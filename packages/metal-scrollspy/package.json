@@ -1,0 +1,32 @@
+{
+	"name": "crystal-scrollspy",
+	"version": "0.0.0",
+	"description": "Crystal's scrollspy component",
+	"license": "MIT",
+	"repository": "metal/crystal-scrollspy",
+	"engines": {
+		"node": ">=0.12.0"
+	},
+	"scripts": {
+		"test": "gulp test"
+	},
+	"keywords": [
+		"metal",
+		"crystal"
+	],
+	"devDependencies": {
+		"chai": "^2.3.0",
+		"gulp": "^3.8.11",
+		"gulp-metal": "^0.1.6",
+		"isparta": "^3.0.3",
+		"karma": "^0.12.31",
+		"karma-babel-preprocessor": "^5.2.1",
+		"karma-chai": "^0.1.0",
+		"karma-chrome-launcher": "^0.1.12",
+		"karma-commonjs": "0.0.13",
+		"karma-coverage": "^0.3.1",
+		"karma-mocha": "^0.1.10",
+		"karma-source-map-support": "^1.0.0",
+		"mocha": "^2.2.5"
+	}
+}
