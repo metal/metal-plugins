@@ -1,0 +1,24 @@
+{
+	"name": "crystal-scrollspy",
+	"version": "0.0.0",
+	"description": "Crystal's scrollspy component",
+	"main": "src/Scrollspy.js",
+	"moduleType": [
+		"es6"
+	],
+	"keywords": [
+		"metal",
+		"crystal"
+	],
+	"ignore": [
+		"*",
+		"!src/**/*"
+	],
+	"dependencies": {
+		"metal": "metal/metal.js#master",
+		"metal-position": "metal/metal-position#master",
+		"metal-jquery-adapter": "~0.0.1",
+		"bootstrap": "~3.3.4",
+		"soyutils": "2014.04.22"
+	}
+}
