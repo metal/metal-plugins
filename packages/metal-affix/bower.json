@@ -1,0 +1,25 @@
+{
+	"name": "crystal-affix",
+	"version": "0.0.0",
+	"description": "Crystal's affix component",
+	"main": "src/Affix.js",
+	"moduleType": [
+		"es6"
+	],
+	"keywords": [
+		"metal",
+		"crystal"
+	],
+	"ignore": [
+		"*",
+		"!test/**/*",
+		"!src/**/*"
+	],
+	"dependencies": {
+		"metal": "metal/metal.js#master",
+		"metal-jquery-adapter": "metal/metal-jquery-adapter#master",
+		"metal-position": "metal/metal-position#master",
+		"bootstrap": "~3.3.4",
+		"soyutils": "2014.04.22"
+	}
+}
