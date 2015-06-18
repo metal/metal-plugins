@@ -8,13 +8,50 @@
 
 	<script src="../bower_components/soyutils/soyutils.js"></script>
 	<script src="../build/globals/scrollspy.js"></script>
+	<style>
+		#content {
+			max-height: 250px;
+			overflow-y: auto;
+		}
+		#content p {
+			font-size: 18px;
+		}
+	</style>
 </head>
 <body>
 	<h1>Scrollspy</h1>
-	<div id="sidebar"></div>
+  <nav id="navbar" class="navbar navbar-default navbar-static">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".bs-example-js-navbar-scrollspy">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Example</a>
+      </div>
+      <div class="collapse navbar-collapse bs-example-js-navbar-scrollspy">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="#foo">@foo</a></li>
+          <li><a href="#bar">@bar</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div id="content">
+    <h2 id="foo">foo</h2>
+    <p>Ad leggings keytar, brunch id art party dolor labore. Pitchfork yr enim lo-fi before they sold out qui. Tumblr farm-to-table bicycle rights whatever. Anim keffiyeh carles cardigan. Velit seitan mcsweeney's photo booth 3 wolf moon irure. Cosby sweater lomo jean shorts, williamsburg hoodie minim qui you probably haven't heard of them et cardigan trust fund culpa biodiesel wes anderson aesthetic. Nihil tattooed accusamus, cred irony biodiesel keffiyeh artisan ullamco consequat.</p>
+    <h2 id="bar">bar</h2>
+    <p>Veniam marfa mustache skateboard, adipisicing fugiat velit pitchfork beard. Freegan beard aliqua cupidatat mcsweeney's vero. Cupidatat four loko nisi, ea helvetica nulla carles. Tattooed cosby sweater food truck, mcsweeney's quis non freegan vinyl. Lo-fi wes anderson +1 sartorial. Carles non aesthetic exercitation quis gentrify. Brooklyn adipisicing craft beer vice keytar deserunt.Occaecat commodo aliqua delectus. Fap craft beer deserunt skateboard ea. Lomo bicycle rights adipisicing banh mi, velit ea sunt next level locavore single-origin coffee in magna veniam. High life id vinyl, echo park consequat quis aliquip banh mi pitchfork. Vero VHS est adipisicing. Consectetur nisi DIY minim messenger bag. Cred ex in, sustainable delectus consectetur fanny pack iphone. Veniam marfa mustache skateboard, adipisicing fugiat velit pitchfork beard. Freegan beard aliqua cupidatat mcsweeney's vero. Cupidatat four loko nisi, ea helvetica nulla carles. Tattooed cosby sweater food truck, mcsweeney's quis non freegan vinyl. Lo-fi wes anderson +1 sartorial. Carles non aesthetic exercitation quis gentrify. Brooklyn adipisicing craft beer vice keytar deserunt.Occaecat commodo aliqua delectus. Fap craft beer deserunt skateboard ea. Lomo bicycle rights adipisicing banh mi, velit ea sunt next level locavore single-origin coffee in magna veniam. High life id vinyl, echo park consequat quis aliquip banh mi pitchfork. Vero VHS est adipisicing. Consectetur nisi DIY minim messenger bag. Cred ex in, sustainable delectus consectetur fanny pack iphone.</p>
+  </div>
 	<script type="text/javascript">
 		new crystal.Scrollspy({
-			element: '#sidebar'
+			element: '#navbar',
+			resolveElement: function(element) {
+				return element.parentNode;
+			},
+			scrollElement: '#content'
 		});
 	</script>
 </body>
