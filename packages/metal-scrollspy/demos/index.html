@@ -5,15 +5,17 @@
 	<title>Demo: Scrollspy</title>
 
 	<link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
-	<link rel="stylesheet" href="../build/scrollspy.css">
 
 	<script src="../bower_components/soyutils/soyutils.js"></script>
 	<script src="../build/globals/scrollspy.js"></script>
 </head>
 <body>
 	<h1>Scrollspy</h1>
+	<div id="sidebar"></div>
 	<script type="text/javascript">
-		new crystal.Scrollspy().render();
+		new crystal.Scrollspy({
+			element: '#sidebar'
+		});
 	</script>
 </body>
 </html>
