@@ -12,6 +12,7 @@
 	],
 	"ignore": [
 		"*",
+		"!test/**/*",
 		"!src/**/*"
 	],
 	"dependencies": {
