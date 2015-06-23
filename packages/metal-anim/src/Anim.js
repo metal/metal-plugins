@@ -1,7 +1,6 @@
 'use strict';
 
 import core from 'bower:metal/src/core';
-import async from 'bower:metal/src/async/async';
 import dom from 'bower:metal/src/dom/dom';
 import features from 'bower:metal/src/dom/features';
 
