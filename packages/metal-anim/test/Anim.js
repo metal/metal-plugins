@@ -1,9 +1,7 @@
 'use strict';
 
 import Anim from '../src/Anim';
-import async from 'bower:metal/src/async/async';
 import dom from 'bower:metal/src/dom/dom';
-import features from 'bower:metal/src/dom/features';
 
 describe('Anim', function() {
 	beforeEach(function() {
