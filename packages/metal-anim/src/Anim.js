@@ -3,6 +3,7 @@
 import core from 'bower:metal/src/core';
 import dom from 'bower:metal/src/dom/dom';
 import features from 'bower:metal/src/dom/features';
+import 'bower:metal/src/dom/events';
 
 class Anim {
 	/**
