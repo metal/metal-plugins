@@ -6,16 +6,20 @@ import features from 'bower:metal/src/dom/features';
 
 class Anim {
 	/**
-	 * Emulates animation or transition end event, the first end event that
-	 * fires will be used by the emulation.
+	 * Emulates animation or transition end event, the end event with longer
+	 * duration will be used by the emulation. If they have the same value,
+	 * transitionend will be emulated.
 	 * @param {Element} element
 	 * @param {number} opt_durationMs
+	 * @return {object} Object containing `abort` function.
 	 */
 	static emulateEnd(element, opt_durationMs) {
-		var animation = this.emulateEnd_(element, 'animation', opt_durationMs);
-		var transition = this.emulateEnd_(element, 'transition', opt_durationMs);
-		dom.once(element, 'animationend', transition.abort);
-		dom.once(element, 'transitionend', animation.abort);
+		if (this.getComputedDurationMs(element, 'animation') > this.getComputedDurationMs(element, 'transition')) {
+			return this.emulateEnd_(element, 'animation', opt_durationMs);
+		}
+		else {
+			return this.emulateEnd_(element, 'transition', opt_durationMs);
+		}
 	}
 
 	/**
@@ -23,9 +27,10 @@ class Anim {
 	 * will read from computed style for animation-duration.
 	 * @param {Element} element
 	 * @param {number} opt_durationMs
+	 * @return {object} Object containing `abort` function.
 	 */
 	static emulateAnimationEnd(element, opt_durationMs) {
-		this.emulateEnd_(element, 'animation', opt_durationMs);
+		return this.emulateEnd_(element, 'animation', opt_durationMs);
 	}
 
 	/**
@@ -33,6 +38,7 @@ class Anim {
 	 * value will read from computed style for transition-duration.
 	 * @param {Element} element
 	 * @param {number} opt_durationMs
+	 * @return {object} Object containing `abort` function.
 	 */
 	static emulateTransitionEnd(element, opt_durationMs) {
 		this.emulateEnd_(element, 'transition', opt_durationMs);
@@ -43,12 +49,13 @@ class Anim {
 	 * @param {Element} element
 	 * @param {string} type
 	 * @param {number} opt_durationMs
+	 * @return {object} Object containing `abort` function.
 	 * @protected
 	 */
 	static emulateEnd_(element, type, opt_durationMs) {
 		var duration = opt_durationMs;
 		if (!core.isDef(opt_durationMs)) {
-			duration = (parseFloat(window.getComputedStyle(element, null).getPropertyValue(type + '-duration')) || 0) * 1000;
+			duration = this.getComputedDurationMs(element, type);
 		}
 
 		var delayed = setTimeout(function() {
@@ -64,6 +71,16 @@ class Anim {
 		return {
 			abort: abort
 		};
+	}
+
+	/**
+	 * Gets computed style duration for duration.
+	 * @param {Element} element
+	 * @param {string} type
+	 * @return {number} The computed duration in milliseconds.
+	 */
+	static getComputedDurationMs(element, type) {
+		return (parseFloat(window.getComputedStyle(element, null).getPropertyValue(type + '-duration')) || 0) * 1000;
 	}
 }
 
