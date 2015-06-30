@@ -73,11 +73,6 @@ class Scrollspy extends Attribute {
 		var scrollHeight = this.getScrollHeight_();
 		var scrollTop = Position.getScrollTop(this.scrollElement);
 
-		if (scrollHeight !== this.scrollHeight_) {
-			this.refresh();
-			return;
-		}
-
 		if (scrollHeight < scrollTop + this.offset) {
 			this.activate(this.regions.length - 1);
 			return;
