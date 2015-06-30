@@ -22,8 +22,9 @@ describe('Scrollspy', function() {
 		}
 		if (scrollElement) {
 			scrollElement.scrollTop = 0;
+		} else {
+			window.scrollTo(0, 0);
 		}
-		window.scrollTo(0, 0);
 	});
 
 	describe('Container', function() {
@@ -49,6 +50,7 @@ describe('Scrollspy', function() {
 		after(function() {
 			dom.exitDocument(element);
 			dom.exitDocument(scrollElement);
+			scrollElement = null;
 		});
 
 		it('should activate element at offset', function() {
@@ -140,7 +142,7 @@ describe('Scrollspy', function() {
 
 	describe('Document', function() {
 		before(function() {
-			dom.enterDocument('<div id="scrollElement" style="position:relative;">' +
+			dom.enterDocument('<div id="contentElement" style="position:relative;">' +
 				'<div id="link1" style="height:5000px;">Link1</div>' +
 				'<div id="link2" style="height:5000px;">Link2</div>' +
 				'<div id="link3" style="height:5000px;">Link3</div>' +
@@ -152,12 +154,11 @@ describe('Scrollspy', function() {
 				'<li><a id="element4" href="#link4">link4</a></li></ul>'
 			);
 			element = dom.toElement('#element');
-			scrollElement = dom.toElement('#scrollElement');
 		});
 
 		after(function() {
 			dom.exitDocument(element);
-			dom.exitDocument(scrollElement);
+			dom.exitDocument(dom.toElement('#contentElement'));
 		});
 
 		it('should activate element', function() {
@@ -253,8 +254,5 @@ describe('Scrollspy', function() {
 });
 
 var nextScrollTick = function(fn, opt_el) {
-	var handler = dom.on(opt_el || document, 'scroll', function() {
-		fn();
-		handler.removeListener();
-	});
+	dom.once(opt_el || document, 'scroll', fn);
 };
