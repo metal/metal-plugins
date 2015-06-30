@@ -28,8 +28,20 @@ describe('Scrollspy', function() {
 
 	describe('Container', function() {
 		before(function() {
-			dom.enterDocument('<ul id="element" style="position:relative;height:500px;margin:0;"><li><a id="element1" href="#link1">link1</a></li><li><a id="element2" href="#link2">link2</a></li><li><a id="element3" href="#link3">link3</a></li><li><a id="element4" href="#link4">link4</a></li><li><a id="element5" href="#link5">link5</a></li></ul>');
-			dom.enterDocument('<div id="scrollElement" style="position:relative;height:500px;overflow-y:auto;"><div id="link1" style="height:500px;">Link1</div><div id="link2" style="height:500px;">Link2</div><div id="link3" style="height:500px;">Link3</div><div id="link4" style="height:500px;">Link4</div><div id="link5" style="height:500px;">Link5</div></div>');
+			dom.enterDocument('<ul id="element" style="position:relative;height:500px;margin:0;">' +
+				'<li><a id="element1" href="#link1">link1</a></li>' +
+				'<li><a id="element2" href="#link2">link2</a></li>' +
+				'<li><a id="element3" href="#link3">link3</a></li>' +
+				'<li><a id="element4" href="#link4">link4</a></li>' +
+				'<li><a id="element5" href="#link5">link5</a></li></ul>'
+			);
+			dom.enterDocument('<div id="scrollElement" style="position:relative;height:500px;overflow-y:auto;">' +
+				'<div id="link1" style="height:500px;">Link1</div>' +
+				'<div id="link2" style="height:500px;">Link2</div>' +
+				'<div id="link3" style="height:500px;">Link3</div>' +
+				'<div id="link4" style="height:500px;">Link4</div>' +
+				'<div id="link5" style="height:500px;">Link5</div></div>'
+			);
 			element = dom.toElement('#element');
 			scrollElement = dom.toElement('#scrollElement');
 		});
@@ -128,8 +140,17 @@ describe('Scrollspy', function() {
 
 	describe('Document', function() {
 		before(function() {
-			dom.enterDocument('<div id="scrollElement" style="position:relative;"><div id="link1" style="height:5000px;">Link1</div><div id="link2" style="height:5000px;">Link2</div><div id="link3" style="height:5000px;">Link3</div><div id="link4" style="height:5000px;">Link4</div></div></div>');
-			dom.enterDocument('<ul id="element"><li><a id="element1" href="#link1">link1</a></li><li><a id="element2" href="#link2">link2</a></li><li><a id="element3" href="#link3">link3</a></li><li><a id="element4" href="#link4">link4</a></li></ul>');
+			dom.enterDocument('<div id="scrollElement" style="position:relative;">' +
+				'<div id="link1" style="height:5000px;">Link1</div>' +
+				'<div id="link2" style="height:5000px;">Link2</div>' +
+				'<div id="link3" style="height:5000px;">Link3</div>' +
+				'<div id="link4" style="height:5000px;">Link4</div></div>');
+			dom.enterDocument('<ul id="element">' +
+				'<li><a id="element1" href="#link1">link1</a></li>' +
+				'<li><a id="element2" href="#link2">link2</a></li>' +
+				'<li><a id="element3" href="#link3">link3</a></li>' +
+				'<li><a id="element4" href="#link4">link4</a></li></ul>'
+			);
 			element = dom.toElement('#element');
 			scrollElement = dom.toElement('#scrollElement');
 		});
