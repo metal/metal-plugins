@@ -384,6 +384,27 @@ describe('Scrollspy', function() {
 
 			dom.exitDocument(spy.element);
 		});
+
+		it('should update active item when the selector changes', function(done) {
+			dom.addClasses(dom.toElement('#element1'), 'mySelector');
+			dom.addClasses(dom.toElement('#element3'), 'mySelector');
+
+			spy = new Scrollspy({
+				element: element,
+				offset: 0
+			});
+
+			window.scrollTo(0, 5000);
+			nextScrollTick(function() {
+				assert.ok(!dom.hasClass(dom.toElement('#element1'), 'active'));
+				assert.ok(dom.hasClass(dom.toElement('#element2'), 'active'));
+
+				spy.selector = '.mySelector';
+				assert.ok(dom.hasClass(dom.toElement('#element1'), 'active'));
+				assert.ok(!dom.hasClass(dom.toElement('#element2'), 'active'));
+				done();
+			});
+		});
 	});
 });
 
