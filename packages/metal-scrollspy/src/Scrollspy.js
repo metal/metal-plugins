@@ -39,8 +39,6 @@ class Scrollspy extends Attribute {
 		this.scrollHandle_ = dom.on(this.scrollElement, 'scroll', this.checkPosition.bind(this));
 
 		this.refresh();
-		this.deactivateAll();
-		this.checkPosition();
 		this.on('elementChanged', this.refresh);
 		this.on('offsetChanged', this.refresh);
 		this.on('scrollElementChanged', this.refresh);
@@ -150,6 +148,7 @@ class Scrollspy extends Attribute {
 	 * nodes can be added and removed.
 	 */
 	refresh() {
+		// Removes the "active" class from all current regions.
 		this.deactivateAll();
 
 		this.scrollElementRegion_ = Position.getRegion(this.scrollElement);
@@ -173,6 +172,11 @@ class Scrollspy extends Attribute {
 			}
 		}
 		this.sortRegions_();
+
+		// Removes the "active" class from all new regions and then activate the right one for
+		// the current position.
+		this.deactivateAll();
+		this.checkPosition();
 	}
 
 	/**
