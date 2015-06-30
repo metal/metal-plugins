@@ -41,7 +41,7 @@ class Scrollspy extends Attribute {
 		this.refresh();
 		this.on('elementChanged', this.refresh);
 		this.on('offsetChanged', this.refresh);
-		this.on('scrollElementChanged', this.refresh);
+		this.on('scrollElementChanged', this.onScrollElementChanged_);
 		this.on('selectorChanged', this.refresh);
 	}
 
@@ -136,6 +136,19 @@ class Scrollspy extends Attribute {
 		scrollHeight += this.scrollElementRegion_.top;
 		scrollHeight -= Position.getClientHeight(this.scrollElement);
 		return scrollHeight;
+	}
+
+	/**
+	 * Fired when the value of the `scrollElement` attribute changes.
+	 * Refreshes the spy and updates the event handler to listen to the new scroll element.
+	 * @param {Element} scrollElement
+	 * @protected
+	 */
+	onScrollElementChanged_(event) {
+		this.refresh();
+
+		this.scrollHandle_.dispose();
+		this.scrollHandle_ = dom.on(event.newVal, 'scroll', this.checkPosition.bind(this));
 	}
 
 	/**

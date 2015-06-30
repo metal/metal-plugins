@@ -138,6 +138,56 @@ describe('Scrollspy', function() {
 				done();
 			}, scrollElement);
 		});
+
+		it('should update current active index when scroll element is changed', function() {
+			spy = new Scrollspy({
+				element: element,
+				scrollElement: scrollElement,
+				offset: 0
+			});
+
+			dom.exitDocument(scrollElement);
+			dom.enterDocument('<div id="scrollElement" style="position:relative;height:500px;overflow-y:auto;">' +
+				'<div id="link2" style="height:500px;">Link2</div>' +
+				'<div id="link1" style="height:500px;">Link1</div>' +
+				'<div id="link3" style="height:500px;">Link3</div>' +
+				'<div id="link4" style="height:500px;">Link4</div>' +
+				'<div id="link5" style="height:500px;">Link5</div></div>'
+			);
+			scrollElement = dom.toElement('#scrollElement');
+
+			spy.scrollElement = scrollElement;
+			assert.ok(dom.hasClass(dom.toElement('#element2'), 'active'));
+		});
+
+		it('should listen to scrolls on the new scroll element', function(done) {
+			spy = new Scrollspy({
+				element: element,
+				scrollElement: scrollElement,
+				offset: 0
+			});
+
+			dom.exitDocument(scrollElement);
+			dom.enterDocument('<div id="scrollElement" style="position:relative;height:500px;overflow-y:auto;">' +
+				'<div id="link2" style="height:500px;">Link2</div>' +
+				'<div id="link1" style="height:500px;">Link1</div>' +
+				'<div id="link3" style="height:500px;">Link3</div>' +
+				'<div id="link4" style="height:500px;">Link4</div>' +
+				'<div id="link5" style="height:500px;">Link5</div></div>'
+			);
+			scrollElement = dom.toElement('#scrollElement');
+
+			spy.scrollElement = scrollElement;
+			scrollElement.scrollTop = 1000;
+			nextScrollTick(function() {
+				assert.ok(!dom.hasClass(dom.toElement('#element1'), 'active'));
+				assert.ok(!dom.hasClass(dom.toElement('#element2'), 'active'));
+				assert.ok(dom.hasClass(dom.toElement('#element3'), 'active'));
+				assert.ok(!dom.hasClass(dom.toElement('#element4'), 'active'));
+				assert.ok(!dom.hasClass(dom.toElement('#element5'), 'active'));
+				done();
+			}, scrollElement);
+		});
 	});
 
 	describe('Document', function() {
