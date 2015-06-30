@@ -364,6 +364,26 @@ describe('Scrollspy', function() {
 				done();
 			});
 		});
+
+		it('should activate the right item on the new element when it changes', function() {
+			spy = new Scrollspy({
+				element: element,
+				offset: 0
+			});
+
+			dom.enterDocument('<ul id="newElement">' +
+				'<li><a id="newElement1" href="#link1">link1</a></li>' +
+				'<li><a id="newElement2" href="#link2">link2</a></li>' +
+				'<li><a id="newElement3" href="#link3">link3</a></li>' +
+				'<li><a id="newElement4" href="#link4">link4</a></li></ul>'
+			);
+			spy.element = '#newElement';
+
+			assert.ok(!dom.hasClass(dom.toElement('#element1'), 'active'));
+			assert.ok(dom.hasClass(dom.toElement('#newElement1'), 'active'));
+
+			dom.exitDocument(spy.element);
+		});
 	});
 });
 
