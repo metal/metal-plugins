@@ -40,7 +40,7 @@ class Scrollspy extends Attribute {
 
 		this.refresh();
 		this.on('elementChanged', this.refresh);
-		this.on('offsetChanged', this.refresh);
+		this.on('offsetChanged', this.checkPosition);
 		this.on('scrollElementChanged', this.onScrollElementChanged_);
 		this.on('selectorChanged', this.refresh);
 	}

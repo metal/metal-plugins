@@ -303,6 +303,23 @@ describe('Scrollspy', function() {
 			});
 		});
 
+		it('should update active element when the value of the offset attr changes', function(done) {
+			spy = new Scrollspy({
+				element: element,
+				offset: 0
+			});
+			window.scrollTo(0, 4000);
+			nextScrollTick(function() {
+				assert.ok(dom.hasClass(dom.toElement('#element1'), 'active'));
+				assert.ok(!dom.hasClass(dom.toElement('#element2'), 'active'));
+
+				spy.offset = 1000;
+				assert.ok(!dom.hasClass(dom.toElement('#element1'), 'active'));
+				assert.ok(dom.hasClass(dom.toElement('#element2'), 'active'));
+				done();
+			});
+		});
+
 		it('should activate last element when scrolling to maximum position', function(done) {
 			spy = new Scrollspy({
 				element: element,
