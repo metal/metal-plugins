@@ -149,7 +149,9 @@ describe('Scrollspy', function() {
 				'<div id="link4" style="height:5000px;">Link4</div></div>');
 			dom.enterDocument('<ul id="element">' +
 				'<li><a id="element1" href="#link1">link1</a></li>' +
+				'<li><a id="elementNoHash" href="/noHash">No Hash</a></li>' +
 				'<li><a id="element2" href="#link2">link2</a></li>' +
+				'<li><a id="elementNoContent" href="#noContent">No Content</a></li>' +
 				'<li><a id="element3" href="#link3">link3</a></li>' +
 				'<li><a id="element4" href="#link4">link4</a></li></ul>'
 			);
@@ -167,6 +169,16 @@ describe('Scrollspy', function() {
 				offset: 0
 			});
 			assert.ok(dom.hasClass(dom.toElement('#element1'), 'active'));
+		});
+
+		it('should not activate any element if scroll position is before all of them', function() {
+			dom.toElement('#contentElement').style.marginTop = '50px';
+			spy = new Scrollspy({
+				element: element,
+				offset: 0
+			});
+			assert.ok(!document.querySelector('.active'));
+			dom.toElement('#contentElement').style.marginTop = '0px';
 		});
 
 		it('should activate resolved element', function() {
@@ -208,6 +220,26 @@ describe('Scrollspy', function() {
 			});
 		});
 
+		it('should deactivates all elements when window is scrolled to position before all elements', function(done) {
+			dom.toElement('#contentElement').style.marginTop = '50px';
+			spy = new Scrollspy({
+				element: element,
+				offset: 0
+			});
+
+			window.scrollTo(0, 50);
+			nextScrollTick(function() {
+				assert.ok(dom.hasClass(dom.toElement('#element1'), 'active'));
+
+				window.scrollTo(0, 0);
+				nextScrollTick(function() {
+					assert.ok(!document.querySelector('.active'));
+					dom.toElement('#contentElement').style.marginTop = '0px';
+					done();
+				});
+			});
+		});
+
 		it('should activate element when scrolling at offset', function(done) {
 			spy = new Scrollspy({
 				element: element,
@@ -225,6 +257,21 @@ describe('Scrollspy', function() {
 			spy = new Scrollspy({
 				element: element,
 				offset: 0
+			});
+			window.scrollTo(0, 99999);
+			nextScrollTick(function() {
+				assert.ok(!dom.hasClass(dom.toElement('#element1'), 'active'));
+				assert.ok(!dom.hasClass(dom.toElement('#element2'), 'active'));
+				assert.ok(!dom.hasClass(dom.toElement('#element3'), 'active'));
+				assert.ok(dom.hasClass(dom.toElement('#element4'), 'active'));
+				done();
+			});
+		});
+
+		it('should activate last element when scrolling to maximum position with offset', function(done) {
+			spy = new Scrollspy({
+				element: element,
+				offset: 100
 			});
 			window.scrollTo(0, 99999);
 			nextScrollTick(function() {
