@@ -39,6 +39,7 @@ class Scrollspy extends Attribute {
 		this.scrollHandle_ = dom.on(this.scrollElement, 'scroll', this.checkPosition.bind(this));
 
 		this.refresh();
+		this.deactivateAll();
 		this.checkPosition();
 		this.on('elementChanged', this.refresh);
 		this.on('offsetChanged', this.refresh);
@@ -74,11 +75,6 @@ class Scrollspy extends Attribute {
 		var scrollHeight = this.getScrollHeight_();
 		var scrollTop = Position.getScrollTop(this.scrollElement);
 
-		if (this.activeIndex >= 0 && scrollTop < this.offset) {
-			this.deactivateAll();
-			return;
-		}
-
 		if (scrollHeight !== this.scrollHeight_) {
 			this.refresh();
 			return;
@@ -90,8 +86,12 @@ class Scrollspy extends Attribute {
 		}
 
 		var index = this.findBestRegionAt_(scrollTop);
-		if (index >= 0 && index !== this.activeIndex) {
-			this.activate(index);
+		if (index !== this.activeIndex) {
+			if (index === -1) {
+				this.deactivateAll();
+			} else {
+				this.activate(index);
+			}
 		}
 	}
 
@@ -121,11 +121,14 @@ class Scrollspy extends Attribute {
 	findBestRegionAt_(scrollTop) {
 		var index = -1;
 		var origin = scrollTop + this.offset + this.scrollElementRegion_.top;
-		for (var i = 0; i < this.regions.length; i++) {
-			var region = this.regions[i];
-			if ((origin >= region.top) && (origin < region.bottom)) {
-				index = i;
-				break;
+		if (this.regions.length > 0 && origin >= this.regions[0].top) {
+			for (var i = 0; i < this.regions.length; i++) {
+				var region = this.regions[i];
+				var lastRegion = i === this.regions.length - 1;
+				if ((origin >= region.top) && (lastRegion || (origin < this.regions[i + 1].top))) {
+					index = i;
+					break;
+				}
 			}
 		}
 		return index;
