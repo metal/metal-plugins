@@ -1,0 +1,23 @@
+{
+	"name": "crystal-drag-drop",
+	"version": "0.0.0",
+	"description": "Crystal's drag and drop component.",
+	"main": "src/DragDrop.js",
+	"moduleType": [
+		"es6"
+	],
+	"keywords": [
+		"metal",
+		"crystal"
+	],
+	"ignore": [
+		"*",
+		"!src/**/*",
+		"!test/**/*"
+	],
+	"dependencies": {
+		"bootstrap": "~3.3.4",
+		"metal": "metal/metal.js#master",
+		"metal-jquery-adapter": "metal/metal-jquery-adapter#master"
+	}
+}
