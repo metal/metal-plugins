@@ -8,7 +8,7 @@ var babelOptions = {
 
 module.exports = function (config) {
 	config.set({
-		frameworks: ['mocha', 'chai', 'source-map-support', 'commonjs'],
+		frameworks: ['mocha', 'chai', 'sinon', 'source-map-support', 'commonjs'],
 
 		files: [
 			'bower_components/soyutils/soyutils.js',

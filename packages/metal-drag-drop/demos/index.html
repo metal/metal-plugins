@@ -9,11 +9,24 @@
 
 	<script src="../bower_components/soyutils/soyutils.js"></script>
 	<script src="../build/globals/dragDrop.js"></script>
+	<style>
+		.box {
+			background-color: red;
+			left: 20px;
+			height: 200px;
+			position: fixed;
+			top: 70px;
+			width: 200px;
+		}
+	</style>
 </head>
 <body>
 	<h1>DragDrop</h1>
+	<div class="box"></div>
 	<script type="text/javascript">
-		new crystal.DragDrop();
+		new crystal.Drag({
+			source: '.box'
+		});
 	</script>
 </body>
 </html>
