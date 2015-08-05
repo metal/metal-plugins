@@ -91,11 +91,11 @@ class Drag extends Attribute {
 	 * @protected
 	 */
 	attachEventToSource_(eventType, listenerFn) {
-		var source = this.source;
-		if (core.isString(source)) {
-			this.eventsHandler_.add(dom.delegate(document, eventType, source, listenerFn));
+		var sources = this.sources;
+		if (core.isString(sources)) {
+			this.eventsHandler_.add(dom.delegate(document, eventType, sources, listenerFn));
 		} else {
-			this.eventsHandler_.add(dom.on(source, eventType, listenerFn));
+			this.eventsHandler_.add(dom.on(sources, eventType, listenerFn));
 		}
 	}
 
@@ -220,13 +220,13 @@ class Drag extends Attribute {
 	}
 
 	/**
-	 * Validates the `source` attribute.
-	 * @param {*} source
+	 * Validates the `sources` attribute.
+	 * @param {*} sources
 	 * @return {boolean}
 	 * @protected
 	 */
-	validatorSourceFn_(source) {
-		return core.isString(source) || core.isElement(source);
+	validatorSourceFn_(sources) {
+		return core.isString(sources) || core.isElement(sources);
 	}
 }
 
@@ -253,7 +253,7 @@ Drag.ATTRS = {
 	 * or a selector for multiple elements.
 	 * @type {!Element|string}
 	 */
-	source: {
+	sources: {
 		validator: 'validatorSourceFn_'
 	}
 };

@@ -23,7 +23,7 @@ describe('Drag', function() {
 	it('should drag source to new position', function() {
 		var item = document.querySelector('.item1');
 		drag = new Drag({
-			source: item
+			sources: item
 		});
 
 		var initialX = item.offsetLeft;
@@ -38,7 +38,7 @@ describe('Drag', function() {
 	it('should ignore mousedown events during dragging', function() {
 		var item = document.querySelector('.item1');
 		drag = new Drag({
-			source: item
+			sources: item
 		});
 
 		var initialX = item.offsetLeft;
@@ -54,7 +54,7 @@ describe('Drag', function() {
 	it('should emit "drag" event with position info', function() {
 		var item = document.querySelector('.item1');
 		drag = new Drag({
-			source: item
+			sources: item
 		});
 
 		var initialX = item.offsetLeft;
@@ -80,7 +80,7 @@ describe('Drag', function() {
 	it('should emit "end" event when drag ends', function() {
 		var item = document.querySelector('.item1');
 		drag = new Drag({
-			source: item
+			sources: item
 		});
 
 		var initialX = item.offsetLeft;
@@ -101,7 +101,7 @@ describe('Drag', function() {
 	it('should check if source is being dragged', function() {
 		var item = document.querySelector('.item1');
 		drag = new Drag({
-			source: item
+			sources: item
 		});
 
 		assert.ok(!drag.isDragging());
@@ -116,7 +116,7 @@ describe('Drag', function() {
 	it('should get the active drag element', function() {
 		var item = document.querySelector('.item1');
 		drag = new Drag({
-			source: item
+			sources: item
 		});
 
 		assert.ok(!drag.getActiveDrag());
@@ -132,7 +132,7 @@ describe('Drag', function() {
 	it('should not start dragging before reaching the minimum distance', function() {
 		var item = document.querySelector('.item1');
 		drag = new Drag({
-			source: item
+			sources: item
 		});
 
 		var listener = sinon.stub();
@@ -152,7 +152,7 @@ describe('Drag', function() {
 		var item = document.querySelector('.item1');
 		drag = new Drag({
 			minimumDragDistance: 2,
-			source: item
+			sources: item
 		});
 
 		var listener = sinon.stub();
@@ -169,7 +169,7 @@ describe('Drag', function() {
 		var item2 = document.querySelector('.item2');
 		drag = new Drag({
 			minimumDragDistance: 2,
-			source: '.item'
+			sources: '.item'
 		});
 
 		triggerMouseEvent(item1, 'mousedown', 20, 20);
