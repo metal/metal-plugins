@@ -142,7 +142,7 @@ class Drag extends Attribute {
 	handleMouseDown_(event) {
 		this.activeDragSource_ = event.delegateTarget || event.currentTarget;
 
-		if (!this.isDragging()) {
+		if (!this.isDragging() && this.isWithinHandle_(event.target)) {
 			this.dragHandler_.add(
 				dom.on(document, 'mousemove', this.handleMouseMove_.bind(this)),
 				dom.on(document, 'mouseup', this.handleMouseUp_.bind(this))
@@ -220,13 +220,29 @@ class Drag extends Attribute {
 	}
 
 	/**
-	 * Validates the `sources` attribute.
-	 * @param {*} sources
+	 * Checks if the given element is within a valid handle.
+	 * @param {!Element} element
+	 * @protected
+	 */
+	isWithinHandle_(element) {
+		var handles = this.handles;
+		if (!handles) {
+			return true;
+		} else if (core.isString(handles)) {
+			return dom.match(element, handles + ', ' + handles + ' *');
+		} else {
+			return handles.contains(element);
+		}
+	}
+
+	/**
+	 * Validates the given value, making sure that it's either an element or a string.
+	 * @param {*} val
 	 * @return {boolean}
 	 * @protected
 	 */
-	validatorSourceFn_(sources) {
-		return core.isString(sources) || core.isElement(sources);
+	validateElementOrString_(val) {
+		return core.isString(val) || core.isElement(val);
 	}
 }
 
@@ -236,6 +252,15 @@ class Drag extends Attribute {
  * @static
  */
 Drag.ATTRS = {
+	/**
+	 * Elements inside the source that should be the drag handles. Can be
+	 * either a single element or a selector for multiple elements.
+	 * @type {Element|?string}
+	 */
+	handles: {
+		validator: 'validateElementOrString_'
+	},
+
 	/**
 	 * The minimum distance, in pixels, that the mouse needs to move before
 	 * the action is considered a drag.
@@ -254,7 +279,7 @@ Drag.ATTRS = {
 	 * @type {!Element|string}
 	 */
 	sources: {
-		validator: 'validatorSourceFn_'
+		validator: 'validateElementOrString_'
 	}
 };
 

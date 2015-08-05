@@ -7,10 +7,9 @@ describe('Drag', function() {
 	var drag;
 
 	beforeEach(function() {
-		dom.append(
-			document.body,
-			'<div class="item item1"></div><div class="item item2"></div>'
-		);
+		var html = '<div class="item item1"><span class="handle"></span></div>' +
+			'<div class="item item2"><span class="handle"></span></div></div>';
+		dom.append(document.body, html);
 	});
 
 	afterEach(function() {
@@ -148,7 +147,7 @@ describe('Drag', function() {
 		assert.strictEqual(1, listener.callCount);
 	});
 
-	it('should allow setting a custom minimim drag distance', function() {
+	it('should allow setting a custom minimum drag distance', function() {
 		var item = document.querySelector('.item1');
 		drag = new Drag({
 			minimumDragDistance: 2,
@@ -182,6 +181,71 @@ describe('Drag', function() {
 		assert.strictEqual(item2, drag.getActiveDrag());
 
 		dom.triggerEvent(document, 'mouseup');
+	});
+
+	describe('Handles', function() {
+		it('should not drag element if clicked outside handle', function() {
+			var item = document.querySelector('.item');
+			var handle = item.querySelector('.handle');
+			drag = new Drag({
+				handles: handle,
+				sources: item
+			});
+
+			triggerMouseEvent(item, 'mousedown', 20, 20);
+			triggerMouseEvent(document, 'mousemove', 40, 50);
+			assert.ok(!drag.isDragging());
+		});
+
+		it('should drag element if clicked inside handle', function() {
+			var item = document.querySelector('.item');
+			var handle = item.querySelector('.handle');
+			drag = new Drag({
+				handles: handle,
+				sources: item
+			});
+
+			var initialX = item.offsetLeft;
+			var initialY = item.offsetTop;
+
+			triggerMouseEvent(handle, 'mousedown', 20, 20);
+			triggerMouseEvent(document, 'mousemove', 40, 50);
+			assert.ok(drag.isDragging());
+			assert.strictEqual(item, drag.getActiveDrag());
+			assert.strictEqual(initialX + 20 + 'px', item.style.left);
+			assert.strictEqual(initialY + 30 + 'px', item.style.top);
+		});
+
+		it('should work with handle selectors', function() {
+			var item = document.querySelector('.item');
+			var handle = item.querySelector('.handle');
+			drag = new Drag({
+				handles: '.handle',
+				sources: item
+			});
+
+			triggerMouseEvent(handle, 'mousedown', 20, 20);
+			triggerMouseEvent(document, 'mousemove', 40, 50);
+			assert.ok(drag.isDragging());
+		});
+
+		it('should work with multiple sources', function() {
+			var item1 = document.querySelector('.item1');
+			var item2 = document.querySelector('.item2');
+			drag = new Drag({
+				handles: '.handle',
+				sources: '.item'
+			});
+
+			triggerMouseEvent(item1.querySelector('.handle'), 'mousedown', 20, 20);
+			triggerMouseEvent(document, 'mousemove', 40, 50);
+			assert.strictEqual(item1, drag.getActiveDrag());
+
+			dom.on(document, 'mouseup');
+			triggerMouseEvent(item2.querySelector('.handle'), 'mousedown', 20, 20);
+			triggerMouseEvent(document, 'mousemove', 40, 50);
+			assert.strictEqual(item2, drag.getActiveDrag());
+		});
 	});
 
 	function triggerMouseEvent(target, eventType, x, y) {

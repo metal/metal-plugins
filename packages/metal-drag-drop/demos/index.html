@@ -24,14 +24,22 @@
 			left: 320px;
 			top: 70px;
 		}
+
+		.handle {
+			background-color: black;
+			float: right;
+			height: 40px;
+			width: 40px;
+		}
 	</style>
 </head>
 <body>
 	<h1>DragDrop</h1>
-	<div class="box"></div>
-	<div class="box blue"></div>
+	<div class="box"><div class="handle"></div></div>
+	<div class="box blue"><div class="handle"></div></div>
 	<script type="text/javascript">
 		new crystal.Drag({
+			handles: '.handle',
 			sources: '.box'
 		});
 	</script>
