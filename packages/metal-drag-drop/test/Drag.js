@@ -477,11 +477,93 @@ describe('Drag', function() {
 		});
 	});
 
+	describe('Scroll', function() {
+		beforeEach(function() {
+			var html = '<div class="scroll" style="width:200px;height:200px;max-height:20px;overflow-y:scroll;"></div>';
+			dom.append(document.body, html);
+
+			var item1 = document.querySelector('.item1');
+			item1.style.height = '100px';
+			item1.style.width = '200px';
+			dom.append(document.querySelector('.scroll'), item1);
+		});
+
+		it('should update position of dragged element when scroll container is scrolled', function(done) {
+			var scrollNode = document.querySelector('.scroll');
+			var item = document.querySelector('.item1');
+			drag = new Drag({
+				scrollContainers: scrollNode,
+				sources: item
+			});
+
+			var initialX = item.offsetLeft;
+			var initialY = item.offsetTop;
+
+			triggerMouseEvent(item, 'mousedown', 20, 20);
+			triggerMouseEvent(document, 'mousemove', 40, 50);
+			drag.once(Drag.Events.DRAG, function(event) {
+				assert.strictEqual(initialX + 20, event.x);
+				assert.strictEqual(initialY + 40, event.y);
+				assert.strictEqual(initialX + 20 + 'px', item.style.left);
+				assert.strictEqual(initialY + 40 + 'px', item.style.top);
+				done();
+			});
+			scrollNode.scrollTop = 10;
+		});
+
+		it('should update position of dragged element on scroll without moving if "move" is false', function(done) {
+			var scrollNode = document.querySelector('.scroll');
+			var item = document.querySelector('.item1');
+			drag = new Drag({
+				move: false,
+				scrollContainers: scrollNode,
+				sources: item
+			});
+
+			var initialX = item.offsetLeft;
+			var initialY = item.offsetTop;
+			var initialLeft = item.style.left;
+			var initialTop = item.style.top;
+
+			triggerMouseEvent(item, 'mousedown', 20, 20);
+			triggerMouseEvent(document, 'mousemove', 40, 50);
+			drag.once(Drag.Events.DRAG, function(event) {
+				assert.strictEqual(initialX + 20, event.x);
+				assert.strictEqual(initialY + 40, event.y);
+				assert.strictEqual(initialLeft, item.style.left);
+				assert.strictEqual(initialTop, item.style.top);
+				done();
+			});
+			scrollNode.scrollTop = 10;
+		});
+
+		it('should update position of dragged element on scroll from selector scroll container', function(done) {
+			var scrollNode = document.querySelector('.scroll');
+			var item = document.querySelector('.item1');
+			drag = new Drag({
+				scrollContainers: '.scroll',
+				sources: item
+			});
+
+			var initialX = item.offsetLeft;
+			var initialY = item.offsetTop;
+
+			triggerMouseEvent(item, 'mousedown', 20, 20);
+			triggerMouseEvent(document, 'mousemove', 40, 50);
+			drag.once(Drag.Events.DRAG, function(event) {
+				assert.strictEqual(initialX + 20, event.x);
+				assert.strictEqual(initialY + 40, event.y);
+				assert.strictEqual(initialX + 20 + 'px', item.style.left);
+				assert.strictEqual(initialY + 40 + 'px', item.style.top);
+				done();
+			});
+			scrollNode.scrollTop = 10;
+		});
+	});
+
 	it('should detach document events when disposed', function() {
 		var item = document.querySelector('.item');
 		drag = new Drag({
-			dragPlaceholder: Drag.Placeholder.CLONE,
-			moveOnEnd: false,
 			sources: item
 		});
 

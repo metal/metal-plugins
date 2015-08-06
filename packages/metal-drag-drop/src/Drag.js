@@ -3,6 +3,7 @@
 import core from 'bower:metal/src/core';
 import dom from 'bower:metal/src/dom/dom';
 import Attribute from 'bower:metal/src/attribute/Attribute';
+import DragScrollDelta from './helpers/DragScrollDelta';
 import EventHandler from 'bower:metal/src/events/EventHandler';
 
 /**
@@ -81,6 +82,13 @@ class Drag extends Attribute {
 		this.dragHandler_ = new EventHandler();
 
 		/**
+		 * `DragScrollDelta` instance.
+		 * @type {!DragScrollDelta}
+		 * @protected
+		 */
+		this.dragScrollDelta_ = new DragScrollDelta();
+
+		/**
 		 * The `EventHandler` instance that holds events for the source (or sources).
 		 * @type {!EventHandler}
 		 * @protected
@@ -89,6 +97,7 @@ class Drag extends Attribute {
 
 		this.attachSourceEvents_();
 		this.on('sourcesChanged', this.handleSourcesChanged_.bind(this));
+		this.dragScrollDelta_.on('scrollDelta', this.handleScrollDelta_.bind(this));
 	}
 
 	/**
@@ -96,19 +105,11 @@ class Drag extends Attribute {
 	 * @protected
 	 */
 	attachSourceEvents_() {
-		var sources = this.sources;
 		var listenerFn = this.handleDragStartEvent_.bind(this);
-		if (core.isString(sources)) {
-			this.sourceHandler_.add(
-				dom.delegate(document, 'mousedown', sources, listenerFn),
-				dom.delegate(document, 'touchstart', sources, listenerFn)
-			);
-		} else {
-			this.sourceHandler_.add(
-				dom.on(sources, 'mousedown', listenerFn),
-				dom.on(sources, 'touchstart', listenerFn)
-			);
-		}
+		this.sourceHandler_.add(
+			dom.on(this.sources, 'mousedown', listenerFn),
+			dom.on(this.sources, 'touchstart', listenerFn)
+		);
 	}
 
 	/**
@@ -139,8 +140,8 @@ class Drag extends Attribute {
 	 */
 	cloneActiveDrag_() {
 		var placeholder = this.activeDragSource_.cloneNode(true);
-		placeholder.style.position = 'fixed';
-		dom.enterDocument(placeholder);
+		placeholder.style.position = 'absolute';
+		dom.append(this.activeDragSource_.parentNode, placeholder);
 		return placeholder;
 	}
 
@@ -149,9 +150,6 @@ class Drag extends Attribute {
 	 * @protected
 	 */
 	createActiveDragPlaceholder_() {
-		if (this.activeDragPlaceholder_) {
-			return;
-		}
 		var dragPlaceholder = this.dragPlaceholder;
 		if (dragPlaceholder === Drag.Placeholder.CLONE) {
 			this.activeDragPlaceholder_ = this.cloneActiveDrag_();
@@ -168,6 +166,8 @@ class Drag extends Attribute {
 	disposeInternal() {
 		this.cleanUpAfterDragging_();
 		this.dragHandler_ = null;
+		this.dragScrollDelta_.dispose();
+		this.dragScrollDelta_ = null;
 		this.sourceHandler_.removeAllListeners();
 		this.sourceHandler_ = null;
 		super.disposeInternal();
@@ -201,6 +201,7 @@ class Drag extends Attribute {
 	 * @protected
 	 */
 	handleDragEndEvent_() {
+		this.dragScrollDelta_.stop();
 		if (this.moveOnEnd) {
 			this.updatePosition_(this.activeDragSource_);
 		}
@@ -224,13 +225,16 @@ class Drag extends Attribute {
 			return;
 		}
 
-		this.dragging_ = true;
-		this.currentSourceX_ += distanceX;
-		this.currentSourceY_ += distanceY;
-
-		if (this.move) {
+		if (!this.isDragging()) {
+			this.dragging_ = true;
 			this.createActiveDragPlaceholder_();
 			dom.addClasses(this.activeDragPlaceholder_, this.draggingClass);
+			this.dragScrollDelta_.start(this.activeDragPlaceholder_, this.scrollContainers);
+		}
+
+		this.currentSourceX_ += distanceX;
+		this.currentSourceY_ += distanceY;
+		if (this.move) {
 			this.updatePosition_(this.activeDragPlaceholder_);
 		}
 		this.emitDragEvent_(Drag.Events.DRAG);
@@ -263,6 +267,21 @@ class Drag extends Attribute {
 
 			event.preventDefault();
 		}
+	}
+
+	/**
+	 * Handles a "scrollDelta" event. Updates the position data for the source,
+	 * as well as the placeholder's position on the screen when "move" is set to true.
+	 * @param {!Object} event [description]
+	 * @protected
+	 */
+	handleScrollDelta_(event) {
+		this.currentSourceX_ += event.deltaX;
+		this.currentSourceY_ += event.deltaY;
+		if (this.move) {
+			this.updatePosition_(this.activeDragPlaceholder_);
+		}
+		this.emitDragEvent_(Drag.Events.DRAG);
 	}
 
 	/**
@@ -363,7 +382,7 @@ Drag.ATTRS = {
 	 * The placeholder element that should be moved during drag. Can be either
 	 * an element or the "clone" string, indicating that a clone of the source
 	 * being dragged should be used. If nothing is set, the original source element
-	 * will be used. Note that this is ignored if the `move` attribute is set to false.
+	 * will be used.
 	 * @type {Element|?string}
 	 */
 	dragPlaceholder: {
@@ -411,6 +430,15 @@ Drag.ATTRS = {
 	 */
 	moveOnEnd: {
 		value: true
+	},
+
+	/**
+	 * Elements with scroll, besides the document, that contain any of the given
+	 * sources. Can be either a single element or a selector for multiple elements.
+	 * @type {Element|string}
+	 */
+	scrollContainers: {
+		validator: 'validateElementOrString_'
 	},
 
 	/**
