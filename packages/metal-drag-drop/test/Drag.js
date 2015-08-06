@@ -477,6 +477,21 @@ describe('Drag', function() {
 		});
 	});
 
+	it('should detach document events when disposed', function() {
+		var item = document.querySelector('.item');
+		drag = new Drag({
+			dragPlaceholder: Drag.Placeholder.CLONE,
+			moveOnEnd: false,
+			sources: item
+		});
+
+		triggerMouseEvent(item, 'mousedown', 20, 20);
+		drag.dispose();
+		assert.doesNotThrow(function() {
+			triggerMouseEvent(document, 'mousemove', 40, 50);
+		});
+	});
+
 	function triggerMouseEvent(target, eventType, x, y) {
 		dom.triggerEvent(target, eventType, {
 			clientX: x,
