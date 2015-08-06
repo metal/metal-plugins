@@ -81,28 +81,27 @@ class Drag extends Attribute {
 		this.dragHandler_ = new EventHandler();
 
 		/**
-		 * The `EventHandler` instance that holds events that will only be detached when this
-		 * instance is disposed.
+		 * The `EventHandler` instance that holds events for the source (or sources).
 		 * @type {!EventHandler}
 		 * @protected
 		 */
-		this.eventsHandler_ = new EventHandler();
+		this.sourceHandler_ = new EventHandler();
 
-		this.attachEventToSource_('mousedown', this.handleMouseDown_.bind(this));
+		this.attachSourceEvents_();
+		this.on('sourcesChanged', this.handleSourcesChanged_.bind(this));
 	}
 
 	/**
-	 * Attaches an event to the given drag source (or sources).
-	 * @param {string} eventType
-	 * @param {!function()} listenerFn
+	 * Attaches the necessary events to the source (or sources).
 	 * @protected
 	 */
-	attachEventToSource_(eventType, listenerFn) {
+	attachSourceEvents_() {
 		var sources = this.sources;
+		var listenerFn = this.handleMouseDown_.bind(this);
 		if (core.isString(sources)) {
-			this.eventsHandler_.add(dom.delegate(document, eventType, sources, listenerFn));
+			this.sourceHandler_.add(dom.delegate(document, 'mousedown', sources, listenerFn));
 		} else {
-			this.eventsHandler_.add(dom.on(sources, eventType, listenerFn));
+			this.sourceHandler_.add(dom.on(sources, 'mousedown', listenerFn));
 		}
 	}
 
@@ -163,8 +162,8 @@ class Drag extends Attribute {
 	disposeInternal() {
 		this.cleanUpAfterDragging_();
 		this.dragHandler_ = null;
-		this.eventsHandler_.removeAllListeners();
-		this.eventsHandler_ = null;
+		this.sourceHandler_.removeAllListeners();
+		this.sourceHandler_ = null;
 		super.disposeInternal();
 	}
 
@@ -251,6 +250,16 @@ class Drag extends Attribute {
 		}
 		this.emitDragEvent_(Drag.Events.END);
 		this.cleanUpAfterDragging_();
+	}
+
+	/**
+	 * Triggers when the `sources` attribute changes. Detaches events attached to the
+	 * previous sources and attaches them to the new value instead.
+	 * @protected
+	 */
+	handleSourcesChanged_() {
+		this.sourceHandler_.removeAllListeners();
+		this.attachSourceEvents_();
 	}
 
 	/**

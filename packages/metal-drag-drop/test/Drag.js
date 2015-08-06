@@ -183,6 +183,24 @@ describe('Drag', function() {
 		dom.triggerEvent(document, 'mouseup');
 	});
 
+	it('should handle changing the value of the "sources" attribute', function() {
+		var item1 = document.querySelector('.item1');
+		var item2 = document.querySelector('.item2');
+		drag = new Drag({
+			minimumDragDistance: 2,
+			sources: item1
+		});
+		drag.set('sources', item2);
+
+		triggerMouseEvent(item1, 'mousedown', 20, 20);
+		triggerMouseEvent(document, 'mousemove', 40, 50);
+		assert.ok(!drag.isDragging());
+
+		triggerMouseEvent(item2, 'mousedown', 20, 20);
+		triggerMouseEvent(document, 'mousemove', 40, 50);
+		assert.ok(drag.isDragging());
+	});
+
 	it('should not move dragged element if "move" attribute is set to false', function() {
 		var item = document.querySelector('.item1');
 		drag = new Drag({
