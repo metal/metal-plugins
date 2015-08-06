@@ -142,7 +142,7 @@ class Drag extends Attribute {
 	handleMouseDown_(event) {
 		this.activeDragSource_ = event.delegateTarget || event.currentTarget;
 
-		if (!this.isDragging() && this.isWithinHandle_(event.target)) {
+		if (!this.disabled && !this.isDragging() && this.isWithinHandle_(event.target)) {
 			this.dragHandler_.add(
 				dom.on(document, 'mousemove', this.handleMouseMove_.bind(this)),
 				dom.on(document, 'mouseup', this.handleMouseUp_.bind(this))
@@ -252,6 +252,17 @@ class Drag extends Attribute {
  * @static
  */
 Drag.ATTRS = {
+	/**
+	 * Flag indicating if drag operations are disabled. When set to true, it
+	 * dragging won't work.
+	 * @type {boolean}
+	 * @default false
+	 */
+	disabled: {
+		validator: core.isBoolean,
+		value: false
+	},
+
 	/**
 	 * Elements inside the source that should be the drag handles. Can be
 	 * either a single element or a selector for multiple elements.

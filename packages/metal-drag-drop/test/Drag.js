@@ -183,6 +183,18 @@ describe('Drag', function() {
 		dom.triggerEvent(document, 'mouseup');
 	});
 
+	it('should disable drag operations', function() {
+		var item = document.querySelector('.item');
+		drag = new Drag({
+			disabled: true,
+			sources: item
+		});
+
+		triggerMouseEvent(item, 'mousedown', 20, 20);
+		triggerMouseEvent(document, 'mousemove', 40, 50);
+		assert.ok(!drag.isDragging());
+	});
+
 	describe('Handles', function() {
 		it('should not drag element if clicked outside handle', function() {
 			var item = document.querySelector('.item');
