@@ -493,9 +493,16 @@ describe('Drag', function() {
 	});
 
 	function triggerMouseEvent(target, eventType, x, y) {
-		dom.triggerEvent(target, eventType, {
+		var data = {
 			clientX: x,
 			clientY: y
-		});
+		};
+		if ('ontouchstart' in window) {
+			eventType = eventType === 'mousedown' ? 'touchstart' : 'touchmove';
+			data = {
+				targetTouches: [data]
+			};
+		}
+		dom.triggerEvent(target, eventType, data);
 	}
 });

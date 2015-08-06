@@ -97,11 +97,17 @@ class Drag extends Attribute {
 	 */
 	attachSourceEvents_() {
 		var sources = this.sources;
-		var listenerFn = this.handleMouseDown_.bind(this);
+		var listenerFn = this.handleDragStartEvent_.bind(this);
 		if (core.isString(sources)) {
-			this.sourceHandler_.add(dom.delegate(document, 'mousedown', sources, listenerFn));
+			this.sourceHandler_.add(
+				dom.delegate(document, 'mousedown', sources, listenerFn),
+				dom.delegate(document, 'touchstart', sources, listenerFn)
+			);
 		} else {
-			this.sourceHandler_.add(dom.on(sources, 'mousedown', listenerFn));
+			this.sourceHandler_.add(
+				dom.on(sources, 'mousedown', listenerFn),
+				dom.on(sources, 'touchstart', listenerFn)
+			);
 		}
 	}
 
@@ -190,40 +196,30 @@ class Drag extends Attribute {
 	}
 
 	/**
-	 * When this is triggered and the sources were not already being dragged, more
-	 * listeners will be attached to keep track of the drag action.
-	 * @param {!Event} event
+	 * Handles events that can end a drag action, like "mouseup" and "touchend".
+	 * Triggered when the mouse drag action ends.
 	 * @protected
 	 */
-	handleMouseDown_(event) {
-		this.activeDragSource_ = event.delegateTarget || event.currentTarget;
-
-		if (!this.disabled && !this.isDragging() && this.isWithinHandle_(event.target)) {
-			this.dragHandler_.add(
-				dom.on(document, 'mousemove', this.handleMouseMove_.bind(this)),
-				dom.on(document, 'mouseup', this.handleMouseUp_.bind(this))
-			);
-
-			this.currentMouseX_ = event.clientX;
-			this.currentMouseY_ = event.clientY;
-			this.currentSourceX_ = this.activeDragSource_.offsetLeft;
-			this.currentSourceY_ = this.activeDragSource_.offsetTop;
-			this.distanceDragged_ = 0;
-
-			event.preventDefault();
+	handleDragEndEvent_() {
+		if (this.moveOnEnd) {
+			this.updatePosition_(this.activeDragSource_);
 		}
+		this.emitDragEvent_(Drag.Events.END);
+		this.cleanUpAfterDragging_();
 	}
 
 	/**
-	 * Tracks the movement of the mouse to update the drag action.
+	 * Handles events that can move a draggable element, like "mousemove" and "touchmove".
+	 * Tracks the movement on the screen to update the drag action.
 	 * @param {!Event} event
 	 * @protected
 	 */
-	handleMouseMove_(event) {
-		var distanceX = event.clientX - this.currentMouseX_;
-		var distanceY = event.clientY - this.currentMouseY_;
-		this.currentMouseX_ = event.clientX;
-		this.currentMouseY_ = event.clientY;
+	handleDragMoveEvent_(event) {
+		var position = event.targetTouches ? event.targetTouches[0] : event;
+		var distanceX = position.clientX - this.currentMouseX_;
+		var distanceY = position.clientY - this.currentMouseY_;
+		this.currentMouseX_ = position.clientX;
+		this.currentMouseY_ = position.clientY;
 		if (!this.isDragging() && !this.hasReachedMinimumDistance_(distanceX, distanceY)) {
 			return;
 		}
@@ -241,15 +237,32 @@ class Drag extends Attribute {
 	}
 
 	/**
-	 * Triggered when the mouse drag action ends.
+	 * Handles events that can start a drag action, like "mousedown" and "touchstart".
+	 * When this is triggered and the sources were not already being dragged, more
+	 * listeners will be attached to keep track of the drag action.
+	 * @param {!Event} event
 	 * @protected
 	 */
-	handleMouseUp_() {
-		if (this.moveOnEnd) {
-			this.updatePosition_(this.activeDragSource_);
+	handleDragStartEvent_(event) {
+		this.activeDragSource_ = event.delegateTarget || event.currentTarget;
+
+		if (!this.disabled && !this.isDragging() && this.isWithinHandle_(event.target)) {
+			this.dragHandler_.add(
+				dom.on(document, 'mousemove', this.handleDragMoveEvent_.bind(this)),
+				dom.on(document, 'touchmove', this.handleDragMoveEvent_.bind(this)),
+				dom.on(document, 'mouseup', this.handleDragEndEvent_.bind(this)),
+				dom.on(document, 'touchend', this.handleDragEndEvent_.bind(this))
+			);
+
+			var position = event.targetTouches ? event.targetTouches[0] : event;
+			this.currentMouseX_ = position.clientX;
+			this.currentMouseY_ = position.clientY;
+			this.currentSourceX_ = this.activeDragSource_.offsetLeft;
+			this.currentSourceY_ = this.activeDragSource_.offsetTop;
+			this.distanceDragged_ = 0;
+
+			event.preventDefault();
 		}
-		this.emitDragEvent_(Drag.Events.END);
-		this.cleanUpAfterDragging_();
 	}
 
 	/**
