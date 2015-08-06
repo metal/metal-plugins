@@ -218,6 +218,37 @@ describe('Drag', function() {
 		assert.strictEqual(initialY + 30, listener.args[0][0].y);
 	});
 
+	it('should add the "dragging" CSS class to dragged element', function() {
+		var item = document.querySelector('.item1');
+		drag = new Drag({
+			sources: item
+		});
+
+		assert.ok(!dom.hasClass(item, 'dragging'));
+		triggerMouseEvent(item, 'mousedown', 20, 20);
+		assert.ok(!dom.hasClass(item, 'dragging'));
+		triggerMouseEvent(document, 'mousemove', 40, 50);
+		assert.ok(dom.hasClass(item, 'dragging'));
+		dom.triggerEvent(document, 'mouseup');
+		assert.ok(!dom.hasClass(item, 'dragging'));
+	});
+
+	it('should add the CSS class defined by "draggingClass" to dragged element', function() {
+		var item = document.querySelector('.item1');
+		drag = new Drag({
+			draggingClass: 'myDraggingClass',
+			sources: item
+		});
+
+		assert.ok(!dom.hasClass(item, 'myDraggingClass'));
+		triggerMouseEvent(item, 'mousedown', 20, 20);
+		assert.ok(!dom.hasClass(item, 'myDraggingClass'));
+		triggerMouseEvent(document, 'mousemove', 40, 50);
+		assert.ok(dom.hasClass(item, 'myDraggingClass'));
+		dom.triggerEvent(document, 'mouseup');
+		assert.ok(!dom.hasClass(item, 'myDraggingClass'));
+	});
+
 	it('should disable drag operations', function() {
 		var item = document.querySelector('.item');
 		drag = new Drag({
@@ -330,8 +361,26 @@ describe('Drag', function() {
 			var event = listener.args[0][0];
 			assert.strictEqual(item, event.source);
 			assert.notStrictEqual(item, event.placeholder);
+			assert.ok(dom.hasClass(event.placeholder, 'dragging'));
 			assert.strictEqual(initialX + 20 + 'px', event.placeholder.style.left);
 			assert.strictEqual(initialY + 30 + 'px', event.placeholder.style.top);
+		});
+
+		it('should remove clone from document after drag is over', function() {
+			var item = document.querySelector('.item');
+			drag = new Drag({
+				dragPlaceholder: Drag.Placeholder.CLONE,
+				sources: item
+			});
+
+			var listener = sinon.stub();
+			drag.on(Drag.Events.END, listener);
+
+			triggerMouseEvent(item, 'mousedown', 20, 20);
+			triggerMouseEvent(document, 'mousemove', 40, 50);
+			dom.triggerEvent(document, 'mouseup');
+
+			assert.ok(!listener.args[0][0].placeholder.parentNode);
 		});
 
 		it('should not move source node if "dragPlaceholder" is set to another element', function() {
@@ -370,6 +419,7 @@ describe('Drag', function() {
 			var event = listener.args[0][0];
 			assert.strictEqual(item, event.source);
 			assert.strictEqual(placeholder, event.placeholder);
+			assert.ok(dom.hasClass(event.placeholder, 'dragging'));
 			assert.strictEqual(initialX + 20 + 'px', placeholder.style.left);
 			assert.strictEqual(initialY + 30 + 'px', placeholder.style.top);
 		});

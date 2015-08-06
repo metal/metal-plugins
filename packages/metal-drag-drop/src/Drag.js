@@ -111,8 +111,11 @@ class Drag extends Attribute {
 	 * @protected
 	 */
 	cleanUpAfterDragging_() {
-		if (this.activeDragPlaceholder_ && this.dragPlaceholder === Drag.Placeholder.CLONE) {
-			this.activeDragPlaceholder_.remove();
+		if (this.activeDragPlaceholder_) {
+			dom.removeClasses(this.activeDragPlaceholder_, this.draggingClass);
+			if (this.dragPlaceholder === Drag.Placeholder.CLONE) {
+				this.activeDragPlaceholder_.remove();
+			}
 		}
 		this.activeDragPlaceholder_ = null;
 		this.activeDragSource_ = null;
@@ -232,6 +235,7 @@ class Drag extends Attribute {
 
 		if (this.move) {
 			this.createActiveDragPlaceholder_();
+			dom.addClasses(this.activeDragPlaceholder_, this.draggingClass);
 			this.updatePosition_(this.activeDragPlaceholder_);
 		}
 		this.emitDragEvent_(Drag.Events.DRAG);
@@ -321,6 +325,16 @@ Drag.ATTRS = {
 	disabled: {
 		validator: core.isBoolean,
 		value: false
+	},
+
+	/**
+	 * The CSS class that should be added to the node being dragged.
+	 * @type {string}
+	 * @default 'dragging'
+	 */
+	draggingClass: {
+		validator: core.isString,
+		value: 'dragging'
 	},
 
 	/**
