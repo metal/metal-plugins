@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Demo: DragDrop</title>
+
+	<link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
+	<link rel="stylesheet" href="../build/dragDrop.css">
+
+	<script src="../bower_components/soyutils/soyutils.js"></script>
+	<script src="../build/globals/dragDrop.js"></script>
+	<style>
+		.box {
+			background-color: red;
+			left: 20px;
+			height: 200px;
+			position: fixed;
+			top: 70px;
+			width: 200px;
+		}
+
+		.box.blue {
+			background-color: blue;
+			left: 320px;
+			top: 70px;
+		}
+
+		.handle {
+			background-color: black;
+			float: right;
+			height: 40px;
+			width: 40px;
+		}
+	</style>
+</head>
+<body>
+	<h1>Drag - Clone</h1>
+	<div class="box"><div class="handle"></div></div>
+	<div class="box blue"><div class="handle"></div></div>
+	<script type="text/javascript">
+		new crystal.Drag({
+			handles: '.handle',
+			dragPlaceholder: crystal.Drag.Placeholder.CLONE,
+			sources: '.box'
+		});
+	</script>
+</body>
+</html>

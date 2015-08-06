@@ -18,6 +18,13 @@ class Drag extends Attribute {
 		super(opt_config);
 
 		/**
+		 * The drag placeholder that is active at the moment.
+		 * @type {Element}
+		 * @protected
+		 */
+		this.activeDragPlaceholder_ = null;
+
+		/**
 		 * The drag source that is active at the moment.
 		 * @type {Element}
 		 * @protected
@@ -104,6 +111,10 @@ class Drag extends Attribute {
 	 * @protected
 	 */
 	cleanUpAfterDragging_() {
+		if (this.activeDragPlaceholder_ && this.dragPlaceholder === Drag.Placeholder.CLONE) {
+			this.activeDragPlaceholder_.remove();
+		}
+		this.activeDragPlaceholder_ = null;
 		this.activeDragSource_ = null;
 		this.currentSourceX_ = null;
 		this.currentSourceY_ = null;
@@ -114,15 +125,58 @@ class Drag extends Attribute {
 	}
 
 	/**
+	 * Clones the active drag source and adds the clone to the document.
+	 * @return {!Element}
+	 * @protected
+	 */
+	cloneActiveDrag_() {
+		var placeholder = this.activeDragSource_.cloneNode(true);
+		placeholder.style.position = 'fixed';
+		dom.enterDocument(placeholder);
+		return placeholder;
+	}
+
+	/**
+	 * Creates the active drag placeholder, unless it already exists.
+	 * @protected
+	 */
+	createActiveDragPlaceholder_() {
+		if (this.activeDragPlaceholder_) {
+			return;
+		}
+		var dragPlaceholder = this.dragPlaceholder;
+		if (dragPlaceholder === Drag.Placeholder.CLONE) {
+			this.activeDragPlaceholder_ = this.cloneActiveDrag_();
+		} else if (core.isElement(dragPlaceholder)) {
+			this.activeDragPlaceholder_ = dragPlaceholder;
+		} else {
+			this.activeDragPlaceholder_ = this.activeDragSource_;
+		}
+	}
+
+	/**
 	 * @inheritDoc
 	 */
 	disposeInternal() {
-		super.disposeInternal();
 		this.cleanUpAfterDragging_();
-
 		this.dragHandler_ = null;
 		this.eventsHandler_.removeAllListeners();
 		this.eventsHandler_ = null;
+		super.disposeInternal();
+	}
+
+	/**
+	 * Emits the given event with the current drag data.
+	 * @param {string} eventType
+	 * @protected
+	 */
+	emitDragEvent_(eventType) {
+		this.emit(eventType, {
+			placeholder: this.activeDragPlaceholder_,
+			source: this.activeDragSource_,
+			x: this.currentSourceX_,
+			y: this.currentSourceY_
+		});
 	}
 
 	/**
@@ -176,16 +230,11 @@ class Drag extends Attribute {
 		this.currentSourceX_ += distanceX;
 		this.currentSourceY_ += distanceY;
 
-		this.emit(Drag.Events.DRAG, {
-			source: this.activeDragSource_,
-			x: this.currentSourceX_,
-			y: this.currentSourceY_
-		});
-
 		if (this.move) {
-			this.activeDragSource_.style.left = this.currentSourceX_ + 'px';
-			this.activeDragSource_.style.top = this.currentSourceY_ + 'px';
+			this.createActiveDragPlaceholder_();
+			this.updatePosition_(this.activeDragPlaceholder_);
 		}
+		this.emitDragEvent_(Drag.Events.DRAG);
 	}
 
 	/**
@@ -193,11 +242,10 @@ class Drag extends Attribute {
 	 * @protected
 	 */
 	handleMouseUp_() {
-		this.emit(Drag.Events.END, {
-			source: this.activeDragSource_,
-			x: this.currentSourceX_,
-			y: this.currentSourceY_
-		});
+		if (this.moveOnEnd) {
+			this.updatePosition_(this.activeDragSource_);
+		}
+		this.emitDragEvent_(Drag.Events.END);
 		this.cleanUpAfterDragging_();
 	}
 
@@ -235,6 +283,16 @@ class Drag extends Attribute {
 		} else {
 			return handles.contains(element);
 		}
+	}
+
+	/**
+	 * Updates the position of the element with the current source coordinates.
+	 * @param {!Element} element
+	 * @protected
+	 */
+	updatePosition_(element) {
+		element.style.left = this.currentSourceX_ + 'px';
+		element.style.top = this.currentSourceY_ + 'px';
 	}
 
 	/**
@@ -299,11 +357,23 @@ Drag.ATTRS = {
 
 	/**
 	 * Flag indicating if the dragged element should be moved automatically,
-	 * following the mouse cursor.
+	 * following the mouse cursor during the drag action.
 	 * @type {boolean}
 	 * @default true
 	 */
 	move: {
+		value: true
+	},
+
+	/**
+	 * Flag indicating if the source element should be moved automatically
+	 * to the final position on drag end. This is important when `dragPlaceholder`
+	 * is set, since during the drag that will be element that will move instead
+	 * of the original source.
+	 * @type {boolean}
+	 * @default true
+	 */
+	moveOnEnd: {
 		value: true
 	},
 

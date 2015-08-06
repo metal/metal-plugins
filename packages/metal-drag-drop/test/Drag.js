@@ -295,6 +295,120 @@ describe('Drag', function() {
 		});
 	});
 
+	describe('Drag Placeholder', function() {
+		it('should not move source node if "dragPlaceholder" is set to "clone"', function() {
+			var item = document.querySelector('.item');
+			drag = new Drag({
+				dragPlaceholder: Drag.Placeholder.CLONE,
+				sources: item
+			});
+
+			var initialLeft = item.style.left;
+			var initialTop = item.style.top;
+			triggerMouseEvent(item, 'mousedown', 20, 20);
+			triggerMouseEvent(document, 'mousemove', 40, 50);
+
+			assert.strictEqual(initialLeft, item.style.left);
+			assert.strictEqual(initialTop, item.style.top);
+		});
+
+		it('should move a clone of the source if "dragPlaceholder" is set to "clone"', function() {
+			var item = document.querySelector('.item');
+			drag = new Drag({
+				dragPlaceholder: Drag.Placeholder.CLONE,
+				sources: item
+			});
+
+			var listener = sinon.stub();
+			drag.on(Drag.Events.DRAG, listener);
+
+			var initialX = item.offsetLeft;
+			var initialY = item.offsetTop;
+			triggerMouseEvent(item, 'mousedown', 20, 20);
+			triggerMouseEvent(document, 'mousemove', 40, 50);
+
+			var event = listener.args[0][0];
+			assert.strictEqual(item, event.source);
+			assert.notStrictEqual(item, event.placeholder);
+			assert.strictEqual(initialX + 20 + 'px', event.placeholder.style.left);
+			assert.strictEqual(initialY + 30 + 'px', event.placeholder.style.top);
+		});
+
+		it('should not move source node if "dragPlaceholder" is set to another element', function() {
+			var placeholder = document.createElement('div');
+			var item = document.querySelector('.item');
+			drag = new Drag({
+				dragPlaceholder: placeholder,
+				sources: item
+			});
+
+			var initialLeft = item.style.left;
+			var initialTop = item.style.top;
+			triggerMouseEvent(item, 'mousedown', 20, 20);
+			triggerMouseEvent(document, 'mousemove', 40, 50);
+
+			assert.strictEqual(initialLeft, item.style.left);
+			assert.strictEqual(initialTop, item.style.top);
+		});
+
+		it('should move the element set as the "dragPlaceholder"', function() {
+			var placeholder = document.createElement('div');
+			var item = document.querySelector('.item');
+			drag = new Drag({
+				dragPlaceholder: placeholder,
+				sources: item
+			});
+
+			var listener = sinon.stub();
+			drag.on(Drag.Events.DRAG, listener);
+
+			var initialX = item.offsetLeft;
+			var initialY = item.offsetTop;
+			triggerMouseEvent(item, 'mousedown', 20, 20);
+			triggerMouseEvent(document, 'mousemove', 40, 50);
+
+			var event = listener.args[0][0];
+			assert.strictEqual(item, event.source);
+			assert.strictEqual(placeholder, event.placeholder);
+			assert.strictEqual(initialX + 20 + 'px', placeholder.style.left);
+			assert.strictEqual(initialY + 30 + 'px', placeholder.style.top);
+		});
+
+		it('should move the source element at the end even if "dragPlaceholder" is set', function() {
+			var item = document.querySelector('.item');
+			drag = new Drag({
+				dragPlaceholder: Drag.Placeholder.CLONE,
+				sources: item
+			});
+
+			var initialX = item.offsetLeft;
+			var initialY = item.offsetTop;
+			triggerMouseEvent(item, 'mousedown', 20, 20);
+			triggerMouseEvent(document, 'mousemove', 40, 50);
+			dom.triggerEvent(document, 'mouseup');
+			assert.strictEqual(initialX + 20 + 'px', item.style.left);
+			assert.strictEqual(initialY + 30 + 'px', item.style.top);
+		});
+
+		it('should not move the source element at the end if "moveOnEnd" is set to false', function() {
+			var item = document.querySelector('.item');
+			drag = new Drag({
+				dragPlaceholder: Drag.Placeholder.CLONE,
+				moveOnEnd: false,
+				sources: item
+			});
+
+			var initialLeft = item.style.left;
+			var initialTop = item.style.top;
+			triggerMouseEvent(item, 'mousedown', 20, 20);
+			triggerMouseEvent(document, 'mousemove', 40, 50);
+			dom.triggerEvent(document, 'mouseup');
+
+			assert.strictEqual(initialLeft, item.style.left);
+			assert.strictEqual(initialTop, item.style.top);
+		});
+	});
+
 	function triggerMouseEvent(target, eventType, x, y) {
 		dom.triggerEvent(target, eventType, {
 			clientX: x,
