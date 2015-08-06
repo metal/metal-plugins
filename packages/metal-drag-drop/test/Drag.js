@@ -183,6 +183,41 @@ describe('Drag', function() {
 		dom.triggerEvent(document, 'mouseup');
 	});
 
+	it('should not move dragged element if "move" attribute is set to false', function() {
+		var item = document.querySelector('.item1');
+		drag = new Drag({
+			move: false,
+			sources: item
+		});
+
+		var initialLeft = item.style.left;
+		var initialTop = item.style.top;
+		triggerMouseEvent(item, 'mousedown', 20, 20);
+		triggerMouseEvent(document, 'mousemove', 40, 50);
+
+		assert.strictEqual(initialLeft, item.style.left);
+		assert.strictEqual(initialTop, item.style.top);
+	});
+
+	it('should still emit drag event if "move" attribute is set to false', function() {
+		var item = document.querySelector('.item1');
+		drag = new Drag({
+			move: false,
+			sources: item
+		});
+
+		var initialX = item.offsetLeft;
+		var initialY = item.offsetTop;
+		var listener = sinon.stub();
+		drag.on(Drag.Events.DRAG, listener);
+
+		triggerMouseEvent(item, 'mousedown', 20, 20);
+		triggerMouseEvent(document, 'mousemove', 40, 50);
+		assert.strictEqual(1, listener.callCount);
+		assert.strictEqual(initialX + 20, listener.args[0][0].x);
+		assert.strictEqual(initialY + 30, listener.args[0][0].y);
+	});
+
 	it('should disable drag operations', function() {
 		var item = document.querySelector('.item');
 		drag = new Drag({

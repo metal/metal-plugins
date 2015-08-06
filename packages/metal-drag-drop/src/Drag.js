@@ -182,8 +182,10 @@ class Drag extends Attribute {
 			y: this.currentSourceY_
 		});
 
-		this.activeDragSource_.style.left = this.currentSourceX_ + 'px';
-		this.activeDragSource_.style.top = this.currentSourceY_ + 'px';
+		if (this.move) {
+			this.activeDragSource_.style.left = this.currentSourceX_ + 'px';
+			this.activeDragSource_.style.top = this.currentSourceY_ + 'px';
+		}
 	}
 
 	/**
@@ -282,6 +284,16 @@ Drag.ATTRS = {
 		validator: core.isNumber,
 		value: 5,
 		writeOnce: true
+	},
+
+	/**
+	 * Flag indicating if the dragged element should be moved automatically,
+	 * following the mouse cursor.
+	 * @type {boolean}
+	 * @default true
+	 */
+	move: {
+		value: true
 	},
 
 	/**
