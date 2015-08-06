@@ -266,6 +266,17 @@ Drag.ATTRS = {
 	},
 
 	/**
+	 * The placeholder element that should be moved during drag. Can be either
+	 * an element or the "clone" string, indicating that a clone of the source
+	 * being dragged should be used. If nothing is set, the original source element
+	 * will be used. Note that this is ignored if the `move` attribute is set to false.
+	 * @type {Element|?string}
+	 */
+	dragPlaceholder: {
+		validator: 'validateElementOrString_'
+	},
+
+	/**
 	 * Elements inside the source that should be the drag handles. Can be
 	 * either a single element or a selector for multiple elements.
 	 * @type {Element|?string}
@@ -307,13 +318,22 @@ Drag.ATTRS = {
 };
 
 /**
- * Constant that holds the names of events that can be emitted by `Drag`.
+ * Holds the names of events that can be emitted by `Drag`.
  * @type {!Object}
  * @static
  */
 Drag.Events = {
 	DRAG: 'drag',
 	END: 'end'
+};
+
+/**
+ * Holds the values that can be passed to the `dragPlaceholder` attribute.
+ * @type {!Object}
+ * @static
+ */
+Drag.Placeholder = {
+	CLONE: 'clone'
 };
 
 export default Drag;
