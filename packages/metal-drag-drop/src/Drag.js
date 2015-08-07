@@ -113,6 +113,19 @@ class Drag extends Attribute {
 	}
 
 	/**
+	 * Checks if the given event can start a drag operation.
+	 * @param {!Event} event
+	 * @return {boolean}
+	 * @protected
+	 */
+	canStartDrag_(event) {
+		return !this.disabled &&
+			event.button === 0 &&
+			!this.isDragging() &&
+			this.isWithinHandle_(event.target);
+	}
+
+	/**
 	 * Resets all variables to their initial values and detaches drag listeners.
 	 * @protected
 	 */
@@ -250,7 +263,7 @@ class Drag extends Attribute {
 	handleDragStartEvent_(event) {
 		this.activeDragSource_ = event.delegateTarget || event.currentTarget;
 
-		if (!this.disabled && !this.isDragging() && this.isWithinHandle_(event.target)) {
+		if (this.canStartDrag_(event)) {
 			this.dragHandler_.add(
 				dom.on(document, 'mousemove', this.handleDragMoveEvent_.bind(this)),
 				dom.on(document, 'touchmove', this.handleDragMoveEvent_.bind(this)),

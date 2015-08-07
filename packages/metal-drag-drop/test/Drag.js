@@ -34,6 +34,21 @@ describe('Drag', function() {
 		assert.strictEqual(initialY + 30 + 'px', item.style.top);
 	});
 
+	it('should only drag source with left mouse button', function() {
+		var item = document.querySelector('.item1');
+		drag = new Drag({
+			sources: item
+		});
+
+		var initialLeft = item.style.left;
+		var initialTop = item.style.top;
+		triggerMouseEvent(item, 'mousedown', 20, 20, 1);
+		triggerMouseEvent(document, 'mousemove', 40, 50);
+
+		assert.strictEqual(initialLeft, item.style.left);
+		assert.strictEqual(initialTop, item.style.top);
+	});
+
 	it('should ignore mousedown events during dragging', function() {
 		var item = document.querySelector('.item1');
 		drag = new Drag({
@@ -574,8 +589,9 @@ describe('Drag', function() {
 		});
 	});
 
-	function triggerMouseEvent(target, eventType, x, y) {
+	function triggerMouseEvent(target, eventType, x, y, button) {
 		var data = {
+			button: button ? button : 0,
 			clientX: x,
 			clientY: y
 		};
