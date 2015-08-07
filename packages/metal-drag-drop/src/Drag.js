@@ -133,7 +133,7 @@ class Drag extends Attribute {
 		if (this.activeDragPlaceholder_) {
 			dom.removeClasses(this.activeDragPlaceholder_, this.draggingClass);
 			if (this.dragPlaceholder === Drag.Placeholder.CLONE) {
-				this.activeDragPlaceholder_.remove();
+				dom.exitDocument(this.activeDragPlaceholder_);
 			}
 		}
 		this.activeDragPlaceholder_ = null;
