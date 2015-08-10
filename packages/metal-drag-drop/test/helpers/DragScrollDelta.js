@@ -1,7 +1,7 @@
 'use strict';
 
 import dom from 'bower:metal/src/dom/dom';
-import DragScrollDelta from '../src/helpers/DragScrollDelta';
+import DragScrollDelta from '../../src/helpers/DragScrollDelta';
 
 describe('DragScrollDelta', function() {
 	var dragScrollDelta;
