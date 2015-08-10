@@ -2,6 +2,7 @@
 
 import dom from 'bower:metal/src/dom/dom';
 import Drag from '../src/Drag';
+import DragShim from '../src/helpers/DragShim';
 
 describe('Drag', function() {
 	var drag;
@@ -14,6 +15,7 @@ describe('Drag', function() {
 
 	afterEach(function() {
 		document.body.innerHTML = '';
+		DragShim.shim_ = null;
 		if (drag) {
 			drag.dispose();
 		}
@@ -34,7 +36,28 @@ describe('Drag', function() {
 		assert.strictEqual(initialY + 30 + 'px', item.style.top);
 	});
 
+	it('should drag source to new position without shim', function() {
+		var item = document.querySelector('.item1');
+		drag = new Drag({
+			sources: item,
+			useShim: false
+		});
+
+		var initialX = item.offsetLeft;
+		var initialY = item.offsetTop;
+		triggerMouseEvent(item, 'mousedown', 20, 20);
+		triggerMouseEvent(document, 'mousemove', 40, 50);
+
+		assert.strictEqual(initialX + 20 + 'px', item.style.left);
+		assert.strictEqual(initialY + 30 + 'px', item.style.top);
+	});
+
 	it('should only drag source with left mouse button', function() {
+		if ('ontouchstart' in window) {
+			// Skip this for touch devices, since they won't use mouse events.
+			return;
+		}
+
 		var item = document.querySelector('.item1');
 		drag = new Drag({
 			sources: item
@@ -104,7 +127,7 @@ describe('Drag', function() {
 
 		var listener = sinon.stub();
 		drag.on(Drag.Events.END, listener);
-		dom.triggerEvent(document, 'mouseup');
+		triggerMouseEvent(document, 'mouseup');
 
 		assert.strictEqual(1, listener.callCount);
 		assert.strictEqual(item, listener.args[0][0].source);
@@ -123,7 +146,7 @@ describe('Drag', function() {
 		assert.ok(!drag.isDragging());
 		triggerMouseEvent(document, 'mousemove', 40, 50);
 		assert.ok(drag.isDragging());
-		dom.triggerEvent(document, 'mouseup');
+		triggerMouseEvent(document, 'mouseup');
 		assert.ok(!drag.isDragging());
 	});
 
@@ -138,7 +161,7 @@ describe('Drag', function() {
 		assert.strictEqual(item, drag.getActiveDrag());
 		triggerMouseEvent(document, 'mousemove', 40, 50);
 		assert.strictEqual(item, drag.getActiveDrag());
-		dom.triggerEvent(document, 'mouseup');
+		triggerMouseEvent(document, 'mouseup');
 		assert.ok(!drag.getActiveDrag());
 
 	});
@@ -190,12 +213,12 @@ describe('Drag', function() {
 		triggerMouseEvent(document, 'mousemove', 40, 50);
 		assert.strictEqual(item1, drag.getActiveDrag());
 
-		dom.triggerEvent(document, 'mouseup');
+		triggerMouseEvent(document, 'mouseup');
 		triggerMouseEvent(item2, 'mousedown', 20, 20);
 		triggerMouseEvent(document, 'mousemove', 40, 50);
 		assert.strictEqual(item2, drag.getActiveDrag());
 
-		dom.triggerEvent(document, 'mouseup');
+		triggerMouseEvent(document, 'mouseup');
 	});
 
 	it('should handle changing the value of the "sources" attribute', function() {
@@ -262,7 +285,7 @@ describe('Drag', function() {
 		assert.ok(!dom.hasClass(item, 'dragging'));
 		triggerMouseEvent(document, 'mousemove', 40, 50);
 		assert.ok(dom.hasClass(item, 'dragging'));
-		dom.triggerEvent(document, 'mouseup');
+		triggerMouseEvent(document, 'mouseup');
 		assert.ok(!dom.hasClass(item, 'dragging'));
 	});
 
@@ -278,7 +301,7 @@ describe('Drag', function() {
 		assert.ok(!dom.hasClass(item, 'myDraggingClass'));
 		triggerMouseEvent(document, 'mousemove', 40, 50);
 		assert.ok(dom.hasClass(item, 'myDraggingClass'));
-		dom.triggerEvent(document, 'mouseup');
+		triggerMouseEvent(document, 'mouseup');
 		assert.ok(!dom.hasClass(item, 'myDraggingClass'));
 	});
 
@@ -411,7 +434,7 @@ describe('Drag', function() {
 
 			triggerMouseEvent(item, 'mousedown', 20, 20);
 			triggerMouseEvent(document, 'mousemove', 40, 50);
-			dom.triggerEvent(document, 'mouseup');
+			triggerMouseEvent(document, 'mouseup');
 
 			assert.ok(!listener.args[0][0].placeholder.parentNode);
 		});
@@ -468,7 +491,7 @@ describe('Drag', function() {
 			var initialY = item.offsetTop;
 			triggerMouseEvent(item, 'mousedown', 20, 20);
 			triggerMouseEvent(document, 'mousemove', 40, 50);
-			dom.triggerEvent(document, 'mouseup');
+			triggerMouseEvent(document, 'mouseup');
 			assert.strictEqual(initialX + 20 + 'px', item.style.left);
 			assert.strictEqual(initialY + 30 + 'px', item.style.top);
 		});
@@ -485,7 +508,7 @@ describe('Drag', function() {
 			var initialTop = item.style.top;
 			triggerMouseEvent(item, 'mousedown', 20, 20);
 			triggerMouseEvent(document, 'mousemove', 40, 50);
-			dom.triggerEvent(document, 'mouseup');
+			triggerMouseEvent(document, 'mouseup');
 
 			assert.strictEqual(initialLeft, item.style.left);
 			assert.strictEqual(initialTop, item.style.top);
@@ -596,10 +619,18 @@ describe('Drag', function() {
 			clientY: y
 		};
 		if ('ontouchstart' in window) {
-			eventType = eventType === 'mousedown' ? 'touchstart' : 'touchmove';
+			var eventTypesMap = {
+				mousedown: 'touchstart',
+				mousemove: 'touchmove',
+				mouseup: 'touchend'
+			};
+			eventType = eventTypesMap[eventType];
 			data = {
 				targetTouches: [data]
 			};
+		}
+		if (target === document) {
+			target = document.querySelector('.shim') || document;
 		}
 		dom.triggerEvent(target, eventType, data);
 	}

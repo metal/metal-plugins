@@ -4,6 +4,7 @@ import core from 'bower:metal/src/core';
 import dom from 'bower:metal/src/dom/dom';
 import Attribute from 'bower:metal/src/attribute/Attribute';
 import DragScrollDelta from './helpers/DragScrollDelta';
+import DragShim from './helpers/DragShim';
 import EventHandler from 'bower:metal/src/events/EventHandler';
 
 /**
@@ -120,7 +121,7 @@ class Drag extends Attribute {
 	 */
 	canStartDrag_(event) {
 		return !this.disabled &&
-			event.button === 0 &&
+			(!core.isDef(event.button) || event.button === 0) &&
 			!this.isDragging() &&
 			this.isWithinHandle_(event.target);
 	}
@@ -215,6 +216,7 @@ class Drag extends Attribute {
 	 */
 	handleDragEndEvent_() {
 		this.dragScrollDelta_.stop();
+		DragShim.hide();
 		if (this.moveOnEnd) {
 			this.updatePosition_(this.activeDragSource_);
 		}
@@ -264,11 +266,14 @@ class Drag extends Attribute {
 		this.activeDragSource_ = event.delegateTarget || event.currentTarget;
 
 		if (this.canStartDrag_(event)) {
-			this.dragHandler_.add(
-				dom.on(document, 'mousemove', this.handleDragMoveEvent_.bind(this)),
-				dom.on(document, 'touchmove', this.handleDragMoveEvent_.bind(this)),
-				dom.on(document, 'mouseup', this.handleDragEndEvent_.bind(this)),
-				dom.on(document, 'touchend', this.handleDragEndEvent_.bind(this))
+			this.dragHandler_.add.apply(
+				this.dragHandler_,
+				DragShim.attachDocListeners(this.useShim, {
+					mousemove: this.handleDragMoveEvent_.bind(this),
+					touchmove: this.handleDragMoveEvent_.bind(this),
+					mouseup: this.handleDragEndEvent_.bind(this),
+					touchend: this.handleDragEndEvent_.bind(this)
+				})
 			);
 
 			var position = event.targetTouches ? event.targetTouches[0] : event;
@@ -479,6 +484,17 @@ Drag.ATTRS = {
 	 */
 	sources: {
 		validator: 'validateElementOrString_'
+	},
+
+	/**
+	 * Flag indicating if a shim should be used for capturing document events.
+	 * This is important for allowing dragging nodes over iframes. If false,
+	 * events will be listened in the document itself instead.
+	 * @type {boolean}
+	 * @default true
+	 */
+	useShim: {
+		value: true
 	}
 };
 
