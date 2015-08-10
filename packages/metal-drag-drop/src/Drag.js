@@ -344,6 +344,23 @@ class Drag extends Attribute {
 	}
 
 	/**
+	 * Sets the `scrollContainers` attribute.
+	 * @param {Element|string} scrollContainers
+	 * @return {!Array<!Element>}
+	 * @protected
+	 */
+	setterScrollContainersFn_(scrollContainers) {
+		var elements = [document];
+		if (core.isString(scrollContainers)) {
+			var matched = document.querySelectorAll(scrollContainers);
+			elements = elements.concat(Array.prototype.slice.call(matched, 0));
+		} else if (scrollContainers && scrollContainers !== document) {
+			elements.push(scrollContainers);
+		}
+		return elements;
+	}
+
+	/**
 	 * Updates the position of the element with the current source coordinates.
 	 * @param {!Element} element
 	 * @protected
@@ -451,6 +468,7 @@ Drag.ATTRS = {
 	 * @type {Element|string}
 	 */
 	scrollContainers: {
+		setter: 'setterScrollContainersFn_',
 		validator: 'validateElementOrString_'
 	},
 

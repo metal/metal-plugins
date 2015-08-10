@@ -15,7 +15,6 @@ class DragScrollDelta extends EventEmitter {
 	 */
 	constructor() {
 		super();
-
 		/**
 		 * `EventHandler` for the scroll events.
 		 * @type {EventHandler}
@@ -29,27 +28,6 @@ class DragScrollDelta extends EventEmitter {
 		 * @protected
 		 */
 		this.scrollPositions_ = [];
-	}
-
-	/**
-	 * Attahces events to the scroll elements that contain the current drag node.
-	 * @param {!Element} dragNode
-	 * @param {!Array<!Element>} elements
-	 * @protected
-	 */
-	attachEvents_(dragNode, elements) {
-		for (var i = 0; i < elements.length; i++) {
-			if (elements[i].contains(dragNode)) {
-				var scrollElement = this.getScrollElement_(elements[i]);
-				this.scrollPositions_.push({
-					scrollLeft: scrollElement.scrollLeft,
-					scrollTop: scrollElement.scrollTop
-				});
-
-				var index = this.scrollPositions_.length - 1;
-				this.handler_.add(dom.on(elements[i], 'scroll', this.handleScroll_.bind(this, index)));
-			}
-		}
 	}
 
 	/**
@@ -99,21 +77,21 @@ class DragScrollDelta extends EventEmitter {
 	 * Starts listening to scroll changes on the given elements that contain
 	 * the current drag node.
 	 * @param {!Element} dragNode
-	 * @param {Element|string=} opt_scrollContainerOrSelector
+	 * @param {!Array<!Element>} scrollContainers
 	 */
-	start(dragNode, opt_scrollContainerOrSelector) {
-		var elements = [];
-		if (opt_scrollContainerOrSelector) {
-			if (core.isString(opt_scrollContainerOrSelector)) {
-				elements = document.querySelectorAll(opt_scrollContainerOrSelector);
-				elements = Array.prototype.slice.call(elements, 0);
-			} else {
-				elements = [opt_scrollContainerOrSelector];
+	start(dragNode, scrollContainers) {
+		for (var i = 0; i < scrollContainers.length; i++) {
+			if (scrollContainers[i].contains(dragNode)) {
+				var scrollElement = this.getScrollElement_(scrollContainers[i]);
+				this.scrollPositions_.push({
+					scrollLeft: scrollElement.scrollLeft,
+					scrollTop: scrollElement.scrollTop
+				});
+
+				var index = this.scrollPositions_.length - 1;
+				this.handler_.add(dom.on(scrollContainers[i], 'scroll', this.handleScroll_.bind(this, index)));
 			}
 		}
-		elements.push(document);
-
-		this.attachEvents_(dragNode, elements);
 	}
 
 	/**

@@ -42,7 +42,7 @@ describe('DragScrollDelta', function() {
 
 	it('should emit "scrollDelta" event when the body is scrolled', function(done) {
 		dragScrollDelta = new DragScrollDelta();
-		dragScrollDelta.start(document.querySelector('.dragNode'));
+		dragScrollDelta.start(document.querySelector('.dragNode'), [document]);
 
 		dragScrollDelta.once('scrollDelta', function(event) {
 			assert.strictEqual(0, event.deltaX);
@@ -61,20 +61,7 @@ describe('DragScrollDelta', function() {
 	it('should emit "scrollDelta" event when a container is scrolled', function(done) {
 		var scrollNode = document.querySelector('.scroll');
 		dragScrollDelta = new DragScrollDelta();
-		dragScrollDelta.start(document.querySelector('.dragNode'), scrollNode);
-
-		dragScrollDelta.once('scrollDelta', function(event) {
-			assert.strictEqual(0, event.deltaX);
-			assert.strictEqual(10, event.deltaY);
-			done();
-		});
-		scrollNode.scrollTop = 10;
-	});
-
-	it('should emit "scrollDelta" event when a container matching given selector is scrolled', function(done) {
-		var scrollNode = document.querySelector('.scroll');
-		dragScrollDelta = new DragScrollDelta();
-		dragScrollDelta.start(document.querySelector('.dragNode'), '.scroll');
+		dragScrollDelta.start(document.querySelector('.dragNode'), [scrollNode]);
 
 		dragScrollDelta.once('scrollDelta', function(event) {
 			assert.strictEqual(0, event.deltaX);
@@ -89,23 +76,7 @@ describe('DragScrollDelta', function() {
 		var anotherDragNode = document.querySelector('.dragNode').cloneNode(true);
 		dom.enterDocument(anotherDragNode);
 		dragScrollDelta = new DragScrollDelta();
-		dragScrollDelta.start(anotherDragNode, '.scroll');
-
-		var listener = sinon.stub();
-		dragScrollDelta.once('scrollDelta', listener);
-
-		dom.once(scrollNode, 'scroll', function() {
-			assert.strictEqual(0, listener.callCount);
-			done();
-		});
-		scrollNode.scrollTop = 10;
-	});
-
-	it('should not emit "scrollDelta" event if scrolled element does not match selector', function(done) {
-		var scrollNode = document.querySelector('.scroll');
-		dom.removeClasses(scrollNode, 'scroll');
-		dragScrollDelta = new DragScrollDelta();
-		dragScrollDelta.start(document.querySelector('.dragNode'), '.scroll');
+		dragScrollDelta.start(anotherDragNode, [scrollNode]);
 
 		var listener = sinon.stub();
 		dragScrollDelta.once('scrollDelta', listener);
@@ -120,7 +91,7 @@ describe('DragScrollDelta', function() {
 	it('should not emit "scrollDelta" event if "stop" is called', function(done) {
 		var scrollNode = document.querySelector('.scroll');
 		dragScrollDelta = new DragScrollDelta();
-		dragScrollDelta.start(document.querySelector('.dragNode'), '.scroll');
+		dragScrollDelta.start(document.querySelector('.dragNode'), [scrollNode]);
 
 		var listener = sinon.stub();
 		dragScrollDelta.once('scrollDelta', listener);
@@ -136,7 +107,7 @@ describe('DragScrollDelta', function() {
 	it('should not emit "scrollDelta" event if "dispose" is called', function(done) {
 		var scrollNode = document.querySelector('.scroll');
 		dragScrollDelta = new DragScrollDelta();
-		dragScrollDelta.start(document.querySelector('.dragNode'), '.scroll');
+		dragScrollDelta.start(document.querySelector('.dragNode'), [scrollNode]);
 
 		var listener = sinon.stub();
 		dragScrollDelta.once('scrollDelta', listener);
