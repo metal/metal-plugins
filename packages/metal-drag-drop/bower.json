@@ -18,6 +18,7 @@
 	"dependencies": {
 		"bootstrap": "~3.3.4",
 		"metal": "metal/metal.js#master",
-		"metal-jquery-adapter": "metal/metal-jquery-adapter#master"
+		"metal-jquery-adapter": "metal/metal-jquery-adapter#master",
+		"metal-position": "metal/metal-position#master"
 	}
 }
