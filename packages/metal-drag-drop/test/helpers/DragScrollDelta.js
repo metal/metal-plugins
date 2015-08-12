@@ -24,7 +24,7 @@ describe('DragScrollDelta', function() {
 		if (document.body.scrollTop > 0 || document.body.scrollLeft > 0) {
 			document.body.scrollTop = 0;
 			document.body.scrollLeft = 0;
-			dom.on(document, 'scroll', function() {
+			dom.once(document, 'scroll', function() {
 				done();
 			});
 		} else {

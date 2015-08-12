@@ -511,6 +511,41 @@ describe('Drag', function() {
 			dom.append(document.querySelector('.scroll'), item1);
 		});
 
+		it('should update position of dragged element when document is scrolled', function(done) {
+			document.body.style.height = '3000px';
+			document.body.style.width = '3000px';
+			document.body.style.overflow = 'scroll';
+
+			var item = document.querySelector('.item1');
+			drag = new Drag({
+				sources: item
+			});
+
+			var initialX = item.offsetLeft;
+			var initialY = item.offsetTop;
+
+			triggerMouseEvent(item, 'mousedown', 20, 20);
+			triggerMouseEvent(document, 'mousemove', 40, 50);
+			drag.once(Drag.Events.DRAG, function(event) {
+				assert.strictEqual(initialX + 20, event.x);
+				assert.strictEqual(initialY + 40, event.y);
+				setTimeout(function() {
+					assert.strictEqual(initialX + 20 + 'px', item.style.left);
+					assert.strictEqual(initialY + 40 + 'px', item.style.top);
+
+					document.body.scrollTop = 0;
+					document.body.scrollLeft = 0;
+					dom.once(document, 'scroll', function() {
+						document.body.style.height = '';
+						document.body.style.width = '';
+						document.body.style.overflow = '';
+						done();
+					});
+				}, 0);
+			});
+			document.body.scrollTop = 10;
+		});
+
 		it('should update position of dragged element when scroll container is scrolled', function(done) {
 			var scrollNode = document.querySelector('.scroll');
 			var item = document.querySelector('.item1');

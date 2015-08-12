@@ -492,10 +492,12 @@ Drag.ATTRS = {
 	 * Elements with scroll, besides the document, that contain any of the given
 	 * sources. Can be either a single element or a selector for multiple elements.
 	 * @type {Element|string}
+	 * @default document
 	 */
 	scrollContainers: {
 		setter: 'setterScrollContainersFn_',
-		validator: 'validateElementOrString_'
+		validator: 'validateElementOrString_',
+		value: document
 	},
 
 	/**
