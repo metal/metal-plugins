@@ -239,11 +239,13 @@ describe('Drag', function() {
 		assert.ok(drag.isDragging());
 	});
 
-	it('should not move dragged element if "move" attribute is set to false', function() {
+	it('should not move dragged element if "preventDefault" is called for  "drag" event', function() {
 		var item = document.querySelector('.item1');
 		drag = new Drag({
-			move: false,
 			sources: item
+		});
+		drag.on(Drag.Events.DRAG, function(data, event) {
+			event.preventDefault();
 		});
 
 		var initialLeft = item.style.left;
@@ -253,25 +255,6 @@ describe('Drag', function() {
 
 		assert.strictEqual(initialLeft, item.style.left);
 		assert.strictEqual(initialTop, item.style.top);
-	});
-
-	it('should still emit drag event if "move" attribute is set to false', function() {
-		var item = document.querySelector('.item1');
-		drag = new Drag({
-			move: false,
-			sources: item
-		});
-
-		var initialX = item.offsetLeft;
-		var initialY = item.offsetTop;
-		var listener = sinon.stub();
-		drag.on(Drag.Events.DRAG, listener);
-
-		triggerMouseEvent(item, 'mousedown', 20, 20);
-		triggerMouseEvent(document, 'mousemove', 40, 50);
-		assert.strictEqual(1, listener.callCount);
-		assert.strictEqual(initialX + 20, listener.args[0][0].x);
-		assert.strictEqual(initialY + 30, listener.args[0][0].y);
 	});
 
 	it('should add the "dragging" CSS class to dragged element', function() {
@@ -496,12 +479,14 @@ describe('Drag', function() {
 			assert.strictEqual(initialY + 30 + 'px', item.style.top);
 		});
 
-		it('should not move the source element at the end if "moveOnEnd" is set to false', function() {
+		it('should not move the source element at the end if "preventDefault" is called for "end" event', function() {
 			var item = document.querySelector('.item');
 			drag = new Drag({
 				dragPlaceholder: Drag.Placeholder.CLONE,
-				moveOnEnd: false,
 				sources: item
+			});
+			drag.on(Drag.Events.END, function(data, event) {
+				event.preventDefault();
 			});
 
 			var initialLeft = item.style.left;
@@ -542,20 +527,24 @@ describe('Drag', function() {
 			drag.once(Drag.Events.DRAG, function(event) {
 				assert.strictEqual(initialX + 20, event.x);
 				assert.strictEqual(initialY + 40, event.y);
-				assert.strictEqual(initialX + 20 + 'px', item.style.left);
-				assert.strictEqual(initialY + 40 + 'px', item.style.top);
-				done();
+				setTimeout(function() {
+					assert.strictEqual(initialX + 20 + 'px', item.style.left);
+					assert.strictEqual(initialY + 40 + 'px', item.style.top);
+					done();
+				}, 0);
 			});
 			scrollNode.scrollTop = 10;
 		});
 
-		it('should update position of dragged element on scroll without moving if "move" is false', function(done) {
+		it('should update position of dragged element on scroll without moving if "preventDefault" is Called', function(done) {
 			var scrollNode = document.querySelector('.scroll');
 			var item = document.querySelector('.item1');
 			drag = new Drag({
-				move: false,
 				scrollContainers: scrollNode,
 				sources: item
+			});
+			drag.on(Drag.Events.DRAG, function(data, event) {
+				event.preventDefault();
 			});
 
 			var initialX = item.offsetLeft;
@@ -565,12 +554,14 @@ describe('Drag', function() {
 
 			triggerMouseEvent(item, 'mousedown', 20, 20);
 			triggerMouseEvent(document, 'mousemove', 40, 50);
-			drag.once(Drag.Events.DRAG, function(event) {
-				assert.strictEqual(initialX + 20, event.x);
-				assert.strictEqual(initialY + 40, event.y);
-				assert.strictEqual(initialLeft, item.style.left);
-				assert.strictEqual(initialTop, item.style.top);
-				done();
+			drag.once(Drag.Events.DRAG, function(data) {
+				assert.strictEqual(initialX + 20, data.x);
+				assert.strictEqual(initialY + 40, data.y);
+				setTimeout(function() {
+					assert.strictEqual(initialLeft, item.style.left);
+					assert.strictEqual(initialTop, item.style.top);
+					done();
+				}, 0);
 			});
 			scrollNode.scrollTop = 10;
 		});
@@ -591,9 +582,12 @@ describe('Drag', function() {
 			drag.once(Drag.Events.DRAG, function(event) {
 				assert.strictEqual(initialX + 20, event.x);
 				assert.strictEqual(initialY + 40, event.y);
-				assert.strictEqual(initialX + 20 + 'px', item.style.left);
-				assert.strictEqual(initialY + 40 + 'px', item.style.top);
-				done();
+
+				setTimeout(function() {
+					assert.strictEqual(initialX + 20 + 'px', item.style.left);
+					assert.strictEqual(initialY + 40 + 'px', item.style.top);
+					done();
+				}, 0);
 			});
 			scrollNode.scrollTop = 10;
 		});

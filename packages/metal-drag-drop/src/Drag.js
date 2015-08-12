@@ -97,6 +97,8 @@ class Drag extends Attribute {
 		this.sourceHandler_ = new EventHandler();
 
 		this.attachSourceEvents_();
+		this.on(Drag.Events.DRAG, this.defaultDragFn_, true);
+		this.on(Drag.Events.END, this.defaultEndFn_, true);
 		this.on('sourcesChanged', this.handleSourcesChanged_.bind(this));
 		this.dragScrollDelta_.on('scrollDelta', this.handleScrollDelta_.bind(this));
 	}
@@ -189,6 +191,26 @@ class Drag extends Attribute {
 	}
 
 	/**
+	 * The default behavior for the `Drag.Events.DRAG` event. Can be prevented
+	 * by calling the `preventDefault` function on the event's facade. Moves
+	 * the placeholder to the new calculated source position.
+	 * @protected
+	 */
+	defaultDragFn_() {
+		this.moveToPosition_(this.activeDragPlaceholder_);
+	}
+
+	/**
+	 * The default behavior for the `Drag.Events.END` event. Can be prevented
+	 * by calling the `preventDefault` function on the event's facade. Moves
+	 * the source element to the final calculated position.
+	 * @protected
+	 */
+	defaultEndFn_() {
+		this.moveToPosition_(this.activeDragSource_);
+	}
+
+	/**
 	 * @inheritDoc
 	 */
 	disposeInternal() {
@@ -217,9 +239,6 @@ class Drag extends Attribute {
 	handleDragEndEvent_() {
 		this.dragScrollDelta_.stop();
 		DragShim.hideDocShim();
-		if (this.moveOnEnd) {
-			this.moveToPosition_(this.activeDragSource_);
-		}
 		this.emit(Drag.Events.END, this.buildEventObject_());
 		this.cleanUpAfterDragging_();
 	}
@@ -396,9 +415,6 @@ class Drag extends Attribute {
 	updatePosition_(deltaX, deltaY) {
 		this.currentSourceX_ += deltaX;
 		this.currentSourceY_ += deltaY;
-		if (this.move) {
-			this.moveToPosition_(this.activeDragPlaceholder_);
-		}
 		this.emit(Drag.Events.DRAG, this.buildEventObject_());
 	}
 
@@ -470,28 +486,6 @@ Drag.ATTRS = {
 		validator: core.isNumber,
 		value: 5,
 		writeOnce: true
-	},
-
-	/**
-	 * Flag indicating if the dragged element should be moved automatically,
-	 * following the mouse cursor during the drag action.
-	 * @type {boolean}
-	 * @default true
-	 */
-	move: {
-		value: true
-	},
-
-	/**
-	 * Flag indicating if the source element should be moved automatically
-	 * to the final position on drag end. This is important when `dragPlaceholder`
-	 * is set, since during the drag that will be element that will move instead
-	 * of the original source.
-	 * @type {boolean}
-	 * @default true
-	 */
-	moveOnEnd: {
-		value: true
 	},
 
 	/**
