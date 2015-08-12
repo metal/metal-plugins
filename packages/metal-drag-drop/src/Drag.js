@@ -371,9 +371,7 @@ class Drag extends Attribute {
 	 */
 	setterScrollContainersFn_(scrollContainers) {
 		var elements = this.toElements_(scrollContainers);
-		if (elements.indexOf(document) === -1) {
-			elements.push(document);
-		}
+		elements.push(document);
 		return elements;
 	}
 
@@ -492,12 +490,10 @@ Drag.ATTRS = {
 	 * Elements with scroll, besides the document, that contain any of the given
 	 * sources. Can be either a single element or a selector for multiple elements.
 	 * @type {Element|string}
-	 * @default document
 	 */
 	scrollContainers: {
 		setter: 'setterScrollContainersFn_',
-		validator: 'validateElementOrString_',
-		value: document
+		validator: 'validateElementOrString_'
 	},
 
 	/**
