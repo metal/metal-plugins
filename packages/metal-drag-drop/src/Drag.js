@@ -114,6 +114,20 @@ class Drag extends Attribute {
 	}
 
 	/**
+	 * Builds the object with data to be passed to a drag event.
+	 * @return {!Object}
+	 * @protected
+	 */
+	buildEventObject_() {
+		return {
+			placeholder: this.activeDragPlaceholder_,
+			source: this.activeDragSource_,
+			x: this.currentSourceX_,
+			y: this.currentSourceY_
+		};
+	}
+
+	/**
 	 * Checks if the given event can start a drag operation.
 	 * @param {!Event} event
 	 * @return {boolean}
@@ -188,20 +202,6 @@ class Drag extends Attribute {
 	}
 
 	/**
-	 * Emits the given event with the current drag data.
-	 * @param {string} eventType
-	 * @protected
-	 */
-	emitDragEvent_(eventType) {
-		this.emit(eventType, {
-			placeholder: this.activeDragPlaceholder_,
-			source: this.activeDragSource_,
-			x: this.currentSourceX_,
-			y: this.currentSourceY_
-		});
-	}
-
-	/**
 	 * Gets the active drag source.
 	 * @return {Element}
 	 */
@@ -218,9 +218,9 @@ class Drag extends Attribute {
 		this.dragScrollDelta_.stop();
 		DragShim.hideDocShim();
 		if (this.moveOnEnd) {
-			this.updatePosition_(this.activeDragSource_);
+			this.moveToPosition_(this.activeDragSource_);
 		}
-		this.emitDragEvent_(Drag.Events.END);
+		this.emit(Drag.Events.END, this.buildEventObject_());
 		this.cleanUpAfterDragging_();
 	}
 
@@ -241,18 +241,9 @@ class Drag extends Attribute {
 		}
 
 		if (!this.isDragging()) {
-			this.dragging_ = true;
-			this.createActiveDragPlaceholder_();
-			dom.addClasses(this.activeDragPlaceholder_, this.draggingClass);
-			this.dragScrollDelta_.start(this.activeDragPlaceholder_, this.scrollContainers);
+			this.startDragging_();
 		}
-
-		this.currentSourceX_ += distanceX;
-		this.currentSourceY_ += distanceY;
-		if (this.move) {
-			this.updatePosition_(this.activeDragPlaceholder_);
-		}
-		this.emitDragEvent_(Drag.Events.DRAG);
+		this.updatePosition_(distanceX, distanceY);
 	}
 
 	/**
@@ -294,12 +285,7 @@ class Drag extends Attribute {
 	 * @protected
 	 */
 	handleScrollDelta_(event) {
-		this.currentSourceX_ += event.deltaX;
-		this.currentSourceY_ += event.deltaY;
-		if (this.move) {
-			this.updatePosition_(this.activeDragPlaceholder_);
-		}
-		this.emitDragEvent_(Drag.Events.DRAG);
+		this.updatePosition_(event.deltaX, event.deltaY);
 	}
 
 	/**
@@ -349,30 +335,71 @@ class Drag extends Attribute {
 	}
 
 	/**
+	 * Moves the given element to the current source coordinates.
+	 * @param {!Element} element
+	 * @protected
+	 */
+	moveToPosition_(element) {
+		element.style.left = this.currentSourceX_ + 'px';
+		element.style.top = this.currentSourceY_ + 'px';
+	}
+
+	/**
 	 * Sets the `scrollContainers` attribute.
 	 * @param {Element|string} scrollContainers
 	 * @return {!Array<!Element>}
 	 * @protected
 	 */
 	setterScrollContainersFn_(scrollContainers) {
-		var elements = [document];
-		if (core.isString(scrollContainers)) {
-			var matched = document.querySelectorAll(scrollContainers);
-			elements = elements.concat(Array.prototype.slice.call(matched, 0));
-		} else if (scrollContainers && scrollContainers !== document) {
-			elements.push(scrollContainers);
+		var elements = this.toElements_(scrollContainers);
+		if (elements.indexOf(document) === -1) {
+			elements.push(document);
 		}
 		return elements;
 	}
 
 	/**
-	 * Updates the position of the element with the current source coordinates.
-	 * @param {!Element} element
+	 * Starts dragging the selected source.
 	 * @protected
 	 */
-	updatePosition_(element) {
-		element.style.left = this.currentSourceX_ + 'px';
-		element.style.top = this.currentSourceY_ + 'px';
+	startDragging_() {
+		this.dragging_ = true;
+		this.createActiveDragPlaceholder_();
+		dom.addClasses(this.activeDragPlaceholder_, this.draggingClass);
+		this.dragScrollDelta_.start(this.activeDragPlaceholder_, this.scrollContainers);
+	}
+
+	/**
+	 * Converts the given element or selector into an array of elements.
+	 * @param  {Element|string} elementOrSelector
+	 * @return {!Array<!Element>}
+	 * @protected
+	 */
+	toElements_(elementOrSelector) {
+		if (core.isString(elementOrSelector)) {
+			var matched = document.querySelectorAll(elementOrSelector);
+			return Array.prototype.slice.call(matched, 0);
+		} else if (elementOrSelector) {
+			return [elementOrSelector];
+		} else {
+			return [];
+		}
+	}
+
+	/**
+	 * Updates the dragged element's position, moving its placeholder if `move`
+	 * is set to true.
+	 * @param {number} deltaX
+	 * @param {number} deltaY
+	 * @protected
+	 */
+	updatePosition_(deltaX, deltaY) {
+		this.currentSourceX_ += deltaX;
+		this.currentSourceY_ += deltaY;
+		if (this.move) {
+			this.moveToPosition_(this.activeDragPlaceholder_);
+		}
+		this.emit(Drag.Events.DRAG, this.buildEventObject_());
 	}
 
 	/**
