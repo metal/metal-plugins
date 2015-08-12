@@ -216,7 +216,7 @@ class Drag extends Attribute {
 	 */
 	handleDragEndEvent_() {
 		this.dragScrollDelta_.stop();
-		DragShim.hide();
+		DragShim.hideDocShim();
 		if (this.moveOnEnd) {
 			this.updatePosition_(this.activeDragSource_);
 		}

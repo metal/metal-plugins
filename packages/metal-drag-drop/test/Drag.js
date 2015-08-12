@@ -15,7 +15,7 @@ describe('Drag', function() {
 
 	afterEach(function() {
 		document.body.innerHTML = '';
-		DragShim.shim_ = null;
+		DragShim.docShim_ = null;
 		if (drag) {
 			drag.dispose();
 		}

@@ -5,15 +5,15 @@ import DragShim from '../../src/helpers/DragShim';
 
 describe('DragShim', function() {
 	afterEach(function() {
-		DragShim.shim_ = null;
+		DragShim.docShim_ = null;
 	});
 
-	it('should return shim element from "getShim" method', function() {
-		assert.ok(DragShim.getShim());
+	it('should return shim element from "getDocShim" method', function() {
+		assert.ok(DragShim.getDocShim());
 	});
 
-	it('should always return the same shim element from "getShim"', function() {
-		assert.strictEqual(DragShim.getShim(), DragShim.getShim());
+	it('should always return the same shim element from "getDocShim"', function() {
+		assert.strictEqual(DragShim.getDocShim(), DragShim.getDocShim());
 	});
 
 	it('should attach mouse listeners to the shim element', function() {
@@ -25,7 +25,7 @@ describe('DragShim', function() {
 		dom.triggerEvent(document, 'mousedown');
 		assert.strictEqual(0, listener.callCount);
 
-		dom.triggerEvent(DragShim.getShim(), 'mousedown');
+		dom.triggerEvent(DragShim.getDocShim(), 'mousedown');
 		assert.strictEqual(1, listener.callCount);
 	});
 
@@ -47,5 +47,21 @@ describe('DragShim', function() {
 
 		dom.triggerEvent(document, 'mousedown');
 		assert.strictEqual(1, listener.callCount);
+	});
+
+	it('should show document shim when attaching listeners to it', function() {
+		var shim = DragShim.getDocShim();
+		assert.strictEqual('none', shim.style.display);
+
+		DragShim.attachDocListeners(true, {
+			mousedown: sinon.stub()
+		});
+		assert.strictEqual('block', shim.style.display);
+	});
+
+	it('should hide document shim', function() {
+		var shim = DragShim.getDocShim();
+		DragShim.hideDocShim();
+		assert.strictEqual('none', shim.style.display);
 	});
 });

@@ -20,7 +20,7 @@ class DragShim {
 	static attachDocListeners(useShim, listeners) {
 		var element = document;
 		if (useShim) {
-			element = DragShim.getShim();
+			element = DragShim.getDocShim();
 			element.style.display = 'block';
 		}
 		var eventTypes = Object.keys(listeners);
@@ -31,33 +31,33 @@ class DragShim {
 	}
 
 	/**
-	 * Gets the shim element, creating it when called for the first time.
+	 * Gets the document's shim element, creating it when called for the first time.
 	 * @return {!Element}
 	 * @static
 	 */
-	static getShim() {
-		if (!DragShim.shim_) {
-			DragShim.shim_ = document.createElement('div');
-			DragShim.shim_.className = 'shim';
-			DragShim.shim_.style.position = 'absolute';
-			DragShim.shim_.style.top = 0;
-			DragShim.shim_.style.left = 0;
-			DragShim.shim_.style.width = '100%';
-			DragShim.shim_.style.height = '100%';
-			DragShim.shim_.style.display = 'none';
-			DragShim.shim_.style.opacity = 0;
-			DragShim.shim_.style.zIndex = 9999;
-			dom.enterDocument(DragShim.shim_);
+	static getDocShim() {
+		if (!DragShim.docShim_) {
+			DragShim.docShim_ = document.createElement('div');
+			DragShim.docShim_.className = 'shim';
+			DragShim.docShim_.style.position = 'fixed';
+			DragShim.docShim_.style.top = 0;
+			DragShim.docShim_.style.left = 0;
+			DragShim.docShim_.style.width = '100%';
+			DragShim.docShim_.style.height = '100%';
+			DragShim.docShim_.style.display = 'none';
+			DragShim.docShim_.style.opacity = 0;
+			DragShim.docShim_.style.zIndex = 9999;
+			dom.enterDocument(DragShim.docShim_);
 		}
-		return DragShim.shim_;
+		return DragShim.docShim_;
 	}
 
 	/**
-	 * Hides the shim element.
+	 * Hides the document's shim element.
 	 * @static
 	 */
-	static hide() {
-		DragShim.getShim().style.display = 'none';
+	static hideDocShim() {
+		DragShim.getDocShim().style.display = 'none';
 	}
 }
 
@@ -67,6 +67,6 @@ class DragShim {
  * @protected
  * @static
  */
-DragShim.shim_ = null;
+DragShim.docShim_ = null;
 
 export default DragShim;
