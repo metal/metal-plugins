@@ -146,6 +146,41 @@ describe('DragDrop', function() {
 		assert.deepEqual([target2], listener.args[1][0].allActiveTargets);
 	});
 
+	it('should add targets dynamically', function() {
+		dragDrop = new DragDrop({
+			sources: item,
+			targets: '.target'
+		});
+		assert.strictEqual(2, dragDrop.targets.length);
+
+		var newTarget = target.cloneNode(true);
+		newTarget.style.top = '250px';
+		dom.enterDocument(newTarget);
+		assert.strictEqual(2, dragDrop.targets.length);
+
+		dragDrop.addTarget(newTarget);
+		assert.strictEqual(3, dragDrop.targets.length);
+
+		DragTestHelper.triggerMouseEvent(item, 'mousedown', 0, 0);
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 260);
+		assert.ok(dom.hasClass(newTarget, 'targetOver'));
+	});
+
+	it('should remove targets dynamically', function() {
+		dragDrop = new DragDrop({
+			sources: item,
+			targets: '.target'
+		});
+		assert.strictEqual(2, dragDrop.targets.length);
+
+		dragDrop.removeTarget(target);
+		assert.strictEqual(1, dragDrop.targets.length);
+
+		DragTestHelper.triggerMouseEvent(item, 'mousedown', 0, 0);
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 260);
+		assert.ok(!dom.hasClass(target, 'targetOver'));
+	});
+
 	describe('Multiple Targets', function() {
 		var nestedTarget;
 		var intersectTarget;

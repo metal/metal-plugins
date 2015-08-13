@@ -1,5 +1,6 @@
 'use strict';
 
+import array from 'bower:metal/src/array/array';
 import dom from 'bower:metal/src/dom/dom';
 import core from 'bower:metal/src/core';
 import Drag from './Drag';
@@ -24,6 +25,15 @@ class DragDrop extends Drag {
 		 * @protected
 		 */
 		this.activeTargets_ = [];
+	}
+
+	/**
+	 * Adds a target to this `DragDrop` instance.
+	 * @param {!Element} target
+	 */
+	addTarget(target) {
+		this.targets.push(target);
+		this.targets = this.targets;
 	}
 
 	/**
@@ -73,6 +83,15 @@ class DragDrop extends Drag {
 			}
 		}.bind(this));
 		return activeTargets;
+	}
+
+	/**
+	 * Removes a target from this `DragDrop` instance.
+	 * @param {!Element} target
+	 */
+	removeTarget(target) {
+		array.remove(this.targets, target);
+		this.targets = this.targets;
 	}
 
 	/**
