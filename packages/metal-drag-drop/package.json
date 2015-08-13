@@ -1,9 +1,9 @@
 {
-  "name": "crystal-drag-drop",
+  "name": "metal-drag-drop",
   "version": "0.0.0",
-  "description": "Crystal's drag and drop component.",
+  "description": "Metal's drag and drop component.",
   "license": "MIT",
-  "repository": "metal/crystal-drag-drop",
+  "repository": "metal/metal-drag-drop",
   "engines": {
     "node": ">=0.12.0"
   },
@@ -11,8 +11,9 @@
     "test": "gulp test"
   },
   "keywords": [
-    "metal",
-    "crystal"
+    "drag",
+    "drop",
+    "metal"
   ],
   "devDependencies": {
     "chai": "^2.3.0",

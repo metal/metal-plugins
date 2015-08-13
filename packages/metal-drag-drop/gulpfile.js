@@ -5,7 +5,7 @@ var metal = require('gulp-metal');
 metal.registerTasks({
 	bundleCssFileName: 'dragDrop.css',
 	bundleFileName: 'dragDrop.js',
-	globalName: 'crystal',
+	globalName: 'metal',
 	mainBuildJsTasks: ['build:globals'],
-	moduleName: 'crystal-drag-drop'
+	moduleName: 'metal-drag-drop'
 });

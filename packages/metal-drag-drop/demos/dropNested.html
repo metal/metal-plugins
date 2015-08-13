@@ -57,13 +57,13 @@
 	</div>
 	<div class="box"><div class="handle"></div></div>
 	<script type="text/javascript">
-		var dragDrop = new crystal.DragDrop({
-			dragPlaceholder: crystal.Drag.Placeholder.CLONE,
+		var dragDrop = new metal.DragDrop({
+			dragPlaceholder: metal.Drag.Placeholder.CLONE,
 			handles: '.handle',
 			sources: '.box',
 			targets: '.target'
 		});
-		dragDrop.on(crystal.DragDrop.Events.END, function(data, event) {
+		dragDrop.on(metal.DragDrop.Events.END, function(data, event) {
 			event.preventDefault();
 			console.log('Hit target:', data.target);
 		});

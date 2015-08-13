@@ -1,6 +1,6 @@
-# crystal-drag-drop
+# metal-drag-drop
 
-Crystal's drag and drop component.
+Metal's drag and drop component.
 
 ## Setup
 

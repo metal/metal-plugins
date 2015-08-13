@@ -1,14 +1,15 @@
 {
-	"name": "crystal-drag-drop",
+	"name": "metal-drag-drop",
 	"version": "0.0.0",
-	"description": "Crystal's drag and drop component.",
+	"description": "Metal's drag and drop component.",
 	"main": "src/DragDrop.js",
 	"moduleType": [
 		"es6"
 	],
 	"keywords": [
-		"metal",
-		"crystal"
+    "drag",
+    "drop",
+    "metal"
 	],
 	"ignore": [
 		"*",
