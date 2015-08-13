@@ -88,6 +88,23 @@ describe('DragScrollDelta', function() {
 		scrollNode.scrollTop = 10;
 	});
 
+	it('should not emit "scrollDelta" event if drag node has "fixed" position', function(done) {
+		var dragNode = document.querySelector('.dragNode');
+		dragNode.style.position = 'fixed';
+
+		dragScrollDelta = new DragScrollDelta();
+		dragScrollDelta.start(dragNode, [document]);
+
+		var listener = sinon.stub();
+		dragScrollDelta.once('scrollDelta', listener);
+
+		dom.once(document, 'scroll', function() {
+			assert.strictEqual(0, listener.callCount);
+			done();
+		});
+		document.body.scrollTop = 10;
+	});
+
 	it('should not emit "scrollDelta" event if "stop" is called', function(done) {
 		var scrollNode = document.querySelector('.scroll');
 		dragScrollDelta = new DragScrollDelta();

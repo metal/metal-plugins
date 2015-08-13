@@ -80,6 +80,12 @@ class DragScrollDelta extends EventEmitter {
 	 * @param {!Array<!Element>} scrollContainers
 	 */
 	start(dragNode, scrollContainers) {
+		if (!dragNode.offsetParent) {
+			// If the drag node has no offset parent, then its position is "fixed",
+			// and so its coordinates don't need to be updated when parents are scrolled.
+			return;
+		}
+
 		for (var i = 0; i < scrollContainers.length; i++) {
 			if (scrollContainers[i].contains(dragNode)) {
 				var scrollElement = this.getScrollElement_(scrollContainers[i]);
