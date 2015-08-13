@@ -24,14 +24,6 @@ class DragDrop extends Drag {
 		 * @protected
 		 */
 		this.activeTargets_ = [];
-
-		/**
-		 * The calculated positions for each target. This will only be set when needed for the
-		 * first time.
-		 * @type {Array}
-		 * @protected
-		 */
-		this.targetRegions_ = null;
 	}
 
 	/**
@@ -56,7 +48,6 @@ class DragDrop extends Drag {
 			dom.removeClasses(this.activeTargets_[0], this.targetOverClass);
 		}
 		this.activeTargets_ = [];
-		this.targetRegions_ = null;
 	}
 
 	/**
@@ -70,7 +61,8 @@ class DragDrop extends Drag {
 		var x = this.currentMouseX_;
 		var y = this.currentMouseY_;
 		var targets = this.targets;
-		this.getTargetRegions_().forEach(function(region, index) {
+		targets.forEach(function(target, index) {
+			var region = Position.getRegion(target);
 			if (targets[index] !== this.activeDragSource_ && Position.pointInsideRegion(x, y, region)) {
 				if (!mainRegion || Position.insideRegion(mainRegion, region)) {
 					activeTargets = [targets[index]].concat(activeTargets);
@@ -81,19 +73,6 @@ class DragDrop extends Drag {
 			}
 		}.bind(this));
 		return activeTargets;
-	}
-
-	/**
-	 * Gets the calculated regions for each target, calculating them if they have not
-	 * yet been set.
-	 * @return {!Array<!Object>}
-	 * @protected
-	 */
-	getTargetRegions_() {
-		if (!this.targetRegions_) {
-			this.targetRegions_ = this.targets.map(target => Position.getRegion(target));
-		}
-		return this.targetRegions_;
 	}
 
 	/**
