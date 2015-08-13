@@ -5,7 +5,7 @@ import DragShim from '../../src/helpers/DragShim';
 
 describe('DragShim', function() {
 	afterEach(function() {
-		DragShim.docShim_ = null;
+		DragShim.reset();
 	});
 
 	it('should return shim element from "getDocShim" method', function() {
@@ -14,6 +14,12 @@ describe('DragShim', function() {
 
 	it('should always return the same shim element from "getDocShim"', function() {
 		assert.strictEqual(DragShim.getDocShim(), DragShim.getDocShim());
+	});
+
+	it('should create new shim element if "reset" is called', function() {
+		var shim = DragShim.getDocShim();
+		DragShim.reset();
+		assert.notStrictEqual(shim, DragShim.getDocShim());
 	});
 
 	it('should attach mouse listeners to the shim element', function() {

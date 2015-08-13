@@ -59,6 +59,18 @@ class DragShim {
 	static hideDocShim() {
 		DragShim.getDocShim().style.display = 'none';
 	}
+
+	/**
+	 * Resets `DragShim`, removing the shim element from the document
+	 * and clearing its variable so it can be created again.
+	 * @static
+	 */
+	static reset() {
+		if (DragShim.docShim_) {
+			dom.exitDocument(DragShim.docShim_);
+			DragShim.docShim_ = null;
+		}
+	}
 }
 
 /**
