@@ -3,6 +3,7 @@
 import dom from 'bower:metal/src/dom/dom';
 import Drag from '../src/Drag';
 import DragShim from '../src/helpers/DragShim';
+import DragTestHelper from './fixtures/DragTestHelper';
 
 describe('Drag', function() {
 	var drag;
@@ -29,8 +30,8 @@ describe('Drag', function() {
 
 		var initialX = item.offsetLeft;
 		var initialY = item.offsetTop;
-		triggerMouseEvent(item, 'mousedown', 20, 20);
-		triggerMouseEvent(document, 'mousemove', 40, 50);
+		DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 
 		assert.strictEqual(initialX + 20 + 'px', item.style.left);
 		assert.strictEqual(initialY + 30 + 'px', item.style.top);
@@ -45,8 +46,8 @@ describe('Drag', function() {
 
 		var initialX = item.offsetLeft;
 		var initialY = item.offsetTop;
-		triggerMouseEvent(item, 'mousedown', 20, 20);
-		triggerMouseEvent(document, 'mousemove', 40, 50);
+		DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 
 		assert.strictEqual(initialX + 20 + 'px', item.style.left);
 		assert.strictEqual(initialY + 30 + 'px', item.style.top);
@@ -65,8 +66,8 @@ describe('Drag', function() {
 
 		var initialLeft = item.style.left;
 		var initialTop = item.style.top;
-		triggerMouseEvent(item, 'mousedown', 20, 20, 1);
-		triggerMouseEvent(document, 'mousemove', 40, 50);
+		DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20, 1);
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 
 		assert.strictEqual(initialLeft, item.style.left);
 		assert.strictEqual(initialTop, item.style.top);
@@ -80,9 +81,9 @@ describe('Drag', function() {
 
 		var initialX = item.offsetLeft;
 		var initialY = item.offsetTop;
-		triggerMouseEvent(item, 'mousedown', 20, 20);
-		triggerMouseEvent(document, 'mousemove', 40, 50);
-		triggerMouseEvent(item, 'mousedown', 50, 60);
+		DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
+		DragTestHelper.triggerMouseEvent(item, 'mousedown', 50, 60);
 
 		assert.strictEqual(initialX + 20 + 'px', item.style.left);
 		assert.strictEqual(initialY + 30 + 'px', item.style.top);
@@ -96,18 +97,18 @@ describe('Drag', function() {
 
 		var initialX = item.offsetLeft;
 		var initialY = item.offsetTop;
-		triggerMouseEvent(item, 'mousedown', 20, 20);
+		DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
 
 		var listener = sinon.stub();
 		drag.on(Drag.Events.DRAG, listener);
 
-		triggerMouseEvent(document, 'mousemove', 40, 50);
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 		assert.strictEqual(1, listener.callCount);
 		assert.strictEqual(item, listener.args[0][0].source);
 		assert.strictEqual(initialX + 20, listener.args[0][0].x);
 		assert.strictEqual(initialY + 30, listener.args[0][0].y);
 
-		triggerMouseEvent(document, 'mousemove', 30, 60);
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 30, 60);
 		assert.strictEqual(2, listener.callCount);
 		assert.strictEqual(item, listener.args[1][0].source);
 		assert.strictEqual(initialX + 10, listener.args[1][0].x);
@@ -122,12 +123,12 @@ describe('Drag', function() {
 
 		var initialX = item.offsetLeft;
 		var initialY = item.offsetTop;
-		triggerMouseEvent(item, 'mousedown', 20, 20);
-		triggerMouseEvent(document, 'mousemove', 40, 50);
+		DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 
 		var listener = sinon.stub();
 		drag.on(Drag.Events.END, listener);
-		triggerMouseEvent(document, 'mouseup');
+		DragTestHelper.triggerMouseEvent(document, 'mouseup');
 
 		assert.strictEqual(1, listener.callCount);
 		assert.strictEqual(item, listener.args[0][0].source);
@@ -142,11 +143,11 @@ describe('Drag', function() {
 		});
 
 		assert.ok(!drag.isDragging());
-		triggerMouseEvent(item, 'mousedown', 20, 20);
+		DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
 		assert.ok(!drag.isDragging());
-		triggerMouseEvent(document, 'mousemove', 40, 50);
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 		assert.ok(drag.isDragging());
-		triggerMouseEvent(document, 'mouseup');
+		DragTestHelper.triggerMouseEvent(document, 'mouseup');
 		assert.ok(!drag.isDragging());
 	});
 
@@ -157,11 +158,11 @@ describe('Drag', function() {
 		});
 
 		assert.ok(!drag.getActiveDrag());
-		triggerMouseEvent(item, 'mousedown', 20, 20);
+		DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
 		assert.strictEqual(item, drag.getActiveDrag());
-		triggerMouseEvent(document, 'mousemove', 40, 50);
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 		assert.strictEqual(item, drag.getActiveDrag());
-		triggerMouseEvent(document, 'mouseup');
+		DragTestHelper.triggerMouseEvent(document, 'mouseup');
 		assert.ok(!drag.getActiveDrag());
 
 	});
@@ -175,12 +176,12 @@ describe('Drag', function() {
 		var listener = sinon.stub();
 		drag.on(Drag.Events.DRAG, listener);
 
-		triggerMouseEvent(item, 'mousedown', 20, 20);
-		triggerMouseEvent(document, 'mousemove', 21, 21);
+		DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 21, 21);
 		assert.ok(!drag.isDragging());
 		assert.strictEqual(0, listener.callCount);
 
-		triggerMouseEvent(document, 'mousemove', 23, 23);
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 23, 23);
 		assert.ok(drag.isDragging());
 		assert.strictEqual(1, listener.callCount);
 	});
@@ -195,8 +196,8 @@ describe('Drag', function() {
 		var listener = sinon.stub();
 		drag.on(Drag.Events.DRAG, listener);
 
-		triggerMouseEvent(item, 'mousedown', 20, 20);
-		triggerMouseEvent(document, 'mousemove', 21, 21);
+		DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 21, 21);
 		assert.ok(drag.isDragging());
 		assert.strictEqual(1, listener.callCount);
 	});
@@ -209,16 +210,16 @@ describe('Drag', function() {
 			sources: '.item'
 		});
 
-		triggerMouseEvent(item1, 'mousedown', 20, 20);
-		triggerMouseEvent(document, 'mousemove', 40, 50);
+		DragTestHelper.triggerMouseEvent(item1, 'mousedown', 20, 20);
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 		assert.strictEqual(item1, drag.getActiveDrag());
 
-		triggerMouseEvent(document, 'mouseup');
-		triggerMouseEvent(item2, 'mousedown', 20, 20);
-		triggerMouseEvent(document, 'mousemove', 40, 50);
+		DragTestHelper.triggerMouseEvent(document, 'mouseup');
+		DragTestHelper.triggerMouseEvent(item2, 'mousedown', 20, 20);
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 		assert.strictEqual(item2, drag.getActiveDrag());
 
-		triggerMouseEvent(document, 'mouseup');
+		DragTestHelper.triggerMouseEvent(document, 'mouseup');
 	});
 
 	it('should handle changing the value of the "sources" attribute', function() {
@@ -230,12 +231,12 @@ describe('Drag', function() {
 		});
 		drag.set('sources', item2);
 
-		triggerMouseEvent(item1, 'mousedown', 20, 20);
-		triggerMouseEvent(document, 'mousemove', 40, 50);
+		DragTestHelper.triggerMouseEvent(item1, 'mousedown', 20, 20);
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 		assert.ok(!drag.isDragging());
 
-		triggerMouseEvent(item2, 'mousedown', 20, 20);
-		triggerMouseEvent(document, 'mousemove', 40, 50);
+		DragTestHelper.triggerMouseEvent(item2, 'mousedown', 20, 20);
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 		assert.ok(drag.isDragging());
 	});
 
@@ -250,8 +251,8 @@ describe('Drag', function() {
 
 		var initialLeft = item.style.left;
 		var initialTop = item.style.top;
-		triggerMouseEvent(item, 'mousedown', 20, 20);
-		triggerMouseEvent(document, 'mousemove', 40, 50);
+		DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 
 		assert.strictEqual(initialLeft, item.style.left);
 		assert.strictEqual(initialTop, item.style.top);
@@ -264,11 +265,11 @@ describe('Drag', function() {
 		});
 
 		assert.ok(!dom.hasClass(item, 'dragging'));
-		triggerMouseEvent(item, 'mousedown', 20, 20);
+		DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
 		assert.ok(!dom.hasClass(item, 'dragging'));
-		triggerMouseEvent(document, 'mousemove', 40, 50);
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 		assert.ok(dom.hasClass(item, 'dragging'));
-		triggerMouseEvent(document, 'mouseup');
+		DragTestHelper.triggerMouseEvent(document, 'mouseup');
 		assert.ok(!dom.hasClass(item, 'dragging'));
 	});
 
@@ -280,11 +281,11 @@ describe('Drag', function() {
 		});
 
 		assert.ok(!dom.hasClass(item, 'myDraggingClass'));
-		triggerMouseEvent(item, 'mousedown', 20, 20);
+		DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
 		assert.ok(!dom.hasClass(item, 'myDraggingClass'));
-		triggerMouseEvent(document, 'mousemove', 40, 50);
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 		assert.ok(dom.hasClass(item, 'myDraggingClass'));
-		triggerMouseEvent(document, 'mouseup');
+		DragTestHelper.triggerMouseEvent(document, 'mouseup');
 		assert.ok(!dom.hasClass(item, 'myDraggingClass'));
 	});
 
@@ -295,8 +296,8 @@ describe('Drag', function() {
 			sources: item
 		});
 
-		triggerMouseEvent(item, 'mousedown', 20, 20);
-		triggerMouseEvent(document, 'mousemove', 40, 50);
+		DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 		assert.ok(!drag.isDragging());
 	});
 
@@ -309,8 +310,8 @@ describe('Drag', function() {
 				sources: item
 			});
 
-			triggerMouseEvent(item, 'mousedown', 20, 20);
-			triggerMouseEvent(document, 'mousemove', 40, 50);
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 			assert.ok(!drag.isDragging());
 		});
 
@@ -325,8 +326,8 @@ describe('Drag', function() {
 			var initialX = item.offsetLeft;
 			var initialY = item.offsetTop;
 
-			triggerMouseEvent(handle, 'mousedown', 20, 20);
-			triggerMouseEvent(document, 'mousemove', 40, 50);
+			DragTestHelper.triggerMouseEvent(handle, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 			assert.ok(drag.isDragging());
 			assert.strictEqual(item, drag.getActiveDrag());
 			assert.strictEqual(initialX + 20 + 'px', item.style.left);
@@ -341,8 +342,8 @@ describe('Drag', function() {
 				sources: item
 			});
 
-			triggerMouseEvent(handle, 'mousedown', 20, 20);
-			triggerMouseEvent(document, 'mousemove', 40, 50);
+			DragTestHelper.triggerMouseEvent(handle, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 			assert.ok(drag.isDragging());
 		});
 
@@ -354,13 +355,13 @@ describe('Drag', function() {
 				sources: '.item'
 			});
 
-			triggerMouseEvent(item1.querySelector('.handle'), 'mousedown', 20, 20);
-			triggerMouseEvent(document, 'mousemove', 40, 50);
+			DragTestHelper.triggerMouseEvent(item1.querySelector('.handle'), 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 			assert.strictEqual(item1, drag.getActiveDrag());
 
 			dom.on(document, 'mouseup');
-			triggerMouseEvent(item2.querySelector('.handle'), 'mousedown', 20, 20);
-			triggerMouseEvent(document, 'mousemove', 40, 50);
+			DragTestHelper.triggerMouseEvent(item2.querySelector('.handle'), 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 			assert.strictEqual(item2, drag.getActiveDrag());
 		});
 	});
@@ -375,8 +376,8 @@ describe('Drag', function() {
 
 			var initialLeft = item.style.left;
 			var initialTop = item.style.top;
-			triggerMouseEvent(item, 'mousedown', 20, 20);
-			triggerMouseEvent(document, 'mousemove', 40, 50);
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 
 			assert.strictEqual(initialLeft, item.style.left);
 			assert.strictEqual(initialTop, item.style.top);
@@ -394,8 +395,8 @@ describe('Drag', function() {
 
 			var initialX = item.offsetLeft;
 			var initialY = item.offsetTop;
-			triggerMouseEvent(item, 'mousedown', 20, 20);
-			triggerMouseEvent(document, 'mousemove', 40, 50);
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 
 			var event = listener.args[0][0];
 			assert.strictEqual(item, event.source);
@@ -415,9 +416,9 @@ describe('Drag', function() {
 			var listener = sinon.stub();
 			drag.on(Drag.Events.END, listener);
 
-			triggerMouseEvent(item, 'mousedown', 20, 20);
-			triggerMouseEvent(document, 'mousemove', 40, 50);
-			triggerMouseEvent(document, 'mouseup');
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
+			DragTestHelper.triggerMouseEvent(document, 'mouseup');
 
 			assert.ok(!listener.args[0][0].placeholder.parentNode);
 		});
@@ -432,8 +433,8 @@ describe('Drag', function() {
 
 			var initialLeft = item.style.left;
 			var initialTop = item.style.top;
-			triggerMouseEvent(item, 'mousedown', 20, 20);
-			triggerMouseEvent(document, 'mousemove', 40, 50);
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 
 			assert.strictEqual(initialLeft, item.style.left);
 			assert.strictEqual(initialTop, item.style.top);
@@ -452,8 +453,8 @@ describe('Drag', function() {
 
 			var initialX = item.offsetLeft;
 			var initialY = item.offsetTop;
-			triggerMouseEvent(item, 'mousedown', 20, 20);
-			triggerMouseEvent(document, 'mousemove', 40, 50);
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 
 			var event = listener.args[0][0];
 			assert.strictEqual(item, event.source);
@@ -472,9 +473,9 @@ describe('Drag', function() {
 
 			var initialX = item.offsetLeft;
 			var initialY = item.offsetTop;
-			triggerMouseEvent(item, 'mousedown', 20, 20);
-			triggerMouseEvent(document, 'mousemove', 40, 50);
-			triggerMouseEvent(document, 'mouseup');
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
+			DragTestHelper.triggerMouseEvent(document, 'mouseup');
 			assert.strictEqual(initialX + 20 + 'px', item.style.left);
 			assert.strictEqual(initialY + 30 + 'px', item.style.top);
 		});
@@ -491,9 +492,9 @@ describe('Drag', function() {
 
 			var initialLeft = item.style.left;
 			var initialTop = item.style.top;
-			triggerMouseEvent(item, 'mousedown', 20, 20);
-			triggerMouseEvent(document, 'mousemove', 40, 50);
-			triggerMouseEvent(document, 'mouseup');
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
+			DragTestHelper.triggerMouseEvent(document, 'mouseup');
 
 			assert.strictEqual(initialLeft, item.style.left);
 			assert.strictEqual(initialTop, item.style.top);
@@ -524,8 +525,8 @@ describe('Drag', function() {
 			var initialX = item.offsetLeft;
 			var initialY = item.offsetTop;
 
-			triggerMouseEvent(item, 'mousedown', 20, 20);
-			triggerMouseEvent(document, 'mousemove', 40, 50);
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 			drag.once(Drag.Events.DRAG, function(event) {
 				assert.strictEqual(initialX + 20, event.x);
 				assert.strictEqual(initialY + 40, event.y);
@@ -557,8 +558,8 @@ describe('Drag', function() {
 			var initialX = item.offsetLeft;
 			var initialY = item.offsetTop;
 
-			triggerMouseEvent(item, 'mousedown', 20, 20);
-			triggerMouseEvent(document, 'mousemove', 40, 50);
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 			drag.once(Drag.Events.DRAG, function(event) {
 				assert.strictEqual(initialX + 20, event.x);
 				assert.strictEqual(initialY + 40, event.y);
@@ -587,8 +588,8 @@ describe('Drag', function() {
 			var initialLeft = item.style.left;
 			var initialTop = item.style.top;
 
-			triggerMouseEvent(item, 'mousedown', 20, 20);
-			triggerMouseEvent(document, 'mousemove', 40, 50);
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 			drag.once(Drag.Events.DRAG, function(data) {
 				assert.strictEqual(initialX + 20, data.x);
 				assert.strictEqual(initialY + 40, data.y);
@@ -612,8 +613,8 @@ describe('Drag', function() {
 			var initialX = item.offsetLeft;
 			var initialY = item.offsetTop;
 
-			triggerMouseEvent(item, 'mousedown', 20, 20);
-			triggerMouseEvent(document, 'mousemove', 40, 50);
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 			drag.once(Drag.Events.DRAG, function(event) {
 				assert.strictEqual(initialX + 20, event.x);
 				assert.strictEqual(initialY + 40, event.y);
@@ -634,33 +635,10 @@ describe('Drag', function() {
 			sources: item
 		});
 
-		triggerMouseEvent(item, 'mousedown', 20, 20);
+		DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
 		drag.dispose();
 		assert.doesNotThrow(function() {
-			triggerMouseEvent(document, 'mousemove', 40, 50);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 		});
 	});
-
-	function triggerMouseEvent(target, eventType, x, y, button) {
-		var data = {
-			button: button ? button : 0,
-			clientX: x,
-			clientY: y
-		};
-		if ('ontouchstart' in window) {
-			var eventTypesMap = {
-				mousedown: 'touchstart',
-				mousemove: 'touchmove',
-				mouseup: 'touchend'
-			};
-			eventType = eventTypesMap[eventType];
-			data = {
-				targetTouches: [data]
-			};
-		}
-		if (target === document) {
-			target = document.querySelector('.shim') || document;
-		}
-		dom.triggerEvent(target, eventType, data);
-	}
 });
