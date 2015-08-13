@@ -1,8 +1,8 @@
 'use strict';
 
 import array from 'bower:metal/src/array/array';
-import dom from 'bower:metal/src/dom/dom';
 import core from 'bower:metal/src/core';
+import dom from 'bower:metal/src/dom/dom';
 import Drag from './Drag';
 import Position from 'bower:metal-position/src/Position';
 import 'bower:metal/src/dom/events';

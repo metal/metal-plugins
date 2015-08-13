@@ -2,10 +2,12 @@
 
 import core from 'bower:metal/src/core';
 import dom from 'bower:metal/src/dom/dom';
+import object from 'bower:metal/src/object/object';
 import Attribute from 'bower:metal/src/attribute/Attribute';
 import DragScrollDelta from './helpers/DragScrollDelta';
 import DragShim from './helpers/DragShim';
 import EventHandler from 'bower:metal/src/events/EventHandler';
+import Position from 'bower:metal-position/src/Position';
 
 /**
  * Responsible for making elements draggable. Handles all the logic
@@ -48,18 +50,29 @@ class Drag extends Attribute {
 		this.currentMouseY_ = null;
 
 		/**
-		 * The current x position of the element being dragged (or null if not dragging).
-		 * @type {?number}
+		 * The current region values of the element being dragged (or null if not dragging).
+		 * @type {Object}
 		 * @protected
 		 */
-		this.currentSourceX_ = null;
+		this.currentSourceRegion_ = null;
 
 		/**
-		 * The current y position of the element being dragged (or null if not dragging).
+		 * The current x position of the element being dragged relative to its
+		 * `offsetParent`, or to the viewport if there's no `offsetParent`
+		 * (or null if not dragging).
 		 * @type {?number}
 		 * @protected
 		 */
-		this.currentSourceY_ = null;
+		this.currentSourceRelativeX_ = null;
+
+		/**
+		 * The current y position of the element being dragged relative to its
+		 * `offsetParent`, or to the viewport if there's no `offsetParent`
+		 * (or null if not dragging).
+		 * @type {?number}
+		 * @protected
+		 */
+		this.currentSourceRelativeY_ = null;
 
 		/**
 		 * The distance that has been dragged.
@@ -124,8 +137,10 @@ class Drag extends Attribute {
 		return {
 			placeholder: this.activeDragPlaceholder_,
 			source: this.activeDragSource_,
-			x: this.currentSourceX_,
-			y: this.currentSourceY_
+			relativeX: this.currentSourceRelativeX_,
+			relativeY: this.currentSourceRelativeY_,
+			x: this.currentSourceRegion_.left,
+			y: this.currentSourceRegion_.top
 		};
 	}
 
@@ -155,8 +170,9 @@ class Drag extends Attribute {
 		}
 		this.activeDragPlaceholder_ = null;
 		this.activeDragSource_ = null;
-		this.currentSourceX_ = null;
-		this.currentSourceY_ = null;
+		this.currentSourceRegion_ = null;
+		this.currentSourceRelativeX_ = null;
+		this.currentSourceRelativeY_ = null;
 		this.currentMouseX_ = null;
 		this.currentMouseY_ = null;
 		this.dragging_ = false;
@@ -173,6 +189,23 @@ class Drag extends Attribute {
 		placeholder.style.position = 'absolute';
 		dom.append(this.activeDragSource_.parentNode, placeholder);
 		return placeholder;
+	}
+
+	/**
+	 * Constrains the given delta between the min/max values defined by the
+	 * constrain region.
+	 * @param {number} delta
+	 * @param {string} minKey The key for the min value in the region object.
+	 * @param {string} maxKey The key for the max value in the region object.
+	 * @protected
+	 */
+	constrain_(delta, minKey, maxKey) {
+		var constrain = this.constrain;
+		if (constrain) {
+			delta = Math.max(delta, constrain[minKey] - this.currentSourceRegion_[minKey]);
+			delta = Math.min(delta, constrain[maxKey] - this.currentSourceRegion_[maxKey]);
+		}
+		return delta;
 	}
 
 	/**
@@ -289,8 +322,9 @@ class Drag extends Attribute {
 			var position = event.targetTouches ? event.targetTouches[0] : event;
 			this.currentMouseX_ = position.clientX;
 			this.currentMouseY_ = position.clientY;
-			this.currentSourceX_ = this.activeDragSource_.offsetLeft;
-			this.currentSourceY_ = this.activeDragSource_.offsetTop;
+			this.currentSourceRegion_ = object.mixin({}, Position.getRegion(this.activeDragSource_));
+			this.currentSourceRelativeX_ = this.activeDragSource_.offsetLeft;
+			this.currentSourceRelativeY_ = this.activeDragSource_.offsetTop;
 			this.distanceDragged_ = 0;
 
 			event.preventDefault();
@@ -304,7 +338,7 @@ class Drag extends Attribute {
 	 * @protected
 	 */
 	handleScrollDelta_(event) {
-		this.updatePosition_(event.deltaX, event.deltaY);
+		this.updatePosition_(event.deltaX, event.deltaY, true);
 	}
 
 	/**
@@ -359,8 +393,8 @@ class Drag extends Attribute {
 	 * @protected
 	 */
 	moveToPosition_(element) {
-		element.style.left = this.currentSourceX_ + 'px';
-		element.style.top = this.currentSourceY_ + 'px';
+		element.style.left = this.currentSourceRelativeX_ + 'px';
+		element.style.top = this.currentSourceRelativeY_ + 'px';
 	}
 
 	/**
@@ -408,11 +442,21 @@ class Drag extends Attribute {
 	 * is set to true.
 	 * @param {number} deltaX
 	 * @param {number} deltaY
+	 * @param {boolean=} opt_relativeOnly Flag indicating if just the relative
+	 *   coordinates should be updated.
 	 * @protected
 	 */
-	updatePosition_(deltaX, deltaY) {
-		this.currentSourceX_ += deltaX;
-		this.currentSourceY_ += deltaY;
+	updatePosition_(deltaX, deltaY, opt_relativeOnly) {
+		if (!opt_relativeOnly) {
+			deltaX = this.constrain_(deltaX, 'left', 'right');
+			deltaY = this.constrain_(deltaY, 'top', 'bottom');
+			this.currentSourceRegion_.left += deltaX;
+			this.currentSourceRegion_.right += deltaX;
+			this.currentSourceRegion_.top += deltaY;
+			this.currentSourceRegion_.bottom += deltaY;
+		}
+		this.currentSourceRelativeX_ += deltaX;
+		this.currentSourceRelativeY_ += deltaY;
 		this.emit(Drag.Events.DRAG, this.buildEventObject_());
 	}
 
@@ -433,6 +477,16 @@ class Drag extends Attribute {
  * @static
  */
 Drag.ATTRS = {
+	/**
+	 * Object with the boundaries that the dragged element should not leave
+	 * while being dragged. If not set, the element is free to be dragged
+	 * to anywhere on the page.
+	 * @type {Object}
+	 */
+	constrain: {
+		validator: core.isObject
+	},
+
 	/**
 	 * Flag indicating if drag operations are disabled. When set to true, it
 	 * dragging won't work.
