@@ -576,14 +576,20 @@ describe('Drag', function() {
 
 	describe('Constrain', function() {
 		beforeEach(function() {
-			item.style.position = 'fixed';
 			item.style.top = '20px';
 			item.style.left = '20px';
 			item.style.height = '20px';
 			item.style.width = '20px';
+
+			var container = document.createElement('div');
+			container.style.width = '100px';
+			container.style.height = '100px';
+			dom.addClasses(container, 'container');
+			dom.append(container, item);
+			dom.append(document.body, container);
 		});
 
-		it('should only drag item within the limits defined in the "constrain" attr', function() {
+		it('should only drag item within the limits defined by the "constrain" object', function() {
 			drag = new Drag({
 				constrain: {
 					bottom: 60,
@@ -612,6 +618,50 @@ describe('Drag', function() {
 			assert.strictEqual(3, listener.callCount);
 			assert.strictEqual(0, listener.args[2][0].x);
 			assert.strictEqual(0, listener.args[2][0].y);
+		});
+
+		it('should only drag item within the limits defined by the "constrain" element', function() {
+			drag = new Drag({
+				constrain: document.querySelector('.container'),
+				sources: item
+			});
+
+			var listener = sinon.stub();
+			drag.on(Drag.Events.DRAG, listener);
+			var containerRegion = Position.getRegion(drag.constrain);
+
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 30, 30);
+			assert.strictEqual(1, listener.callCount);
+			assert.strictEqual(30, listener.args[0][0].x);
+			assert.strictEqual(30, listener.args[0][0].y);
+
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 230, 230);
+			assert.strictEqual(2, listener.callCount);
+			assert.strictEqual(containerRegion.right - 20, listener.args[1][0].x);
+			assert.strictEqual(containerRegion.bottom - 20, listener.args[1][0].y);
+		});
+
+		it('should only drag item within the limits defined by the "constrain" selector', function() {
+			drag = new Drag({
+				constrain: '.container',
+				sources: item
+			});
+
+			var listener = sinon.stub();
+			drag.on(Drag.Events.DRAG, listener);
+			var containerRegion = Position.getRegion(drag.constrain);
+
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 30, 30);
+			assert.strictEqual(1, listener.callCount);
+			assert.strictEqual(30, listener.args[0][0].x);
+			assert.strictEqual(30, listener.args[0][0].y);
+
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 230, 230);
+			assert.strictEqual(2, listener.callCount);
+			assert.strictEqual(containerRegion.right - 20, listener.args[1][0].x);
+			assert.strictEqual(containerRegion.bottom - 20, listener.args[1][0].y);
 		});
 	});
 

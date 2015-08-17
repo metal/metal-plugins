@@ -202,6 +202,9 @@ class Drag extends Attribute {
 	constrain_(delta, minKey, maxKey) {
 		var constrain = this.constrain;
 		if (constrain) {
+			if (core.isElement(constrain)) {
+				constrain = Position.getRegion(constrain);
+			}
 			delta = Math.max(delta, constrain[minKey] - this.currentSourceRegion_[minKey]);
 			delta = Math.min(delta, constrain[maxKey] - this.currentSourceRegion_[maxKey]);
 		}
@@ -398,6 +401,19 @@ class Drag extends Attribute {
 	}
 
 	/**
+	 * Setter for the `constrain` attribute.
+	 * @param {!Element|Object|string} val
+	 * @return {!Element|Object}
+	 * @protected
+	 */
+	setterConstrainFn(val) {
+		if (core.isString(val)) {
+			val = dom.toElement(val);
+		}
+		return val;
+	}
+
+	/**
 	 * Sets the `scrollContainers` attribute.
 	 * @param {Element|string} scrollContainers
 	 * @return {!Array<!Element>}
@@ -469,6 +485,16 @@ class Drag extends Attribute {
 	validateElementOrString_(val) {
 		return core.isString(val) || core.isElement(val);
 	}
+
+	/**
+	 * Validates the value of the `constrain` attribute.
+	 * @param {*} val
+	 * @return {boolean}
+	 * @protected
+	 */
+	validatorConstrainFn(val) {
+		return core.isString(val) || core.isObject(val);
+	}
 }
 
 /**
@@ -478,13 +504,16 @@ class Drag extends Attribute {
  */
 Drag.ATTRS = {
 	/**
-	 * Object with the boundaries that the dragged element should not leave
+	 * Object with the boundaries, that the dragged element should not leave
 	 * while being dragged. If not set, the element is free to be dragged
-	 * to anywhere on the page.
-	 * @type {Object}
+	 * to anywhere on the page. Can be either already an object with the
+	 * boundaries, or an element to get the boundaries from, or even a selector
+	 * for finding that element.
+	 * @type {!Element|Object|string}
 	 */
 	constrain: {
-		validator: core.isObject
+		setter: 'setterConstrainFn',
+		validator: 'validatorConstrainFn'
 	},
 
 	/**
