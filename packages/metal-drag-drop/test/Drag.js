@@ -477,7 +477,7 @@ describe('Drag', function() {
 			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 			drag.once(Drag.Events.DRAG, function(event) {
 				assert.strictEqual(initialRegion.left + 20, event.x);
-				assert.strictEqual(initialRegion.top + 30, event.y);
+				assert.strictEqual(initialRegion.top + 40, event.y);
 				assert.strictEqual(40, event.relativeX);
 				assert.strictEqual(60, event.relativeY);
 				setTimeout(function() {
@@ -509,7 +509,7 @@ describe('Drag', function() {
 			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 			drag.once(Drag.Events.DRAG, function(event) {
 				assert.strictEqual(initialRegion.left + 20, event.x);
-				assert.strictEqual(initialRegion.top + 30, event.y);
+				assert.strictEqual(initialRegion.top + 40, event.y);
 				assert.strictEqual(40, event.relativeX);
 				assert.strictEqual(60, event.relativeY);
 				setTimeout(function() {
@@ -536,7 +536,7 @@ describe('Drag', function() {
 			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 			drag.once(Drag.Events.DRAG, function(data) {
 				assert.strictEqual(initialRegion.left + 20, data.x);
-				assert.strictEqual(initialRegion.top + 30, data.y);
+				assert.strictEqual(initialRegion.top + 40, data.y);
 				assert.strictEqual(40, data.relativeX);
 				assert.strictEqual(60, data.relativeY);
 				setTimeout(function() {
@@ -560,7 +560,7 @@ describe('Drag', function() {
 			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 			drag.once(Drag.Events.DRAG, function(data) {
 				assert.strictEqual(initialRegion.left + 20, data.x);
-				assert.strictEqual(initialRegion.top + 30, data.y);
+				assert.strictEqual(initialRegion.top + 40, data.y);
 				assert.strictEqual(40, data.relativeX);
 				assert.strictEqual(60, data.relativeY);
 
@@ -576,6 +576,7 @@ describe('Drag', function() {
 
 	describe('Constrain', function() {
 		beforeEach(function() {
+			item.style.position = 'absolute';
 			item.style.top = '20px';
 			item.style.left = '20px';
 			item.style.height = '20px';
@@ -662,6 +663,31 @@ describe('Drag', function() {
 			assert.strictEqual(2, listener.callCount);
 			assert.strictEqual(containerRegion.right - 20, listener.args[1][0].x);
 			assert.strictEqual(containerRegion.bottom - 20, listener.args[1][0].y);
+		});
+
+		it('should keep constraining drag to element after scrolling', function(done) {
+			document.body.style.height = '3000px';
+
+			drag = new Drag({
+				constrain: '.container',
+				sources: item
+			});
+			var containerRegion = Position.getRegion(drag.constrain);
+
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 30, 30);
+
+			drag.once(Drag.Events.DRAG, function(data) {
+				assert.strictEqual(30, data.x);
+				assert.strictEqual(containerRegion.bottom - 20, data.y);
+
+				document.body.scrollTop = 0;
+				drag.once(Drag.Events.DRAG, function() {
+					document.body.style.height = '';
+					done();
+				});
+			});
+			document.body.scrollTop = 200;
 		});
 	});
 

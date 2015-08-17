@@ -50,7 +50,8 @@ class Drag extends Attribute {
 		this.currentMouseY_ = null;
 
 		/**
-		 * The current region values of the element being dragged (or null if not dragging).
+		 * The current region values of the element being dragged, relative to
+		 * the document (or null if not dragging).
 		 * @type {Object}
 		 * @protected
 		 */
@@ -203,7 +204,7 @@ class Drag extends Attribute {
 		var constrain = this.constrain;
 		if (constrain) {
 			if (core.isElement(constrain)) {
-				constrain = Position.getRegion(constrain);
+				constrain = Position.getRegion(constrain, true);
 			}
 			delta = Math.max(delta, constrain[minKey] - this.currentSourceRegion_[minKey]);
 			delta = Math.min(delta, constrain[maxKey] - this.currentSourceRegion_[maxKey]);
@@ -325,7 +326,7 @@ class Drag extends Attribute {
 			var position = event.targetTouches ? event.targetTouches[0] : event;
 			this.currentMouseX_ = position.clientX;
 			this.currentMouseY_ = position.clientY;
-			this.currentSourceRegion_ = object.mixin({}, Position.getRegion(this.activeDragSource_));
+			this.currentSourceRegion_ = object.mixin({}, Position.getRegion(this.activeDragSource_, true));
 			this.currentSourceRelativeX_ = this.activeDragSource_.offsetLeft;
 			this.currentSourceRelativeY_ = this.activeDragSource_.offsetTop;
 			this.distanceDragged_ = 0;
@@ -341,7 +342,7 @@ class Drag extends Attribute {
 	 * @protected
 	 */
 	handleScrollDelta_(event) {
-		this.updatePosition_(event.deltaX, event.deltaY, true);
+		this.updatePosition_(event.deltaX, event.deltaY);
 	}
 
 	/**
@@ -458,19 +459,17 @@ class Drag extends Attribute {
 	 * is set to true.
 	 * @param {number} deltaX
 	 * @param {number} deltaY
-	 * @param {boolean=} opt_relativeOnly Flag indicating if just the relative
-	 *   coordinates should be updated.
 	 * @protected
 	 */
-	updatePosition_(deltaX, deltaY, opt_relativeOnly) {
-		if (!opt_relativeOnly) {
-			deltaX = this.constrain_(deltaX, 'left', 'right');
-			deltaY = this.constrain_(deltaY, 'top', 'bottom');
-			this.currentSourceRegion_.left += deltaX;
-			this.currentSourceRegion_.right += deltaX;
-			this.currentSourceRegion_.top += deltaY;
-			this.currentSourceRegion_.bottom += deltaY;
-		}
+	updatePosition_(deltaX, deltaY) {
+		deltaX = this.constrain_(deltaX, 'left', 'right');
+		deltaY = this.constrain_(deltaY, 'top', 'bottom');
+
+		this.currentSourceRegion_.left += deltaX;
+		this.currentSourceRegion_.right += deltaX;
+		this.currentSourceRegion_.top += deltaY;
+		this.currentSourceRegion_.bottom += deltaY;
+
 		this.currentSourceRelativeX_ += deltaX;
 		this.currentSourceRelativeY_ += deltaY;
 		this.emit(Drag.Events.DRAG, this.buildEventObject_());
@@ -507,8 +506,8 @@ Drag.ATTRS = {
 	 * Object with the boundaries, that the dragged element should not leave
 	 * while being dragged. If not set, the element is free to be dragged
 	 * to anywhere on the page. Can be either already an object with the
-	 * boundaries, or an element to get the boundaries from, or even a selector
-	 * for finding that element.
+	 * boundaries relative to the document, or an element to use the boundaries
+	 * from, or even a selector for finding that element.
 	 * @type {!Element|Object|string}
 	 */
 	constrain: {
