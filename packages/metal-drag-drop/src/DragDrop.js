@@ -99,11 +99,10 @@ class DragDrop extends Drag {
 	 * the dragged element is over at the new position.
 	 * @param {number} deltaX
 	 * @param {number} deltaY
-	 * @protected
 	 * @override
 	 */
-	updatePosition_(deltaX, deltaY) {
-		super.updatePosition_(deltaX, deltaY);
+	updatePosition(deltaX, deltaY) {
+		super.updatePosition(deltaX, deltaY);
 
 		var newTargets = this.findAllActiveTargets_();
 		if (newTargets[0] !== this.activeTargets_[0]) {

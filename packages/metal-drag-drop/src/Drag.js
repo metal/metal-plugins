@@ -299,7 +299,7 @@ class Drag extends Attribute {
 		if (!this.isDragging()) {
 			this.startDragging_();
 		}
-		this.updatePosition_(distanceX, distanceY);
+		this.updatePosition(distanceX, distanceY);
 	}
 
 	/**
@@ -342,7 +342,7 @@ class Drag extends Attribute {
 	 * @protected
 	 */
 	handleScrollDelta_(event) {
-		this.updatePosition_(event.deltaX, event.deltaY);
+		this.updatePosition(event.deltaX, event.deltaY);
 	}
 
 	/**
@@ -459,20 +459,26 @@ class Drag extends Attribute {
 	 * is set to true.
 	 * @param {number} deltaX
 	 * @param {number} deltaY
-	 * @protected
 	 */
-	updatePosition_(deltaX, deltaY) {
+	updatePosition(deltaX, deltaY) {
+		if (this.axis === 'x') {
+			deltaY = 0;
+		} else if (this.axis === 'y') {
+			deltaX = 0;
+		}
 		deltaX = this.constrain_(deltaX, 'left', 'right');
 		deltaY = this.constrain_(deltaY, 'top', 'bottom');
 
-		this.currentSourceRegion_.left += deltaX;
-		this.currentSourceRegion_.right += deltaX;
-		this.currentSourceRegion_.top += deltaY;
-		this.currentSourceRegion_.bottom += deltaY;
+		if (deltaX !== 0 || deltaY !== 0) {
+			this.currentSourceRegion_.left += deltaX;
+			this.currentSourceRegion_.right += deltaX;
+			this.currentSourceRegion_.top += deltaY;
+			this.currentSourceRegion_.bottom += deltaY;
 
-		this.currentSourceRelativeX_ += deltaX;
-		this.currentSourceRelativeY_ += deltaY;
-		this.emit(Drag.Events.DRAG, this.buildEventObject_());
+			this.currentSourceRelativeX_ += deltaX;
+			this.currentSourceRelativeY_ += deltaY;
+			this.emit(Drag.Events.DRAG, this.buildEventObject_());
+		}
 	}
 
 	/**
@@ -502,6 +508,14 @@ class Drag extends Attribute {
  * @static
  */
 Drag.ATTRS = {
+	/**
+	 * The axis that allows dragging. Can be set to just x, just y or both (default).
+	 * @type {string}
+	 */
+	axis: {
+		validator: core.isString
+	},
+
 	/**
 	 * Object with the boundaries, that the dragged element should not leave
 	 * while being dragged. If not set, the element is free to be dragged

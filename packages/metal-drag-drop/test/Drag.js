@@ -691,6 +691,57 @@ describe('Drag', function() {
 		});
 	});
 
+	describe('Axis', function() {
+		it('should only drag horizontally if "axis" is set to "x"', function() {
+			drag = new Drag({
+				axis: 'x',
+				sources: item
+			});
+
+			var listener = sinon.stub();
+			drag.once(Drag.Events.DRAG, listener);
+
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 30, 30);
+
+			assert.strictEqual(1, listener.callCount);
+			assert.strictEqual(30, listener.args[0][0].x);
+			assert.strictEqual(20, listener.args[0][0].y);
+		});
+
+		it('should only drag verically if "axis" is set to "y"', function() {
+			drag = new Drag({
+				axis: 'y',
+				sources: item
+			});
+
+			var listener = sinon.stub();
+			drag.once(Drag.Events.DRAG, listener);
+
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 30, 30);
+
+			assert.strictEqual(1, listener.callCount);
+			assert.strictEqual(20, listener.args[0][0].x);
+			assert.strictEqual(30, listener.args[0][0].y);
+		});
+
+		it('should not emit "drag" event if element did not move', function() {
+			drag = new Drag({
+				axis: 'y',
+				sources: item
+			});
+
+			var listener = sinon.stub();
+			drag.once(Drag.Events.DRAG, listener);
+
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 30, 20);
+
+			assert.strictEqual(0, listener.callCount);
+		});
+	});
+
 	it('should detach document events when disposed', function() {
 		drag = new Drag({
 			sources: item
