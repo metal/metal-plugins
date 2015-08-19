@@ -288,6 +288,20 @@ describe('Drag', function() {
 		assert.ok(!dom.hasClass(item, 'myDraggingClass'));
 	});
 
+	it('should set the "aria-grabbed" attribute to true for dragged element', function() {
+		drag = new Drag({
+			sources: item
+		});
+
+		assert.ok(!item.getAttribute('aria-grabbed'));
+		DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+		assert.ok(!item.getAttribute('aria-grabbed'));
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
+		assert.strictEqual('true', item.getAttribute('aria-grabbed'));
+		DragTestHelper.triggerMouseEvent(document, 'mouseup');
+		assert.strictEqual('false', item.getAttribute('aria-grabbed'));
+	});
+
 	it('should disable drag operations', function() {
 		drag = new Drag({
 			disabled: true,

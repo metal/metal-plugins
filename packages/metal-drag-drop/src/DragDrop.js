@@ -54,6 +54,7 @@ class DragDrop extends Drag {
 	 */
 	cleanUpAfterDragging_() {
 		super.cleanUpAfterDragging_();
+		this.targets.forEach(target => target.removeAttribute('aria-dropeffect'));
 		if (this.activeTargets_.length) {
 			dom.removeClasses(this.activeTargets_[0], this.targetOverClass);
 		}
@@ -73,7 +74,7 @@ class DragDrop extends Drag {
 		var targets = this.targets;
 		targets.forEach(function(target, index) {
 			var region = Position.getRegion(target);
-			if (targets[index] !== this.activeDragSource_ && Position.pointInsideRegion(x, y, region)) {
+			if (targets[index] !== this.activeDragPlaceholder_ && Position.pointInsideRegion(x, y, region)) {
 				if (!mainRegion || Position.insideRegion(mainRegion, region)) {
 					activeTargets = [targets[index]].concat(activeTargets);
 					mainRegion = region;
@@ -92,6 +93,18 @@ class DragDrop extends Drag {
 	removeTarget(target) {
 		array.remove(this.targets, target);
 		this.targets = this.targets;
+	}
+
+	/**
+	 * Overrides the original method from `Drag` to also set the "aria-dropeffect"
+	 * attribute, if set, for all targets.
+	 * @return {[type]} [description]
+	 */
+	startDragging_() {
+		if (this.ariaDropEffect) {
+			this.targets.forEach(target => target.setAttribute('aria-dropeffect', this.ariaDropEffect));
+		}
+		super.startDragging_();
 	}
 
 	/**
@@ -126,6 +139,15 @@ class DragDrop extends Drag {
  * @static
  */
 DragDrop.ATTRS = {
+	/**
+	 * The "aria-dropeffect" value to be set for all targets. If not set,
+	 * this html attribute will have to be set manually on the targets.
+	 * @type {string}
+	 */
+	ariaDropEffect: {
+		validator: core.isString
+	},
+
 	/**
 	 * The CSS class that should be added to drop targets when a source
 	 * is being dragged over them.

@@ -171,6 +171,7 @@ class Drag extends Attribute {
 	 */
 	cleanUpAfterDragging_() {
 		if (this.activeDragPlaceholder_) {
+			this.activeDragPlaceholder_.setAttribute('aria-grabbed', 'false');
 			dom.removeClasses(this.activeDragPlaceholder_, this.draggingClass);
 			if (this.dragPlaceholder === Drag.Placeholder.CLONE) {
 				dom.exitDocument(this.activeDragPlaceholder_);
@@ -441,6 +442,7 @@ class Drag extends Attribute {
 		this.dragging_ = true;
 		this.createActiveDragPlaceholder_();
 		dom.addClasses(this.activeDragPlaceholder_, this.draggingClass);
+		this.activeDragPlaceholder_.setAttribute('aria-grabbed', 'true');
 		this.dragScrollDelta_.start(this.activeDragPlaceholder_, this.scrollContainers);
 	}
 

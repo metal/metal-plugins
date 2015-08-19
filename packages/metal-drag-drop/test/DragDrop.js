@@ -251,5 +251,27 @@ describe('DragDrop', function() {
 			assert.strictEqual(nestedTarget, listener.args[0][0].target);
 			assert.deepEqual([nestedTarget, target], listener.args[0][0].allActiveTargets);
 		});
+
+		it('should set "aria-dropeffect" attribute on targets during drag', function() {
+			dragDrop = new DragDrop({
+				ariaDropEffect: 'move',
+				sources: item,
+				targets: '.target'
+			});
+			assert.ok(!target.getAttribute('aria-dropeffect'));
+			assert.ok(!target2.getAttribute('aria-dropeffect'));
+
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 0, 0);
+			assert.ok(!target.getAttribute('aria-dropeffect'));
+			assert.ok(!target2.getAttribute('aria-dropeffect'));
+
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 10, 10);
+			assert.strictEqual('move', target.getAttribute('aria-dropeffect'));
+			assert.strictEqual('move', target2.getAttribute('aria-dropeffect'));
+
+			DragTestHelper.triggerMouseEvent(document, 'mouseup');
+			assert.ok(!target.getAttribute('aria-dropeffect'));
+			assert.ok(!target2.getAttribute('aria-dropeffect'));
+		});
 	});
 });
