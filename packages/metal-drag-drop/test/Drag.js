@@ -207,6 +207,27 @@ describe('Drag', function() {
 		DragTestHelper.triggerMouseEvent(document, 'mouseup');
 	});
 
+	it('should only drag sources that match selector inside given container', function() {
+		var parent = document.createElement('div');
+		dom.replace(item, parent);
+		dom.append(parent, item);
+
+		drag = new Drag({
+			container: parent,
+			minimumDragDistance: 2,
+			sources: '.item'
+		});
+
+		DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
+		assert.strictEqual(item, drag.getActiveDrag());
+
+		DragTestHelper.triggerMouseEvent(document, 'mouseup');
+		DragTestHelper.triggerMouseEvent(item2, 'mousedown', 20, 20);
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
+		assert.ok(!drag.getActiveDrag());
+	});
+
 	it('should handle changing the value of the "sources" attribute', function() {
 		drag = new Drag({
 			minimumDragDistance: 2,
@@ -571,6 +592,35 @@ describe('Drag', function() {
 				}, 0);
 			});
 			scrollNode.scrollTop = 10;
+		});
+
+		it('should convert "scrollContainers" given as selector into elements', function() {
+			var scroll = document.querySelector('.scroll');
+			var scroll2 = scroll.cloneNode(true);
+			dom.enterDocument(scroll2);
+
+			drag = new Drag({
+				scrollContainers: '.scroll',
+				sources: item
+			});
+
+			assert.deepEqual([scroll, scroll2, document], drag.scrollContainers);
+		});
+
+		it('should ignore elements that match "scrollContainers" selector that are outside "container"', function() {
+			var scroll = document.querySelector('.scroll');
+			var scroll2 = scroll.cloneNode(true);
+			var parent = document.createElement('div');
+			dom.append(parent, scroll2);
+			dom.enterDocument(parent);
+
+			drag = new Drag({
+				container: parent,
+				scrollContainers: '.scroll',
+				sources: item
+			});
+
+			assert.deepEqual([scroll2, document], drag.scrollContainers);
 		});
 	});
 

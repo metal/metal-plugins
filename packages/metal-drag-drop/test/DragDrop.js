@@ -97,6 +97,27 @@ describe('DragDrop', function() {
 		assert.ok(dom.hasClass(target2, 'targetOver'));
 	});
 
+	it('should ignore targets that match selector but are outside the given "container"', function() {
+		var parent = document.createElement('div');
+		dom.replace(target, parent);
+		dom.append(parent, target);
+
+		dragDrop = new DragDrop({
+			container: parent,
+			sources: item,
+			targets: '.target'
+		});
+
+		DragTestHelper.triggerMouseEvent(item, 'mousedown', 0, 0);
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
+		assert.ok(dom.hasClass(target, 'targetOver'));
+		assert.ok(!dom.hasClass(target2, 'targetOver'));
+
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 260, 50);
+		assert.ok(!dom.hasClass(target, 'targetOver'));
+		assert.ok(!dom.hasClass(target2, 'targetOver'));
+	});
+
 	it('should trigger "targetEnter" event when mouse enters target', function() {
 		dragDrop = new DragDrop({
 			sources: item,

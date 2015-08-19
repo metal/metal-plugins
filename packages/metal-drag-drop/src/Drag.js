@@ -123,10 +123,17 @@ class Drag extends Attribute {
 	 */
 	attachSourceEvents_() {
 		var listenerFn = this.handleDragStartEvent_.bind(this);
-		this.sourceHandler_.add(
-			dom.on(this.sources, 'mousedown', listenerFn),
-			dom.on(this.sources, 'touchstart', listenerFn)
-		);
+		if (core.isString(this.sources)) {
+			this.sourceHandler_.add(
+				dom.delegate(this.container, 'mousedown', this.sources, listenerFn),
+				dom.delegate(this.container, 'touchstart', this.sources, listenerFn)
+			);
+		} else {
+			this.sourceHandler_.add(
+				dom.on(this.sources, 'mousedown', listenerFn),
+				dom.on(this.sources, 'touchstart', listenerFn)
+			);
+		}
 	}
 
 	/**
@@ -445,7 +452,7 @@ class Drag extends Attribute {
 	 */
 	toElements_(elementOrSelector) {
 		if (core.isString(elementOrSelector)) {
-			var matched = document.querySelectorAll(elementOrSelector);
+			var matched = this.container.querySelectorAll(elementOrSelector);
 			return Array.prototype.slice.call(matched, 0);
 		} else if (elementOrSelector) {
 			return [elementOrSelector];
@@ -527,6 +534,19 @@ Drag.ATTRS = {
 	constrain: {
 		setter: 'setterConstrainFn',
 		validator: 'validatorConstrainFn'
+	},
+
+	/**
+	 * An element that contains all sources, targets and scroll containers. This
+	 * will be used when delegate events are attached or when looking for elements
+	 * by selector. Defaults to `document`.
+	 * @type {!Element|string}
+	 * @default document
+	 */
+	container: {
+		setter: dom.toElement,
+		validator: 'validateElementOrString_',
+		value: document
 	},
 
 	/**
