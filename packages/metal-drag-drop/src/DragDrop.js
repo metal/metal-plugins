@@ -3,6 +3,7 @@
 import array from 'bower:metal/src/array/array';
 import core from 'bower:metal/src/core';
 import dom from 'bower:metal/src/dom/dom';
+import object from 'bower:metal/src/object/object';
 import Drag from './Drag';
 import Position from 'bower:metal-position/src/Position';
 import 'bower:metal/src/dom/events';
@@ -69,12 +70,11 @@ class DragDrop extends Drag {
 	findAllActiveTargets_() {
 		var activeTargets = [];
 		var mainRegion;
-		var x = this.currentMouseX_;
-		var y = this.currentMouseY_;
+		var sourceRegion = this.getSourceRegion_();
 		var targets = this.targets;
 		targets.forEach(function(target, index) {
 			var region = Position.getRegion(target);
-			if (targets[index] !== this.activeDragPlaceholder_ && Position.pointInsideRegion(x, y, region)) {
+			if (targets[index] !== this.activeDragPlaceholder_ && Position.intersectRegion(region, sourceRegion)) {
 				if (!mainRegion || Position.insideRegion(mainRegion, region)) {
 					activeTargets = [targets[index]].concat(activeTargets);
 					mainRegion = region;
@@ -84,6 +84,28 @@ class DragDrop extends Drag {
 			}
 		}.bind(this));
 		return activeTargets;
+	}
+
+	/**
+	 * Gets the active source's region, to be used when calculating which targets are active.
+	 * @return {!Object}
+	 * @protected
+	 */
+	getSourceRegion_() {
+		if (core.isDef(this.currentMouseX_)) {
+			var x = this.currentMouseX_;
+			var y = this.currentMouseY_;
+			return Position.makeRegion(y, 0, x, x, y, 0);
+		} else {
+			// We need to remove the scroll data from the region, since the other regions we'll
+			// be comparing to won't take that information into account.
+			var region = object.mixin({}, this.currentSourceRegion_);
+			region.left -= document.body.scrollLeft;
+			region.right -= document.body.scrollLeft;
+			region.top -= document.body.scrollTop;
+			region.bottom -= document.body.scrollTop;
+			return region;
+		}
 	}
 
 	/**

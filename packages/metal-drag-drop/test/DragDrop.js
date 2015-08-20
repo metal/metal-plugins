@@ -12,7 +12,7 @@ describe('DragDrop', function() {
 	var target2;
 
 	beforeEach(function() {
-		var html = '<div class="item"></div><div class="target"></div>';
+		var html = '<div class="item" style="height:50px;width:50px;"></div><div class="target"></div>';
 		dom.append(document.body, html);
 
 		item = document.querySelector('.item');
@@ -165,6 +165,52 @@ describe('DragDrop', function() {
 		assert.strictEqual(2, listener.callCount);
 		assert.strictEqual(target2, listener.args[1][0].target);
 		assert.deepEqual([target2], listener.args[1][0].allActiveTargets);
+	});
+
+	it('should trigger "targetEnter" event when source is over target via keyboard controls', function() {
+		dragDrop = new DragDrop({
+			keyboardSpeed: 100,
+			sources: item,
+			targets: '.target'
+		});
+
+		var listener = sinon.stub();
+		dragDrop.on(DragDrop.Events.TARGET_ENTER, listener);
+
+		DragTestHelper.triggerKeyEvent(item, 13);
+		DragTestHelper.triggerKeyEvent(item, 39);
+		DragTestHelper.triggerKeyEvent(item, 40);
+		assert.strictEqual(1, listener.callCount);
+		assert.strictEqual(target, listener.args[0][0].target);
+		assert.deepEqual([target], listener.args[0][0].allActiveTargets);
+
+		DragTestHelper.triggerKeyEvent(item, 39);
+		DragTestHelper.triggerKeyEvent(item, 39);
+		assert.strictEqual(2, listener.callCount);
+		assert.strictEqual(target2, listener.args[1][0].target);
+		assert.deepEqual([target2], listener.args[1][0].allActiveTargets);
+	});
+
+	it('should trigger "targetLeave" event when source leaves target via keyboard controls', function() {
+		dragDrop = new DragDrop({
+			keyboardSpeed: 100,
+			sources: item,
+			targets: '.target'
+		});
+
+		var listener = sinon.stub();
+		dragDrop.on(DragDrop.Events.TARGET_LEAVE, listener);
+
+		DragTestHelper.triggerKeyEvent(item, 13);
+		DragTestHelper.triggerKeyEvent(item, 39);
+		DragTestHelper.triggerKeyEvent(item, 40);
+		assert.strictEqual(0, listener.callCount);
+
+		DragTestHelper.triggerKeyEvent(item, 39);
+		DragTestHelper.triggerKeyEvent(item, 39);
+		assert.strictEqual(1, listener.callCount);
+		assert.strictEqual(target, listener.args[0][0].target);
+		assert.deepEqual([target], listener.args[0][0].allActiveTargets);
 	});
 
 	it('should add targets dynamically', function() {
