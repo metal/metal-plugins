@@ -33,8 +33,6 @@ describe('DragScrollDelta', function() {
 	});
 
 	after(function() {
-		document.body.scrollTop = 0;
-		document.body.scrollLeft = 0;
 		document.body.style.height = '';
 		document.body.style.width = '';
 		document.body.style.overflow = '';

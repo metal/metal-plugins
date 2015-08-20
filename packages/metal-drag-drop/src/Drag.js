@@ -4,6 +4,7 @@ import core from 'bower:metal/src/core';
 import dom from 'bower:metal/src/dom/dom';
 import object from 'bower:metal/src/object/object';
 import Attribute from 'bower:metal/src/attribute/Attribute';
+import DragAutoScroll from './helpers/DragAutoScroll';
 import DragScrollDelta from './helpers/DragScrollDelta';
 import DragShim from './helpers/DragShim';
 import EventHandler from 'bower:metal/src/events/EventHandler';
@@ -299,6 +300,9 @@ class Drag extends Attribute {
 	 * @protected
 	 */
 	handleDragEndEvent_() {
+		if (this.autoScroll) {
+			this.autoScroll.stop();
+		}
 		this.dragScrollDelta_.stop();
 		DragShim.hideDocShim();
 		this.emit(Drag.Events.END, this.buildEventObject_());
@@ -324,6 +328,9 @@ class Drag extends Attribute {
 		if (!this.isDragging()) {
 			this.startDragging_();
 			this.dragScrollDelta_.start(this.activeDragPlaceholder_, this.scrollContainers);
+		}
+		if (this.autoScroll) {
+			this.autoScroll.scroll(this.scrollContainers, this.currentMouseX_, this.currentMouseY_);
 		}
 		this.updatePosition(distanceX, distanceY);
 	}
@@ -473,6 +480,17 @@ class Drag extends Attribute {
 	}
 
 	/**
+	 * Setter for the `autoScroll` attribute.
+	 * @param {*} val
+	 * @return {!DragAutoScroll}
+	 */
+	setterAutoScrollFn_(val) {
+		if (val !== false) {
+			return new DragAutoScroll(val);
+		}
+	}
+
+	/**
 	 * Setter for the `constrain` attribute.
 	 * @param {!Element|Object|string} val
 	 * @return {!Element|Object}
@@ -579,6 +597,20 @@ class Drag extends Attribute {
  * @static
  */
 Drag.ATTRS = {
+	/**
+	 * Configuration object for the `DragAutoScroll` instance that will be used for
+	 * automatically scrolling the elements in `scrollContainers` during drag when
+	 * the mouse is near their boundaries. If set to `false`, auto scrolling will be
+	 * disabled (default).
+	 * @type {!Object|boolean}
+	 * @default false
+	 */
+	autoScroll: {
+		setter: 'setterAutoScrollFn_',
+		value: false,
+		writeOnce: true
+	},
+
 	/**
 	 * The axis that allows dragging. Can be set to just x, just y or both (default).
 	 * @type {string}

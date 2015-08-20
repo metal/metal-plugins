@@ -636,6 +636,62 @@ describe('Drag', function() {
 
 			assert.deepEqual([scroll2, document], drag.scrollContainers);
 		});
+
+		it('should auto scroll the document when dragging near boundaries', function(done) {
+			document.body.style.height = '3000px';
+			document.body.style.overflow = 'scroll';
+
+			drag = new Drag({
+				autoScroll: true,
+				sources: item
+			});
+
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 20, window.innerHeight);
+			dom.once(document, 'scroll', function() {
+				assert.strictEqual(20, document.body.scrollTop);
+
+				DragTestHelper.triggerMouseEvent(document, 'mouseup');
+				document.body.scrollTop = 0;
+				dom.once(document, 'scroll', function() {
+					document.body.style.height = '';
+					document.body.style.overflow = '';
+					done();
+				});
+			});
+		});
+
+		it('should auto scroll a container when dragging near boundaries', function(done) {
+			var scroll = document.querySelector('.scroll');
+			drag = new Drag({
+				autoScroll: true,
+				scrollContainers: '.scroll',
+				sources: item
+			});
+
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 10);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 20, 15);
+			dom.once(scroll, 'scroll', function() {
+				assert.strictEqual(20, scroll.scrollTop);
+				DragTestHelper.triggerMouseEvent(document, 'mouseup');
+				done();
+			});
+		});
+
+		it('should not auto scroll if "autoScroll" is not set', function(done) {
+			var scroll = document.querySelector('.scroll');
+			drag = new Drag({
+				scrollContainers: '.scroll',
+				sources: item
+			});
+
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 10);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 20, 15);
+			setTimeout(function() {
+				assert.strictEqual(0, scroll.scrollTop);
+				done();
+			}, 100);
+		});
 	});
 
 	describe('Constrain', function() {
