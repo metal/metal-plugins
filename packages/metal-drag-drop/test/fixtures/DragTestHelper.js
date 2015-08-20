@@ -7,6 +7,18 @@ import dom from 'bower:metal/src/dom/dom';
  */
 class DragTestHelper {
 	/**
+	 * Triggers a `keydown` event on the given target.
+	 * @param {!Element} target
+	 * @param {string} keyCode
+	 * @static
+	 */
+	static triggerKeyEvent(target, keyCode) {
+		dom.triggerEvent(target, 'keydown', {
+			keyCode: keyCode
+		});
+	}
+
+	/**
 	 * Triggers the given mouse event, building the correct data object
 	 * with the given information, using the shim as target instead of
 	 * the document, and turning the mouse event into the corresponding
@@ -16,6 +28,7 @@ class DragTestHelper {
 	 * @param {number} x
 	 * @param {number} y
 	 * @param {number} button
+	 * @static
 	 */
 	static triggerMouseEvent(target, eventType, x, y, button) {
 		var data = {

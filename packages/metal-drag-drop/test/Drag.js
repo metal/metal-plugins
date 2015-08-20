@@ -806,6 +806,188 @@ describe('Drag', function() {
 		});
 	});
 
+	describe('Keyboard', function() {
+		it('should start drag operation when ENTER key is pressed on source', function() {
+			drag = new Drag({
+				sources: item
+			});
+
+			DragTestHelper.triggerKeyEvent(item, 13);
+			assert.ok(drag.isDragging());
+			assert.strictEqual(item, drag.getActiveDrag());
+		});
+
+		it('should not start drag operation when ENTER key is pressed on non source element', function() {
+			drag = new Drag({
+				sources: item
+			});
+
+			DragTestHelper.triggerKeyEvent(document.body, 13);
+			assert.ok(!drag.isDragging());
+		});
+
+		it('should start drag operation when SPACE key is pressed', function() {
+			drag = new Drag({
+				sources: item
+			});
+
+			DragTestHelper.triggerKeyEvent(item, 32);
+			assert.ok(drag.isDragging());
+			assert.strictEqual(item, drag.getActiveDrag());
+		});
+
+		it('should not start drag operation when SPACE key is pressed on non source element', function() {
+			drag = new Drag({
+				sources: item
+			});
+
+			DragTestHelper.triggerKeyEvent(document.body, 32);
+			assert.ok(!drag.isDragging());
+		});
+
+		it('should end drag operation when ENTER key is pressed on source', function() {
+			drag = new Drag({
+				sources: item
+			});
+
+			DragTestHelper.triggerKeyEvent(item, 13);
+			DragTestHelper.triggerKeyEvent(item, 13);
+			assert.ok(!drag.isDragging());
+		});
+
+		it('should not end drag operation when ENTER key is pressed on non source element', function() {
+			drag = new Drag({
+				sources: item
+			});
+
+			DragTestHelper.triggerKeyEvent(item, 13);
+			DragTestHelper.triggerKeyEvent(document.body, 13);
+			assert.ok(drag.isDragging());
+		});
+
+		it('should end drag operation when SPACE key is pressed on source', function() {
+			drag = new Drag({
+				sources: item
+			});
+
+			DragTestHelper.triggerKeyEvent(item, 13);
+			DragTestHelper.triggerKeyEvent(item, 32);
+			assert.ok(!drag.isDragging());
+		});
+
+		it('should not end drag operation when SPACE key is pressed on non source element', function() {
+			drag = new Drag({
+				sources: item
+			});
+
+			DragTestHelper.triggerKeyEvent(item, 13);
+			DragTestHelper.triggerKeyEvent(document.body, 32);
+			assert.ok(drag.isDragging());
+		});
+
+		it('should end drag operation when ESC key is pressed on source', function() {
+			drag = new Drag({
+				sources: item
+			});
+
+			DragTestHelper.triggerKeyEvent(item, 13);
+			DragTestHelper.triggerKeyEvent(item, 27);
+			assert.ok(!drag.isDragging());
+		});
+
+		it('should end drag operation when ESC key is pressed on non source element', function() {
+			drag = new Drag({
+				sources: item
+			});
+
+			DragTestHelper.triggerKeyEvent(item, 13);
+			DragTestHelper.triggerKeyEvent(document.body, 27);
+			assert.ok(!drag.isDragging());
+		});
+
+		it('should move source during drag when arrow keys are pressed', function() {
+			drag = new Drag({
+				sources: item
+			});
+
+			DragTestHelper.triggerKeyEvent(item, 13);
+			DragTestHelper.triggerKeyEvent(item, 37);
+			assert.strictEqual('10px', item.style.left);
+			assert.strictEqual('20px', item.style.top);
+
+			DragTestHelper.triggerKeyEvent(item, 38);
+			assert.strictEqual('10px', item.style.left);
+			assert.strictEqual('10px', item.style.top);
+
+			DragTestHelper.triggerKeyEvent(item, 39);
+			assert.strictEqual('20px', item.style.left);
+			assert.strictEqual('10px', item.style.top);
+
+			DragTestHelper.triggerKeyEvent(item, 40);
+			assert.strictEqual('20px', item.style.left);
+			assert.strictEqual('20px', item.style.top);
+		});
+
+		it('should move source through arrows according to given speed', function() {
+			drag = new Drag({
+				keyboardSpeed: 20,
+				sources: item
+			});
+
+			DragTestHelper.triggerKeyEvent(item, 13);
+			DragTestHelper.triggerKeyEvent(item, 37);
+			assert.strictEqual('0px', item.style.left);
+			assert.strictEqual('20px', item.style.top);
+
+			DragTestHelper.triggerKeyEvent(item, 38);
+			assert.strictEqual('0px', item.style.left);
+			assert.strictEqual('0px', item.style.top);
+
+			DragTestHelper.triggerKeyEvent(item, 39);
+			assert.strictEqual('20px', item.style.left);
+			assert.strictEqual('0px', item.style.top);
+
+			DragTestHelper.triggerKeyEvent(item, 40);
+			assert.strictEqual('20px', item.style.left);
+			assert.strictEqual('20px', item.style.top);
+		});
+
+		it('should not move source if it\'s not being dragged', function() {
+			drag = new Drag({
+				sources: item
+			});
+
+			DragTestHelper.triggerKeyEvent(item, 37);
+			assert.strictEqual('20px', item.style.left);
+			assert.strictEqual('20px', item.style.top);
+		});
+
+		it('should not move source if arrow keys are pressed on another element', function() {
+			drag = new Drag({
+				sources: '.item'
+			});
+
+			DragTestHelper.triggerKeyEvent(item, 13);
+			DragTestHelper.triggerKeyEvent(item2, 37);
+			assert.strictEqual('20px', item.style.left);
+			assert.strictEqual('20px', item.style.top);
+		});
+
+		it('should neither end nor move source if unsupported key is pressed', function() {
+			drag = new Drag({
+				sources: '.item'
+			});
+
+			DragTestHelper.triggerKeyEvent(item, 13);
+
+			DragTestHelper.triggerKeyEvent(item, 10);
+			assert.ok(drag.isDragging());
+			assert.strictEqual('20px', item.style.left);
+			assert.strictEqual('20px', item.style.top);
+		});
+
+	});
+
 	it('should detach document events when disposed', function() {
 		drag = new Drag({
 			sources: item

@@ -115,6 +115,7 @@ class Drag extends Attribute {
 		this.on(Drag.Events.END, this.defaultEndFn_, true);
 		this.on('sourcesChanged', this.handleSourcesChanged_.bind(this));
 		this.dragScrollDelta_.on('scrollDelta', this.handleScrollDelta_.bind(this));
+		dom.on(document, 'keydown', this.handleKeyDown_.bind(this));
 	}
 
 	/**
@@ -122,17 +123,19 @@ class Drag extends Attribute {
 	 * @protected
 	 */
 	attachSourceEvents_() {
-		var listenerFn = this.handleDragStartEvent_.bind(this);
-		if (core.isString(this.sources)) {
-			this.sourceHandler_.add(
-				dom.delegate(this.container, 'mousedown', this.sources, listenerFn),
-				dom.delegate(this.container, 'touchstart', this.sources, listenerFn)
-			);
-		} else {
-			this.sourceHandler_.add(
-				dom.on(this.sources, 'mousedown', listenerFn),
-				dom.on(this.sources, 'touchstart', listenerFn)
-			);
+		var toAttach = {
+			keydown: this.handleSourceKeyDown_.bind(this),
+			mousedown: this.handleDragStartEvent_.bind(this),
+			touchstart: this.handleDragStartEvent_.bind(this)
+		};
+		var eventTypes = Object.keys(toAttach);
+		for (var i = 0; i < eventTypes.length; i++) {
+			var listenerFn = toAttach[eventTypes[i]];
+			if (core.isString(this.sources)) {
+				this.sourceHandler_.add(dom.delegate(this.container, eventTypes[i], this.sources, listenerFn));
+			} else {
+				this.sourceHandler_.add(dom.on(this.sources, eventTypes[i], listenerFn));
+			}
 		}
 	}
 
@@ -150,6 +153,18 @@ class Drag extends Attribute {
 			x: this.currentSourceRegion_.left,
 			y: this.currentSourceRegion_.top
 		};
+	}
+
+	/**
+	 * Calculates the initial positions for the drag action.
+	 * @protected
+	 */
+	calculateInitialPosition_() {
+		this.currentMouseX_ = event.clientX;
+		this.currentMouseY_ = event.clientY;
+		this.currentSourceRegion_ = object.mixin({}, Position.getRegion(this.activeDragSource_, true));
+		this.currentSourceRelativeX_ = this.activeDragSource_.offsetLeft;
+		this.currentSourceRelativeY_ = this.activeDragSource_.offsetTop;
 	}
 
 	/**
@@ -196,6 +211,8 @@ class Drag extends Attribute {
 	cloneActiveDrag_() {
 		var placeholder = this.activeDragSource_.cloneNode(true);
 		placeholder.style.position = 'absolute';
+		placeholder.style.left = this.currentSourceRelativeX_ + 'px';
+		placeholder.style.top = this.currentSourceRelativeY_ + 'px';
 		dom.append(this.activeDragSource_.parentNode, placeholder);
 		return placeholder;
 	}
@@ -306,6 +323,7 @@ class Drag extends Attribute {
 
 		if (!this.isDragging()) {
 			this.startDragging_();
+			this.dragScrollDelta_.start(this.activeDragPlaceholder_, this.scrollContainers);
 		}
 		this.updatePosition(distanceX, distanceY);
 	}
@@ -321,25 +339,33 @@ class Drag extends Attribute {
 		this.activeDragSource_ = event.delegateTarget || event.currentTarget;
 
 		if (this.canStartDrag_(event)) {
-			this.dragHandler_.add.apply(
-				this.dragHandler_,
-				DragShim.attachDocListeners(this.useShim, {
-					mousemove: this.handleDragMoveEvent_.bind(this),
-					touchmove: this.handleDragMoveEvent_.bind(this),
-					mouseup: this.handleDragEndEvent_.bind(this),
-					touchend: this.handleDragEndEvent_.bind(this)
-				})
-			);
-
-			var position = event.targetTouches ? event.targetTouches[0] : event;
-			this.currentMouseX_ = position.clientX;
-			this.currentMouseY_ = position.clientY;
-			this.currentSourceRegion_ = object.mixin({}, Position.getRegion(this.activeDragSource_, true));
-			this.currentSourceRelativeX_ = this.activeDragSource_.offsetLeft;
-			this.currentSourceRelativeY_ = this.activeDragSource_.offsetTop;
-			this.distanceDragged_ = 0;
-
+			this.calculateInitialPosition_(event.targetTouches ? event.targetTouches[0] : event);
 			event.preventDefault();
+			if (event.type === 'keydown') {
+				this.startDragging_();
+			} else {
+				this.dragHandler_.add.apply(
+					this.dragHandler_,
+					DragShim.attachDocListeners(this.useShim, {
+						mousemove: this.handleDragMoveEvent_.bind(this),
+						touchmove: this.handleDragMoveEvent_.bind(this),
+						mouseup: this.handleDragEndEvent_.bind(this),
+						touchend: this.handleDragEndEvent_.bind(this)
+					})
+				);
+				this.distanceDragged_ = 0;
+			}
+		}
+	}
+
+	/**
+	 * Handles a `keydown` event on the document. Ends the drag if ESC was the pressed key.
+	 * @param {!Event} event
+	 * @protected
+	 */
+	handleKeyDown_(event) {
+		if (event.keyCode === 27 && this.isDragging()) {
+			this.handleDragEndEvent_();
 		}
 	}
 
@@ -351,6 +377,43 @@ class Drag extends Attribute {
 	 */
 	handleScrollDelta_(event) {
 		this.updatePosition(event.deltaX, event.deltaY);
+	}
+
+	/**
+	 * Handles a `keydown` event from `KeyboardDrag`. Does the appropriate drag action
+	 * for the pressed key.
+	 * @param {!Object} event
+	 * @protected
+	 */
+	handleSourceKeyDown_(event) {
+		if (this.isDragging()) {
+			var currentTarget = event.delegateTarget || event.currentTarget;
+			if (currentTarget !== this.activeDragSource_) {
+				return;
+			}
+			if (event.keyCode >= 37 && event.keyCode <= 40) {
+				// Arrow keys during drag move the source.
+				var deltaX = 0;
+				var deltaY = 0;
+				if (event.keyCode === 37) {
+					deltaX -= this.keyboardSpeed;
+				} else if (event.keyCode === 38) {
+					deltaY -= this.keyboardSpeed;
+				} else if (event.keyCode === 39) {
+					deltaX += this.keyboardSpeed;
+				} else {
+					deltaY += this.keyboardSpeed;
+				}
+				this.updatePosition(deltaX, deltaY);
+				event.preventDefault();
+			} else if (event.keyCode === 13 || event.keyCode === 32 || event.keyCode === 27) {
+				// Enter, space or esc during drag will end it.
+				this.handleDragEndEvent_();
+			}
+		} else if (event.keyCode === 13 || event.keyCode === 32) {
+			// Enter or space will start the drag action.
+			this.handleDragStartEvent_(event);
+		}
 	}
 
 	/**
@@ -443,7 +506,6 @@ class Drag extends Attribute {
 		this.createActiveDragPlaceholder_();
 		dom.addClasses(this.activeDragPlaceholder_, this.draggingClass);
 		this.activeDragPlaceholder_.setAttribute('aria-grabbed', 'true');
-		this.dragScrollDelta_.start(this.activeDragPlaceholder_, this.scrollContainers);
 	}
 
 	/**
@@ -590,6 +652,16 @@ Drag.ATTRS = {
 	 */
 	handles: {
 		validator: 'validateElementOrString_'
+	},
+
+	/**
+	 * The number of pixels that the source should move when dragged via
+	 * the keyboard controls.
+	 * @default 10
+	 */
+	keyboardSpeed: {
+		validator: core.isNumber,
+		value: 10
 	},
 
 	/**
