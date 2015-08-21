@@ -519,17 +519,16 @@ describe('Drag', function() {
 					assert.strictEqual(40 + 'px', item.style.left);
 					assert.strictEqual(60 + 'px', item.style.top);
 
-					document.body.scrollTop = 0;
-					document.body.scrollLeft = 0;
 					dom.once(document, 'scroll', function() {
 						document.body.style.height = '';
 						document.body.style.width = '';
 						document.body.style.overflow = '';
 						done();
 					});
+					window.scrollTo(0, 0);
 				}, 0);
 			});
-			document.body.scrollTop = 10;
+			window.scrollTo(0, 10);
 		});
 
 		it('should update position of dragged element when scroll container is scrolled', function(done) {
@@ -649,15 +648,15 @@ describe('Drag', function() {
 			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
 			DragTestHelper.triggerMouseEvent(document, 'mousemove', 20, window.innerHeight);
 			dom.once(document, 'scroll', function() {
-				assert.strictEqual(20, document.body.scrollTop);
+				assert.strictEqual(20, Position.getScrollTop(document));
 
 				DragTestHelper.triggerMouseEvent(document, 'mouseup');
-				document.body.scrollTop = 0;
 				dom.once(document, 'scroll', function() {
 					document.body.style.height = '';
 					document.body.style.overflow = '';
 					done();
 				});
+				window.scrollTo(0, 0);
 			});
 		});
 
@@ -792,8 +791,8 @@ describe('Drag', function() {
 				constrain: '.container',
 				sources: item
 			});
-			var containerRegion = Position.getRegion(drag.constrain);
 
+			var containerRegion = Position.getRegion(drag.constrain);
 			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
 			DragTestHelper.triggerMouseEvent(document, 'mousemove', 30, 30);
 
@@ -801,13 +800,13 @@ describe('Drag', function() {
 				assert.strictEqual(30, data.x);
 				assert.strictEqual(containerRegion.bottom - 20, data.y);
 
-				document.body.scrollTop = 0;
+				window.scrollTo(0, 0);
 				drag.once(Drag.Events.DRAG, function() {
 					document.body.style.height = '';
 					done();
 				});
 			});
-			document.body.scrollTop = 200;
+			window.scrollTo(0, 200);
 		});
 	});
 

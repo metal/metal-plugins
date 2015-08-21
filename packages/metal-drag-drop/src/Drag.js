@@ -158,9 +158,10 @@ class Drag extends Attribute {
 
 	/**
 	 * Calculates the initial positions for the drag action.
+	 * @param {Event} event
 	 * @protected
 	 */
-	calculateInitialPosition_() {
+	calculateInitialPosition_(event) {
 		this.currentMouseX_ = event.clientX;
 		this.currentMouseY_ = event.clientY;
 		this.currentSourceRegion_ = object.mixin({}, Position.getRegion(this.activeDragSource_, true));
@@ -465,7 +466,7 @@ class Drag extends Attribute {
 		} else if (core.isString(handles)) {
 			return dom.match(element, handles + ', ' + handles + ' *');
 		} else {
-			return handles.contains(element);
+			return dom.contains(handles, element);
 		}
 	}
 

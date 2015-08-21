@@ -1,9 +1,9 @@
 'use strict';
 
-import core from 'bower:metal/src/core';
 import dom from 'bower:metal/src/dom/dom';
 import EventEmitter from 'bower:metal/src/events/EventEmitter';
 import EventHandler from 'bower:metal/src/events/EventHandler';
+import Position from 'bower:metal-position/src/Position';
 
 /**
  * Helper called by the `Drag` instance that emits an event whenever
@@ -40,18 +40,6 @@ class DragScrollDelta extends EventEmitter {
 	}
 
 	/**
-	 * Gets the scroll element for the given element. That's necessary because
-	 * when an event is triggered on the document, the element with the scroll
-	 * positions is the body, not the actual document.
-	 * @param {!Element} element
-	 * @return {boolean}
-	 * @protected
-	 */
-	getScrollElement_(element) {
-		return core.isDocument(element) ? element.body : element;
-	}
-
-	/**
 	 * Handles a "scroll" event, emitting a "scrollDelta" event with the
 	 * difference between the previous and new values.
 	 * @param {number} index
@@ -59,10 +47,9 @@ class DragScrollDelta extends EventEmitter {
 	 * @protected
 	 */
 	handleScroll_(index, event) {
-		var element = this.getScrollElement_(event.currentTarget);
 		var newPosition = {
-			scrollLeft: element.scrollLeft,
-			scrollTop: element.scrollTop
+			scrollLeft: Position.getScrollLeft(event.currentTarget),
+			scrollTop: Position.getScrollTop(event.currentTarget)
 		};
 		var position = this.scrollPositions_[index];
 		this.scrollPositions_[index] = newPosition;
@@ -80,18 +67,17 @@ class DragScrollDelta extends EventEmitter {
 	 * @param {!Array<!Element>} scrollContainers
 	 */
 	start(dragNode, scrollContainers) {
-		if (!dragNode.offsetParent) {
-			// If the drag node has no offset parent, then its position is "fixed",
-			// and so its coordinates don't need to be updated when parents are scrolled.
+		if (getComputedStyle(dragNode).position === 'fixed') {
+			// If the drag node's position is "fixed", then its coordinates don't need to
+			// be updated when parents are scrolled.
 			return;
 		}
 
 		for (var i = 0; i < scrollContainers.length; i++) {
-			if (scrollContainers[i].contains(dragNode)) {
-				var scrollElement = this.getScrollElement_(scrollContainers[i]);
+			if (dom.contains(scrollContainers[i], dragNode)) {
 				this.scrollPositions_.push({
-					scrollLeft: scrollElement.scrollLeft,
-					scrollTop: scrollElement.scrollTop
+					scrollLeft: Position.getScrollLeft(scrollContainers[i]),
+					scrollTop: Position.getScrollTop(scrollContainers[i])
 				});
 
 				var index = this.scrollPositions_.length - 1;

@@ -2,6 +2,7 @@
 
 import dom from 'bower:metal/src/dom/dom';
 import DragAutoScroll from '../../src/helpers/DragAutoScroll';
+import Position from 'bower:metal-position/src/Position';
 
 describe('DragAutoScroll', function() {
 	var autoScroll;
@@ -21,9 +22,8 @@ describe('DragAutoScroll', function() {
 	afterEach(function(done) {
 		autoScroll.dispose();
 		document.body.innerHTML = '';
-		if (document.body.scrollTop > 0 || document.body.scrollLeft > 0) {
-			document.body.scrollTop = 0;
-			document.body.scrollLeft = 0;
+		if (Position.getScrollTop(document) > 0 || Position.getScrollLeft(document) > 0) {
+			window.scrollTo(0, 0);
 			dom.once(document, 'scroll', function() {
 				done();
 			});
@@ -42,8 +42,8 @@ describe('DragAutoScroll', function() {
 		autoScroll = new DragAutoScroll();
 
 		setTimeout(function() {
-			assert.strictEqual(0, document.body.scrollTop);
-			assert.strictEqual(0, document.body.scrollLeft);
+			assert.strictEqual(0, Position.getScrollTop(document));
+			assert.strictEqual(0, Position.getScrollLeft(document));
 			done();
 		}, 100);
 		autoScroll.scroll([document], 30, 30);
@@ -53,27 +53,27 @@ describe('DragAutoScroll', function() {
 		autoScroll = new DragAutoScroll();
 
 		dom.once(document, 'scroll', function() {
-			assert.strictEqual(20, document.body.scrollTop);
-			assert.strictEqual(0, document.body.scrollLeft);
+			assert.strictEqual(20, Position.getScrollTop(document));
+			assert.strictEqual(0, Position.getScrollLeft(document));
 
-			autoScroll.scroll([document], window.innerWidth - 10, 30);
 			dom.once(document, 'scroll', function() {
-				assert.strictEqual(20, document.body.scrollTop);
-				assert.strictEqual(20, document.body.scrollLeft);
+				assert.strictEqual(20, Position.getScrollTop(document));
+				assert.strictEqual(20, Position.getScrollLeft(document));
 
-				autoScroll.scroll([document], 0, 30);
 				dom.once(document, 'scroll', function() {
-					assert.strictEqual(20, document.body.scrollTop);
-					assert.strictEqual(0, document.body.scrollLeft);
+					assert.strictEqual(20, Position.getScrollTop(document));
+					assert.strictEqual(0, Position.getScrollLeft(document));
 
-					autoScroll.scroll([document], 0, 0);
 					dom.once(document, 'scroll', function() {
-						assert.strictEqual(0, document.body.scrollTop);
-						assert.strictEqual(0, document.body.scrollLeft);
+						assert.strictEqual(0, Position.getScrollTop(document));
+						assert.strictEqual(0, Position.getScrollLeft(document));
 						done();
 					});
+					autoScroll.scroll([document], 0, 0);
 				});
+				autoScroll.scroll([document], 0, 30);
 			});
+			autoScroll.scroll([document], window.innerWidth - 10, 30);
 		});
 		autoScroll.scroll([document], 30, window.innerHeight - 10);
 	});
@@ -82,13 +82,13 @@ describe('DragAutoScroll', function() {
 		autoScroll = new DragAutoScroll();
 
 		dom.once(document, 'scroll', function() {
-			assert.strictEqual(20, document.body.scrollTop);
+			assert.strictEqual(20, Position.getScrollTop(document));
 			dom.once(document, 'scroll', function() {
-				assert.strictEqual(40, document.body.scrollTop);
+				assert.strictEqual(40, Position.getScrollTop(document));
 				dom.once(document, 'scroll', function() {
-					assert.strictEqual(60, document.body.scrollTop);
+					assert.strictEqual(60, Position.getScrollTop(document));
 					setTimeout(function() {
-						assert.strictEqual(60, document.body.scrollTop);
+						assert.strictEqual(60, Position.getScrollTop(document));
 						done();
 					}, 100);
 					autoScroll.scroll([document], 30, 30);
@@ -102,9 +102,9 @@ describe('DragAutoScroll', function() {
 		autoScroll = new DragAutoScroll();
 
 		dom.once(document, 'scroll', function() {
-			assert.strictEqual(20, document.body.scrollTop);
+			assert.strictEqual(20, Position.getScrollTop(document));
 			setTimeout(function() {
-				assert.strictEqual(20, document.body.scrollTop);
+				assert.strictEqual(20, Position.getScrollTop(document));
 				done();
 			}, 100);
 			autoScroll.stop();
@@ -140,7 +140,7 @@ describe('DragAutoScroll', function() {
 		});
 
 		dom.once(document, 'scroll', function() {
-			assert.strictEqual(30, document.body.scrollTop);
+			assert.strictEqual(30, Position.getScrollTop(document));
 			done();
 		});
 		autoScroll.scroll([document], 30, window.innerHeight - 10);
@@ -152,9 +152,9 @@ describe('DragAutoScroll', function() {
 		});
 
 		setTimeout(function() {
-			assert.strictEqual(0, document.body.scrollTop);
+			assert.strictEqual(0, Position.getScrollTop(document));
 			dom.once(document, 'scroll', function() {
-				assert.strictEqual(20, document.body.scrollTop);
+				assert.strictEqual(20, Position.getScrollTop(document));
 				done();
 			});
 			autoScroll.scroll([document], 30, window.innerHeight - 50);
@@ -168,7 +168,7 @@ describe('DragAutoScroll', function() {
 		});
 
 		setTimeout(function() {
-			assert.strictEqual(0, document.body.scrollTop);
+			assert.strictEqual(0, Position.getScrollTop(document));
 			done();
 		}, 50);
 		autoScroll.scroll([document], 30, window.innerHeight - 10);
@@ -180,7 +180,7 @@ describe('DragAutoScroll', function() {
 		});
 
 		setTimeout(function() {
-			assert.strictEqual(20, document.body.scrollTop);
+			assert.strictEqual(20, Position.getScrollTop(document));
 			done();
 		}, 110);
 		autoScroll.scroll([document], 30, window.innerHeight - 10);

@@ -62,6 +62,22 @@ class DragAutoScroll extends Attribute {
 	}
 
 	/**
+	 * Adds the given deltas to the given element's scroll position.
+	 * @param {!Element} element
+	 * @param {number} deltaX
+	 * @param {number} deltaY
+	 * @protected
+	 */
+	scrollElement_(element, deltaX, deltaY) {
+		if (core.isDocument(element)) {
+			window.scrollBy(deltaX, deltaY);
+		} else {
+			element.scrollTop += deltaY;
+			element.scrollLeft += deltaX;
+		}
+	}
+
+	/**
 	 * Scrolls the given containers if the mouse is near their boundaries.
 	 * @param {!Array<!Element>} scrollContainers
 	 * @param {number} mouseX
@@ -69,35 +85,29 @@ class DragAutoScroll extends Attribute {
 	 * @protected
 	 */
 	scrollInternal_(scrollContainers, mouseX, mouseY) {
-		var scrolled = false;
 		for (var i = 0; i < scrollContainers.length; i++) {
 			var scrollRegion = this.getRegionWithoutScroll_(scrollContainers[i]);
 			if (!Position.pointInsideRegion(mouseX, mouseY, scrollRegion)) {
 				continue;
 			}
 
-			var scrollElement = scrollContainers[i];
-			if (core.isDocument(scrollElement)) {
-				scrollElement = scrollElement.body;
+			var deltaX = 0;
+			var deltaY = 0;
+			var scrollTop = Position.getScrollTop(scrollContainers[i]);
+			var scrollLeft = Position.getScrollLeft(scrollContainers[i]);
+			if (scrollLeft > 0 && Math.abs(mouseX - scrollRegion.left) <= this.maxDistance) {
+				deltaX -= this.speed;
+			} else if (Math.abs(mouseX - scrollRegion.right) <= this.maxDistance) {
+				deltaX += this.speed;
 			}
-			if (Math.abs(mouseX - scrollRegion.left) <= this.maxDistance) {
-				scrollElement.scrollLeft -= this.speed;
-				scrolled = true;
-			}
-			if (Math.abs(mouseX - scrollRegion.right) <= this.maxDistance) {
-				scrollElement.scrollLeft += this.speed;
-				scrolled = true;
-			}
-			if (Math.abs(mouseY - scrollRegion.top) <= this.maxDistance) {
-				scrollElement.scrollTop -= this.speed;
-				scrolled = true;
-			}
-			if (Math.abs(mouseY - scrollRegion.bottom) <= this.maxDistance) {
-				scrollElement.scrollTop += this.speed;
-				scrolled = true;
+			if (scrollTop > 0 && Math.abs(mouseY - scrollRegion.top) <= this.maxDistance) {
+				deltaY -= this.speed;
+			} else if (Math.abs(mouseY - scrollRegion.bottom) <= this.maxDistance) {
+				deltaY += this.speed;
 			}
 
-			if (scrolled) {
+			if (deltaX || deltaY) {
+				this.scrollElement_(scrollContainers[i], deltaX, deltaY);
 				this.scroll(scrollContainers, mouseX, mouseY);
 				break;
 			}

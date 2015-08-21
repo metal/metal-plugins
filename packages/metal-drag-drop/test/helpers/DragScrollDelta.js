@@ -2,6 +2,7 @@
 
 import dom from 'bower:metal/src/dom/dom';
 import DragScrollDelta from '../../src/helpers/DragScrollDelta';
+import Position from 'bower:metal-position/src/Position';
 
 describe('DragScrollDelta', function() {
 	var dragScrollDelta;
@@ -21,12 +22,11 @@ describe('DragScrollDelta', function() {
 	afterEach(function(done) {
 		dragScrollDelta.dispose();
 		document.body.innerHTML = '';
-		if (document.body.scrollTop > 0 || document.body.scrollLeft > 0) {
-			document.body.scrollTop = 0;
-			document.body.scrollLeft = 0;
+		if (Position.getScrollTop(document) > 0 || Position.getScrollLeft(document) > 0) {
 			dom.once(document, 'scroll', function() {
 				done();
 			});
+			window.scrollTo(0, 0);
 		} else {
 			done();
 		}
@@ -46,14 +46,14 @@ describe('DragScrollDelta', function() {
 			assert.strictEqual(0, event.deltaX);
 			assert.strictEqual(10, event.deltaY);
 
-			document.body.scrollLeft = 20;
 			dragScrollDelta.once('scrollDelta', function(event) {
 				assert.strictEqual(20, event.deltaX);
 				assert.strictEqual(0, event.deltaY);
 				done();
 			});
+			window.scrollTo(20, 10);
 		});
-		document.body.scrollTop = 10;
+		window.scrollTo(0, 10);
 	});
 
 	it('should emit "scrollDelta" event when a container is scrolled', function(done) {
@@ -100,7 +100,7 @@ describe('DragScrollDelta', function() {
 			assert.strictEqual(0, listener.callCount);
 			done();
 		});
-		document.body.scrollTop = 10;
+		window.scrollTo(0, 10);
 	});
 
 	it('should not emit "scrollDelta" event if "stop" is called', function(done) {
