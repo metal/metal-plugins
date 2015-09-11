@@ -17,7 +17,7 @@ class Scrollspy extends Attribute {
 
 		/**
 		 * Holds the active index.
-		 * @type {Number}
+		 * @type {number}
 		 * @private
 		 * @default -1
 		 */
@@ -25,7 +25,7 @@ class Scrollspy extends Attribute {
 
 		/**
 		 * Holds the regions cache.
-		 * @type {Object}
+		 * @type {!Array}
 		 * @private
 		 * @default []
 		 */
@@ -33,7 +33,7 @@ class Scrollspy extends Attribute {
 
 		/**
 		 * Holds event handle that listens scroll shared event emitter proxy.
-		 * @type {EventHandle}
+		 * @type {!EventHandle}
 		 * @protected
 		 */
 		this.scrollHandle_ = dom.on(this.scrollElement, 'scroll', this.checkPosition.bind(this));
@@ -56,7 +56,7 @@ class Scrollspy extends Attribute {
 
 	/**
 	 * Activates index matching element.
-	 * @param {Number} index
+	 * @param {number} index
 	 */
 	activate(index) {
 		if (this.activeIndex >= 0) {
@@ -90,7 +90,7 @@ class Scrollspy extends Attribute {
 
 	/**
 	 * Deactivates index matching element.
-	 * @param {Number} index
+	 * @param {number} index
 	 */
 	deactivate(index) {
 		dom.removeClasses(this.resolveElement(this.regions[index].link), this.activeClass);
@@ -129,7 +129,8 @@ class Scrollspy extends Attribute {
 
 	/**
 	 * Gets the scroll height of `scrollElement`.
-	 * @return {Number}
+	 * @return {number}
+	 * @protected
 	 */
 	getScrollHeight_() {
 		var scrollHeight = Position.getHeight(this.scrollElement);
@@ -141,7 +142,7 @@ class Scrollspy extends Attribute {
 	/**
 	 * Fired when the value of the `scrollElement` attribute changes.
 	 * Refreshes the spy and updates the event handler to listen to the new scroll element.
-	 * @param {Element} scrollElement
+	 * @param {!Event} event
 	 * @protected
 	 */
 	onScrollElementChanged_(event) {
@@ -233,7 +234,7 @@ Scrollspy.ATTRS = {
 
 	/**
 	 * Defines the offset that triggers scrollspy.
-	 * @type {Number}
+	 * @type {number}
 	 * @default 0
 	 */
 	offset: {
