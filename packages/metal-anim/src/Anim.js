@@ -10,9 +10,9 @@ class Anim {
 	 * Emulates animation or transition end event, the end event with longer
 	 * duration will be used by the emulation. If they have the same value,
 	 * transitionend will be emulated.
-	 * @param {Element} element
-	 * @param {number} opt_durationMs
-	 * @return {object} Object containing `abort` function.
+	 * @param {!Element} element
+	 * @param {number=} opt_durationMs
+	 * @return {!Object} Object containing `abort` function.
 	 */
 	static emulateEnd(element, opt_durationMs) {
 		if (this.getComputedDurationMs(element, 'animation') > this.getComputedDurationMs(element, 'transition')) {
@@ -26,9 +26,9 @@ class Anim {
 	/**
 	 * Emulates animation end event. If `opt_durationMs` not specified the value
 	 * will read from computed style for animation-duration.
-	 * @param {Element} element
-	 * @param {number} opt_durationMs
-	 * @return {object} Object containing `abort` function.
+	 * @param {!Element} element
+	 * @param {number=} opt_durationMs
+	 * @return {!Object} Object containing `abort` function.
 	 */
 	static emulateAnimationEnd(element, opt_durationMs) {
 		return this.emulateEnd_(element, 'animation', opt_durationMs);
@@ -37,9 +37,9 @@ class Anim {
 	/**
 	 * Emulates transition end event. If `opt_durationMs` not specified the
 	 * value will read from computed style for transition-duration.
-	 * @param {Element} element
-	 * @param {number} opt_durationMs
-	 * @return {object} Object containing `abort` function.
+	 * @param {!Element} element
+	 * @param {number=} opt_durationMs
+	 * @return {!Object} Object containing `abort` function.
 	 */
 	static emulateTransitionEnd(element, opt_durationMs) {
 		this.emulateEnd_(element, 'transition', opt_durationMs);
@@ -47,10 +47,10 @@ class Anim {
 
 	/**
 	 * Emulates transition or animation end.
-	 * @param {Element} element
+	 * @param {!Element} element
 	 * @param {string} type
-	 * @param {number} opt_durationMs
-	 * @return {object} Object containing `abort` function.
+	 * @param {number=} opt_durationMs
+	 * @return {!Object} Object containing `abort` function.
 	 * @protected
 	 */
 	static emulateEnd_(element, type, opt_durationMs) {
@@ -76,7 +76,7 @@ class Anim {
 
 	/**
 	 * Gets computed style duration for duration.
-	 * @param {Element} element
+	 * @param {!Element} element
 	 * @param {string} type
 	 * @return {number} The computed duration in milliseconds.
 	 */
