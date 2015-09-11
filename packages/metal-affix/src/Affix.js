@@ -129,7 +129,7 @@ Affix.ATTRS = {
 
 	/**
 	 * Defines the offset bottom that triggers affix.
-	 * @type {Number}
+	 * @type {number}
 	 */
 	offsetTop: {
 		validator: core.isNumber
@@ -137,7 +137,7 @@ Affix.ATTRS = {
 
 	/**
 	 * Defines the offset top that triggers affix.
-	 * @type {Number}
+	 * @type {number}
 	 */
 	offsetBottom: {
 		validator: core.isNumber
