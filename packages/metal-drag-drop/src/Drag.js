@@ -78,7 +78,7 @@ class Drag extends Attribute {
 
 		/**
 		 * The distance that has been dragged.
-		 * @type {Number}
+		 * @type {number}
 		 * @protected
 		 */
 		this.distanceDragged_ = 0;
@@ -158,7 +158,7 @@ class Drag extends Attribute {
 
 	/**
 	 * Calculates the initial positions for the drag action.
-	 * @param {Event} event
+	 * @param {!Event} event
 	 * @protected
 	 */
 	calculateInitialPosition_(event) {
@@ -225,6 +225,7 @@ class Drag extends Attribute {
 	 * @param {number} delta
 	 * @param {string} minKey The key for the min value in the region object.
 	 * @param {string} maxKey The key for the max value in the region object.
+	 * @return {number} The constrained delta.
 	 * @protected
 	 */
 	constrain_(delta, minKey, maxKey) {
@@ -437,7 +438,8 @@ class Drag extends Attribute {
 	/**
 	 * Checks if the minimum distance for dragging has been reached after
 	 * adding the given values.
-	 * @param {number} distance
+	 * @param {number} distanceX
+	 * @param {number} distanceY
 	 * @return {boolean}
 	 * @protected
 	 */
@@ -529,7 +531,7 @@ class Drag extends Attribute {
 
 	/**
 	 * Converts the given element or selector into an array of elements.
-	 * @param  {Element|string} elementOrSelector
+	 * @param {Element|string} elementOrSelector
 	 * @return {!Array<!Element>}
 	 * @protected
 	 */
