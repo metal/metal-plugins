@@ -1,6 +1,7 @@
 'use strict';
 
 import Attribute from 'bower:metal/src/attribute/Attribute';
+
 import core from 'bower:metal/src/core';
 import dom from 'bower:metal/src/dom/dom';
 
@@ -13,8 +14,9 @@ class Clipboard extends Attribute {
 
 	initialize(e) {
 		new ClipboardAction({
-			trigger : e.delegateTarget,
-			target  : e.delegateTarget.getAttribute('data-target')
+			host    : this,
+			target  : e.delegateTarget.getAttribute('data-target'),
+			trigger : e.delegateTarget
 		});
 	}
 }
@@ -50,6 +52,15 @@ class ClipboardAction extends Attribute {
 			succeeded = false;
 		}
 
+		if (succeeded) {
+			this.host.emit('success', {
+				text: this.selectedText
+			});
+		}
+		else {
+			this.host.emit('error', `Cannot execute ${this.action} operation`);
+		}
+
 		this.clearSelection();
 	}
 
@@ -60,6 +71,11 @@ class ClipboardAction extends Attribute {
 }
 
 ClipboardAction.ATTRS = {
+	host: {
+		validator: function(val) {
+			return val instanceof Clipboard;
+		}
+	},
 	target: {
 		setter: function(val) {
 			return document.getElementById(val);
