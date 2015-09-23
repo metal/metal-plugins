@@ -21,11 +21,10 @@ class Clipboard extends Attribute {
 	 * @inheritDoc
 	 */
 	disposeInterval() {
-		super.disposeInterval();
-
 		if (this.clipboardAction) {
 			this.clipboardAction.dispose();
 		}
+		super.disposeInterval();
 	}
 
 	/**
@@ -87,7 +86,6 @@ class ClipboardAction extends Attribute {
 	 * @inheritDoc
 	 */
 	disposeInterval() {
-		super.disposeInterval();
 		this.removeFakeElement();
 	}
 
