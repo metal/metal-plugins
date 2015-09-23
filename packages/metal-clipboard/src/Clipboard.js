@@ -133,7 +133,10 @@ class ClipboardAction extends Attribute {
 			this.clearSelection();
 		}
 		else {
-			this.host.emit('error', `Cannot execute ${this.action} operation`);
+			this.host.emit('error', {
+				action: this.action,
+				trigger: this.trigger
+			});
 		}
 	}
 
