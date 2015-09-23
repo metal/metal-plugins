@@ -5,7 +5,7 @@ var metal = require('gulp-metal');
 metal.registerTasks({
 	bundleCssFileName: 'clipboard.css',
 	bundleFileName: 'clipboard.js',
-	globalName: 'metal',
+	globalName: 'steel',
 	mainBuildJsTasks: ['build:globals'],
-	moduleName: 'metal-clipboard'
+	moduleName: 'steel-clipboard'
 });
