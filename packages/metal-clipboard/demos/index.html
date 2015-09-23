@@ -73,8 +73,7 @@
 		var clipboard = new steel.Clipboard();
 
 		clipboard.on('success', function(e) {
-			e.clipboard.clearSelection();
-
+			e.clearSelection();
 			showTooltip(e.trigger, 'Copied!');
 
 			console.info('Action:', e.action);
@@ -104,7 +103,6 @@
 			// Simplistic detection, do not use it in production
 			if(/iPhone|iPad/i.test(navigator.userAgent)) {
 				actionCommand = 'No support :(';
-				clipboard.clearSelection();
 			}
 			else if (/Mac/i.test(navigator.userAgent)) {
 				actionCommand = 'Press ⌘-' + actionKey + ' to ' + action;
