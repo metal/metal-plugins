@@ -18,11 +18,26 @@ class Clipboard extends Attribute {
 	}
 
 	/**
+	 * @inheritDoc
+	 */
+	disposeInterval() {
+		super.disposeInterval();
+
+		if (this.clipboardAction) {
+			this.clipboardAction.dispose();
+		}
+	}
+
+	/**
 	 * Defines a new `ClipboardAction` on each click event.
 	 * @param {!Event} e
 	 */
 	initialize(e) {
-		new ClipboardAction({
+		if (this.clipboardAction) {
+			this.clipboardAction.dispose();
+		}
+
+		this.clipboardAction = new ClipboardAction({
 			host    : this,
 			action  : e.delegateTarget.getAttribute('data-action'),
 			target  : e.delegateTarget.getAttribute('data-target'),
@@ -69,22 +84,40 @@ class ClipboardAction extends Attribute {
 	}
 
 	/**
+	 * @inheritDoc
+	 */
+	disposeInterval() {
+		super.disposeInterval();
+		this.removeFakeElement();
+	}
+
+	/**
 	 * Selects the content from value passed on `text` attribute.
 	 */
 	selectValue() {
-		let fake = document.createElement('input');
+		this.removeFakeElement();
+		this.removeFakeHandler = dom.once(document, 'click', this.removeFakeElement.bind(this));
 
-		fake.style.position = 'absolute';
-		fake.style.left = '-9999px';
-		fake.value = this.text;
+		this.fake = document.createElement('input');
+		this.fake.style.position = 'absolute';
+		this.fake.style.left = '-9999px';
+		this.fake.value = this.text;
 		this.selectedText = this.text;
 
-		document.body.appendChild(fake);
+		dom.enterDocument(this.fake);
 
-		fake.select();
+		this.fake.select();
 		this.copyText();
+	}
 
-		document.body.removeChild(fake);
+	removeFakeElement() {
+		if (this.fake) {
+			dom.exitDocument(this.fake);
+		}
+
+		if (this.removeFakeHandler) {
+			this.removeFakeHandler.removeListener();
+		}
 	}
 
 	/**
