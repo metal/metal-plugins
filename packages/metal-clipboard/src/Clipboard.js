@@ -102,7 +102,7 @@ class ClipboardAction extends Attribute {
 	}
 
 	/**
-	 * Executes the copy command based on the current selection.
+	 * Executes the copy operation based on the current selection.
 	 */
 	copyText() {
 		let succeeded;
@@ -114,24 +114,26 @@ class ClipboardAction extends Attribute {
 			succeeded = false;
 		}
 
-		this.fireResult(succeeded);
-		this.clearSelection();
+		this.handleResult(succeeded);
 	}
 
 	/**
-	 * Emits either an event based on the copy command result.
+	 * Emits an event based on the copy operation result.
+	 * Also clears current selection if operation was successful.
 	 * @param {boolean} succeeded
 	 */
-	fireResult(succeeded) {
+	handleResult(succeeded) {
 		if (succeeded) {
 			this.host.emit('success', {
 				action: this.action,
 				text: this.selectedText,
 				trigger: this.trigger
 			});
+
+			this.clearSelection();
 		}
 		else {
-			this.host.emit('error', `Cannot execute {$this.action} operation`);
+			this.host.emit('error', `Cannot execute ${this.action} operation`);
 		}
 	}
 
