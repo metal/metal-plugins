@@ -85,8 +85,9 @@ class ClipboardAction extends Attribute {
 		this.removeFakeHandler = dom.once(document, 'click', this.removeFakeElement.bind(this));
 
 		this.fake = document.createElement('input');
-		this.fake.style.position = 'absolute';
+		this.fake.style.position = 'fixed';
 		this.fake.style.left = '-9999px';
+		this.fake.setAttribute('readonly', '');
 		this.fake.value = this.text;
 		this.selectedText = this.text;
 
