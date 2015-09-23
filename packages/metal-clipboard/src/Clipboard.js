@@ -1,17 +1,26 @@
 'use strict';
 
 import Attribute from 'bower:metal/src/attribute/Attribute';
-
 import core from 'bower:metal/src/core';
 import dom from 'bower:metal/src/dom/dom';
 
+/**
+ * Clipboard component.
+ */
 class Clipboard extends Attribute {
+	/**
+	 * Delegates a click event to the passed selector.
+	 */
 	constructor(opt_config) {
 		super(opt_config);
 
 		dom.on(this.selector, 'click', (e) => this.initialize(e));
 	}
 
+	/**
+	 * Defines a new `ClipboardAction` on each click event.
+	 * @param {!Event} e
+	 */
 	initialize(e) {
 		new ClipboardAction({
 			host    : this,
@@ -23,6 +32,11 @@ class Clipboard extends Attribute {
 	}
 }
 
+/**
+ * Attributes definition.
+ * @type {!Object}
+ * @static
+ */
 Clipboard.ATTRS = {
 	selector: {
 		value: '[data-clipboard]',
@@ -30,7 +44,13 @@ Clipboard.ATTRS = {
 	}
 };
 
+/**
+ * ClipboardAction component.
+ */
 class ClipboardAction extends Attribute {
+	/**
+	 * Initializes selection either from a `text` or `target` attribute.
+	 */
 	constructor(opt_config) {
 		super(opt_config);
 
@@ -42,6 +62,9 @@ class ClipboardAction extends Attribute {
 		}
 	}
 
+	/**
+	 * Selects the content from value passed on `text` attribute.
+	 */
 	selectValue() {
 		let fake = document.createElement('input');
 
@@ -58,6 +81,9 @@ class ClipboardAction extends Attribute {
 		document.body.removeChild(fake);
 	}
 
+	/**
+	 * Selects the content from element passed on `target` attribute.
+	 */
 	selectTarget() {
 		if (this.target.nodeName === 'INPUT' || this.target.nodeName === 'TEXTAREA') {
 			this.target.select();
@@ -75,6 +101,9 @@ class ClipboardAction extends Attribute {
 		this.copyText();
 	}
 
+	/**
+	 * Executes the copy command based on the current selection.
+	 */
 	copyText() {
 		let succeeded;
 
@@ -89,6 +118,10 @@ class ClipboardAction extends Attribute {
 		this.clearSelection();
 	}
 
+	/**
+	 * Emits either an event based on the copy command result.
+	 * @param {boolean} succeeded
+	 */
 	fireResult(succeeded) {
 		if (succeeded) {
 			this.host.emit('success', {
@@ -102,6 +135,9 @@ class ClipboardAction extends Attribute {
 		}
 	}
 
+	/**
+	 * Removes current selection and focus from `target` element.
+	 */
 	clearSelection() {
 		if (this.target) {
 			this.target.blur();
@@ -111,29 +147,64 @@ class ClipboardAction extends Attribute {
 	}
 }
 
+/**
+ * Attributes definition.
+ * @type {!Object}
+ * @static
+ */
 ClipboardAction.ATTRS = {
+	/**
+	 * A reference to the `Clipboard` base class.
+	 * @type {Clipboard}
+	 */
 	host: {
 		validator: function(val) {
 			return val instanceof Clipboard;
 		}
 	},
+
+	/**
+	 * The action to be performed (either 'copy' or 'cut').
+	 * @type {string}
+	 * @default 'copy'
+	 */
 	action: {
 		value: 'copy',
 		validator: function(val) {
 			return val === 'copy' || val === 'cut';
 		}
 	},
+
+	/**
+	 * The ID of an element that will be have its content copied.
+	 * @type {string}
+	 */
 	target: {
 		setter: function(val) {
 			return document.getElementById(val);
 		}
 	},
+
+	/**
+	 * The text to be copied.
+	 * @type {string}
+	 */
 	text: {
 		validator: core.isString
 	},
+
+	/**
+	 * The element that when clicked initiates a clipboard action.
+	 * @type {Element}
+	 */
 	trigger: {
 		validator: core.isElement
 	},
+
+	/**
+	 * The text that is current selected.
+	 * @type {string}
+	 */
 	selectedText: {
 		validator: core.isString
 	}
