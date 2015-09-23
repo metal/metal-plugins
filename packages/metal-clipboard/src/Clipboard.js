@@ -34,6 +34,7 @@ class Clipboard extends Attribute {
 	initialize(e) {
 		if (this.clipboardAction) {
 			this.clipboardAction.dispose();
+			this.clipboardAction = null;
 		}
 
 		this.clipboardAction = new ClipboardAction({
@@ -87,6 +88,7 @@ class ClipboardAction extends Attribute {
 	 */
 	disposeInterval() {
 		this.removeFakeElement();
+		super.disposeInterval();
 	}
 
 	/**
