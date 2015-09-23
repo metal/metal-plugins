@@ -30,6 +30,12 @@ class Clipboard extends Attribute {
 			trigger : e.delegateTarget
 		});
 	}
+
+	clearSelection() {
+		if (this.clipboardAction) {
+			this.clipboardAction.clearSelection();
+		}
+	}
 }
 
 /**
@@ -129,8 +135,6 @@ class ClipboardAction extends Attribute {
 				text: this.selectedText,
 				trigger: this.trigger
 			});
-
-			this.clearSelection();
 		}
 		else {
 			this.host.emit('error', {
