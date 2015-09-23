@@ -151,16 +151,16 @@ class ClipboardAction extends Attribute {
 		if (succeeded) {
 			this.host.emit('success', {
 				action: this.action,
-				clipboard: this,
 				text: this.selectedText,
-				trigger: this.trigger
+				trigger: this.trigger,
+				clearSelection: this.clearSelection.bind(this),
 			});
 		}
 		else {
 			this.host.emit('error', {
 				action: this.action,
-				clipboard: this,
-				trigger: this.trigger
+				trigger: this.trigger,
+				clearSelection: this.clearSelection.bind(this)
 			});
 		}
 	}
