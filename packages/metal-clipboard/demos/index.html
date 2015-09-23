@@ -63,15 +63,58 @@
 	<button class="btn btn-sm btn-success" data-clipboard data-target="paragraph">Copy to clipboard</button>
 
 	<script>
-		var clipboard = new metal.Clipboard();
+		var tooltip = new steel.Tooltip({
+			delay: [0, 0],
+			triggerEvents: [null, 'mouseleave'],
+			selector: '[data-clipboard]',
+			visible: false
+		}).render();
+
+		var clipboard = new steel.Clipboard();
 
 		clipboard.on('success', function(e) {
-			console.info('Text: ', e.text);
+			clipboard.clearSelection();
+
+			showTooltip(e.trigger, 'Copied!');
+
+			console.info('Action:', e.action);
+			console.info('Text:', e.text);
 		});
 
 		clipboard.on('error', function(e) {
-			console.info('Error: ', e);
+			showTooltip(e.trigger, messageFallback(e.action));
 		});
+
+		function showTooltip(elem, msg) {
+			tooltip.content = msg;
+			tooltip.alignElement = elem;
+			tooltip.visible = true;
+		}
+
+		function messageFallback(action) {
+			var actionKey, actionCommand;
+
+			if (action === 'copy') {
+				actionKey = 'C';
+			}
+			else {
+				actionKey = 'X';
+			}
+
+			// Simplistic detection, do not use it in production
+			if(/iPhone|iPad/i.test(navigator.userAgent)) {
+				actionCommand = 'No support :(';
+				clipboard.clearSelection();
+			}
+			else if (/Mac/i.test(navigator.userAgent)) {
+				actionCommand = 'Press ⌘-' + actionKey + ' to ' + action;
+			}
+			else {
+				actionCommand = 'Press Ctrl-' + actionKey + ' to ' + action;
+			}
+
+			return actionCommand;
+		}
 	</script>
 </body>
 </html>
