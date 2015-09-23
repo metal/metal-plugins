@@ -3,11 +3,13 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Demo: Clipboard</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<link rel="stylesheet" href="../bower_components/steel-bootstrap/build/bootstrap.css">
 	<link rel="stylesheet" href="../bower_components/steel-bootstrap/build/fonts/icon-16.css">
 
 	<script src="../bower_components/soyutils/soyutils.js"></script>
+	<script src="../bower_components/steel-components/build/globals/steel-min.js"></script>
 	<script src="../build/globals/clipboard.js"></script>
 
 	<style>
@@ -20,20 +22,45 @@
 		cursor: pointer;
 		z-index: 2;
 	}
+
+	.icon-16-link:hover {
+		color: rgba(35, 50, 64, 0.7);
+	}
+
+	#textarea-btn {
+		margin-top: 10px;
+	}
 	</style>
 </head>
 <body>
-	<h1>Copy to clipboard</h1>
+	<h2>Copy text from attribute</h2>
 
-	<div class="input-group">
-		<div class="input-inner-addon input-inner-addon-left">
-			<input id="foo" class="input-btn-right form-control" value="https://github.com/metal/steel-clipboard" type="text">
-			<span class="icon-16-link" data-clipboard data-target="foo" type="button"></span>
-		</div>
-		<span class="input-group-btn">
-			<button class="btn btn-sm btn-success">Try it out</button>
-		</span>
+	<button class="btn btn-sm btn-success" data-clipboard data-text="Button" type="button">Copy to clipboard</button>
+
+	<hr>
+
+	<h2>Copy text from another element</h2>
+
+	<div class="input-inner-addon input-inner-addon-left">
+		<span id="icon-copy" class="icon-16-link" data-clipboard data-target="input" type="button"></span>
+		<input id="input" class="form-control" type="text" value="https://github.com/metal/steel-clipboard">
 	</div>
+
+	<hr>
+
+	<h2>Cut text from another element</h2>
+
+	<textarea id="textarea" class="form-control" rows="5" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">Mussum ipsum cacilds, vidis litro abertis. Consetis adipiscings elitis. Pra lá , depois divoltis porris, paradis. Paisis, filhis, espiritis santis. Mé faiz elementum girarzis, nisi eros vermeio, in elementis mé pra quem é amistosis quis leo. Manduma pindureta quium dia nois paga.</textarea>
+
+	<button id="textarea-btn" class="btn btn-sm btn-success" data-clipboard data-action="cut" data-target="textarea" type="button">Cut to clipboard</button>
+
+	<hr>
+
+	<h2>Copy text from non-editable element</h2>
+
+	<p id="paragraph">Mussum ipsum cacilds, vidis litro abertis. Consetis adipiscings elitis. Pra lá , depois divoltis porris, paradis. Paisis, filhis, espiritis santis. Mé faiz elementum girarzis, nisi eros vermeio, in elementis mé pra quem é amistosis quis leo. Manduma pindureta quium dia nois paga.</p>
+
+	<button class="btn btn-sm btn-success" data-clipboard data-target="paragraph">Copy to clipboard</button>
 
 	<script>
 		var clipboard = new metal.Clipboard();
