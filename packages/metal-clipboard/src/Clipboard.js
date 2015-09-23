@@ -15,7 +15,9 @@ class Clipboard extends Attribute {
 	initialize(e) {
 		new ClipboardAction({
 			host    : this,
+			action  : e.delegateTarget.getAttribute('data-action'),
 			target  : e.delegateTarget.getAttribute('data-target'),
+			text    : e.delegateTarget.getAttribute('data-text'),
 			trigger : e.delegateTarget
 		});
 	}
@@ -32,40 +34,79 @@ class ClipboardAction extends Attribute {
 	constructor(opt_config) {
 		super(opt_config);
 
-		this.select();
+		if (this.text) {
+			this.selectValue();
+		}
+		else if (this.target) {
+			this.selectTarget();
+		}
 	}
 
-	select() {
-		this.target.select();
-		this.selectedText = this.target.value;
+	selectValue() {
+		let fake = document.createElement('input');
 
-		this.copy();
+		fake.style.position = 'absolute';
+		fake.style.left = '-9999px';
+		fake.value = this.text;
+		this.selectedText = this.text;
+
+		document.body.appendChild(fake);
+
+		fake.select();
+		this.copyText();
+
+		document.body.removeChild(fake);
 	}
 
-	copy() {
+	selectTarget() {
+		if (this.target.nodeName === 'INPUT' || this.target.nodeName === 'TEXTAREA') {
+			this.target.select();
+			this.selectedText = this.target.value;
+		}
+		else {
+			let range = document.createRange();
+			let selection = window.getSelection();
+
+			range.selectNodeContents(this.target);
+			selection.addRange(range);
+			this.selectedText = selection.toString();
+		}
+
+		this.copyText();
+	}
+
+	copyText() {
 		let succeeded;
 
 		try {
-			succeeded = document.execCommand('copy');
+			succeeded = document.execCommand(this.action);
 		}
 		catch (err) {
 			succeeded = false;
 		}
 
-		if (succeeded) {
-			this.host.emit('success', {
-				text: this.selectedText
-			});
-		}
-		else {
-			this.host.emit('error', `Cannot execute ${this.action} operation`);
-		}
-
+		this.fireResult(succeeded);
 		this.clearSelection();
 	}
 
+	fireResult(succeeded) {
+		if (succeeded) {
+			this.host.emit('success', {
+				action: this.action,
+				text: this.selectedText,
+				trigger: this.trigger
+			});
+		}
+		else {
+			this.host.emit('error', `Cannot execute {$this.action} operation`);
+		}
+	}
+
 	clearSelection() {
-		this.target.blur();
+		if (this.target) {
+			this.target.blur();
+		}
+
 		window.getSelection().removeAllRanges();
 	}
 }
@@ -76,14 +117,22 @@ ClipboardAction.ATTRS = {
 			return val instanceof Clipboard;
 		}
 	},
+	action: {
+		value: 'copy',
+		validator: function(val) {
+			return val === 'copy' || val === 'cut';
+		}
+	},
 	target: {
 		setter: function(val) {
 			return document.getElementById(val);
-		},
-		validator: function(val) {
-			let target = document.getElementById(val);
-			return target.nodeName === 'INPUT' || target.nodeName === 'TEXTAREA';
 		}
+	},
+	text: {
+		validator: core.isString
+	},
+	trigger: {
+		validator: core.isElement
 	},
 	selectedText: {
 		validator: core.isString
