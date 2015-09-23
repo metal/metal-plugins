@@ -21,9 +21,6 @@ class Clipboard extends Attribute {
 	 * @inheritDoc
 	 */
 	disposeInterval() {
-		if (this.clipboardAction) {
-			this.clipboardAction.dispose();
-		}
 		super.disposeInterval();
 	}
 
@@ -32,24 +29,13 @@ class Clipboard extends Attribute {
 	 * @param {!Event} e
 	 */
 	initialize(e) {
-		if (this.clipboardAction) {
-			this.clipboardAction.dispose();
-			this.clipboardAction = null;
-		}
-
-		this.clipboardAction = new ClipboardAction({
+		new ClipboardAction({
 			host    : this,
 			action  : e.delegateTarget.getAttribute('data-action'),
 			target  : e.delegateTarget.getAttribute('data-target'),
 			text    : e.delegateTarget.getAttribute('data-text'),
 			trigger : e.delegateTarget
 		});
-	}
-
-	clearSelection() {
-		if (this.clipboardAction) {
-			this.clipboardAction.clearSelection();
-		}
 	}
 }
 
@@ -165,6 +151,7 @@ class ClipboardAction extends Attribute {
 		if (succeeded) {
 			this.host.emit('success', {
 				action: this.action,
+				clipboard: this,
 				text: this.selectedText,
 				trigger: this.trigger
 			});
@@ -172,6 +159,7 @@ class ClipboardAction extends Attribute {
 		else {
 			this.host.emit('error', {
 				action: this.action,
+				clipboard: this,
 				trigger: this.trigger
 			});
 		}

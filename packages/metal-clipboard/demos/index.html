@@ -73,7 +73,7 @@
 		var clipboard = new steel.Clipboard();
 
 		clipboard.on('success', function(e) {
-			clipboard.clearSelection();
+			e.clipboard.clearSelection();
 
 			showTooltip(e.trigger, 'Copied!');
 
