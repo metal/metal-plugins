@@ -145,7 +145,6 @@ class ClipboardAction extends Attribute {
 
 	/**
 	 * Emits an event based on the copy operation result.
-	 * Also clears current selection if operation was successful.
 	 * @param {boolean} succeeded
 	 */
 	handleResult(succeeded) {
@@ -154,7 +153,7 @@ class ClipboardAction extends Attribute {
 				action: this.action,
 				text: this.selectedText,
 				trigger: this.trigger,
-				clearSelection: this.clearSelection.bind(this),
+				clearSelection: this.clearSelection.bind(this)
 			});
 		}
 		else {
