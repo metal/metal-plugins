@@ -72,6 +72,14 @@ class Drag extends Attribute {
 		this.mousePos_ = null;
 
 		/**
+		 * The distance between the mouse position and the dragged source position
+		 * (or null if not dragging).
+		 * @type {{x: number, y: number}}
+		 * @protected
+		 */
+		this.mouseSourceDelta_ = null;
+
+		/**
 		 * The `EventHandler` instance that holds events for the source (or sources).
 		 * @type {!EventHandler}
 		 * @protected
@@ -146,17 +154,21 @@ class Drag extends Attribute {
 	 * @protected
 	 */
 	calculateInitialPosition_(event) {
-		if (core.isDef(event.clientX)) {
-			this.mousePos_ = {
-				x: event.clientX,
-				y: event.clientY
-			};
-		}
 		this.sourceRegion_ = object.mixin({}, Position.getRegion(this.activeDragSource_, true));
 		this.sourceRelativePos_ = {
 			x: this.activeDragSource_.offsetLeft,
 			y: this.activeDragSource_.offsetTop
 		};
+		if (core.isDef(event.clientX)) {
+			this.mousePos_ = {
+				x: event.clientX,
+				y: event.clientY
+			};
+			this.mouseSourceDelta_ = {
+				x: this.sourceRegion_.left - this.mousePos_.x,
+				y: this.sourceRegion_.top - this.mousePos_.y
+			};
+		}
 	}
 
 	/**
@@ -189,6 +201,7 @@ class Drag extends Attribute {
 		this.sourceRegion_ = null;
 		this.sourceRelativePos_ = null;
 		this.mousePos_ = null;
+		this.mouseSourceDelta_ = null;
 		this.dragging_ = false;
 		this.dragHandler_.removeAllListeners();
 	}
@@ -327,7 +340,7 @@ class Drag extends Attribute {
 		if (this.autoScroll) {
 			this.autoScroll.scroll(this.scrollContainers, this.mousePos_.x, this.mousePos_.y);
 		}
-		this.updatePosition(distanceX, distanceY);
+		this.updatePositionFromMouse();
 	}
 
 	/**
@@ -374,11 +387,13 @@ class Drag extends Attribute {
 	/**
 	 * Handles a "scrollDelta" event. Updates the position data for the source,
 	 * as well as the placeholder's position on the screen when "move" is set to true.
-	 * @param {!Object} event [description]
+	 * @param {!Object} event
 	 * @protected
 	 */
 	handleScrollDelta_(event) {
-		this.updatePosition(event.deltaX, event.deltaY);
+		this.mouseSourceDelta_.x += event.deltaX;
+		this.mouseSourceDelta_.y += event.deltaY;
+		this.updatePositionFromMouse();
 	}
 
 	/**
@@ -406,7 +421,7 @@ class Drag extends Attribute {
 				} else {
 					deltaY += this.keyboardSpeed;
 				}
-				this.updatePosition(deltaX, deltaY);
+				this.updatePositionFromDelta(deltaX, deltaY);
 				event.preventDefault();
 			} else if (event.keyCode === 13 || event.keyCode === 32 || event.keyCode === 27) {
 				// Enter, space or esc during drag will end it.
@@ -540,33 +555,57 @@ class Drag extends Attribute {
 	}
 
 	/**
-	 * Updates the dragged element's position, moving its placeholder if `move`
-	 * is set to true.
-	 * @param {number} deltaX
-	 * @param {number} deltaY
+	 * Updates the dragged element's position using the given calculated region.
+	 * @param {!Object} newRegion
 	 */
-	updatePosition(deltaX, deltaY) {
+	updatePosition(newRegion) {
 		if (this.axis === 'x') {
-			deltaY = 0;
+			newRegion.top = this.sourceRegion_.top;
+			newRegion.bottom = this.sourceRegion_.bottom;
 		} else if (this.axis === 'y') {
-			deltaX = 0;
+			newRegion.left = this.sourceRegion_.left;
+			newRegion.right = this.sourceRegion_.right;
 		}
-
-		var newRegion = object.mixin({}, this.sourceRegion_);
-		newRegion.left += deltaX;
-		newRegion.right += deltaX;
-		newRegion.top += deltaY;
-		newRegion.bottom += deltaY;
 		this.constrain_(newRegion);
-		deltaX = newRegion.left - this.sourceRegion_.left;
-		deltaY = newRegion.top - this.sourceRegion_.top;
 
+		var deltaX = newRegion.left - this.sourceRegion_.left;
+		var deltaY = newRegion.top - this.sourceRegion_.top;
 		if (deltaX !== 0 || deltaY !== 0) {
 			this.sourceRegion_ = newRegion;
 			this.sourceRelativePos_.x += deltaX;
 			this.sourceRelativePos_.y += deltaY;
 			this.emit(Drag.Events.DRAG, this.buildEventObject_());
 		}
+	}
+
+	/**
+	 * Updates the dragged element's position, moving its placeholder if `move`
+	 * is set to true.
+	 * @param {number} deltaX
+	 * @param {number} deltaY
+	 */
+	updatePositionFromDelta(deltaX, deltaY) {
+		var newRegion = object.mixin({}, this.sourceRegion_);
+		newRegion.left += deltaX;
+		newRegion.right += deltaX;
+		newRegion.top += deltaY;
+		newRegion.bottom += deltaY;
+		this.updatePosition(newRegion);
+	}
+
+	/**
+	 * Updates the dragged element's position, according to the current mouse position.
+	 */
+	updatePositionFromMouse() {
+		var newRegion = {
+			height: this.sourceRegion_.height,
+			left: this.mousePos_.x + this.mouseSourceDelta_.x,
+			top: this.mousePos_.y + this.mouseSourceDelta_.y,
+			width: this.sourceRegion_.width
+		};
+		newRegion.right = newRegion.left + newRegion.width;
+		newRegion.bottom = newRegion.top + newRegion.height;
+		this.updatePosition(newRegion);
 	}
 
 	/**

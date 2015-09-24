@@ -734,7 +734,7 @@ describe('Drag', function() {
 			assert.strictEqual(40, listener.args[1][0].x);
 			assert.strictEqual(40, listener.args[1][0].y);
 
-			DragTestHelper.triggerMouseEvent(document, 'mousemove', -10, 0);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', -10, -20);
 			assert.strictEqual(3, listener.callCount);
 			assert.strictEqual(0, listener.args[2][0].x);
 			assert.strictEqual(0, listener.args[2][0].y);
@@ -782,6 +782,42 @@ describe('Drag', function() {
 			assert.strictEqual(2, listener.callCount);
 			assert.strictEqual(containerRegion.right - 20, listener.args[1][0].x);
 			assert.strictEqual(containerRegion.bottom - 20, listener.args[1][0].y);
+		});
+
+		it('should only continue dragging item when the mouse returns to previous position inside the "constrain" limits', function() {
+			drag = new Drag({
+				constrain: {
+					bottom: 60,
+					left: 0,
+					right: 60,
+					top: 0
+				},
+				sources: item
+			});
+
+			var listener = sinon.stub();
+			drag.on(Drag.Events.DRAG, listener);
+
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 30, 30);
+			assert.strictEqual(1, listener.callCount);
+			assert.strictEqual(30, listener.args[0][0].x);
+			assert.strictEqual(30, listener.args[0][0].y);
+
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 60, 50);
+			assert.strictEqual(2, listener.callCount);
+			assert.strictEqual(40, listener.args[1][0].x);
+			assert.strictEqual(40, listener.args[1][0].y);
+
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 40);
+			assert.strictEqual(2, listener.callCount);
+			assert.strictEqual(40, listener.args[1][0].x);
+			assert.strictEqual(40, listener.args[1][0].y);
+
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 30, 30);
+			assert.strictEqual(3, listener.callCount);
+			assert.strictEqual(30, listener.args[0][0].x);
+			assert.strictEqual(30, listener.args[0][0].y);
 		});
 
 		it('should keep constraining drag to element after scrolling', function(done) {
