@@ -1,5 +1,5 @@
 {
-	"name": "metal-clipboard",
+	"name": "steel-clipboard",
 	"version": "0.0.0",
 	"description": "Steel's copy to clipboard component",
 	"main": "src/Clipboard.js",
