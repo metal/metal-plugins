@@ -92,14 +92,14 @@ class DragDrop extends Drag {
 	 * @protected
 	 */
 	getSourceRegion_() {
-		if (core.isDef(this.currentMouseX_)) {
-			var x = this.currentMouseX_;
-			var y = this.currentMouseY_;
+		if (core.isDefAndNotNull(this.mousePos_)) {
+			var x = this.mousePos_.x;
+			var y = this.mousePos_.y;
 			return Position.makeRegion(y, 0, x, x, y, 0);
 		} else {
 			// We need to remove the scroll data from the region, since the other regions we'll
 			// be comparing to won't take that information into account.
-			var region = object.mixin({}, this.currentSourceRegion_);
+			var region = object.mixin({}, this.sourceRegion_);
 			region.left -= document.body.scrollLeft;
 			region.right -= document.body.scrollLeft;
 			region.top -= document.body.scrollTop;

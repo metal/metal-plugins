@@ -37,46 +37,6 @@ class Drag extends Attribute {
 		this.activeDragSource_ = null;
 
 		/**
-		 * The current x position of the mouse (or null if not dragging).
-		 * @type {?number}
-		 * @protected
-		 */
-		this.currentMouseX_ = null;
-
-		/**
-		 * The current y position of the mouse (or null if not dragging).
-		 * @type {?number}
-		 * @protected
-		 */
-		this.currentMouseY_ = null;
-
-		/**
-		 * The current region values of the element being dragged, relative to
-		 * the document (or null if not dragging).
-		 * @type {Object}
-		 * @protected
-		 */
-		this.currentSourceRegion_ = null;
-
-		/**
-		 * The current x position of the element being dragged relative to its
-		 * `offsetParent`, or to the viewport if there's no `offsetParent`
-		 * (or null if not dragging).
-		 * @type {?number}
-		 * @protected
-		 */
-		this.currentSourceRelativeX_ = null;
-
-		/**
-		 * The current y position of the element being dragged relative to its
-		 * `offsetParent`, or to the viewport if there's no `offsetParent`
-		 * (or null if not dragging).
-		 * @type {?number}
-		 * @protected
-		 */
-		this.currentSourceRelativeY_ = null;
-
-		/**
 		 * The distance that has been dragged.
 		 * @type {number}
 		 * @protected
@@ -105,11 +65,35 @@ class Drag extends Attribute {
 		this.dragScrollDelta_ = new DragScrollDelta();
 
 		/**
+		 * The current x and y positions of the mouse (or null if not dragging).
+		 * @type {{x: number, y: number}}
+		 * @protected
+		 */
+		this.mousePos_ = null;
+
+		/**
 		 * The `EventHandler` instance that holds events for the source (or sources).
 		 * @type {!EventHandler}
 		 * @protected
 		 */
 		this.sourceHandler_ = new EventHandler();
+
+		/**
+		 * The current region values of the element being dragged, relative to
+		 * the document (or null if not dragging).
+		 * @type {Object}
+		 * @protected
+		 */
+		this.sourceRegion_ = null;
+
+		/**
+		 * The current x and y positions of the element being dragged relative to its
+		 * `offsetParent`, or to the viewport if there's no `offsetParent`
+		 * (or null if not dragging).
+		 * @type {{x: number, y: number}}
+		 * @protected
+		 */
+		this.sourceRelativePos_ = null;
 
 		this.attachSourceEvents_();
 		this.on(Drag.Events.DRAG, this.defaultDragFn_, true);
@@ -149,10 +133,10 @@ class Drag extends Attribute {
 		return {
 			placeholder: this.activeDragPlaceholder_,
 			source: this.activeDragSource_,
-			relativeX: this.currentSourceRelativeX_,
-			relativeY: this.currentSourceRelativeY_,
-			x: this.currentSourceRegion_.left,
-			y: this.currentSourceRegion_.top
+			relativeX: this.sourceRelativePos_.x,
+			relativeY: this.sourceRelativePos_.y,
+			x: this.sourceRegion_.left,
+			y: this.sourceRegion_.top
 		};
 	}
 
@@ -162,11 +146,17 @@ class Drag extends Attribute {
 	 * @protected
 	 */
 	calculateInitialPosition_(event) {
-		this.currentMouseX_ = event.clientX;
-		this.currentMouseY_ = event.clientY;
-		this.currentSourceRegion_ = object.mixin({}, Position.getRegion(this.activeDragSource_, true));
-		this.currentSourceRelativeX_ = this.activeDragSource_.offsetLeft;
-		this.currentSourceRelativeY_ = this.activeDragSource_.offsetTop;
+		if (core.isDef(event.clientX)) {
+			this.mousePos_ = {
+				x: event.clientX,
+				y: event.clientY
+			};
+		}
+		this.sourceRegion_ = object.mixin({}, Position.getRegion(this.activeDragSource_, true));
+		this.sourceRelativePos_ = {
+			x: this.activeDragSource_.offsetLeft,
+			y: this.activeDragSource_.offsetTop
+		};
 	}
 
 	/**
@@ -196,11 +186,9 @@ class Drag extends Attribute {
 		}
 		this.activeDragPlaceholder_ = null;
 		this.activeDragSource_ = null;
-		this.currentSourceRegion_ = null;
-		this.currentSourceRelativeX_ = null;
-		this.currentSourceRelativeY_ = null;
-		this.currentMouseX_ = null;
-		this.currentMouseY_ = null;
+		this.sourceRegion_ = null;
+		this.sourceRelativePos_ = null;
+		this.mousePos_ = null;
 		this.dragging_ = false;
 		this.dragHandler_.removeAllListeners();
 	}
@@ -213,8 +201,8 @@ class Drag extends Attribute {
 	cloneActiveDrag_() {
 		var placeholder = this.activeDragSource_.cloneNode(true);
 		placeholder.style.position = 'absolute';
-		placeholder.style.left = this.currentSourceRelativeX_ + 'px';
-		placeholder.style.top = this.currentSourceRelativeY_ + 'px';
+		placeholder.style.left = this.sourceRelativePos_.x + 'px';
+		placeholder.style.top = this.sourceRelativePos_.y + 'px';
 		dom.append(this.activeDragSource_.parentNode, placeholder);
 		return placeholder;
 	}
@@ -324,10 +312,10 @@ class Drag extends Attribute {
 	 */
 	handleDragMoveEvent_(event) {
 		var position = event.targetTouches ? event.targetTouches[0] : event;
-		var distanceX = position.clientX - this.currentMouseX_;
-		var distanceY = position.clientY - this.currentMouseY_;
-		this.currentMouseX_ = position.clientX;
-		this.currentMouseY_ = position.clientY;
+		var distanceX = position.clientX - this.mousePos_.x;
+		var distanceY = position.clientY - this.mousePos_.y;
+		this.mousePos_.x = position.clientX;
+		this.mousePos_.y = position.clientY;
 		if (!this.isDragging() && !this.hasReachedMinimumDistance_(distanceX, distanceY)) {
 			return;
 		}
@@ -337,7 +325,7 @@ class Drag extends Attribute {
 			this.dragScrollDelta_.start(this.activeDragPlaceholder_, this.scrollContainers);
 		}
 		if (this.autoScroll) {
-			this.autoScroll.scroll(this.scrollContainers, this.currentMouseX_, this.currentMouseY_);
+			this.autoScroll.scroll(this.scrollContainers, this.mousePos_.x, this.mousePos_.y);
 		}
 		this.updatePosition(distanceX, distanceY);
 	}
@@ -483,8 +471,8 @@ class Drag extends Attribute {
 	 * @protected
 	 */
 	moveToPosition_(element) {
-		element.style.left = this.currentSourceRelativeX_ + 'px';
-		element.style.top = this.currentSourceRelativeY_ + 'px';
+		element.style.left = this.sourceRelativePos_.x + 'px';
+		element.style.top = this.sourceRelativePos_.y + 'px';
 	}
 
 	/**
@@ -564,19 +552,19 @@ class Drag extends Attribute {
 			deltaX = 0;
 		}
 
-		var newRegion = object.mixin({}, this.currentSourceRegion_);
+		var newRegion = object.mixin({}, this.sourceRegion_);
 		newRegion.left += deltaX;
 		newRegion.right += deltaX;
 		newRegion.top += deltaY;
 		newRegion.bottom += deltaY;
 		this.constrain_(newRegion);
-		deltaX = newRegion.left - this.currentSourceRegion_.left;
-		deltaY = newRegion.top - this.currentSourceRegion_.top;
+		deltaX = newRegion.left - this.sourceRegion_.left;
+		deltaY = newRegion.top - this.sourceRegion_.top;
 
 		if (deltaX !== 0 || deltaY !== 0) {
-			this.currentSourceRegion_ = newRegion;
-			this.currentSourceRelativeX_ += deltaX;
-			this.currentSourceRelativeY_ += deltaY;
+			this.sourceRegion_ = newRegion;
+			this.sourceRelativePos_.x += deltaX;
+			this.sourceRelativePos_.y += deltaY;
 			this.emit(Drag.Events.DRAG, this.buildEventObject_());
 		}
 	}
