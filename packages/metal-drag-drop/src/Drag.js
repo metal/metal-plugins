@@ -220,24 +220,29 @@ class Drag extends Attribute {
 	}
 
 	/**
-	 * Constrains the given delta between the min/max values defined by the
-	 * constrain region.
-	 * @param {number} delta
-	 * @param {string} minKey The key for the min value in the region object.
-	 * @param {string} maxKey The key for the max value in the region object.
-	 * @return {number} The constrained delta.
+	 * Constrains the given region within the region defined by the `constrain` attr.
+	 * @param {!Object} region
 	 * @protected
 	 */
-	constrain_(delta, minKey, maxKey) {
+	constrain_(region) {
 		var constrain = this.constrain;
 		if (constrain) {
 			if (core.isElement(constrain)) {
 				constrain = Position.getRegion(constrain, true);
 			}
-			delta = Math.max(delta, constrain[minKey] - this.currentSourceRegion_[minKey]);
-			delta = Math.min(delta, constrain[maxKey] - this.currentSourceRegion_[maxKey]);
+			if (region.left < constrain.left) {
+				region.left = constrain.left;
+			} else if (region.right > constrain.right) {
+				region.left -= region.right - constrain.right;
+			}
+			if (region.top < constrain.top) {
+				region.top = constrain.top;
+			} else if (region.bottom > constrain.bottom) {
+				region.top -= region.bottom - constrain.bottom;
+			}
+			region.right = region.left + region.width;
+			region.bottom = region.top + region.height;
 		}
-		return delta;
 	}
 
 	/**
@@ -558,15 +563,18 @@ class Drag extends Attribute {
 		} else if (this.axis === 'y') {
 			deltaX = 0;
 		}
-		deltaX = this.constrain_(deltaX, 'left', 'right');
-		deltaY = this.constrain_(deltaY, 'top', 'bottom');
+
+		var newRegion = object.mixin({}, this.currentSourceRegion_);
+		newRegion.left += deltaX;
+		newRegion.right += deltaX;
+		newRegion.top += deltaY;
+		newRegion.bottom += deltaY;
+		this.constrain_(newRegion);
+		deltaX = newRegion.left - this.currentSourceRegion_.left;
+		deltaY = newRegion.top - this.currentSourceRegion_.top;
 
 		if (deltaX !== 0 || deltaY !== 0) {
-			this.currentSourceRegion_.left += deltaX;
-			this.currentSourceRegion_.right += deltaX;
-			this.currentSourceRegion_.top += deltaY;
-			this.currentSourceRegion_.bottom += deltaY;
-
+			this.currentSourceRegion_ = newRegion;
 			this.currentSourceRelativeX_ += deltaX;
 			this.currentSourceRelativeY_ += deltaY;
 			this.emit(Drag.Events.DRAG, this.buildEventObject_());
