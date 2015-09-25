@@ -811,13 +811,11 @@ describe('Drag', function() {
 
 			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 40);
 			assert.strictEqual(2, listener.callCount);
-			assert.strictEqual(40, listener.args[1][0].x);
-			assert.strictEqual(40, listener.args[1][0].y);
 
 			DragTestHelper.triggerMouseEvent(document, 'mousemove', 30, 30);
 			assert.strictEqual(3, listener.callCount);
-			assert.strictEqual(30, listener.args[0][0].x);
-			assert.strictEqual(30, listener.args[0][0].y);
+			assert.strictEqual(30, listener.args[2][0].x);
+			assert.strictEqual(30, listener.args[2][0].y);
 		});
 
 		it('should keep constraining drag to element after scrolling', function(done) {
@@ -894,6 +892,35 @@ describe('Drag', function() {
 			DragTestHelper.triggerMouseEvent(document, 'mousemove', 30, 20);
 
 			assert.strictEqual(0, listener.callCount);
+		});
+	});
+
+	describe('Steps', function() {
+		it('should only move the dragged element by multiples of the values defined in "steps" attr', function() {
+			drag = new Drag({
+				sources: item,
+				steps: {
+					x: 50,
+					y: 100
+				}
+			});
+
+			var listener = sinon.stub();
+			drag.on(Drag.Events.DRAG, listener);
+
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 30, 30);
+			assert.strictEqual(0, listener.callCount);
+
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 80, 80);
+			assert.strictEqual(1, listener.callCount);
+			assert.strictEqual(70, listener.args[0][0].x);
+			assert.strictEqual(20, listener.args[0][0].y);
+
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 90, 130);
+			assert.strictEqual(2, listener.callCount);
+			assert.strictEqual(70, listener.args[1][0].x);
+			assert.strictEqual(120, listener.args[1][0].y);
 		});
 	});
 
@@ -1037,6 +1064,33 @@ describe('Drag', function() {
 			DragTestHelper.triggerKeyEvent(item, 39);
 			assert.strictEqual('20px', item.style.left);
 			assert.strictEqual('0px', item.style.top);
+
+			DragTestHelper.triggerKeyEvent(item, 40);
+			assert.strictEqual('20px', item.style.left);
+			assert.strictEqual('20px', item.style.top);
+		});
+
+		it('should move source through arrows according to "steps" if "keyboardSpeed" is too small', function() {
+			drag = new Drag({
+				sources: item,
+				steps: {
+					x: 30,
+					y: 40
+				}
+			});
+
+			DragTestHelper.triggerKeyEvent(item, 13);
+			DragTestHelper.triggerKeyEvent(item, 37);
+			assert.strictEqual('-10px', item.style.left);
+			assert.strictEqual('20px', item.style.top);
+
+			DragTestHelper.triggerKeyEvent(item, 38);
+			assert.strictEqual('-10px', item.style.left);
+			assert.strictEqual('-20px', item.style.top);
+
+			DragTestHelper.triggerKeyEvent(item, 39);
+			assert.strictEqual('20px', item.style.left);
+			assert.strictEqual('-20px', item.style.top);
 
 			DragTestHelper.triggerKeyEvent(item, 40);
 			assert.strictEqual('20px', item.style.left);

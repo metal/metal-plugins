@@ -221,11 +221,37 @@ class Drag extends Attribute {
 	}
 
 	/**
-	 * Constrains the given region within the region defined by the `constrain` attr.
+	 * Constrains the given region according to the current attr configurations.
 	 * @param {!Object} region
 	 * @protected
 	 */
 	constrain_(region) {
+		this.constrainToAxis_(region);
+		this.constrainToSteps_(region);
+		this.constrainToRegion_(region);
+	}
+
+	/**
+	 * Constrains the given region according to the chosen drag axis, if any.
+	 * @param {!Object} region
+	 * @protected
+	 */
+	constrainToAxis_(region) {
+		if (this.axis === 'x') {
+			region.top = this.sourceRegion_.top;
+			region.bottom = this.sourceRegion_.bottom;
+		} else if (this.axis === 'y') {
+			region.left = this.sourceRegion_.left;
+			region.right = this.sourceRegion_.right;
+		}
+	}
+
+	/**
+	 * Constrains the given region within the region defined by the `constrain` attr.
+	 * @param {!Object} region
+	 * @protected
+	 */
+	constrainToRegion_(region) {
 		var constrain = this.constrain;
 		if (constrain) {
 			if (core.isElement(constrain)) {
@@ -244,6 +270,20 @@ class Drag extends Attribute {
 			region.right = region.left + region.width;
 			region.bottom = region.top + region.height;
 		}
+	}
+
+	/**
+	 * Constrains the given region to change according to the `steps` attr.
+	 * @param {!Object} region
+	 * @protected
+	 */
+	constrainToSteps_(region) {
+		var deltaX = region.left - this.sourceRegion_.left;
+		var deltaY = region.top - this.sourceRegion_.top;
+		region.left -= deltaX % this.steps.x;
+		region.right = region.left + region.width;
+		region.top -= deltaY % this.steps.y;
+		region.bottom = region.top + region.height;
 	}
 
 	/**
@@ -412,14 +452,16 @@ class Drag extends Attribute {
 				// Arrow keys during drag move the source.
 				var deltaX = 0;
 				var deltaY = 0;
+				var speedX = this.keyboardSpeed >= this.steps.x ? this.keyboardSpeed : this.steps.x;
+				var speedY = this.keyboardSpeed >= this.steps.y ? this.keyboardSpeed : this.steps.y;
 				if (event.keyCode === 37) {
-					deltaX -= this.keyboardSpeed;
+					deltaX -= speedX;
 				} else if (event.keyCode === 38) {
-					deltaY -= this.keyboardSpeed;
+					deltaY -= speedY;
 				} else if (event.keyCode === 39) {
-					deltaX += this.keyboardSpeed;
+					deltaX += speedX;
 				} else {
-					deltaY += this.keyboardSpeed;
+					deltaY += speedY;
 				}
 				this.updatePositionFromDelta(deltaX, deltaY);
 				event.preventDefault();
@@ -559,15 +601,7 @@ class Drag extends Attribute {
 	 * @param {!Object} newRegion
 	 */
 	updatePosition(newRegion) {
-		if (this.axis === 'x') {
-			newRegion.top = this.sourceRegion_.top;
-			newRegion.bottom = this.sourceRegion_.bottom;
-		} else if (this.axis === 'y') {
-			newRegion.left = this.sourceRegion_.left;
-			newRegion.right = this.sourceRegion_.right;
-		}
 		this.constrain_(newRegion);
-
 		var deltaX = newRegion.left - this.sourceRegion_.left;
 		var deltaY = newRegion.top - this.sourceRegion_.top;
 		if (deltaX !== 0 || deltaY !== 0) {
@@ -763,6 +797,23 @@ Drag.ATTRS = {
 	 */
 	sources: {
 		validator: 'validateElementOrString_'
+	},
+
+	/**
+	 * The number of pixels that the source element should move at a time,
+	 * for each axis. When set to a value higher than 1, dragging won't be
+	 * a continuous movement, since the source element will move by multiple
+	 * pixels on each step.
+	 * @type {!{x: number, y: number}}
+	 */
+	steps: {
+		validator: core.isObject,
+		valueFn: () => {
+			return {
+				x: 1,
+				y: 1
+			};
+		}
 	},
 
 	/**
