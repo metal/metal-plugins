@@ -31,9 +31,9 @@ class Clipboard extends Attribute {
 	initialize(e) {
 		new ClipboardAction({
 			host    : this,
-			action  : e.delegateTarget.getAttribute('data-action'),
-			target  : e.delegateTarget.getAttribute('data-target'),
-			text    : e.delegateTarget.getAttribute('data-text'),
+			action  : this.action(e.delegateTarget),
+			target  : this.target(e.delegateTarget),
+			text    : this.text(e.delegateTarget),
 			trigger : e.delegateTarget
 		});
 	}
@@ -48,6 +48,27 @@ Clipboard.ATTRS = {
 	selector: {
 		value: '[data-clipboard]',
 		validator: core.isString
+	},
+
+	target: {
+		validator: core.isFunction,
+		value: function(delegateTarget) {
+			return document.querySelector(delegateTarget.getAttribute('data-target'));
+		}
+	},
+
+	action: {
+		validator: core.isFunction,
+		value: function(delegateTarget) {
+			return delegateTarget.getAttribute('data-action');
+		}
+	},
+
+	text: {
+		validator: core.isFunction,
+		value: function(delegateTarget) {
+			return delegateTarget.getAttribute('data-text');
+		}
 	}
 };
 
@@ -207,12 +228,10 @@ ClipboardAction.ATTRS = {
 
 	/**
 	 * The ID of an element that will be have its content copied.
-	 * @type {string}
+	 * @type {Element}
 	 */
 	target: {
-		setter: function(val) {
-			return document.getElementById(val);
-		}
+		validator: core.isElement
 	},
 
 	/**
