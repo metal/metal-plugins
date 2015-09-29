@@ -29,7 +29,11 @@ class Clipboard extends Attribute {
 	 * @param {!Event} e
 	 */
 	initialize(e) {
-		new ClipboardAction({
+		if (this.clipboardAction) {
+			this.clipboardAction = null;
+		}
+
+		this.clipboardAction = new ClipboardAction({
 			host    : this,
 			action  : this.action(e.delegateTarget),
 			target  : this.target(e.delegateTarget),
