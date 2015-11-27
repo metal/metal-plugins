@@ -2,7 +2,7 @@
 	"name": "crystal-affix",
 	"version": "0.0.0",
 	"description": "Crystal's affix component",
-	"license": "MIT",
+	"license": "BSD",
 	"repository": "metal/crystal-affix",
 	"engines": {
 		"node": ">=0.12.0"
