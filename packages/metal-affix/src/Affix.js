@@ -113,7 +113,7 @@ class Affix extends Attribute {
 Affix.Position = {
 	Top: 'affix-top',
 	Bottom: 'affix-bottom',
-	Default: 'affix-default'
+	Default: 'affix'
 };
 
 Affix.ATTRS = {

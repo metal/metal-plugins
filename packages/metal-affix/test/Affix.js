@@ -44,7 +44,7 @@ describe('Affix', function() {
 		});
 		window.scrollTo(0, 100);
 		nextScrollTick(function() {
-			assert.ok(dom.hasClass(affix.element, 'affix-default'));
+			assert.ok(dom.hasClass(affix.element, 'affix'));
 			assert.ok(!dom.hasClass(affix.element, 'affix-top'));
 			done();
 		});
@@ -56,7 +56,7 @@ describe('Affix', function() {
 		});
 		window.scrollTo(0, Position.getHeight(document));
 		nextScrollTick(function() {
-			assert.ok(dom.hasClass(affix.element, 'affix-default'));
+			assert.ok(dom.hasClass(affix.element, 'affix'));
 			assert.ok(!dom.hasClass(affix.element, 'affix-bottom'));
 			done();
 		});
@@ -70,7 +70,7 @@ describe('Affix', function() {
 		assert.ok(dom.hasClass(affix.element, 'affix-top'));
 	});
 
-	it('should restore class to affix-default when is not on offsetTop', function(done) {
+	it('should restore class to affix when is not on offsetTop', function(done) {
 		affix = new Affix({
 			element: element,
 			offsetTop: 50
@@ -78,7 +78,7 @@ describe('Affix', function() {
 		assert.ok(dom.hasClass(affix.element, 'affix-top'));
 		window.scrollTo(0, 51);
 		nextScrollTick(function() {
-			assert.ok(dom.hasClass(affix.element, 'affix-default'));
+			assert.ok(dom.hasClass(affix.element, 'affix'));
 			window.scrollTo(0, 0);
 			nextScrollTick(function() {
 				assert.ok(dom.hasClass(affix.element, 'affix-top'));
@@ -99,18 +99,18 @@ describe('Affix', function() {
 		});
 	});
 
-	it('should restore class to affix-default when is not on offsetBottom', function(done) {
+	it('should restore class to affix when is not on offsetBottom', function(done) {
 		affix = new Affix({
 			element: element,
 			offsetBottom: 0
 		});
-		assert.ok(dom.hasClass(affix.element, 'affix-default'));
+		assert.ok(dom.hasClass(affix.element, 'affix'));
 		window.scrollTo(0, Position.getHeight(document) - Position.getHeight(window));
 		nextScrollTick(function() {
 			assert.ok(dom.hasClass(affix.element, 'affix-bottom'));
 			window.scrollTo(0, Position.getHeight(document) - Position.getHeight(window) - 1);
 			nextScrollTick(function() {
-				assert.ok(dom.hasClass(affix.element, 'affix-default'));
+				assert.ok(dom.hasClass(affix.element, 'affix'));
 				done();
 			});
 		});
