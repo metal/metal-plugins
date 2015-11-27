@@ -2,7 +2,7 @@
   "name": "metal-drag-drop",
   "version": "0.0.0",
   "description": "Metal's drag and drop component.",
-  "license": "MIT",
+  "license": "BSD",
   "repository": "metal/metal-drag-drop",
   "engines": {
     "node": ">=0.12.0"
