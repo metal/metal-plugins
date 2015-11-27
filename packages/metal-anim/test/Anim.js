@@ -75,7 +75,7 @@ describe('Anim', function() {
 		dom.on(this.element, 'animationend', function() {
 			assert.fail('Transition end event must be fired for the same duration');
 		});
-		dom.on(this.element, 'transitionend', function(event) {
+		dom.on(this.element, 'transitionend', function() {
 			done();
 		});
 	});
