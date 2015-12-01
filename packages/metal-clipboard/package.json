@@ -2,7 +2,7 @@
 	"name": "steel-clipboard",
 	"version": "0.0.0",
 	"description": "Steel's copy to clipboard component",
-	"license": "MIT",
+	"license": "BSD",
 	"repository": "metal/steel-clipboard",
 	"engines": {
 		"node": ">=0.12.0"
