@@ -6,127 +6,208 @@ import Toggler from '../src/Toggler';
 describe('Toggler', function() {
 	var toggler;
 
-	beforeEach(function() {
-		dom.enterDocument('<button class="toggler-btn"></button>');
-		dom.enterDocument('<div class="toggler-content"></div>');
-	});
-
 	afterEach(function() {
 		document.body.innerHTML = '';
 		toggler.dispose();
 	});
 
-	it('should begin with content collapsed by default', function() {
-		toggler = new Toggler({
-			content: '.toggler-content',
-			header: '.toggler-btn'
+	describe('Single Element Toggler', function() {
+		beforeEach(function() {
+			dom.enterDocument('<button class="toggler-btn"></button>');
+			dom.enterDocument('<div class="toggler-content toggler-collapsed"></div>');
 		});
-		assert.ok(dom.hasClass(toggler.content, Toggler.CSS_COLLAPSED));
-		assert.ok(!dom.hasClass(toggler.content, Toggler.CSS_EXPANDED));
-		assert.ok(!toggler.expanded);
+
+		it('should expand/collapse content when header is clicked', function() {
+			toggler = new Toggler({
+				content: dom.toElement('.toggler-content'),
+				header: dom.toElement('.toggler-btn')
+			});
+
+			dom.triggerEvent(toggler.header, 'click');
+			assert.ok(!dom.hasClass(toggler.content, Toggler.CSS_COLLAPSED));
+			assert.ok(dom.hasClass(toggler.content, Toggler.CSS_EXPANDED));
+
+			dom.triggerEvent(toggler.header, 'click');
+			assert.ok(dom.hasClass(toggler.content, Toggler.CSS_COLLAPSED));
+			assert.ok(!dom.hasClass(toggler.content, Toggler.CSS_EXPANDED));
+		});
+
+		it('should expand/collapse content when ENTER key is pressed on header', function() {
+			toggler = new Toggler({
+				content: dom.toElement('.toggler-content'),
+				header: dom.toElement('.toggler-btn')
+			});
+
+			dom.triggerEvent(toggler.header, 'keydown', {
+				keyCode: 13
+			});
+			assert.ok(!dom.hasClass(toggler.content, Toggler.CSS_COLLAPSED));
+			assert.ok(dom.hasClass(toggler.content, Toggler.CSS_EXPANDED));
+
+			dom.triggerEvent(toggler.header, 'keydown', {
+				keyCode: 13
+			});
+			assert.ok(dom.hasClass(toggler.content, Toggler.CSS_COLLAPSED));
+			assert.ok(!dom.hasClass(toggler.content, Toggler.CSS_EXPANDED));
+		});
+
+		it('should expand/collapse content when SPACE key is pressed on header', function() {
+			toggler = new Toggler({
+				content: dom.toElement('.toggler-content'),
+				header: dom.toElement('.toggler-btn')
+			});
+
+			dom.triggerEvent(toggler.header, 'keydown', {
+				keyCode: 32
+			});
+			assert.ok(!dom.hasClass(toggler.content, Toggler.CSS_COLLAPSED));
+			assert.ok(dom.hasClass(toggler.content, Toggler.CSS_EXPANDED));
+
+			dom.triggerEvent(toggler.header, 'keydown', {
+				keyCode: 32
+			});
+			assert.ok(dom.hasClass(toggler.content, Toggler.CSS_COLLAPSED));
+			assert.ok(!dom.hasClass(toggler.content, Toggler.CSS_EXPANDED));
+		});
+
+		it('should not expand/collapse content when any other key is pressed on header', function() {
+			toggler = new Toggler({
+				content: dom.toElement('.toggler-content'),
+				header: dom.toElement('.toggler-btn')
+			});
+
+			dom.triggerEvent(toggler.header, 'keydown', {
+				keyCode: 10
+			});
+			assert.ok(dom.hasClass(toggler.content, Toggler.CSS_COLLAPSED));
+			assert.ok(!dom.hasClass(toggler.content, Toggler.CSS_EXPANDED));
+		});
+
+		it('should not throw error if no header is given', function() {
+			assert.doesNotThrow(function() {
+				toggler = new Toggler({
+					content: dom.toElement('.toggler-content')
+				});
+			});
+		});
 	});
 
-	it('should expand/collapse content when header is clicked', function() {
-		toggler = new Toggler({
-			content: '.toggler-content',
-			header: '.toggler-btn'
+	describe('Delegate Toggler', function() {
+		it('should expand/collapse the appropriate content when an element matching header selector is clicked', function() {
+			dom.enterDocument('<button id="toggler1" class="toggler-btn"></button>');
+			dom.enterDocument('<div id="togglerContent1" class="toggler-content toggler-collapsed"></div>');
+			dom.enterDocument('<button id="toggler2" class="toggler-btn"></button>');
+			dom.enterDocument('<div id="togglerContent2" class="toggler-content toggler-collapsed"></div>');
+
+			toggler = new Toggler({
+				content: '.toggler-content',
+				header: '.toggler-btn'
+			});
+
+			var toggler1 = dom.toElement('#toggler1');
+			var toggler2 = dom.toElement('#toggler2');
+			var content1 = dom.toElement('#togglerContent1');
+			var content2 = dom.toElement('#togglerContent2');
+
+			dom.triggerEvent(toggler1, 'click');
+			assert.ok(!dom.hasClass(content1, Toggler.CSS_COLLAPSED));
+			assert.ok(dom.hasClass(content1, Toggler.CSS_EXPANDED));
+			assert.ok(dom.hasClass(content2, Toggler.CSS_COLLAPSED));
+			assert.ok(!dom.hasClass(content2, Toggler.CSS_EXPANDED));
+
+			dom.triggerEvent(toggler2, 'click');
+			assert.ok(!dom.hasClass(content1, Toggler.CSS_COLLAPSED));
+			assert.ok(dom.hasClass(content1, Toggler.CSS_EXPANDED));
+			assert.ok(!dom.hasClass(content2, Toggler.CSS_COLLAPSED));
+			assert.ok(dom.hasClass(content2, Toggler.CSS_EXPANDED));
 		});
 
-		dom.triggerEvent(toggler.header, 'click');
-		assert.ok(!dom.hasClass(toggler.content, Toggler.CSS_COLLAPSED));
-		assert.ok(dom.hasClass(toggler.content, Toggler.CSS_EXPANDED));
-		assert.ok(toggler.expanded);
+		it('should use the header\'s next matched sibling as its content', function() {
+			dom.enterDocument('<button class="toggler-btn"></button>');
+			dom.enterDocument('<div>Some other content</div>');
+			dom.enterDocument('<div id="togglerContent1" class="toggler-content toggler-collapsed"></div>');
+			dom.enterDocument('<div id="togglerContent2" class="toggler-content toggler-collapsed"></div>');
 
-		dom.triggerEvent(toggler.header, 'click');
-		assert.ok(dom.hasClass(toggler.content, Toggler.CSS_COLLAPSED));
-		assert.ok(!dom.hasClass(toggler.content, Toggler.CSS_EXPANDED));
-		assert.ok(!toggler.expanded);
-	});
+			toggler = new Toggler({
+				content: '.toggler-content',
+				header: '.toggler-btn'
+			});
 
-	it('should expand/collapse content when ENTER key is pressed on header', function() {
-		toggler = new Toggler({
-			content: '.toggler-content',
-			header: '.toggler-btn'
+			dom.triggerEvent(dom.toElement('.toggler-btn'), 'click');
+			assert.ok(!dom.hasClass(dom.toElement('#togglerContent1'), Toggler.CSS_COLLAPSED));
+			assert.ok(dom.hasClass(dom.toElement('#togglerContent1'), Toggler.CSS_EXPANDED));
 		});
 
-		dom.triggerEvent(toggler.header, 'keydown', {
-			keyCode: 13
-		});
-		assert.ok(!dom.hasClass(toggler.content, Toggler.CSS_COLLAPSED));
-		assert.ok(dom.hasClass(toggler.content, Toggler.CSS_EXPANDED));
-		assert.ok(toggler.expanded);
+		it('should use the header\'s first matched child if no sibling matches content selector', function() {
+			dom.enterDocument('<div class="toggler-btn"><div class="toggler-content toggler-collapsed"></div></div>');
 
-		dom.triggerEvent(toggler.header, 'keydown', {
-			keyCode: 13
-		});
-		assert.ok(dom.hasClass(toggler.content, Toggler.CSS_COLLAPSED));
-		assert.ok(!dom.hasClass(toggler.content, Toggler.CSS_EXPANDED));
-		assert.ok(!toggler.expanded);
-	});
+			toggler = new Toggler({
+				content: '.toggler-content',
+				header: '.toggler-btn'
+			});
 
-	it('should expand/collapse content when SPACE key is pressed on header', function() {
-		toggler = new Toggler({
-			content: '.toggler-content',
-			header: '.toggler-btn'
+			dom.triggerEvent(dom.toElement('.toggler-btn'), 'click');
+			assert.ok(!dom.hasClass(dom.toElement('.toggler-content'), Toggler.CSS_COLLAPSED));
+			assert.ok(dom.hasClass(dom.toElement('.toggler-content'), Toggler.CSS_EXPANDED));
 		});
 
-		dom.triggerEvent(toggler.header, 'keydown', {
-			keyCode: 32
-		});
-		assert.ok(!dom.hasClass(toggler.content, Toggler.CSS_COLLAPSED));
-		assert.ok(dom.hasClass(toggler.content, Toggler.CSS_EXPANDED));
-		assert.ok(toggler.expanded);
+		it('should use any matched element if no matching header sibling or child is found', function() {
+			dom.enterDocument('<button class="toggler-btn"></button>');
+			dom.enterDocument('<div><div class="toggler-content toggler-collapsed"></div></div>');
 
-		dom.triggerEvent(toggler.header, 'keydown', {
-			keyCode: 32
-		});
-		assert.ok(dom.hasClass(toggler.content, Toggler.CSS_COLLAPSED));
-		assert.ok(!dom.hasClass(toggler.content, Toggler.CSS_EXPANDED));
-		assert.ok(!toggler.expanded);
-	});
+			toggler = new Toggler({
+				content: '.toggler-content',
+				header: '.toggler-btn'
+			});
 
-	it('should not expand/collapse content when any other key is pressed on header', function() {
-		toggler = new Toggler({
-			content: '.toggler-content',
-			header: '.toggler-btn'
+			dom.triggerEvent(dom.toElement('.toggler-btn'), 'click');
+			assert.ok(!dom.hasClass(dom.toElement('.toggler-content'), Toggler.CSS_COLLAPSED));
+			assert.ok(dom.hasClass(dom.toElement('.toggler-content'), Toggler.CSS_EXPANDED));
 		});
 
-		dom.triggerEvent(toggler.header, 'keydown', {
-			keyCode: 10
+		describe('Container', function() {
+			beforeEach(function() {
+				dom.enterDocument('<button class="toggler-btn"></button>');
+				dom.enterDocument('<div class="toggler-content toggler-collapsed"></div>');
+				dom.enterDocument(
+					'<div class="container">' +
+					'<button class="toggler-btn"></button>' +
+					'<div class="toggler-content toggler-collapsed"></div>' +
+					'</div>'
+				);
+			});
+
+			it('should only work for header elements that are inside container given as selector', function() {
+				toggler = new Toggler({
+					container: '.container',
+					content: '.toggler-content',
+					header: '.toggler-btn'
+				});
+
+				dom.triggerEvent(dom.toElement('.toggler-btn'), 'click');
+				assert.ok(dom.hasClass(dom.toElement('.toggler-content'), Toggler.CSS_COLLAPSED));
+				assert.ok(!dom.hasClass(dom.toElement('.toggler-content'), Toggler.CSS_EXPANDED));
+
+				dom.triggerEvent(dom.toElement('.container .toggler-btn'), 'click');
+				assert.ok(!dom.hasClass(dom.toElement('.container .toggler-content'), Toggler.CSS_COLLAPSED));
+				assert.ok(dom.hasClass(dom.toElement('.container .toggler-content'), Toggler.CSS_EXPANDED));
+			});
+
+			it('should only work for header elements that are inside container given as element', function() {
+				toggler = new Toggler({
+					container: dom.toElement('.container'),
+					content: '.toggler-content',
+					header: '.toggler-btn'
+				});
+
+				dom.triggerEvent(dom.toElement('.toggler-btn'), 'click');
+				assert.ok(dom.hasClass(dom.toElement('.toggler-content'), Toggler.CSS_COLLAPSED));
+				assert.ok(!dom.hasClass(dom.toElement('.toggler-content'), Toggler.CSS_EXPANDED));
+
+				dom.triggerEvent(dom.toElement('.container .toggler-btn'), 'click');
+				assert.ok(!dom.hasClass(dom.toElement('.container .toggler-content'), Toggler.CSS_COLLAPSED));
+				assert.ok(dom.hasClass(dom.toElement('.container .toggler-content'), Toggler.CSS_EXPANDED));
+			});
 		});
-		assert.ok(dom.hasClass(toggler.content, Toggler.CSS_COLLAPSED));
-		assert.ok(!dom.hasClass(toggler.content, Toggler.CSS_EXPANDED));
-		assert.ok(!toggler.expanded);
-	});
-
-	it('should expand/collapse content when the "expanded" attribute is set', function() {
-		toggler = new Toggler({
-			content: '.toggler-content'
-		});
-
-		toggler.expanded = true;
-		assert.ok(!dom.hasClass(toggler.content, Toggler.CSS_COLLAPSED));
-		assert.ok(dom.hasClass(toggler.content, Toggler.CSS_EXPANDED));
-
-		toggler.expanded = false;
-		assert.ok(dom.hasClass(toggler.content, Toggler.CSS_COLLAPSED));
-		assert.ok(!dom.hasClass(toggler.content, Toggler.CSS_EXPANDED));
-	});
-
-	it('should also allow passing elements directly to "content" and "header"', function() {
-		toggler = new Toggler({
-			content: dom.toElement('.toggler-content'),
-			header: dom.toElement('.toggler-btn')
-		});
-
-		dom.triggerEvent(toggler.header, 'click');
-		assert.ok(!dom.hasClass(toggler.content, Toggler.CSS_COLLAPSED));
-		assert.ok(dom.hasClass(toggler.content, Toggler.CSS_EXPANDED));
-		assert.ok(toggler.expanded);
-
-		dom.triggerEvent(toggler.header, 'click');
-		assert.ok(dom.hasClass(toggler.content, Toggler.CSS_COLLAPSED));
-		assert.ok(!dom.hasClass(toggler.content, Toggler.CSS_EXPANDED));
-		assert.ok(!toggler.expanded);
 	});
 });

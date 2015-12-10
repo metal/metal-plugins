@@ -12,103 +12,127 @@ class Toggler extends Attribute {
 	/**
 	 * @inheritDoc
 	 */
-  constructor(opt_config) {
-    super(opt_config);
+	constructor(opt_config) {
+		super(opt_config);
 
-    this.headerEventHandler_ = new EventHandler();
+		this.headerEventHandler_ = new EventHandler();
 
-    this.on('expandedChanged', this.syncExpanded);
-    this.on('headerChanged', this.syncHeader);
-
-    this.syncExpanded();
-    this.syncHeader();
-  }
+		this.on('headerChanged', this.syncHeader);
+		this.syncHeader();
+	}
 
 	/**
 	 * @inheritDoc
 	 */
-  disposeInternal() {
-    super.disposeInternal();
-    this.headerEventHandler_.removeAllListeners();
-  }
+	disposeInternal() {
+		super.disposeInternal();
+		this.headerEventHandler_.removeAllListeners();
+	}
 
-  /**
-   * Handles a `keydown` event on the header.
-   * @param {!Event} event
-   * @protected
-   */
-  handleKeydown_(event) {
-    if (event.keyCode === 13 || event.keyCode === 32) {
-      this.toggle();
-      event.preventDefault();
-    }
-  }
+	/**
+	 * Gets the content to be toggled by the given header element.
+	 * @param {!Element} header
+	 * @protected
+	 */
+	getContentElement_(header) {
+		if (core.isElement(this.content)) {
+			return this.content;
+		}
 
-  /**
-   * Syncs the component according to the value of the `expanded` attribute,
-   * updating the css class of the `content` element.
-   */
-  syncExpanded() {
-    if (this.expanded) {
-      dom.addClasses(this.content, Toggler.CSS_EXPANDED);
-      dom.removeClasses(this.content, Toggler.CSS_COLLAPSED);
-    } else {
-      dom.removeClasses(this.content, Toggler.CSS_EXPANDED);
-      dom.addClasses(this.content, Toggler.CSS_COLLAPSED);
-    }
-  }
+		var content = dom.next(header, this.content);
+		if (content) {
+			return content;
+		}
 
-  /**
-   * Syncs the component according to the value of the `header` attribute,
-   * attaching events to the new element and detaching from any previous one.
-   */
-  syncHeader() {
-    this.headerEventHandler_.removeAllListeners();
-    if (this.header) {
-      this.headerEventHandler_.add(
-        dom.on(this.header, 'click', this.toggle.bind(this)),
-        dom.on(this.header, 'keydown', this.handleKeydown_.bind(this))
-      );
-    }
-  }
+		content = header.querySelector(this.content);
+		if (content) {
+			return content;
+		}
 
-  /**
-   * Toggles the content's visibility.
-   */
-  toggle() {
-    this.expanded = !this.expanded;
-  }
+		return this.container.querySelector(this.content);
+	}
+
+	/**
+	 * Handles a `click` event on the header.
+	 * @param {!Event} event
+	 * @protected
+	 */
+	handleClick_(event) {
+		this.toggle(event.delegateTarget || event.currentTarget);
+	}
+
+	/**
+	 * Handles a `keydown` event on the header.
+	 * @param {!Event} event
+	 * @protected
+	 */
+	handleKeydown_(event) {
+		if (event.keyCode === 13 || event.keyCode === 32) {
+			this.toggle(event.delegateTarget || event.currentTarget);
+			event.preventDefault();
+		}
+	}
+
+	/**
+	 * Syncs the component according to the value of the `header` attribute,
+	 * attaching events to the new element and detaching from any previous one.
+	 */
+	syncHeader() {
+		this.headerEventHandler_.removeAllListeners();
+		if (this.header) {
+			if (core.isString(this.header)) {
+				this.headerEventHandler_.add(
+					dom.delegate(this.container, 'click', this.header, this.handleClick_.bind(this)),
+					dom.delegate(this.container, 'keydown', this.header, this.handleKeydown_.bind(this))
+				);
+			} else {
+				this.headerEventHandler_.add(
+					dom.on(this.header, 'click', this.handleClick_.bind(this)),
+					dom.on(this.header, 'keydown', this.handleKeydown_.bind(this))
+				);
+			}
+		}
+	}
+
+	/**
+	 * Toggles the content's visibility.
+	 */
+	toggle(header) {
+		var content = this.getContentElement_(header);
+		dom.toggleClasses(content, Toggler.CSS_EXPANDED);
+		dom.toggleClasses(content, Toggler.CSS_COLLAPSED);
+	}
 }
 
 /**
  * Attributes configuration.
  */
 Toggler.ATTRS = {
-  /**
-   * The element that should be expanded/collapsed by this toggler.
-   * @type {string|!Element}
-   */
-  content: {
-    setter: dom.toElement,
-    validator: value => core.isString(value) || core.isElement(value)
-  },
+	/**
+	 * The element where the header/content selectors will be looked for.
+	 * @type {string|!Element}
+	 */
+	container: {
+		setter: dom.toElement,
+		validator: value => core.isString(value) || core.isElement(value),
+		value: document
+	},
 
-  /**
-   * Flag indicating if the content is currently expanded or collapsed.
-   * @type {boolean}
-   */
-  expanded: {
-    value: false
-  },
+	/**
+	 * The element that should be expanded/collapsed by this toggler.
+	 * @type {string|!Element}
+	 */
+	content: {
+		validator: value => core.isString(value) || core.isElement(value)
+	},
 
-  /**
-   * The element that should be trigger toggling.
-   * @type {string|!Element}
-   */
-  header: {
-    setter: dom.toElement,
-    validator: value => core.isString(value) || core.isElement(value)
-  }
+	/**
+	 * The element that should be trigger toggling.
+	 * @type {string|!Element}
+	 */
+	header: {
+		validator: value => core.isString(value) || core.isElement(value)
+	}
 };
 
 /**
