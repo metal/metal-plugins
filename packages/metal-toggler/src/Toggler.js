@@ -24,6 +24,14 @@ class Toggler extends Attribute {
     this.syncHeader();
   }
 
+	/**
+	 * @inheritDoc
+	 */
+  disposeInternal() {
+    super.disposeInternal();
+    this.headerEventHandler_.removeAllListeners();
+  }
+
   /**
    * Handles a `keydown` event on the header.
    * @param {!Event} event
