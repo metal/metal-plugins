@@ -2,9 +2,9 @@
 
 /**
   * Debounces function execution.
-  * @param {Function} fn
-  * @param {Number} delay
-  * @return {Function}
+  * @param {!function()} fn
+  * @param {number} delay
+  * @return {!function()}
   */
  function debounce(fn, delay) {
    var id;
