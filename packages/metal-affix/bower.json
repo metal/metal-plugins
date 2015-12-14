@@ -1,14 +1,13 @@
 {
-	"name": "crystal-affix",
+	"name": "metal-affix",
 	"version": "0.0.0",
-	"description": "Crystal's affix component",
+	"description": "Metal's affix component",
 	"main": "src/Affix.js",
 	"moduleType": [
 		"es6"
 	],
 	"keywords": [
-		"metal",
-		"crystal"
+		"metal"
 	],
 	"ignore": [
 		"*",
