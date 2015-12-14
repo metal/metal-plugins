@@ -1,6 +1,6 @@
-# crystal-affix
+# metal-affix
 
-Crystal's affix component
+Metal's affix component
 
 ## Setup
 
