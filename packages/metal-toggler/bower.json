@@ -1,14 +1,13 @@
 {
-	"name": "crystal-toggler",
+	"name": "metal-toggler",
 	"version": "0.0.0",
-	"description": "Crystal's toggler component",
+	"description": "Metal's toggler component",
 	"main": "src/Toggler.js",
 	"moduleType": [
 		"es6"
 	],
 	"keywords": [
-		"metal",
-		"crystal"
+		"metal"
 	],
 	"ignore": [
 		"*",

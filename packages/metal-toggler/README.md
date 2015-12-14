@@ -1,6 +1,6 @@
-# crystal-toggler
+# metal-toggler
 
-Crystal's toggler component
+Metal's toggler component
 
 ## Setup
 
@@ -24,5 +24,3 @@ Crystal's toggler component
   ```
   gulp build
   ```
-
-
