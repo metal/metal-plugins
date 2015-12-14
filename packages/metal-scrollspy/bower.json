@@ -1,14 +1,13 @@
 {
-	"name": "crystal-scrollspy",
+	"name": "metal-scrollspy",
 	"version": "0.0.0",
-	"description": "Crystal's scrollspy component",
+	"description": "Metal's scrollspy component",
 	"main": "src/Scrollspy.js",
 	"moduleType": [
 		"es6"
 	],
 	"keywords": [
-		"metal",
-		"crystal"
+		"metal"
 	],
 	"ignore": [
 		"*",
