@@ -1,9 +1,9 @@
 {
-	"name": "crystal-scrollspy",
+	"name": "metal-scrollspy",
 	"version": "0.0.0",
-	"description": "Crystal's scrollspy component",
+	"description": "Metal's scrollspy component",
 	"license": "BSD",
-	"repository": "metal/crystal-scrollspy",
+	"repository": "metal/metal-scrollspy",
 	"engines": {
 		"node": ">=0.12.0"
 	},
@@ -11,8 +11,7 @@
 		"test": "gulp test"
 	},
 	"keywords": [
-		"metal",
-		"crystal"
+		"metal"
 	],
 	"devDependencies": {
 		"gulp": "^3.8.11",

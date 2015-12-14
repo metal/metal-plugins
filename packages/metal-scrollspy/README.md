@@ -1,6 +1,6 @@
-# crystal-scrollspy
+# metal-scrollspy
 
-Crystal's scrollspy component
+Metal's scrollspy component
 
 ## Setup
 
