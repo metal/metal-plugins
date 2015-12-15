@@ -1,13 +1,13 @@
 {
-	"name": "steel-clipboard",
+	"name": "metal-clipboard",
 	"version": "0.0.0",
-	"description": "Steel's copy to clipboard component",
+	"description": "Metal's component for copying content to the clipboard",
 	"main": "src/Clipboard.js",
 	"moduleType": [
 		"es6"
 	],
 	"keywords": [
-		"metal",
+		"clipboard",
 		"metal"
 	],
 	"ignore": [
@@ -17,10 +17,6 @@
 	],
 	"dependencies": {
 		"metal": "metal/metal.js#master",
-		"metal-jquery-adapter": "metal/metal-jquery-adapter#master",
-		"steel-bootstrap": "metal/steel-bootstrap#master"
-	},
-	"devDependencies": {
-		"steel-components": "metal/steel-components#master"
+		"metal-jquery-adapter": "metal/metal-jquery-adapter#master"
 	}
 }

@@ -1,6 +1,6 @@
 # metal-clipboard
 
-Steel's copy to clipboard component
+Metal's component for copying content to the clipboard.
 
 ## Setup
 
