@@ -5,11 +5,9 @@
 	<title>Demo: Clipboard</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<link rel="stylesheet" href="../bower_components/steel-bootstrap/build/bootstrap.css">
-	<link rel="stylesheet" href="../bower_components/steel-bootstrap/build/fonts/icon-16.css">
+	<link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
 
 	<script src="../bower_components/soyutils/soyutils.js"></script>
-	<script src="../bower_components/steel-components/build/globals/steel-min.js"></script>
 	<script src="../build/globals/clipboard.js"></script>
 
 	<style>
@@ -18,7 +16,7 @@
 		margin: 0 auto;
 	}
 
-	.icon-16-link {
+	.glyphicon-link {
 		cursor: pointer;
 	}
 
@@ -36,9 +34,9 @@
 
 	<h2>Copy text from another element</h2>
 
-	<div class="input-inner-addon input-inner-addon-left">
-		<span id="icon-copy" class="input-inner-icon-helper icon-16-link" data-clipboard data-target="input" type="button"></span>
-		<input id="input" class="form-control" type="text" value="https://github.com/metal/steel-clipboard">
+	<div class="input-group">
+		<input id="input" class="form-control" type="text" value="https://github.com/metal/metal-clipboard">
+		<span id="icon-copy" class="input-group-addon" data-clipboard="" data-target="input" type="button"><span class="glyphicon glyphicon-link"></span></span>
 	</div>
 
 	<hr>
@@ -55,36 +53,22 @@
 
 	<p id="paragraph">Mussum ipsum cacilds, vidis litro abertis. Consetis adipiscings elitis. Pra lá , depois divoltis porris, paradis. Paisis, filhis, espiritis santis. Mé faiz elementum girarzis, nisi eros vermeio, in elementis mé pra quem é amistosis quis leo. Manduma pindureta quium dia nois paga.</p>
 
-	<button class="btn btn-sm btn-success" data-clipboard data-target="paragraph">Copy to clipboard</button>
+	<button class="btn btn-sm btn-success" data-clipboard data-target="#paragraph">Copy to clipboard</button>
 
 	<script>
-		var tooltip = new steel.Tooltip({
-			delay: [0, 0],
-			triggerEvents: [null, 'mouseleave'],
-			selector: '[data-clipboard]',
-			visible: false
-		}).render();
-
-		var clipboard = new steel.Clipboard();
+		var clipboard = new metal.Clipboard();
 
 		clipboard.on('success', function(e) {
 			e.clearSelection();
 
+			console.info('Copied!');
 			console.info('Action:', e.action);
 			console.info('Text:', e.text);
-
-			showTooltip(e.trigger, 'Copied!');
 		});
 
 		clipboard.on('error', function(e) {
-			showTooltip(e.trigger, messageFallback(e.action));
+			console.warn(messageFallback(e.action));
 		});
-
-		function showTooltip(elem, msg) {
-			tooltip.content = msg;
-			tooltip.alignElement = elem;
-			tooltip.visible = true;
-		}
 
 		// Simplistic detection, do not use it in production
     function messageFallback(action) {

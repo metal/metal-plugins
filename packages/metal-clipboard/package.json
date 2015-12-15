@@ -1,9 +1,9 @@
 {
-	"name": "steel-clipboard",
+	"name": "metal-clipboard",
 	"version": "0.0.0",
-	"description": "Steel's copy to clipboard component",
+	"description": "Metal's component for copying content to the clipboard",
 	"license": "BSD",
-	"repository": "metal/steel-clipboard",
+	"repository": "metal/metal-clipboard",
 	"engines": {
 		"node": ">=0.12.0"
 	},
@@ -11,7 +11,7 @@
 		"test": "gulp test"
 	},
 	"keywords": [
-		"metal",
+		"clipboard",
 		"metal"
 	],
 	"devDependencies": {
