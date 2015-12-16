@@ -101,6 +101,14 @@ class Toggler extends Attribute {
 		var content = this.getContentElement_(header);
 		dom.toggleClasses(content, Toggler.CSS_EXPANDED);
 		dom.toggleClasses(content, Toggler.CSS_COLLAPSED);
+
+		if (dom.hasClass(content, Toggler.CSS_EXPANDED)) {
+			dom.addClasses(header, Toggler.CSS_HEADER_EXPANDED);
+			dom.removeClasses(header, Toggler.CSS_HEADER_COLLAPSED);
+		} else {
+			dom.removeClasses(header, Toggler.CSS_HEADER_EXPANDED);
+			dom.addClasses(header, Toggler.CSS_HEADER_COLLAPSED);
+		}
 	}
 }
 
@@ -144,5 +152,15 @@ Toggler.CSS_COLLAPSED = 'toggler-collapsed';
  * The CSS class added to the content when it's expanded.
  */
 Toggler.CSS_EXPANDED = 'toggler-expanded';
+
+/**
+ * The CSS class added to the header when the content is collapsed.
+ */
+Toggler.CSS_HEADER_COLLAPSED = 'toggler-header-collapsed';
+
+/**
+ * The CSS class added to the header when the content is expanded.
+ */
+Toggler.CSS_HEADER_EXPANDED = 'toggler-header-expanded';
 
 export default Toggler;

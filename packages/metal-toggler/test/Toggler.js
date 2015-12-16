@@ -83,6 +83,21 @@ describe('Toggler', function() {
 			assert.ok(!dom.hasClass(toggler.content, Toggler.CSS_EXPANDED));
 		});
 
+		it('should add css classes to header when content is expanded/collapsed', function() {
+			toggler = new Toggler({
+				content: dom.toElement('.toggler-content'),
+				header: dom.toElement('.toggler-btn')
+			});
+
+			dom.triggerEvent(toggler.header, 'click');
+			assert.ok(!dom.hasClass(toggler.header, Toggler.CSS_HEADER_COLLAPSED));
+			assert.ok(dom.hasClass(toggler.header, Toggler.CSS_HEADER_EXPANDED));
+
+			dom.triggerEvent(toggler.header, 'click');
+			assert.ok(dom.hasClass(toggler.header, Toggler.CSS_HEADER_COLLAPSED));
+			assert.ok(!dom.hasClass(toggler.header, Toggler.CSS_HEADER_EXPANDED));
+		});
+
 		it('should not throw error if no header is given', function() {
 			assert.doesNotThrow(function() {
 				toggler = new Toggler({
