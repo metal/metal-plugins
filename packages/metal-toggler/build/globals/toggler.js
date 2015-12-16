@@ -38,13 +38,13 @@ babelHelpers.possibleConstructorReturn = function (self, call) {
 };
 
 babelHelpers;
-'use strict';
+'use strict'
 
 /**
  * A collection of core utility functions.
  * @const
  */
-
+;
 (function () {
 	var core = (function () {
 		function core() {
@@ -366,7 +366,7 @@ babelHelpers;
 
 	this.metal.object = object;
 }).call(this);
-'use strict';
+'use strict'
 
 /**
  * Disposable utility. When inherited provides the `dispose` function to its
@@ -375,7 +375,7 @@ babelHelpers;
  * `disposeInternal` to implement any specific disposing logic.
  * @constructor
  */
-
+;
 (function () {
 	var Disposable = (function () {
 		function Disposable() {
@@ -2628,6 +2628,14 @@ babelHelpers;
 			var content = this.getContentElement_(header);
 			dom.toggleClasses(content, Toggler.CSS_EXPANDED);
 			dom.toggleClasses(content, Toggler.CSS_COLLAPSED);
+
+			if (dom.hasClass(content, Toggler.CSS_EXPANDED)) {
+				dom.addClasses(header, Toggler.CSS_HEADER_EXPANDED);
+				dom.removeClasses(header, Toggler.CSS_HEADER_COLLAPSED);
+			} else {
+				dom.removeClasses(header, Toggler.CSS_HEADER_EXPANDED);
+				dom.addClasses(header, Toggler.CSS_HEADER_COLLAPSED);
+			}
 		};
 
 		return Toggler;
@@ -2681,6 +2689,16 @@ babelHelpers;
   * The CSS class added to the content when it's expanded.
   */
 	Toggler.CSS_EXPANDED = 'toggler-expanded';
+
+	/**
+  * The CSS class added to the header when the content is collapsed.
+  */
+	Toggler.CSS_HEADER_COLLAPSED = 'toggler-header-collapsed';
+
+	/**
+  * The CSS class added to the header when the content is expanded.
+  */
+	Toggler.CSS_HEADER_EXPANDED = 'toggler-header-expanded';
 
 	this.metal.Toggler = Toggler;
 }).call(this);
