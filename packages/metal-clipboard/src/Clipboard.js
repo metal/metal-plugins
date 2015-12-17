@@ -37,11 +37,11 @@ class Clipboard extends Attribute {
 		}
 
 		this.clipboardAction_ = new ClipboardAction({
-			host    : this,
-			action  : this.action(e.delegateTarget),
-			target  : this.target(e.delegateTarget),
-			text    : this.text(e.delegateTarget),
-			trigger : e.delegateTarget
+			host: this,
+			action: this.action(e.delegateTarget),
+			target: this.target(e.delegateTarget),
+			text: this.text(e.delegateTarget),
+			trigger: e.delegateTarget
 		});
 	}
 }
@@ -133,8 +133,7 @@ class ClipboardAction extends Attribute {
 
 		try {
 			succeeded = document.execCommand(this.action);
-		}
-		catch (err) {
+		} catch (err) {
 			succeeded = false;
 		}
 
@@ -161,8 +160,7 @@ class ClipboardAction extends Attribute {
 				trigger: this.trigger,
 				clearSelection: this.clearSelection.bind(this)
 			});
-		}
-		else {
+		} else {
 			this.host.emit('error', {
 				action: this.action,
 				trigger: this.trigger,
@@ -192,8 +190,7 @@ class ClipboardAction extends Attribute {
 		if (this.target.nodeName === 'INPUT' || this.target.nodeName === 'TEXTAREA') {
 			this.target.select();
 			this.selectedText = this.target.value;
-		}
-		else {
+		} else {
 			let range = document.createRange();
 			let selection = window.getSelection();
 
