@@ -23,8 +23,10 @@ class Clipboard extends Attribute {
 	disposeInternal() {
 		this.listener_.dispose();
 		this.listener_ = null;
-		this.clipboardAction_.dispose();
-		this.clipboardAction_ = null;
+		if (this.clipboardAction_) {
+			this.clipboardAction_.dispose();
+			this.clipboardAction_ = null;
+		}
 	}
 
 	/**
