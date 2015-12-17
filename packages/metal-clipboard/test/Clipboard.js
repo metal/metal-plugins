@@ -276,4 +276,10 @@ describe('Clipboard', function() {
 		assert.strictEqual('', window.getSelection().toString());
 		assert.strictEqual(0, document.execCommand.callCount);
 	});
+
+	it('should not throw error if disposed before any element has been clicked', function() {
+		dom.append(container, '<div data-clipboard></div>');
+		clipboard = new Clipboard();
+		assert.doesNotThrow(() => clipboard.dispose());
+	});
 });
