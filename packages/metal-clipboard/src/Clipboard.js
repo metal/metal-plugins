@@ -18,13 +18,6 @@ class Clipboard extends Attribute {
 	}
 
 	/**
-	 * @inheritDoc
-	 */
-	disposeInterval() {
-		super.disposeInterval();
-	}
-
-	/**
 	 * Defines a new `ClipboardAction` on each click event.
 	 * @param {!Event} e
 	 */
@@ -49,18 +42,11 @@ class Clipboard extends Attribute {
  * @static
  */
 Clipboard.ATTRS = {
-	selector: {
-		value: '[data-clipboard]',
-		validator: core.isString
-	},
-
-	target: {
-		validator: core.isFunction,
-		value: function(delegateTarget) {
-			return document.querySelector(delegateTarget.getAttribute('data-target'));
-		}
-	},
-
+	/**
+	 * A function that returns the name of the clipboard action that should be done
+	 * when for the given element (either 'copy' or 'cut').
+	 * @type {!function(!Element)}
+	 */
 	action: {
 		validator: core.isFunction,
 		value: function(delegateTarget) {
@@ -68,6 +54,31 @@ Clipboard.ATTRS = {
 		}
 	},
 
+	/**
+	 * The selector for all elements that should be listened for clipboard actions.
+	 * @type {string}
+	 */
+	selector: {
+		value: '[data-clipboard]',
+		validator: core.isString
+	},
+
+	/**
+	 * A function that returns an element that has the content to be copied to the
+	 * clipboard.
+	 * @type {!function(!Element)}
+	 */
+	target: {
+		validator: core.isFunction,
+		value: function(delegateTarget) {
+			return document.querySelector(delegateTarget.getAttribute('data-target'));
+		}
+	},
+
+	/**
+	 * A function that returns the text to be copied to the clipboard.
+	 * @type {!function(!Element)}
+	 */
 	text: {
 		validator: core.isFunction,
 		value: function(delegateTarget) {
@@ -88,40 +99,72 @@ class ClipboardAction extends Attribute {
 
 		if (this.text) {
 			this.selectValue();
-		}
-		else if (this.target) {
+		} else if (this.target) {
 			this.selectTarget();
 		}
 	}
 
 	/**
-	 * @inheritDoc
+	 * Removes current selection and focus from `target` element.
 	 */
-	disposeInterval() {
-		this.removeFakeElement();
-		super.disposeInterval();
+	clearSelection() {
+		if (this.target) {
+			this.target.blur();
+		}
+
+		window.getSelection().removeAllRanges();
 	}
 
 	/**
-	 * Selects the content from value passed on `text` attribute.
+	 * Executes the copy operation based on the current selection.
 	 */
-	selectValue() {
-		this.removeFakeElement();
-		this.removeFakeHandler = dom.once(document, 'click', this.removeFakeElement.bind(this));
+	copyText() {
+		let succeeded;
 
-		this.fake = document.createElement('textarea');
-		this.fake.style.position = 'fixed';
-		this.fake.style.left = '-9999px';
-		this.fake.setAttribute('readonly', '');
-		this.fake.value = this.text;
-		this.selectedText = this.text;
+		try {
+			succeeded = document.execCommand(this.action);
+		}
+		catch (err) {
+			succeeded = false;
+		}
 
-		dom.enterDocument(this.fake);
-
-		this.fake.select();
-		this.copyText();
+		this.handleResult(succeeded);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	disposeInternal() {
+		this.removeFakeElement();
+		super.disposeInternal();
+	}
+
+	/**
+	 * Emits an event based on the copy operation result.
+	 * @param {boolean} succeeded
+	 */
+	handleResult(succeeded) {
+		if (succeeded) {
+			this.host.emit('success', {
+				action: this.action,
+				text: this.selectedText,
+				trigger: this.trigger,
+				clearSelection: this.clearSelection.bind(this)
+			});
+		}
+		else {
+			this.host.emit('error', {
+				action: this.action,
+				trigger: this.trigger,
+				clearSelection: this.clearSelection.bind(this)
+			});
+		}
+	}
+
+	/**
+	 * Removes the fake element that was added to the document, as well as its
+	 * listener.
+	 */
 	removeFakeElement() {
 		if (this.fake) {
 			dom.exitDocument(this.fake);
@@ -153,52 +196,23 @@ class ClipboardAction extends Attribute {
 	}
 
 	/**
-	 * Executes the copy operation based on the current selection.
+	 * Selects the content from value passed on `text` attribute.
 	 */
-	copyText() {
-		let succeeded;
+	selectValue() {
+		this.removeFakeElement();
+		this.removeFakeHandler = dom.once(document, 'click', this.removeFakeElement.bind(this));
 
-		try {
-			succeeded = document.execCommand(this.action);
-		}
-		catch (err) {
-			succeeded = false;
-		}
+		this.fake = document.createElement('textarea');
+		this.fake.style.position = 'fixed';
+		this.fake.style.left = '-9999px';
+		this.fake.setAttribute('readonly', '');
+		this.fake.value = this.text;
+		this.selectedText = this.text;
 
-		this.handleResult(succeeded);
-	}
+		dom.enterDocument(this.fake);
 
-	/**
-	 * Emits an event based on the copy operation result.
-	 * @param {boolean} succeeded
-	 */
-	handleResult(succeeded) {
-		if (succeeded) {
-			this.host.emit('success', {
-				action: this.action,
-				text: this.selectedText,
-				trigger: this.trigger,
-				clearSelection: this.clearSelection.bind(this)
-			});
-		}
-		else {
-			this.host.emit('error', {
-				action: this.action,
-				trigger: this.trigger,
-				clearSelection: this.clearSelection.bind(this)
-			});
-		}
-	}
-
-	/**
-	 * Removes current selection and focus from `target` element.
-	 */
-	clearSelection() {
-		if (this.target) {
-			this.target.blur();
-		}
-
-		window.getSelection().removeAllRanges();
+		this.fake.select();
+		this.copyText();
 	}
 }
 
@@ -209,16 +223,6 @@ class ClipboardAction extends Attribute {
  */
 ClipboardAction.ATTRS = {
 	/**
-	 * A reference to the `Clipboard` base class.
-	 * @type {Clipboard}
-	 */
-	host: {
-		validator: function(val) {
-			return val instanceof Clipboard;
-		}
-	},
-
-	/**
 	 * The action to be performed (either 'copy' or 'cut').
 	 * @type {string}
 	 * @default 'copy'
@@ -228,6 +232,24 @@ ClipboardAction.ATTRS = {
 		validator: function(val) {
 			return val === 'copy' || val === 'cut';
 		}
+	},
+
+	/**
+	 * A reference to the `Clipboard` base class.
+	 * @type {!Clipboard}
+	 */
+	host: {
+		validator: function(val) {
+			return val instanceof Clipboard;
+		}
+	},
+
+	/**
+	 * The text that is current selected.
+	 * @type {string}
+	 */
+	selectedText: {
+		validator: core.isString
 	},
 
 	/**
@@ -248,18 +270,10 @@ ClipboardAction.ATTRS = {
 
 	/**
 	 * The element that when clicked initiates a clipboard action.
-	 * @type {Element}
+	 * @type {!Element}
 	 */
 	trigger: {
 		validator: core.isElement
-	},
-
-	/**
-	 * The text that is current selected.
-	 * @type {string}
-	 */
-	selectedText: {
-		validator: core.isString
 	}
 };
 
