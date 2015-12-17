@@ -6,21 +6,24 @@ import Clipboard from '../src/Clipboard';
 
 describe('Clipboard', function() {
 	var clipboard;
+	var container;
 
 	beforeEach(function() {
 		sinon.stub(document, 'execCommand').returns(true);
+		container = document.createElement('div');
+		dom.enterDocument(container);
 	});
 
 	afterEach(function() {
 		clipboard.dispose();
 		document.execCommand.restore();
-		document.body.innerHTML = '';
+		dom.exitDocument(container);
 		window.getSelection().removeAllRanges();
 	});
 
 	describe('Text', function() {
 		it('should copy text from data-text to clipboard', function() {
-			dom.enterDocument('<div data-clipboard data-text="From data-text"></div>');
+			dom.append(container, '<div data-clipboard data-text="From data-text"></div>');
 
 			clipboard = new Clipboard();
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
@@ -31,7 +34,7 @@ describe('Clipboard', function() {
 		});
 
 		it('should copy text from "text" attribute fn to clipboard', function() {
-			dom.enterDocument('<div data-clipboard data-text="From data-text"></div>');
+			dom.append(container, '<div data-clipboard data-text="From data-text"></div>');
 
 			clipboard = new Clipboard({
 				text: function() {
@@ -48,9 +51,9 @@ describe('Clipboard', function() {
 
 	describe('Selector', function() {
 		it('should copy text from elements matching selector to clipboard', function() {
-			dom.enterDocument('<div data-clipboard data-text="data-clipboard attribute"></div>');
-			dom.enterDocument('<div class="copy" data-text="copy class"></div>');
-			dom.enterDocument('<div class="copy" data-text="copy class 2"></div>');
+			dom.append(container, '<div data-clipboard data-text="data-clipboard attribute"></div>');
+			dom.append(container, '<div class="copy" data-text="copy class"></div>');
+			dom.append(container, '<div class="copy" data-text="copy class 2"></div>');
 
 			clipboard = new Clipboard({
 				selector: '.copy'
@@ -72,7 +75,7 @@ describe('Clipboard', function() {
 
 	describe('Action', function() {
 		it('should copy text to clipboard using the action specified by data-action', function() {
-			dom.enterDocument('<div data-clipboard data-text="From data-text" data-action="cut"></div>');
+			dom.append(container, '<div data-clipboard data-text="From data-text" data-action="cut"></div>');
 
 			clipboard = new Clipboard();
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
@@ -83,7 +86,7 @@ describe('Clipboard', function() {
 		});
 
 		it('should copy text to clipboard using the action specified by the action attribute', function() {
-			dom.enterDocument('<div data-clipboard data-text="From data-text" data-action="cut"></div>');
+			dom.append(container, '<div data-clipboard data-text="From data-text" data-action="cut"></div>');
 
 			clipboard = new Clipboard({
 				action: function() {
@@ -100,7 +103,7 @@ describe('Clipboard', function() {
 
 	describe('Fake text element', function() {
 		it('should remove fake text element used for copying when document is clicked again', function() {
-			dom.enterDocument('<div data-clipboard data-text="From data-text"></div>');
+			dom.append(container, '<div data-clipboard data-text="From data-text"></div>');
 			clipboard = new Clipboard();
 
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
@@ -111,7 +114,7 @@ describe('Clipboard', function() {
 		});
 
 		it('should remove fake text element used for copying when Clipboard instance is disposed', function() {
-			dom.enterDocument('<div data-clipboard data-text="From data-text"></div>');
+			dom.append(container, '<div data-clipboard data-text="From data-text"></div>');
 			clipboard = new Clipboard();
 
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
@@ -124,8 +127,8 @@ describe('Clipboard', function() {
 
 	describe('Target', function() {
 		it('should copy text from text input element to clipboard', function() {
-			dom.enterDocument('<div data-clipboard data-target="#target"></div>');
-			dom.enterDocument('<input id="target" type="text" value="From text input">');
+			dom.append(container, '<div data-clipboard data-target="#target"></div>');
+			dom.append(container, '<input id="target" type="text" value="From text input">');
 			clipboard = new Clipboard();
 
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
@@ -136,8 +139,8 @@ describe('Clipboard', function() {
 		});
 
 		it('should copy text from textarea element to clipboard', function() {
-			dom.enterDocument('<div data-clipboard data-target="#target"></div>');
-			dom.enterDocument('<textarea id="target" type="text">From textarea</textarea>');
+			dom.append(container, '<div data-clipboard data-target="#target"></div>');
+			dom.append(container, '<textarea id="target" type="text">From textarea</textarea>');
 			clipboard = new Clipboard();
 
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
@@ -148,8 +151,8 @@ describe('Clipboard', function() {
 		});
 
 		it('should copy text from any element to clipboard', function() {
-			dom.enterDocument('<div data-clipboard data-target="#target"></div>');
-			dom.enterDocument('<div id="target">From div</div>');
+			dom.append(container, '<div data-clipboard data-target="#target"></div>');
+			dom.append(container, '<div id="target">From div</div>');
 			clipboard = new Clipboard();
 
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
@@ -160,9 +163,9 @@ describe('Clipboard', function() {
 		});
 
 		it('should copy text from the element given in the "target" attribute', function() {
-			dom.enterDocument('<div data-clipboard data-target="#target"></div>');
-			dom.enterDocument('<div id="target">From div</div>');
-			dom.enterDocument('<span id="target2">From span</span>');
+			dom.append(container, '<div data-clipboard data-target="#target"></div>');
+			dom.append(container, '<div id="target">From div</div>');
+			dom.append(container, '<span id="target2">From span</span>');
 			clipboard = new Clipboard({
 				target: function() {
 					return dom.toElement('#target2');
@@ -179,7 +182,7 @@ describe('Clipboard', function() {
 
 	describe('Events', function() {
 		it('should trigger "success" event when text is successfully copied', function() {
-			dom.enterDocument('<div data-clipboard data-text="From data-text"></div>');
+			dom.append(container, '<div data-clipboard data-text="From data-text"></div>');
 			clipboard = new Clipboard();
 
 			var listener = sinon.stub();
@@ -197,7 +200,7 @@ describe('Clipboard', function() {
 		});
 
 		it('should clear the selection through the function given by the "success" event', function() {
-			dom.enterDocument('<div data-clipboard data-text="From data-text"></div>');
+			dom.append(container, '<div data-clipboard data-text="From data-text"></div>');
 			clipboard = new Clipboard();
 
 			var listener = sinon.stub();
@@ -211,8 +214,8 @@ describe('Clipboard', function() {
 		});
 
 		it('should blur target through the function given by the "success" event', function() {
-			dom.enterDocument('<div data-clipboard data-target="#target"></div>');
-			dom.enterDocument('<textarea id="target">From textarea</textarea>');
+			dom.append(container, '<div data-clipboard data-target="#target"></div>');
+			dom.append(container, '<textarea id="target">From textarea</textarea>');
 			clipboard = new Clipboard();
 
 			var listener = sinon.stub();
@@ -230,7 +233,7 @@ describe('Clipboard', function() {
 
 		it('should trigger "error" event when document.execCommand returns false', function() {
 			document.execCommand.returns(false);
-			dom.enterDocument('<div data-clipboard data-text="From data-text"></div>');
+			dom.append(container, '<div data-clipboard data-text="From data-text"></div>');
 			clipboard = new Clipboard();
 
 			var listener = sinon.stub();
@@ -248,7 +251,7 @@ describe('Clipboard', function() {
 
 		it('should trigger "error" event when document.execCommand throws error', function() {
 			document.execCommand.throws();
-			dom.enterDocument('<div data-clipboard data-text="From data-text"></div>');
+			dom.append(container, '<div data-clipboard data-text="From data-text"></div>');
 			clipboard = new Clipboard();
 
 			var listener = sinon.stub();
@@ -266,7 +269,7 @@ describe('Clipboard', function() {
 	});
 
 	it('should not copy anything to clipboard if neither target nor text is given', function() {
-		dom.enterDocument('<div data-clipboard></div>');
+		dom.append(container, '<div data-clipboard></div>');
 		clipboard = new Clipboard();
 		dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
 
