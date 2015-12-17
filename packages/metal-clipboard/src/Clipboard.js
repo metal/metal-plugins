@@ -14,7 +14,17 @@ class Clipboard extends Attribute {
 	constructor(opt_config) {
 		super(opt_config);
 
-		dom.on(this.selector, 'click', (e) => this.initialize(e));
+		this.listener_ = dom.on(this.selector, 'click', (e) => this.initialize(e));
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	disposeInternal() {
+		this.listener_.dispose();
+		this.listener_ = null;
+		this.clipboardAction_.dispose();
+		this.clipboardAction_ = null;
 	}
 
 	/**
@@ -22,11 +32,11 @@ class Clipboard extends Attribute {
 	 * @param {!Event} e
 	 */
 	initialize(e) {
-		if (this.clipboardAction) {
-			this.clipboardAction = null;
+		if (this.clipboardAction_) {
+			this.clipboardAction_ = null;
 		}
 
-		this.clipboardAction = new ClipboardAction({
+		this.clipboardAction_ = new ClipboardAction({
 			host    : this,
 			action  : this.action(e.delegateTarget),
 			target  : this.target(e.delegateTarget),
