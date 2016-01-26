@@ -16,7 +16,6 @@ Metal's drag and drop component.
 
   ```
   npm install
-  bower install
   ```
 
 4. Build the code:

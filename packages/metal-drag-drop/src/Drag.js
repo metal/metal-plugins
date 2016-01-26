@@ -1,14 +1,14 @@
 'use strict';
 
-import core from 'bower:metal/src/core';
-import dom from 'bower:metal/src/dom/dom';
-import object from 'bower:metal/src/object/object';
-import Attribute from 'bower:metal/src/attribute/Attribute';
+import core from 'npm:metal/src/core';
+import dom from 'npm:metal/src/dom/dom';
+import object from 'npm:metal/src/object/object';
+import Attribute from 'npm:metal/src/attribute/Attribute';
 import DragAutoScroll from './helpers/DragAutoScroll';
 import DragScrollDelta from './helpers/DragScrollDelta';
 import DragShim from './helpers/DragShim';
-import EventHandler from 'bower:metal/src/events/EventHandler';
-import Position from 'bower:metal-position/src/Position';
+import EventHandler from 'npm:metal/src/events/EventHandler';
+import Position from 'npm:metal-position/src/Position';
 
 /**
  * Responsible for making elements draggable. Handles all the logic

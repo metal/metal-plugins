@@ -1,8 +1,8 @@
 'use strict';
 
-import core from 'bower:metal/src/core';
-import Attribute from 'bower:metal/src/attribute/Attribute';
-import Position from 'bower:metal-position/src/Position';
+import core from 'npm:metal/src/core';
+import Attribute from 'npm:metal/src/attribute/Attribute';
+import Position from 'npm:metal-position/src/Position';
 
 /**
  * Helper called by the `Drag` instance that scrolls elements when the

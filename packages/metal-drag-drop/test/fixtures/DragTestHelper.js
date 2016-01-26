@@ -1,6 +1,6 @@
 'use strict';
 
-import dom from 'bower:metal/src/dom/dom';
+import dom from 'npm:metal/src/dom/dom';
 
 /**
  * This class has helper functions for testing the drag components

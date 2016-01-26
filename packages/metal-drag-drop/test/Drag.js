@@ -1,10 +1,10 @@
 'use strict';
 
-import dom from 'bower:metal/src/dom/dom';
+import dom from 'npm:metal/src/dom/dom';
 import Drag from '../src/Drag';
 import DragShim from '../src/helpers/DragShim';
 import DragTestHelper from './fixtures/DragTestHelper';
-import Position from 'bower:metal-position/src/Position';
+import Position from 'npm:metal-position/src/Position';
 
 describe('Drag', function() {
 	var drag;

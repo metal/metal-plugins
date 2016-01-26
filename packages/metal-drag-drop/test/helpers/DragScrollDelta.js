@@ -1,8 +1,8 @@
 'use strict';
 
-import dom from 'bower:metal/src/dom/dom';
+import dom from 'npm:metal/src/dom/dom';
 import DragScrollDelta from '../../src/helpers/DragScrollDelta';
-import Position from 'bower:metal-position/src/Position';
+import Position from 'npm:metal-position/src/Position';
 
 describe('DragScrollDelta', function() {
 	var dragScrollDelta;

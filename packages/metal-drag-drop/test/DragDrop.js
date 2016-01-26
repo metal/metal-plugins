@@ -1,6 +1,6 @@
 'use strict';
 
-import dom from 'bower:metal/src/dom/dom';
+import dom from 'npm:metal/src/dom/dom';
 import DragDrop from '../src/DragDrop';
 import DragShim from '../src/helpers/DragShim';
 import DragTestHelper from './fixtures/DragTestHelper';
