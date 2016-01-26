@@ -2,19 +2,29 @@
 	"name": "metal-debounce",
 	"version": "0.0.0",
 	"description": "Metal's debounce utility",
-	"license": "SEE LICENSE IN LICENSE.md",
+	"license": "BSD",
 	"repository": "metal/metal-debounce",
 	"engines": {
-		"node": ">=0.12.0"
+		"node": ">=0.12.0",
+		"npm": ">=3.0.0"
 	},
+	"files": [
+		"src/**/*.js",
+		"test/**/*.js"
+	],
 	"scripts": {
 		"test": "gulp test"
 	},
 	"keywords": [
 		"metal"
 	],
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "closure-templates": "20140422.0.0",
+    "metal": "metal/metal.js#master"
+  },
 	"devDependencies": {
 		"gulp": "^3.8.11",
-		"gulp-metal": "^0.7.0"
+		"gulp-metal": "^0.9.0"
 	}
 }
