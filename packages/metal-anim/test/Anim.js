@@ -1,7 +1,7 @@
 'use strict';
 
 import Anim from '../src/Anim';
-import dom from 'bower:metal/src/dom/dom';
+import dom from 'npm:metal/src/dom/dom';
 
 describe('Anim', function() {
 	beforeEach(function() {

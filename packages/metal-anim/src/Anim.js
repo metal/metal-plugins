@@ -1,9 +1,9 @@
 'use strict';
 
-import core from 'bower:metal/src/core';
-import dom from 'bower:metal/src/dom/dom';
-import features from 'bower:metal/src/dom/features';
-import 'bower:metal/src/dom/events';
+import core from 'npm:metal/src/core';
+import dom from 'npm:metal/src/dom/dom';
+import features from 'npm:metal/src/dom/features';
+import 'npm:metal/src/dom/events';
 
 class Anim {
 	/**
