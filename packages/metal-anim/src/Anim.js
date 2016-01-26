@@ -17,8 +17,7 @@ class Anim {
 	static emulateEnd(element, opt_durationMs) {
 		if (this.getComputedDurationMs(element, 'animation') > this.getComputedDurationMs(element, 'transition')) {
 			return this.emulateEnd_(element, 'animation', opt_durationMs);
-		}
-		else {
+		} else {
 			return this.emulateEnd_(element, 'transition', opt_durationMs);
 		}
 	}
