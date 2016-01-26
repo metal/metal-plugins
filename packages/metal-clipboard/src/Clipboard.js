@@ -1,8 +1,8 @@
 'use strict';
 
-import Attribute from 'bower:metal/src/attribute/Attribute';
-import core from 'bower:metal/src/core';
-import dom from 'bower:metal/src/dom/dom';
+import Attribute from 'npm:metal/src/attribute/Attribute';
+import core from 'npm:metal/src/core';
+import dom from 'npm:metal/src/dom/dom';
 
 /**
  * Clipboard component.
