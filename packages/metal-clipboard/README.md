@@ -16,7 +16,6 @@ Metal's component for copying content to the clipboard.
 
   ```
   npm install
-  bower install
   ```
 
 4. Build the code:
