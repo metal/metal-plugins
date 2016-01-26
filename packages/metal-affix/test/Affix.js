@@ -1,7 +1,7 @@
 'use strict';
 
-import dom from 'bower:metal/src/dom/dom';
-import Position from 'bower:metal-position/src/Position';
+import dom from 'npm:metal/src/dom/dom';
+import Position from 'npm:metal-position/src/Position';
 import Affix from '../src/Affix';
 
 var affix;
