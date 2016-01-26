@@ -16,7 +16,6 @@ Metal's debounce utility
 
   ```
   npm install
-  bower install
   ```
 
 4. Build the code:
@@ -24,5 +23,3 @@ Metal's debounce utility
   ```
   gulp build
   ```
-
-
