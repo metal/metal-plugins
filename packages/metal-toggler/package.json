@@ -2,31 +2,29 @@
 	"name": "metal-toggler",
 	"version": "0.0.0",
 	"description": "Metal's toggler component",
-	"license": "SEE LICENSE IN LICENSE.md",
+	"license": "BSD",
 	"repository": "metal/metal-toggler",
-	"engines": {
-		"node": ">=0.12.0"
-	},
+  "engines": {
+    "node": ">=0.12.0",
+    "npm": ">=3.0.0"
+  },
+  "files": [
+    "src/**/*.js",
+    "test/**/*.js"
+  ],
 	"scripts": {
 		"test": "gulp test"
 	},
 	"keywords": [
 		"metal"
 	],
-	"devDependencies": {
-		"babel-preset-metal": "^1.0.3",
-		"chai": "^2.3.0",
-		"gulp": "^3.8.11",
-		"gulp-metal": "^0.6.0",
-		"isparta": "^4.0.0",
-		"karma": "^0.13.9",
-		"karma-babel-preprocessor": "^6.0.1",
-		"karma-chai": "^0.1.0",
-		"karma-chrome-launcher": "^0.2.0",
-		"karma-commonjs": "0.0.13",
-		"karma-coverage": "^0.5.1",
-		"karma-mocha": "^0.2.0",
-		"karma-source-map-support": "1.0.0",
-		"mocha": "^2.2.5"
-	}
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "closure-templates": "20140422.0.0",
+    "metal": "metal/metal.js#master"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.11",
+		"gulp-metal": "^0.9.2"
+  }
 }

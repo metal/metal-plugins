@@ -1,9 +1,9 @@
 'use strict';
 
-import core from 'bower:metal/src/core';
-import dom from 'bower:metal/src/dom/dom';
-import Attribute from 'bower:metal/src/attribute/Attribute';
-import EventHandler from 'bower:metal/src/events/EventHandler';
+import core from 'metal/src/core';
+import dom from 'metal/src/dom/dom';
+import Attribute from 'metal/src/attribute/Attribute';
+import EventHandler from 'metal/src/events/EventHandler';
 
 /**
  * Toggler component.

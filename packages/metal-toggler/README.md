@@ -16,7 +16,6 @@ Metal's toggler component
 
   ```
   npm install
-  bower install
   ```
 
 4. Build the code:
