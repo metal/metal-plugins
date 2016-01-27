@@ -16,7 +16,6 @@ Class for parsing and formatting URIs.
 
   ```
   npm install
-  bower install
   ```
 
 4. Build the code:
