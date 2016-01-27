@@ -16,7 +16,6 @@ Metal.js utility to perform Ajax requests
 
   ```
   npm install
-  bower install
   ```
 
 4. Build the code:
@@ -24,5 +23,3 @@ Metal.js utility to perform Ajax requests
   ```
   gulp build
   ```
-
-

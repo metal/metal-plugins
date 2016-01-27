@@ -1,7 +1,7 @@
 'use strict';
 
-import core from 'bower:metal/src/core';
-import { CancellablePromise as Promise } from 'bower:metal-promise/src/promise/Promise';
+import core from 'metal/src/core';
+import { CancellablePromise as Promise } from 'metal-promise/src/promise/Promise';
 
 class Ajax {
 
