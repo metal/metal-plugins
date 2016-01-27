@@ -9,8 +9,8 @@
     "npm": ">=3.0.0"
   },
   "files": [
-    "src/**/*.js",
-    "test/**/*.js"
+    "src",
+    "test"
   ],
 	"scripts": {
 		"test": "gulp test"
