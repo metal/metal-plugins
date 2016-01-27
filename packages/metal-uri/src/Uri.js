@@ -24,7 +24,7 @@ class Uri {
 	addParameterValue(name, value) {
 		this.ensureQueryInitialized_();
 		if (core.isDef(value)) {
-			value = decodeURIComponent(String(value));
+			value = String(value);
 		}
 		this.query.add(name, value);
 		return this;

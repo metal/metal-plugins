@@ -202,6 +202,13 @@ describe('Uri', function() {
 		assert.strictEqual('/?a=one%20space', uri.toString());
 	});
 
+	it('should decode parameter value in uri preserving encoding', function() {
+		var uri = new Uri();
+		uri.setParameterValue('a', 'one%20space');
+		assert.strictEqual('one%20space', uri.getParameterValue('a'));
+		assert.strictEqual('/?a=one%2520space', uri.toString());
+	});
+
 	it('should remove dot segments from pathname', function() {
 		assert.strictEqual('/a/', new Uri('./a/').getPathname());
 		assert.strictEqual('/a/', new Uri('./a/b/c/../..').getPathname());
