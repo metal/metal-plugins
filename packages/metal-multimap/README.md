@@ -16,7 +16,6 @@ Case insensitive string Multimap implementation.
 
   ```
   npm install
-  bower install
   ```
 
 4. Build the code:
@@ -24,5 +23,3 @@ Case insensitive string Multimap implementation.
   ```
   gulp build
   ```
-
-
