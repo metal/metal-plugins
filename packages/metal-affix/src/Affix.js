@@ -1,11 +1,11 @@
 'use strict';
 
-import core from 'npm:metal/src/core';
-import dom from 'npm:metal/src/dom/dom';
-import Attribute from 'npm:metal/src/attribute/Attribute';
-import EventEmitter from 'npm:metal/src/events/EventEmitter';
-import EventEmitterProxy from 'npm:metal/src/events/EventEmitterProxy';
-import Position from 'npm:metal-position/src/Position';
+import core from 'metal/src/core';
+import dom from 'metal/src/dom/dom';
+import Attribute from 'metal/src/attribute/Attribute';
+import EventEmitter from 'metal/src/events/EventEmitter';
+import EventEmitterProxy from 'metal/src/events/EventEmitterProxy';
+import Position from 'metal-position/src/Position';
 
 /**
  * Affix utility.
