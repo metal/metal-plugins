@@ -1,12 +1,12 @@
 'use strict';
 
-import array from 'npm:metal/src/array/array';
-import core from 'npm:metal/src/core';
-import dom from 'npm:metal/src/dom/dom';
-import object from 'npm:metal/src/object/object';
+import array from 'metal/src/array/array';
+import core from 'metal/src/core';
+import dom from 'metal/src/dom/dom';
+import object from 'metal/src/object/object';
 import Drag from './Drag';
-import Position from 'npm:metal-position/src/Position';
-import 'npm:metal/src/dom/events';
+import Position from 'metal-position/src/Position';
+import 'metal/src/dom/events';
 
 /**
  * Adds the functionality of dropping dragged elements to specific

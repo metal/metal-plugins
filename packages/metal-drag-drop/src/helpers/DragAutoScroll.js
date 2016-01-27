@@ -1,8 +1,8 @@
 'use strict';
 
-import core from 'npm:metal/src/core';
-import Attribute from 'npm:metal/src/attribute/Attribute';
-import Position from 'npm:metal-position/src/Position';
+import core from 'metal/src/core';
+import Attribute from 'metal/src/attribute/Attribute';
+import Position from 'metal-position/src/Position';
 
 /**
  * Helper called by the `Drag` instance that scrolls elements when the

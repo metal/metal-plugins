@@ -1,8 +1,8 @@
 'use strict';
 
-import dom from 'npm:metal/src/dom/dom';
+import dom from 'metal/src/dom/dom';
 import DragScrollDelta from '../../src/helpers/DragScrollDelta';
-import Position from 'npm:metal-position/src/Position';
+import Position from 'metal-position/src/Position';
 
 describe('DragScrollDelta', function() {
 	var dragScrollDelta;
