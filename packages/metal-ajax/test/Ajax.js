@@ -7,22 +7,6 @@ describe('Ajax', function() {
 
 	describe('Utils', function() {
 
-		it('should join paths', function() {
-			assert.strictEqual('foo', Ajax.joinPaths('foo', ''));
-			assert.strictEqual('/foo', Ajax.joinPaths('', 'foo'));
-			assert.strictEqual('foo', Ajax.joinPaths('foo/', ''));
-			assert.strictEqual('/foo', Ajax.joinPaths('', 'foo/'));
-			assert.strictEqual('foo/bar', Ajax.joinPaths('foo/', '/bar'));
-			assert.strictEqual('foo/bar', Ajax.joinPaths('foo/', 'bar'));
-			assert.strictEqual('foo/bar', Ajax.joinPaths('foo', 'bar'));
-			assert.strictEqual('foo/bar', Ajax.joinPaths('foo', '/bar'));
-			assert.strictEqual('foo/bar/bazz', Ajax.joinPaths('foo', '/bar', 'bazz'));
-		});
-
-		it('should join paths with full urls', function() {
-			assert.strictEqual('http://localhost:123', Ajax.joinPaths('http://localhost:123', ''));
-		});
-
 		it('should parse response headers', function() {
 			var headers = 'Name\u003a\u0020Value\u000d\u000aName\u003a\u0020Value';
 			assert.deepEqual([{

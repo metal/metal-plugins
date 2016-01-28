@@ -7,19 +7,6 @@ import { CancellablePromise as Promise } from 'metal-promise/src/promise/Promise
 class Ajax {
 
 	/**
-	 * Joins the given paths.
-	 * @param {string} basePath
-	 * @param {...string} ...paths Any number of paths to be joined with the base url.
-	 */
-	static joinPaths(basePath, ...paths) {
-		if (basePath.charAt(basePath.length - 1) === '/') {
-			basePath = basePath.substring(0, basePath.length - 1);
-		}
-		paths = paths.map(path => path.charAt(0) === '/' ? path.substring(1) : path);
-		return [basePath].concat(paths).join('/').replace(/\/$/, '');
-	}
-
-	/**
 	 * XmlHttpRequest's getAllResponseHeaders() method returns a string of
 	 * response headers according to the format described on the spec:
 	 * {@link http://www.w3.org/TR/XMLHttpRequest/#the-getallresponseheaders-method}.
