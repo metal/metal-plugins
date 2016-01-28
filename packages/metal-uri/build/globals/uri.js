@@ -38,6 +38,44 @@ babelHelpers.possibleConstructorReturn = function (self, call) {
   return call && (typeof call === "object" || typeof call === "function") ? call : self;
 };
 
+babelHelpers.slicedToArray = function () {
+  function sliceIterator(arr, i) {
+    var _arr = [];
+    var _n = true;
+    var _d = false;
+    var _e = undefined;
+
+    try {
+      for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+        _arr.push(_s.value);
+
+        if (i && _arr.length === i) break;
+      }
+    } catch (err) {
+      _d = true;
+      _e = err;
+    } finally {
+      try {
+        if (!_n && _i["return"]) _i["return"]();
+      } finally {
+        if (_d) throw _e;
+      }
+    }
+
+    return _arr;
+  }
+
+  return function (arr, i) {
+    if (Array.isArray(arr)) {
+      return arr;
+    } else if (Symbol.iterator in Object(arr)) {
+      return sliceIterator(arr, i);
+    } else {
+      throw new TypeError("Invalid attempt to destructure non-iterable instance");
+    }
+  };
+}();
+
 babelHelpers;
 'use strict';
 
@@ -534,8 +572,17 @@ babelHelpers;
 	var Uri = function () {
 
 		/**
-   * This class contains setters and getters for the parts of the URI.This
-   * class contains setters and getters for the parts of the URI.
+   * This class contains setters and getters for the parts of the URI.
+   * The following figure displays an example URIs and their component parts.
+   *
+   *                                              path
+   *	                                         ┌───┴────┐
+   *	  abc://username:password@example.com:123/path/data?key=value#fragid1
+   *	  └┬┘   └───────┬───────┘ └────┬────┘ └┬┘           └───┬───┘ └──┬──┘
+   * protocol  user information   hostname  port            search    hash
+   *                            └──────┬───────┘
+   *                                  host
+   *                                  
    * @param {*=} opt_uri Optional string URI to parse
    * @constructor
    */
@@ -557,7 +604,7 @@ babelHelpers;
 		Uri.prototype.addParameterValue = function addParameterValue(name, value) {
 			this.ensureQueryInitialized_();
 			if (core.isDef(value)) {
-				value = decodeURIComponent(String(value));
+				value = String(value);
 			}
 			this.query.add(name, value);
 			return this;
@@ -595,8 +642,17 @@ babelHelpers;
 			var search = this.url.search;
 			if (search) {
 				search.substring(1).split('&').forEach(function (param) {
-					var pieces = param.split('=');
-					_this2.addParameterValue(pieces[0], pieces[1]);
+					var _param$split = param.split('=');
+
+					var _param$split2 = babelHelpers.slicedToArray(_param$split, 2);
+
+					var key = _param$split2[0];
+					var value = _param$split2[1];
+
+					if (core.isDef(value)) {
+						value = decodeURIComponent(value);
+					}
+					_this2.addParameterValue(key, value);
 				});
 			}
 		};

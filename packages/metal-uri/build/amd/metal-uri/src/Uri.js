@@ -15,6 +15,44 @@ define(['exports', 'metal/src/core', 'metal-multimap/src/MultiMap'], function (e
 		};
 	}
 
+	var _slicedToArray = function () {
+		function sliceIterator(arr, i) {
+			var _arr = [];
+			var _n = true;
+			var _d = false;
+			var _e = undefined;
+
+			try {
+				for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+					_arr.push(_s.value);
+
+					if (i && _arr.length === i) break;
+				}
+			} catch (err) {
+				_d = true;
+				_e = err;
+			} finally {
+				try {
+					if (!_n && _i["return"]) _i["return"]();
+				} finally {
+					if (_d) throw _e;
+				}
+			}
+
+			return _arr;
+		}
+
+		return function (arr, i) {
+			if (Array.isArray(arr)) {
+				return arr;
+			} else if (Symbol.iterator in Object(arr)) {
+				return sliceIterator(arr, i);
+			} else {
+				throw new TypeError("Invalid attempt to destructure non-iterable instance");
+			}
+		};
+	}();
+
 	function _classCallCheck(instance, Constructor) {
 		if (!(instance instanceof Constructor)) {
 			throw new TypeError("Cannot call a class as a function");
@@ -34,7 +72,7 @@ define(['exports', 'metal/src/core', 'metal-multimap/src/MultiMap'], function (e
 			this.ensureQueryInitialized_();
 
 			if (_core2.default.isDef(value)) {
-				value = decodeURIComponent(String(value));
+				value = String(value);
 			}
 
 			this.query.add(name, value);
@@ -62,9 +100,18 @@ define(['exports', 'metal/src/core', 'metal-multimap/src/MultiMap'], function (e
 
 			if (search) {
 				search.substring(1).split('&').forEach(function (param) {
-					var pieces = param.split('=');
+					var _param$split = param.split('=');
 
-					_this2.addParameterValue(pieces[0], pieces[1]);
+					var _param$split2 = _slicedToArray(_param$split, 2);
+
+					var key = _param$split2[0];
+					var value = _param$split2[1];
+
+					if (_core2.default.isDef(value)) {
+						value = decodeURIComponent(value);
+					}
+
+					_this2.addParameterValue(key, value);
 				});
 			}
 		};
