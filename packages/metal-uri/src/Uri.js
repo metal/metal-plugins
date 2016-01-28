@@ -6,8 +6,7 @@ import MultiMap from 'metal-multimap/src/MultiMap';
 class Uri {
 
 	/**
-	 * This class contains setters and getters for the parts of the URI.This
-	 * class contains setters and getters for the parts of the URI.
+	 * This class contains setters and getters for the parts of the URI.
 	 * The following figure displays an example URIs and their component parts.
 	 *
 	 *                                              path
