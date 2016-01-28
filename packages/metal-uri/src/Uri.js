@@ -54,8 +54,11 @@ class Uri {
 		var search = this.url.search;
 		if (search) {
 			search.substring(1).split('&').forEach((param) => {
-				var pieces = param.split('=');
-				this.addParameterValue(pieces[0], pieces[1]);
+				var [key, value] = param.split('=');
+				if (core.isDef(value)) {
+					value = decodeURIComponent(value);
+				}
+				this.addParameterValue(key, value);
 			});
 		}
 	}
