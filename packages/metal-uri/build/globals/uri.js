@@ -595,6 +595,25 @@ babelHelpers;
 		}
 
 		/**
+   * Adds parameters to uri from a <code>MultiMap</code> as source.
+   * @param {MultiMap} multimap The <code>MultiMap</code> containing the
+   *   parameters.
+   * @protected
+   * @chainable
+   */
+
+		Uri.prototype.addParametersFromMultiMap = function addParametersFromMultiMap(multimap) {
+			var _this = this;
+
+			multimap.names().forEach(function (name) {
+				multimap.getAll(name).forEach(function (value) {
+					_this.addParameterValue(name, value);
+				});
+			});
+			return this;
+		};
+
+		/**
    * Adds the value of the named query parameters.
    * @param {string} key The parameter to set.
    * @param {*} value The new value. Will be explicitly casted to String.
@@ -618,10 +637,10 @@ babelHelpers;
    */
 
 		Uri.prototype.addParameterValues = function addParameterValues(name, values) {
-			var _this = this;
+			var _this2 = this;
 
 			values.forEach(function (value) {
-				return _this.addParameterValue(name, value);
+				return _this2.addParameterValue(name, value);
 			});
 			return this;
 		};
@@ -633,7 +652,7 @@ babelHelpers;
    */
 
 		Uri.prototype.ensureQueryInitialized_ = function ensureQueryInitialized_() {
-			var _this2 = this;
+			var _this3 = this;
 
 			if (this.query) {
 				return;
@@ -652,7 +671,7 @@ babelHelpers;
 					if (core.isDef(value)) {
 						value = decodeURIComponent(value);
 					}
-					_this2.addParameterValue(key, value);
+					_this3.addParameterValue(key, value);
 				});
 			}
 		};
@@ -789,12 +808,12 @@ babelHelpers;
    */
 
 		Uri.prototype.getSearch = function getSearch() {
-			var _this3 = this;
+			var _this4 = this;
 
 			var search = '';
 			var querystring = '';
 			this.getParameterNames().forEach(function (name) {
-				_this3.getParameterValues(name).forEach(function (value) {
+				_this4.getParameterValues(name).forEach(function (value) {
 					querystring += name;
 					if (core.isDef(value)) {
 						querystring += '=' + encodeURIComponent(value);
@@ -907,11 +926,11 @@ babelHelpers;
    */
 
 		Uri.prototype.setParameterValues = function setParameterValues(name, values) {
-			var _this4 = this;
+			var _this5 = this;
 
 			this.removeParameter(name);
 			values.forEach(function (value) {
-				return _this4.addParameterValue(name, value);
+				return _this5.addParameterValue(name, value);
 			});
 			return this;
 		};
@@ -989,6 +1008,27 @@ babelHelpers;
 			}
 			href += host + this.getPathname() + this.getSearch() + this.getHash();
 			return href;
+		};
+
+		/**
+   * Joins the given paths.
+   * @param {string} basePath
+   * @param {...string} ...paths Any number of paths to be joined with the base url.
+   * @static
+   */
+
+		Uri.joinPaths = function joinPaths(basePath) {
+			for (var _len = arguments.length, paths = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+				paths[_key - 1] = arguments[_key];
+			}
+
+			if (basePath.charAt(basePath.length - 1) === '/') {
+				basePath = basePath.substring(0, basePath.length - 1);
+			}
+			paths = paths.map(function (path) {
+				return path.charAt(0) === '/' ? path.substring(1) : path;
+			});
+			return [basePath].concat(paths).join('/').replace(/\/$/, '');
 		};
 
 		return Uri;

@@ -68,6 +68,17 @@ define(['exports', 'metal/src/core', 'metal-multimap/src/MultiMap'], function (e
 			this.url = new URL(this.maybeAddProtocolAndHostname_(opt_uri));
 		}
 
+		Uri.prototype.addParametersFromMultiMap = function addParametersFromMultiMap(multimap) {
+			var _this = this;
+
+			multimap.names().forEach(function (name) {
+				multimap.getAll(name).forEach(function (value) {
+					_this.addParameterValue(name, value);
+				});
+			});
+			return this;
+		};
+
 		Uri.prototype.addParameterValue = function addParameterValue(name, value) {
 			this.ensureQueryInitialized_();
 
@@ -80,16 +91,16 @@ define(['exports', 'metal/src/core', 'metal-multimap/src/MultiMap'], function (e
 		};
 
 		Uri.prototype.addParameterValues = function addParameterValues(name, values) {
-			var _this = this;
+			var _this2 = this;
 
 			values.forEach(function (value) {
-				return _this.addParameterValue(name, value);
+				return _this2.addParameterValue(name, value);
 			});
 			return this;
 		};
 
 		Uri.prototype.ensureQueryInitialized_ = function ensureQueryInitialized_() {
-			var _this2 = this;
+			var _this3 = this;
 
 			if (this.query) {
 				return;
@@ -111,7 +122,7 @@ define(['exports', 'metal/src/core', 'metal-multimap/src/MultiMap'], function (e
 						value = decodeURIComponent(value);
 					}
 
-					_this2.addParameterValue(key, value);
+					_this3.addParameterValue(key, value);
 				});
 			}
 		};
@@ -186,12 +197,12 @@ define(['exports', 'metal/src/core', 'metal-multimap/src/MultiMap'], function (e
 		};
 
 		Uri.prototype.getSearch = function getSearch() {
-			var _this3 = this;
+			var _this4 = this;
 
 			var search = '';
 			var querystring = '';
 			this.getParameterNames().forEach(function (name) {
-				_this3.getParameterValues(name).forEach(function (value) {
+				_this4.getParameterValues(name).forEach(function (value) {
 					querystring += name;
 
 					if (_core2.default.isDef(value)) {
@@ -266,11 +277,11 @@ define(['exports', 'metal/src/core', 'metal-multimap/src/MultiMap'], function (e
 		};
 
 		Uri.prototype.setParameterValues = function setParameterValues(name, values) {
-			var _this4 = this;
+			var _this5 = this;
 
 			this.removeParameter(name);
 			values.forEach(function (value) {
-				return _this4.addParameterValue(name, value);
+				return _this5.addParameterValue(name, value);
 			});
 			return this;
 		};
@@ -316,6 +327,21 @@ define(['exports', 'metal/src/core', 'metal-multimap/src/MultiMap'], function (e
 
 			href += host + this.getPathname() + this.getSearch() + this.getHash();
 			return href;
+		};
+
+		Uri.joinPaths = function joinPaths(basePath) {
+			for (var _len = arguments.length, paths = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+				paths[_key - 1] = arguments[_key];
+			}
+
+			if (basePath.charAt(basePath.length - 1) === '/') {
+				basePath = basePath.substring(0, basePath.length - 1);
+			}
+
+			paths = paths.map(function (path) {
+				return path.charAt(0) === '/' ? path.substring(1) : path;
+			});
+			return [basePath].concat(paths).join('/').replace(/\/$/, '');
 		};
 
 		return Uri;
