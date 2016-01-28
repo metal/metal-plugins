@@ -220,4 +220,9 @@ describe('Uri', function() {
 		assert.strictEqual('/a/', new Uri('./a/b/c/../..').getPathname());
 	});
 
+	it('should support protocol relative uri', function() {
+		var uri = '//username:password@hostname:123/path/data?key=value#hash';
+		assert.strictEqual(uri, new Uri(uri).toString());
+	});
+
 });
