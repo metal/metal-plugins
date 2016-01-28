@@ -235,4 +235,17 @@ describe('Uri', function() {
 		assert.strictEqual('/?a=1&a=2&a=3', uri.toString());
 	});
 
+	it('should join paths', function() {
+		assert.strictEqual('/foo', Uri.joinPaths('', 'foo'));
+		assert.strictEqual('/foo', Uri.joinPaths('', 'foo/'));
+		assert.strictEqual('foo', Uri.joinPaths('foo', ''));
+		assert.strictEqual('foo', Uri.joinPaths('foo/', ''));
+		assert.strictEqual('foo/bar', Uri.joinPaths('foo', '/bar'));
+		assert.strictEqual('foo/bar', Uri.joinPaths('foo', 'bar'));
+		assert.strictEqual('foo/bar', Uri.joinPaths('foo/', '/bar'));
+		assert.strictEqual('foo/bar', Uri.joinPaths('foo/', 'bar'));
+		assert.strictEqual('foo/bar/bazz', Uri.joinPaths('foo', '/bar', 'bazz'));
+		assert.strictEqual('http://localhost:123', Uri.joinPaths('http://localhost:123', ''));
+	});
+
 });
