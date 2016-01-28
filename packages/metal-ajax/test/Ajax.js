@@ -7,16 +7,6 @@ describe('Ajax', function() {
 
 	describe('Utils', function() {
 
-		it('should parse urls', function() {
-			assert.deepEqual(['localhost:8080', '/path/a', ''], Ajax.parseUrl('http://localhost:8080/path/a'));
-			assert.deepEqual(['localhost:8080', '/path/a', ''], Ajax.parseUrl('//localhost:8080/path/a'));
-			assert.deepEqual(['localhost:8080', '/path/a', ''], Ajax.parseUrl('localhost:8080/path/a'));
-			assert.deepEqual(['', '/path/a', ''], Ajax.parseUrl('/path/a'));
-			assert.deepEqual(['', '/path/a', '?foo=1'], Ajax.parseUrl('/path/a?foo=1'));
-			assert.deepEqual(['localhost:8080', '/', ''], Ajax.parseUrl('localhost:8080'));
-			assert.deepEqual(['localhost:8080', '/', ''], Ajax.parseUrl('localhost:8080/'));
-		});
-
 		it('should join paths', function() {
 			assert.strictEqual('foo', Ajax.joinPaths('foo', ''));
 			assert.strictEqual('/foo', Ajax.joinPaths('', 'foo'));
@@ -47,22 +37,6 @@ describe('Ajax', function() {
 		it('should return empty array when parsing empty response headers', function() {
 			var headers = '';
 			assert.deepEqual([], Ajax.parseResponseHeaders(headers));
-		});
-
-		it('should add parameters to querystring', function() {
-			var params = new MultiMap();
-			params.add('a', '1');
-			params.add('b', '2');
-			params.add('b', '3');
-			assert.strictEqual('/path?pre=1&a=1&b=2&b=3', Ajax.addParametersToUrlQueryString('/path?pre=1', params));
-		});
-
-		it('should set parameters to querystring', function() {
-			var params = new MultiMap();
-			params.add('a', '1');
-			params.add('b', '2');
-			params.add('b', '3');
-			assert.strictEqual('/path?a=1&b=2&b=3', Ajax.addParametersToUrlQueryString('/path', params));
 		});
 
 	});

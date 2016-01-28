@@ -1,32 +1,10 @@
 'use strict';
 
 import core from 'metal/src/core';
+import Uri from 'metal-uri/src/Uri';
 import { CancellablePromise as Promise } from 'metal-promise/src/promise/Promise';
 
 class Ajax {
-
-	/**
-	 * Adds parameters into the url querystring.
-	 * @param {string} url
-	 * @param {MultiMap} opt_params
-	 * @return {string} Url containting parameters as querystring.
-	 * @protected
-	 */
-	static addParametersToUrlQueryString(url, opt_params) {
-		var querystring = '';
-		opt_params.names().forEach(function(name) {
-			opt_params.getAll(name).forEach(function(value) {
-				querystring += name + '=' + encodeURIComponent(value) + '&';
-			});
-		});
-		querystring = querystring.slice(0, -1);
-		if (querystring) {
-			url += (url.indexOf('?') > -1) ? '&' : '?';
-			url += querystring;
-		}
-
-		return url;
-	}
 
 	/**
 	 * Joins the given paths.
@@ -71,42 +49,6 @@ class Ajax {
 	}
 
 	/**
-	 * Parses the url separating the domain and port from the path.
-	 * @param {string} url
-	 * @return {array} Array containing the url domain and path.
-	 * @protected
-	 */
-	static parseUrl(url) {
-		var base;
-		var path;
-		var qs;
-
-		var domainAt = url.indexOf('//');
-		if (domainAt > -1) {
-			url = url.substring(domainAt + 2);
-		}
-
-		var pathAt = url.indexOf('/');
-		if (pathAt === -1) {
-			url += '/';
-			pathAt = url.length - 1;
-		}
-
-		base = url.substring(0, pathAt);
-		path = url.substring(pathAt);
-
-		var qsAt = path.indexOf('?');
-		if (qsAt > -1) {
-			qs = path.substring(qsAt, path.length);
-			path = path.substring(0, qsAt);
-		} else {
-			qs = '';
-		}
-
-		return [base, path, qs];
-	}
-
-	/**
 	 * Requests the url using XMLHttpRequest.
 	 * @param {!string} url
 	 * @param {!string} method
@@ -142,7 +84,7 @@ class Ajax {
 		});
 
 		if (opt_params) {
-			url = Ajax.addParametersToUrlQueryString(url, opt_params);
+			url = new Uri(url).addParametersFromMultiMap(opt_params).toString();
 		}
 
 		request.open(method, url, !opt_sync);
