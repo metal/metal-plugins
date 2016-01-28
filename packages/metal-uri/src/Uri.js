@@ -25,6 +25,22 @@ class Uri {
 	}
 
 	/**
+	 * Adds parameters to uri from a <code>MultiMap</code> as source.
+	 * @param {MultiMap} multimap The <code>MultiMap</code> containing the
+	 *   parameters.
+	 * @protected
+	 * @chainable
+	 */
+	addParametersFromMultiMap(multimap) {
+		multimap.names().forEach((name) => {
+			multimap.getAll(name).forEach((value) => {
+				this.addParameterValue(name, value);
+			});
+		});
+		return this;
+	}
+
+	/**
 	 * Adds the value of the named query parameters.
 	 * @param {string} key The parameter to set.
 	 * @param {*} value The new value. Will be explicitly casted to String.

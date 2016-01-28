@@ -1,6 +1,7 @@
 'use strict';
 
 import Uri from '../src/Uri';
+import MultiMap from 'metal-multimap/src/MultiMap';
 
 describe('Uri', function() {
 	it('should support empty uri', function() {
@@ -223,6 +224,15 @@ describe('Uri', function() {
 	it('should support protocol relative uri', function() {
 		var uri = '//username:password@hostname:123/path/data?key=value#hash';
 		assert.strictEqual(uri, new Uri(uri).toString());
+	});
+
+	it('should add parameters from MultiMap', function() {
+		var uri = new Uri('?a=1');
+		var map = new MultiMap();
+		map.add('a', '2');
+		map.add('a', '3');
+		uri.addParametersFromMultiMap(map);
+		assert.strictEqual('/?a=1&a=2&a=3', uri.toString());
 	});
 
 });
