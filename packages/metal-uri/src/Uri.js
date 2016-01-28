@@ -8,6 +8,16 @@ class Uri {
 	/**
 	 * This class contains setters and getters for the parts of the URI.This
 	 * class contains setters and getters for the parts of the URI.
+	 * The following figure displays an example URIs and their component parts.
+	 *
+	 *                                              path
+	 *	                                         ┌───┴────┐
+	 *	  abc://username:password@example.com:123/path/data?key=value#fragid1
+	 *	  └┬┘   └───────┬───────┘ └────┬────┘ └┬┘           └───┬───┘ └──┬──┘
+	 * protocol  user information   hostname  port            search    hash
+	 *                            └──────┬───────┘
+	 *                                  host
+	 *                                  
 	 * @param {*=} opt_uri Optional string URI to parse
 	 * @constructor
 	 */
