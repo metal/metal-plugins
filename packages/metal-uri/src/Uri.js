@@ -3,6 +3,8 @@
 import { core } from 'metal';
 import MultiMap from 'metal-multimap';
 
+var parseFn_;
+
 class Uri {
 
 	/**
@@ -21,7 +23,7 @@ class Uri {
 	 * @constructor
 	 */
 	constructor(opt_uri = '') {
-		this.url = new URL(this.maybeAddProtocolAndHostname_(opt_uri));
+		this.url = Uri.parse(this.maybeAddProtocolAndHostname_(opt_uri));
 	}
 
 	/**
@@ -266,6 +268,17 @@ class Uri {
 	}
 
 	/**
+	 * Parses the given uri string into an object.
+	 * @param {*=} opt_uri Optional string URI to parse
+	 */
+	static parse(opt_uri) {
+		if (!parseFn_) {
+			parseFn_ = uri => new URL(uri);
+		}
+		return parseFn_(opt_uri);
+	}
+
+	/**
 	 * Removes the named query parameter.
 	 * @param {string} name The parameter to remove.
 	 * @chainable
@@ -350,6 +363,15 @@ class Uri {
 	setPort(port) {
 		this.url.port = port;
 		return this;
+	}
+
+	/**
+	 * Sets the function that will be used for parsing the original string uri
+	 * into an object.
+	 * @param {!function()} parseFn
+	 */
+	static setParseFn(parseFn) {
+		parseFn_ = parseFn;
 	}
 
 	/**
