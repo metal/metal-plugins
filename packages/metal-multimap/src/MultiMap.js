@@ -1,6 +1,6 @@
 'use strict';
 
-import Disposable from 'metal/src/disposable/Disposable';
+import { Disposable } from 'metal';
 
 /**
  * Case insensitive string Multimap implementation. Allows multiple values for
