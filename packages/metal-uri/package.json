@@ -8,7 +8,15 @@
     "node": ">=0.12.0",
     "npm": ">=3.0.0"
   },
+  "main": "lib/Uri.js",
+  "files": [
+    "lib",
+    "src",
+    "test"
+  ],
   "scripts": {
+    "compile": "babel --presets es2015 -d lib/ src/",
+    "install": "npm run compile",
     "test": "gulp test"
   },
   "keywords": [
@@ -19,6 +27,8 @@
     "metal-multimap": "metal/metal-multimap#master"
   },
   "devDependencies": {
+    "babel-cli": "^6.4.5",
+    "babel-preset-es2015": "^6.3.13",
     "gulp": "^3.8.11",
     "gulp-metal": "^0.9.0"
   }

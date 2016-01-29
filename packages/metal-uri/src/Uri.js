@@ -1,7 +1,7 @@
 'use strict';
 
-import core from 'metal/src/core';
-import MultiMap from 'metal-multimap/src/MultiMap';
+import { core } from 'metal';
+import MultiMap from 'metal-multimap';
 
 class Uri {
 
@@ -16,7 +16,7 @@ class Uri {
 	 * protocol  user information   hostname  port            search    hash
 	 *                            └──────┬───────┘
 	 *                                  host
-	 *                                  
+	 *
 	 * @param {*=} opt_uri Optional string URI to parse
 	 * @constructor
 	 */
