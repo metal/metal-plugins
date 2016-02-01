@@ -95,7 +95,7 @@ class Uri {
 	 * @return {string}
 	 */
 	getHash() {
-		return this.url.hash;
+		return this.url.hash || '';
 	}
 
 	/**
