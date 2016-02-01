@@ -1,8 +1,8 @@
 'use strict';
 
-import core from 'metal/src/core';
-import Uri from 'metal-uri/src/Uri';
-import { CancellablePromise as Promise } from 'metal-promise/src/promise/Promise';
+import { core } from 'metal';
+import Uri from 'metal-uri';
+import { CancellablePromise as Promise } from 'metal-promise';
 
 class Ajax {
 

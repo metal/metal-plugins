@@ -1,7 +1,7 @@
 'use strict';
 
 import Ajax from '../src/Ajax';
-import MultiMap from 'metal-multimap/src/MultiMap';
+import MultiMap from 'metal-multimap';
 
 describe('Ajax', function() {
 
