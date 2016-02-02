@@ -252,6 +252,17 @@ describe('Uri', function() {
 		assert.strictEqual('http://localhost:123', Uri.joinPaths('http://localhost:123', ''));
 	});
 
+	it('should make urls unique by adding a random param', function() {
+		var uri = new Uri('foo.bar/path');
+		var uri2 = new Uri('foo.bar/path');
+
+		assert.strictEqual(uri.toString(), uri2.toString());
+
+		uri.makeUnique();
+		uri2.makeUnique();
+		assert.notStrictEqual(uri.toString(), uri2.toString());
+	});
+
 	it('should change the function used for parsing urls', function() {
 		Uri.setParseFn(function(url) {
 			return url.toLowerCase();
