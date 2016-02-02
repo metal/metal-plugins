@@ -1,13 +1,10 @@
 'use strict';
 
+import parse from '../src/parse';
 import Uri from '../src/Uri';
 import MultiMap from 'metal-multimap';
 
 describe('Uri', function() {
-	afterEach(function() {
-		Uri.setParseFn(null);
-	});
-
 	it('should support empty uri', function() {
 		var uri = new Uri();
 		assert.strictEqual('/', uri.getPathname());
@@ -47,7 +44,7 @@ describe('Uri', function() {
 	it('should support set port on uri', function() {
 		var uri = new Uri('hostname:8080');
 		assert.strictEqual('8080', uri.getPort());
-		uri.setPort(81);
+		uri.setPort('81');
 		assert.strictEqual('81', uri.getPort());
 	});
 
@@ -226,8 +223,8 @@ describe('Uri', function() {
 	});
 
 	it('should support protocol relative uri', function() {
-		var uri = '//username:password@hostname:123/path/data?key=value#hash';
-		assert.strictEqual(uri, new Uri(uri).toString());
+		var uri = new Uri('//hostname:123/path/data?key=value#hash');
+		assert.strictEqual('http://hostname:123/path/data?key=value#hash', uri.toString());
 	});
 
 	it('should add parameters from MultiMap', function() {
@@ -268,5 +265,6 @@ describe('Uri', function() {
 			return url.toLowerCase();
 		});
 		assert.strictEqual('foo', Uri.parse('Foo'));
+		Uri.setParseFn(parse);
 	});
 });

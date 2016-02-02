@@ -1,9 +1,10 @@
 'use strict';
 
 import { core, string } from 'metal';
+import parse from './parse';
 import MultiMap from 'metal-multimap';
 
-var parseFn_;
+var parseFn_ = parse;
 
 class Uri {
 
@@ -106,7 +107,7 @@ class Uri {
 		var host = this.getHostname();
 		if (host) {
 			var port = this.getPort();
-			if (port) {
+			if (port && port !== '80') {
 				host += ':' + port;
 			}
 		}
@@ -254,7 +255,10 @@ class Uri {
 	maybeAddProtocolAndHostname_(opt_uri) {
 		var url = opt_uri;
 		if (opt_uri.indexOf('://') === -1) {
-			url = Uri.DEFAULT_PROTOCOL + '//';
+			url = Uri.DEFAULT_PROTOCOL;
+			if (opt_uri[0] !== '/' || opt_uri[1] !== '/') {
+				url += '//';
+			}
 
 			switch (opt_uri.charAt(0)) {
 				case '.':
@@ -266,7 +270,9 @@ class Uri {
 					break;
 				case '':
 				case '/':
-					url += Uri.HOSTNAME_PLACEHOLDER;
+					if (opt_uri[1] !== '/') {
+						url += Uri.HOSTNAME_PLACEHOLDER;
+					}
 					url += opt_uri;
 					break;
 				default:
@@ -281,9 +287,6 @@ class Uri {
 	 * @param {*=} opt_uri Optional string URI to parse
 	 */
 	static parse(opt_uri) {
-		if (!parseFn_) {
-			parseFn_ = uri => new URL(uri);
-		}
 		return parseFn_(opt_uri);
 	}
 
@@ -390,6 +393,9 @@ class Uri {
 	 */
 	setProtocol(protocol) {
 		this.url.protocol = protocol;
+		if (this.url.protocol[this.url.protocol.length - 1] !== ':') {
+			this.url.protocol += ':';
+		}
 		return this;
 	}
 
