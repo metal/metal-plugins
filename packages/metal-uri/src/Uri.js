@@ -12,13 +12,13 @@ class Uri {
 	 * This class contains setters and getters for the parts of the URI.
 	 * The following figure displays an example URIs and their component parts.
 	 *
-	 *                                              path
-	 *	                                         ┌───┴────┐
-	 *	  abc://username:password@example.com:123/path/data?key=value#fragid1
-	 *	  └┬┘   └───────┬───────┘ └────┬────┘ └┬┘           └───┬───┘ └──┬──┘
-	 * protocol  user information   hostname  port            search    hash
-	 *                            └──────┬───────┘
-	 *                                  host
+	 *                                  path
+	 *	                             ┌───┴────┐
+	 *	  abc://example.com:123/path/data?key=value#fragid1
+	 *	  └┬┘   └────┬────┘ └┬┘           └───┬───┘ └──┬──┘
+	 * protocol  hostname  port            search    hash
+	 *          └──────┬───────┘
+	 *                host
 	 *
 	 * @param {*=} opt_uri Optional string URI to parse
 	 * @constructor
@@ -174,14 +174,6 @@ class Uri {
 	}
 
 	/**
-	 * Gets the password part of uri.
-	 * @return {string}
-	 */
-	getPassword() {
-		return this.url.password;
-	}
-
-	/**
 	 * Gets the pathname part of uri.
 	 * @return {string}
 	 */
@@ -227,14 +219,6 @@ class Uri {
 			search += '?' + querystring;
 		}
 		return search;
-	}
-
-	/**
-	 * Gets the username part of uri.
-	 * @return {string}
-	 */
-	getUsername() {
-		return this.url.username;
 	}
 
 	/**
@@ -348,16 +332,6 @@ class Uri {
 	}
 
 	/**
-	 * Sets the password.
-	 * @param {string} password
-	 * @chainable
-	 */
-	setPassword(password) {
-		this.url.password = password;
-		return this;
-	}
-
-	/**
 	 * Sets the pathname.
 	 * @param {string} pathname
 	 * @chainable
@@ -400,16 +374,6 @@ class Uri {
 	}
 
 	/**
-	 * Sets the username.
-	 * @param {string} username
-	 * @chainable
-	 */
-	setUsername(username) {
-		this.url.username = username;
-		return this;
-	}
-
-	/**
 	 * @return {string} The string form of the url.
 	 * @override
 	 */
@@ -418,11 +382,6 @@ class Uri {
 		var host = this.getHost();
 		if (host) {
 			href += this.getProtocol() + '//';
-			var username = this.getUsername();
-			var password = this.getPassword();
-			if (username && password) {
-				href += username + ':' + password + '@';
-			}
 		}
 		href += host + this.getPathname() + this.getSearch() + this.getHash();
 		return href;

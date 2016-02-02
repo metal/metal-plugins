@@ -126,22 +126,6 @@ describe('Uri', function() {
 		assert.strictEqual('/pathname?a=1#hash', uri.toString());
 	});
 
-	it('should support username and password', function() {
-		var uri = new Uri('http://user:pass@hostname');
-		assert.strictEqual('user', uri.getUsername());
-		assert.strictEqual('pass', uri.getPassword());
-		assert.strictEqual('http://user:pass@hostname/', uri.toString());
-	});
-
-	it('should support username and password from setter', function() {
-		var uri = new Uri('http://hostname');
-		uri.setUsername('user');
-		uri.setPassword('pass');
-		assert.strictEqual('user', uri.getUsername());
-		assert.strictEqual('pass', uri.getPassword());
-		assert.strictEqual('http://user:pass@hostname/', uri.toString());
-	});
-
 	it('should initialize parameters from search part of uri', function() {
 		var uri = new Uri('http://hostname?a=1&b=2');
 		assert.strictEqual('1', uri.getParameterValue('a'));
