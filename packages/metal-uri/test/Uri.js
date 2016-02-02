@@ -4,6 +4,10 @@ import Uri from '../src/Uri';
 import MultiMap from 'metal-multimap';
 
 describe('Uri', function() {
+	afterEach(function() {
+		Uri.setParseFn(null);
+	});
+
 	it('should support empty uri', function() {
 		var uri = new Uri();
 		assert.strictEqual('/', uri.getPathname());
@@ -248,4 +252,10 @@ describe('Uri', function() {
 		assert.strictEqual('http://localhost:123', Uri.joinPaths('http://localhost:123', ''));
 	});
 
+	it('should change the function used for parsing urls', function() {
+		Uri.setParseFn(function(url) {
+			return url.toLowerCase();
+		});
+		assert.strictEqual('foo', Uri.parse('Foo'));
+	});
 });
