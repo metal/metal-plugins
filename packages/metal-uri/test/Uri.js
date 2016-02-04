@@ -252,6 +252,14 @@ describe('Uri', function() {
 		assert.notStrictEqual(uri.toString(), uri2.toString());
 	});
 
+	it('should remove uniqueness by removing the random param', function() {
+		var uri = new Uri('foo.bar/path');
+		var uri2 = new Uri('foo.bar/path');
+		uri.makeUnique().removeUnique();
+		uri2.makeUnique().removeUnique();
+		assert.strictEqual(uri.toString(), uri2.toString());
+	});
+
 	it('should change the function used for parsing urls', function() {
 		Uri.setParseFn(function(url) {
 			return url.toLowerCase();

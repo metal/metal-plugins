@@ -298,6 +298,15 @@ class Uri {
 	}
 
 	/**
+	 * Removes uniqueness parameter of the uri.
+	 * @chainable
+	 */
+	removeUnique() {
+		this.removeParameter(Uri.RANDOM_PARAM);
+		return this;
+	}
+
+	/**
 	 * Sets the hash.
 	 * @param {string} hash
 	 * @chainable
