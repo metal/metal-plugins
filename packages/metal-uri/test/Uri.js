@@ -26,6 +26,14 @@ describe('Uri', function() {
 		assert.strictEqual('http://hostname:8080', uri.getOrigin());
 	});
 
+	it('should get uri protocol', function() {
+		var uri = new Uri('http://hostname:8080');
+		assert.strictEqual('http:', uri.getProtocol());
+
+		uri = new Uri('javascript:hostname:8080'); // jshint ignore:line
+		assert.strictEqual('javascript:', uri.getProtocol()); // jshint ignore:line
+	});
+
 	it('should hostname be empty for empty uri', function() {
 		var uri = new Uri();
 		assert.strictEqual('', uri.getHostname());

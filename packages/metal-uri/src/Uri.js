@@ -238,7 +238,9 @@ class Uri {
 	 */
 	maybeAddProtocolAndHostname_(opt_uri) {
 		var url = opt_uri;
-		if (opt_uri.indexOf('://') === -1) {
+		if (opt_uri.indexOf('://') === -1 &&
+			opt_uri.indexOf('javascript:') !== 0) { // jshint ignore:line
+
 			url = Uri.DEFAULT_PROTOCOL;
 			if (opt_uri[0] !== '/' || opt_uri[1] !== '/') {
 				url += '//';
