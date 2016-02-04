@@ -222,6 +222,16 @@ class Uri {
 	}
 
 	/**
+	 * Checks if uri contains the parameter.
+	 * @param {string} name
+	 * @return {boolean}
+	 */
+	hasParameter(name) {
+		this.ensureQueryInitialized_();
+		return this.query.contains(name);
+	}
+
+	/**
 	 * Makes this URL unique by adding a random param to it. Useful for avoiding
 	 * cache.
 	 */

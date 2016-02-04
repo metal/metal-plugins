@@ -259,4 +259,9 @@ describe('Uri', function() {
 		assert.strictEqual('foo', Uri.parse('Foo'));
 		Uri.setParseFn(parse);
 	});
+
+	it('should check if uri has parameter', function() {
+		assert.ok(new Uri('?a=1').hasParameter('a'));
+		assert.ok(!new Uri('?a=1').hasParameter('b'));
+	});
 });
