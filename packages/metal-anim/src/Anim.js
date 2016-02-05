@@ -1,9 +1,7 @@
 'use strict';
 
-import core from 'metal/src/core';
-import dom from 'metal/src/dom/dom';
-import features from 'metal/src/dom/features';
-import 'metal/src/dom/events';
+import core from 'metal';
+import { dom, features } from 'metal-dom';
 
 class Anim {
 	/**
