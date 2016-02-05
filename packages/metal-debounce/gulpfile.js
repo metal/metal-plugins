@@ -7,5 +7,9 @@ metal.registerTasks({
 	bundleFileName: 'debounce.js',
 	globalName: 'metal',
 	mainBuildJsTasks: ['build:globals'],
-	moduleName: 'metal-debounce'
+	moduleName: 'metal-debounce',
+	testNodeSrc: [
+		'env/test/node.js',
+		'test/**/*.js'
+	]
 });
