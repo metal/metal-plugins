@@ -174,6 +174,14 @@ class Uri {
 	}
 
 	/**
+	 * Gets the function currently being used to parse URIs.
+	 * @return {!function()}
+	 */
+	static getParseFn() {
+		return parseFn_;
+	}
+
+	/**
 	 * Gets the pathname part of uri.
 	 * @return {string}
 	 */

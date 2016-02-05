@@ -6,5 +6,9 @@ metal.registerTasks({
 	bundleCssFileName: 'uri.css',
 	bundleFileName: 'uri.js',
 	mainBuildJsTasks: ['build:globals'],
-	moduleName: 'metal-uri'
+	moduleName: 'metal-uri',
+	testNodeSrc: [
+		'env/test/node.js',
+		'test/**/*.js'
+	]
 });

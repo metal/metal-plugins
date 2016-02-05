@@ -1,6 +1,5 @@
 'use strict';
 
-import parse from '../src/parse';
 import Uri from '../src/Uri';
 import MultiMap from 'metal-multimap';
 
@@ -261,11 +260,12 @@ describe('Uri', function() {
 	});
 
 	it('should change the function used for parsing urls', function() {
+		var fn = Uri.getParseFn();
 		Uri.setParseFn(function(url) {
 			return url.toLowerCase();
 		});
 		assert.strictEqual('foo', Uri.parse('Foo'));
-		Uri.setParseFn(parse);
+		Uri.setParseFn(fn);
 	});
 
 	it('should check if uri has parameter', function() {
