@@ -1,7 +1,7 @@
 'use strict';
 
 import Anim from '../src/Anim';
-import dom from 'metal/src/dom/dom';
+import dom from 'metal-dom';
 
 describe('Anim', function() {
 	beforeEach(function() {
