@@ -209,8 +209,8 @@ describe('Uri', function() {
 	});
 
 	it('should remove dot segments from pathname', function() {
-		assert.strictEqual('/a/', new Uri('./a/').getPathname());
-		assert.strictEqual('/a/', new Uri('./a/b/c/../..').getPathname());
+		assert.strictEqual('/a', new Uri('./a/').getPathname());
+		assert.strictEqual('/a', new Uri('./a/b/c/../..').getPathname());
 	});
 
 	it('should support protocol relative uri', function() {

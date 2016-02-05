@@ -287,11 +287,23 @@ class Uri {
 	}
 
 	/**
+	 * Normalizes the parsed object to be in the expected standard.
+	 * @param {!Object}
+	 */
+	static normalizeObject(parsed) {
+		var length = parsed.pathname ? parsed.pathname.length : 0;
+		if (length > 1 && parsed.pathname[length - 1] === '/') {
+			parsed.pathname = parsed.pathname.substr(0, length - 1);
+		}
+		return parsed;
+	}
+
+	/**
 	 * Parses the given uri string into an object.
 	 * @param {*=} opt_uri Optional string URI to parse
 	 */
 	static parse(opt_uri) {
-		return parseFn_(opt_uri);
+		return Uri.normalizeObject(parseFn_(opt_uri));
 	}
 
 	/**
