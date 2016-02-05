@@ -7,5 +7,9 @@ metal.registerTasks({
 	bundleFileName: 'MultiMap.js',
 	globalName: 'metal',
 	mainBuildJsTasks: ['build:globals'],
-	moduleName: 'metal-multimap'
+	moduleName: 'metal-multimap',
+	testNodeSrc: [
+		'env/test/node.js',
+		'test/**/*.js'
+	]
 });
