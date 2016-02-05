@@ -1,0 +1,31 @@
+{
+	"name": "metal-useragent",
+	"version": "0.0.0",
+	"description": "Metal.js browser user agent detection.",
+	"license": "BSD",
+	"repository": "metal/metal-useragent",
+	"engines": {
+		"node": ">=0.12.0",
+		"npm": ">=3.0.0"
+	},
+	"browser": "src/UA.js",
+	"files": [
+		"src",
+		"test"
+	],
+	"scripts": {
+		"test": "gulp test"
+	},
+	"keywords": [
+		"metal"
+	],
+	"dependencies": {
+    "bootstrap": "^3.3.6",
+		"closure-templates": "20140422.0.0",
+		"metal": "metal/metal.js#master"
+	},
+	"devDependencies": {
+		"gulp": "^3.8.11",
+		"gulp-metal": "^0.9.0"
+	}
+}
