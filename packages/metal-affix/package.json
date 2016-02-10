@@ -8,6 +8,7 @@
     "node": ">=0.12.0",
     "npm": ">=3.0.0"
   },
+  "main": "src/Affix.js",
   "files": [
     "src",
     "test"
@@ -22,6 +23,9 @@
     "bootstrap": "^3.3.6",
     "closure-templates": "20140422.0.0",
     "metal": "metal/metal.js#master",
+    "metal-attribute": "metal/metal-attribute#master",
+    "metal-dom": "metal/metal-dom#master",
+    "metal-events": "metal/metal-events#master",
     "metal-position": "metal/metal-position#master"
   },
   "devDependencies": {
