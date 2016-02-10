@@ -77,6 +77,7 @@ babelHelpers;
    * TODO(*): Rethink superclass loop.
    */
 
+
 		core.collectSuperClassesProperty = function collectSuperClassesProperty(constructor, propertyName) {
 			var propertyValues = [constructor[propertyName]];
 			while (constructor.__proto__ && !constructor.__proto__.isPrototypeOf(Function)) {
@@ -93,6 +94,7 @@ babelHelpers;
    * @param {!function()} fn
    * @return {string}
    */
+
 
 		core.getFunctionName = function getFunctionName(fn) {
 			if (!fn.name) {
@@ -112,6 +114,7 @@ babelHelpers;
    * @throws {Error} when invoked to indicate the method should be overridden.
    */
 
+
 		core.getUid = function getUid(opt_object) {
 			if (opt_object) {
 				return opt_object[core.UID_PROPERTY] || (opt_object[core.UID_PROPERTY] = core.uniqueIdCounter_++);
@@ -125,6 +128,7 @@ babelHelpers;
    * @return {?} The first argument.
    */
 
+
 		core.identityFunction = function identityFunction(opt_returnValue) {
 			return opt_returnValue;
 		};
@@ -134,6 +138,7 @@ babelHelpers;
    * @param {?} val Variable to test.
    * @return {boolean} Whether variable is boolean.
    */
+
 
 		core.isBoolean = function isBoolean(val) {
 			return typeof val === 'boolean';
@@ -145,6 +150,7 @@ babelHelpers;
    * @return {boolean} Whether variable is defined.
    */
 
+
 		core.isDef = function isDef(val) {
 			return val !== undefined;
 		};
@@ -154,6 +160,7 @@ babelHelpers;
    * @param {*} val
    * @return {Boolean}
    */
+
 
 		core.isDefAndNotNull = function isDefAndNotNull(val) {
 			return core.isDef(val) && !core.isNull(val);
@@ -165,6 +172,7 @@ babelHelpers;
    * @return {Boolean}
    */
 
+
 		core.isDocument = function isDocument(val) {
 			return val && (typeof val === 'undefined' ? 'undefined' : babelHelpers.typeof(val)) === 'object' && val.nodeType === 9;
 		};
@@ -174,6 +182,7 @@ babelHelpers;
    * @param {*} val
    * @return {Boolean}
    */
+
 
 		core.isElement = function isElement(val) {
 			return val && (typeof val === 'undefined' ? 'undefined' : babelHelpers.typeof(val)) === 'object' && val.nodeType === 1;
@@ -185,6 +194,7 @@ babelHelpers;
    * @return {boolean} Whether variable is a function.
    */
 
+
 		core.isFunction = function isFunction(val) {
 			return typeof val === 'function';
 		};
@@ -194,6 +204,7 @@ babelHelpers;
    * @param {*} val
    * @return {Boolean}
    */
+
 
 		core.isNull = function isNull(val) {
 			return val === null;
@@ -205,6 +216,7 @@ babelHelpers;
    * @return {boolean} Whether variable is a number.
    */
 
+
 		core.isNumber = function isNumber(val) {
 			return typeof val === 'number';
 		};
@@ -214,6 +226,7 @@ babelHelpers;
    * @param {*} val
    * @return {Boolean}
    */
+
 
 		core.isWindow = function isWindow(val) {
 			return val !== null && val === val.window;
@@ -226,6 +239,7 @@ babelHelpers;
    * @return {boolean} Whether variable is an object.
    */
 
+
 		core.isObject = function isObject(val) {
 			var type = typeof val === 'undefined' ? 'undefined' : babelHelpers.typeof(val);
 			return type === 'object' && val !== null || type === 'function';
@@ -237,6 +251,7 @@ babelHelpers;
    * @return {Boolean}
    */
 
+
 		core.isPromise = function isPromise(val) {
 			return val && (typeof val === 'undefined' ? 'undefined' : babelHelpers.typeof(val)) === 'object' && typeof val.then === 'function';
 		};
@@ -246,6 +261,7 @@ babelHelpers;
    * @param {*} val
    * @return {Boolean}
    */
+
 
 		core.isString = function isString(val) {
 			return typeof val === 'string';
@@ -263,6 +279,7 @@ babelHelpers;
    *   Should return the merged value to be stored on the current class.
    * @return {boolean} Returns true if merge happens, false otherwise.
    */
+
 
 		core.mergeSuperClassesProperty = function mergeSuperClassesProperty(constructor, propertyName, opt_mergeFn) {
 			var mergedName = propertyName + '_MERGED';
@@ -283,6 +300,7 @@ babelHelpers;
    * @return {void} Nothing.
    */
 
+
 		core.nullFunction = function nullFunction() {};
 
 		return core;
@@ -294,6 +312,7 @@ babelHelpers;
   * @protected
   */
 
+
 	core.UID_PROPERTY = 'core_' + (Math.random() * 1e9 >>> 0);
 
 	/**
@@ -304,855 +323,6 @@ babelHelpers;
 	core.uniqueIdCounter_ = 1;
 
 	this.metal.core = core;
-}).call(this);
-'use strict';
-
-(function () {
-	var core = this.metal.core;
-
-	var object = function () {
-		function object() {
-			babelHelpers.classCallCheck(this, object);
-		}
-
-		/**
-   * Copies all the members of a source object to a target object.
-   * @param {Object} target Target object.
-   * @param {...Object} var_args The objects from which values will be copied.
-   * @return {Object} Returns the target object reference.
-   */
-
-		object.mixin = function mixin(target) {
-			var key, source;
-			for (var i = 1; i < arguments.length; i++) {
-				source = arguments[i];
-				for (key in source) {
-					target[key] = source[key];
-				}
-			}
-			return target;
-		};
-
-		/**
-   * Returns an object based on its fully qualified external name.
-   * @param {string} name The fully qualified name.
-   * @param {object=} opt_obj The object within which to look; default is
-   *     <code>window</code>.
-   * @return {?} The value (object or primitive) or, if not found, null.
-   */
-
-		object.getObjectByName = function getObjectByName(name, opt_obj) {
-			var parts = name.split('.');
-			var cur = opt_obj || window;
-			var part;
-			while (part = parts.shift()) {
-				if (core.isDefAndNotNull(cur[part])) {
-					cur = cur[part];
-				} else {
-					return null;
-				}
-			}
-			return cur;
-		};
-
-		/**
-   * Returns a new object with the same keys as the given one, but with
-   * their values set to the return values of the specified function.
-   * @param {!Object} obj
-   * @param {!function(string, *)} fn
-   * @return {!Object}
-   */
-
-		object.map = function map(obj, fn) {
-			var mappedObj = {};
-			var keys = Object.keys(obj);
-			for (var i = 0; i < keys.length; i++) {
-				mappedObj[keys[i]] = fn(keys[i], obj[keys[i]]);
-			}
-			return mappedObj;
-		};
-
-		return object;
-	}();
-
-	this.metal.object = object;
-}).call(this);
-'use strict';
-
-/**
- * Disposable utility. When inherited provides the `dispose` function to its
- * subclass, which is responsible for disposing of any object references
- * when an instance won't be used anymore. Subclasses should override
- * `disposeInternal` to implement any specific disposing logic.
- * @constructor
- */
-
-(function () {
-	var Disposable = function () {
-		function Disposable() {
-			babelHelpers.classCallCheck(this, Disposable);
-
-			/**
-    * Flag indicating if this instance has already been disposed.
-    * @type {boolean}
-    * @protected
-    */
-			this.disposed_ = false;
-		}
-
-		/**
-   * Disposes of this instance's object references. Calls `disposeInternal`.
-   */
-
-		Disposable.prototype.dispose = function dispose() {
-			if (!this.disposed_) {
-				this.disposeInternal();
-				this.disposed_ = true;
-			}
-		};
-
-		/**
-   * Subclasses should override this method to implement any specific
-   * disposing logic (like clearing references and calling `dispose` on other
-   * disposables).
-   */
-
-		Disposable.prototype.disposeInternal = function disposeInternal() {};
-
-		/**
-   * Checks if this instance has already been disposed.
-   * @return {boolean}
-   */
-
-		Disposable.prototype.isDisposed = function isDisposed() {
-			return this.disposed_;
-		};
-
-		return Disposable;
-	}();
-
-	this.metal.Disposable = Disposable;
-}).call(this);
-'use strict';
-
-(function () {
-	var Disposable = this.metal.Disposable;
-
-	/**
-  * EventHandle utility. Holds information about an event subscription, and
-  * allows removing them easily.
-  * EventHandle is a Disposable, but it's important to note that the
-  * EventEmitter that created it is not the one responsible for disposing it.
-  * That responsibility is for the code that holds a reference to it.
-  * @param {!EventEmitter} emitter Emitter the event was subscribed to.
-  * @param {string} event The name of the event that was subscribed to.
-  * @param {!Function} listener The listener subscribed to the event.
-  * @constructor
-  * @extends {Disposable}
-  */
-
-	var EventHandle = function (_Disposable) {
-		babelHelpers.inherits(EventHandle, _Disposable);
-
-		function EventHandle(emitter, event, listener) {
-			babelHelpers.classCallCheck(this, EventHandle);
-
-			/**
-    * The EventEmitter instance that the event was subscribed to.
-    * @type {EventEmitter}
-    * @protected
-    */
-
-			var _this = babelHelpers.possibleConstructorReturn(this, _Disposable.call(this));
-
-			_this.emitter_ = emitter;
-
-			/**
-    * The name of the event that was subscribed to.
-    * @type {string}
-    * @protected
-    */
-			_this.event_ = event;
-
-			/**
-    * The listener subscribed to the event.
-    * @type {Function}
-    * @protected
-    */
-			_this.listener_ = listener;
-			return _this;
-		}
-
-		/**
-   * Disposes of this instance's object references.
-   * @override
-   */
-
-		EventHandle.prototype.disposeInternal = function disposeInternal() {
-			this.removeListener();
-			this.emitter_ = null;
-			this.listener_ = null;
-		};
-
-		/**
-   * Removes the listener subscription from the emitter.
-   */
-
-		EventHandle.prototype.removeListener = function removeListener() {
-			if (!this.emitter_.isDisposed()) {
-				this.emitter_.removeListener(this.event_, this.listener_);
-			}
-		};
-
-		return EventHandle;
-	}(Disposable);
-
-	EventHandle.prototype.registerMetalComponent && EventHandle.prototype.registerMetalComponent(EventHandle, 'EventHandle')
-	this.metal.EventHandle = EventHandle;
-}).call(this);
-'use strict';
-
-(function () {
-	var EventHandle = this.metal.EventHandle;
-
-	/**
-  * This is a special EventHandle, that is responsible for dom events, instead
-  * of EventEmitter events.
-  * @extends {EventHandle}
-  */
-
-	var DomEventHandle = function (_EventHandle) {
-		babelHelpers.inherits(DomEventHandle, _EventHandle);
-
-		/**
-   * The constructor for `DomEventHandle`.
-   * @param {!EventEmitter} emitter Emitter the event was subscribed to.
-   * @param {string} event The name of the event that was subscribed to.
-   * @param {!Function} listener The listener subscribed to the event.
-   * @param {boolean} opt_capture Flag indicating if listener should be triggered
-   *   during capture phase, instead of during the bubbling phase. Defaults to false.
-   * @constructor
-   */
-
-		function DomEventHandle(emitter, event, listener, opt_capture) {
-			babelHelpers.classCallCheck(this, DomEventHandle);
-
-			var _this = babelHelpers.possibleConstructorReturn(this, _EventHandle.call(this, emitter, event, listener));
-
-			_this.capture_ = opt_capture;
-			return _this;
-		}
-
-		/**
-   * @inheritDoc
-   */
-
-		DomEventHandle.prototype.removeListener = function removeListener() {
-			this.emitter_.removeEventListener(this.event_, this.listener_, this.capture_);
-		};
-
-		return DomEventHandle;
-	}(EventHandle);
-
-	DomEventHandle.prototype.registerMetalComponent && DomEventHandle.prototype.registerMetalComponent(DomEventHandle, 'DomEventHandle')
-	this.metal.DomEventHandle = DomEventHandle;
-}).call(this);
-'use strict';
-
-(function () {
-	var core = this.metal.core;
-	var object = this.metal.object;
-	var DomEventHandle = this.metal.DomEventHandle;
-
-	var dom = function () {
-		function dom() {
-			babelHelpers.classCallCheck(this, dom);
-		}
-
-		/**
-   * Adds the requested CSS classes to an element.
-   * @param {!Element} element The element to add CSS classes to.
-   * @param {string} classes CSS classes to add.
-   */
-
-		dom.addClasses = function addClasses(element, classes) {
-			if (!core.isObject(element) || !core.isString(classes)) {
-				return;
-			}
-
-			if ('classList' in element) {
-				dom.addClassesWithNative_(element, classes);
-			} else {
-				dom.addClassesWithoutNative_(element, classes);
-			}
-		};
-
-		/**
-   * Adds the requested CSS classes to an element using classList.
-   * @param {!Element} element The element to add CSS classes to.
-   * @param {string} classes CSS classes to add.
-   * @protected
-   */
-
-		dom.addClassesWithNative_ = function addClassesWithNative_(element, classes) {
-			classes.split(' ').forEach(function (className) {
-				element.classList.add(className);
-			});
-		};
-
-		/**
-   * Adds the requested CSS classes to an element without using classList.
-   * @param {!Element} element The element to add CSS classes to.
-   * @param {string} classes CSS classes to add.
-   * @protected
-   */
-
-		dom.addClassesWithoutNative_ = function addClassesWithoutNative_(element, classes) {
-			var elementClassName = ' ' + element.className + ' ';
-			var classesToAppend = '';
-
-			classes = classes.split(' ');
-
-			for (var i = 0; i < classes.length; i++) {
-				var className = classes[i];
-
-				if (elementClassName.indexOf(' ' + className + ' ') === -1) {
-					classesToAppend += ' ' + className;
-				}
-			}
-
-			if (classesToAppend) {
-				element.className = element.className + classesToAppend;
-			}
-		};
-
-		/**
-   * Appends a child node with text or other nodes to a parent node. If
-   * child is a HTML string it will be automatically converted to a document
-   * fragment before appending it to the parent.
-   * @param {!Element} parent The node to append nodes to.
-   * @param {!(Element|NodeList|string)} child The thing to append to the parent.
-   * @return {!Element} The appended child.
-   */
-
-		dom.append = function append(parent, child) {
-			if (core.isString(child)) {
-				child = dom.buildFragment(child);
-			}
-			if (child instanceof NodeList) {
-				var childArr = Array.prototype.slice.call(child);
-				for (var i = 0; i < childArr.length; i++) {
-					parent.appendChild(childArr[i]);
-				}
-			} else {
-				parent.appendChild(child);
-			}
-			return child;
-		};
-
-		/**
-   * Helper for converting a HTML string into a document fragment.
-   * @param {string} htmlString The HTML string to convert.
-   * @return {!Element} The resulting document fragment.
-   */
-
-		dom.buildFragment = function buildFragment(htmlString) {
-			var tempDiv = document.createElement('div');
-			tempDiv.innerHTML = '<br>' + htmlString;
-			tempDiv.removeChild(tempDiv.firstChild);
-
-			var fragment = document.createDocumentFragment();
-			while (tempDiv.firstChild) {
-				fragment.appendChild(tempDiv.firstChild);
-			}
-			return fragment;
-		};
-
-		/**
-   * Checks if the first element contains the second one.
-   * @param {!Element} element1
-   * @param {!Element} element2
-   * @return {boolean}
-   */
-
-		dom.contains = function contains(element1, element2) {
-			if (core.isDocument(element1)) {
-				// document.contains is not defined on IE9, so call it on documentElement instead.
-				return element1.documentElement.contains(element2);
-			} else {
-				return element1.contains(element2);
-			}
-		};
-
-		/**
-   * Listens to the specified event on the given DOM element, but only calls the
-   * callback with the event when it triggered by elements that match the given
-   * selector.
-   * @param {!Element} element The container DOM element to listen to the event on.
-   * @param {string} eventName The name of the event to listen to.
-   * @param {string} selector The selector that matches the child elements that
-   *   the event should be triggered for.
-   * @param {!function(!Object)} callback Function to be called when the event is
-   *   triggered. It will receive the normalized event object.
-   * @return {!DomEventHandle} Can be used to remove the listener.
-   */
-
-		dom.delegate = function delegate(element, eventName, selector, callback) {
-			var customConfig = dom.customEvents[eventName];
-			if (customConfig && customConfig.delegate) {
-				eventName = customConfig.originalEvent;
-				callback = customConfig.handler.bind(customConfig, callback);
-			}
-			return dom.on(element, eventName, dom.handleDelegateEvent_.bind(null, selector, callback));
-		};
-
-		/**
-   * Inserts node in document as last element.
-   * @param {Element} node Element to remove children from.
-   */
-
-		dom.enterDocument = function enterDocument(node) {
-			dom.append(document.body, node);
-		};
-
-		/**
-   * Removes node from document.
-   * @param {Element} node Element to remove children from.
-   */
-
-		dom.exitDocument = function exitDocument(node) {
-			if (node.parentNode) {
-				node.parentNode.removeChild(node);
-			}
-		};
-
-		/**
-   * This is called when an event is triggered by a delegate listener (see
-   * `dom.delegate` for more details).
-   * @param {string} selector The selector or element that matches the child
-   *   elements that the event should be triggered for.
-   * @param {!function(!Object)} callback Function to be called when the event
-   *   is triggered. It will receive the normalized event object.
-   * @param {!Event} event The event payload.
-   * @return {boolean} False if at least one of the triggered callbacks returns
-   *   false, or true otherwise.
-   */
-
-		dom.handleDelegateEvent_ = function handleDelegateEvent_(selector, callback, event) {
-			dom.normalizeDelegateEvent_(event);
-
-			var currentElement = event.target;
-			var returnValue = true;
-
-			while (currentElement && !event.stopped) {
-				if (core.isString(selector) && dom.match(currentElement, selector)) {
-					event.delegateTarget = currentElement;
-					returnValue &= callback(event);
-				}
-				if (currentElement === event.currentTarget) {
-					break;
-				}
-				currentElement = currentElement.parentNode;
-			}
-			event.delegateTarget = null;
-
-			return returnValue;
-		};
-
-		/**
-   * Checks if the given element has the requested css class.
-   * @param {!Element} element
-   * @param {string} className
-   * @return {boolean}
-   */
-
-		dom.hasClass = function hasClass(element, className) {
-			if ('classList' in element) {
-				return dom.hasClassWithNative_(element, className);
-			} else {
-				return dom.hasClassWithoutNative_(element, className);
-			}
-		};
-
-		/**
-   * Checks if the given element has the requested css class using classList.
-   * @param {!Element} element
-   * @param {string} className
-   * @return {boolean}
-   * @protected
-   */
-
-		dom.hasClassWithNative_ = function hasClassWithNative_(element, className) {
-			return element.classList.contains(className);
-		};
-
-		/**
-   * Checks if the given element has the requested css class without using classList.
-   * @param {!Element} element
-   * @param {string} className
-   * @return {boolean}
-   * @protected
-   */
-
-		dom.hasClassWithoutNative_ = function hasClassWithoutNative_(element, className) {
-			return (' ' + element.className + ' ').indexOf(' ' + className + ' ') >= 0;
-		};
-
-		/**
-   * Checks if the given element is empty or not.
-   * @param {!Element} element
-   * @return {boolean}
-   */
-
-		dom.isEmpty = function isEmpty(element) {
-			return element.childNodes.length === 0;
-		};
-
-		/**
-   * Check if an element matches a given selector.
-   * @param {Element} element
-   * @param {string} selector
-   * @return {boolean}
-   */
-
-		dom.match = function match(element, selector) {
-			if (!element || element.nodeType !== 1) {
-				return false;
-			}
-
-			var p = Element.prototype;
-			var m = p.matches || p.webkitMatchesSelector || p.mozMatchesSelector || p.msMatchesSelector || p.oMatchesSelector;
-			if (m) {
-				return m.call(element, selector);
-			}
-
-			return dom.matchFallback_(element, selector);
-		};
-
-		/**
-   * Check if an element matches a given selector, using an internal implementation
-   * instead of calling existing javascript functions.
-   * @param {Element} element
-   * @param {string} selector
-   * @return {boolean}
-   * @protected
-   */
-
-		dom.matchFallback_ = function matchFallback_(element, selector) {
-			var nodes = document.querySelectorAll(selector, element.parentNode);
-			for (var i = 0; i < nodes.length; ++i) {
-				if (nodes[i] === element) {
-					return true;
-				}
-			}
-			return false;
-		};
-
-		/**
-   * Returns the next sibling of the given element that matches the specified
-   * selector, or null if there is none.
-   * @param {!Element} element
-   * @param {?string} selector
-   */
-
-		dom.next = function next(element, selector) {
-			do {
-				element = element.nextSibling;
-				if (element && dom.match(element, selector)) {
-					return element;
-				}
-			} while (element);
-			return null;
-		};
-
-		/**
-   * Normalizes the event payload for delegate listeners.
-   * @param {!Event} event
-   */
-
-		dom.normalizeDelegateEvent_ = function normalizeDelegateEvent_(event) {
-			event.stopPropagation = dom.stopPropagation_;
-			event.stopImmediatePropagation = dom.stopImmediatePropagation_;
-		};
-
-		/**
-   * Listens to the specified event on the given DOM element. This function normalizes
-   * DOM event payloads and functions so they'll work the same way on all supported
-   * browsers.
-   * @param {!Element|string} element The DOM element to listen to the event on, or
-   *   a selector that should be delegated on the entire document.
-   * @param {string} eventName The name of the event to listen to.
-   * @param {!function(!Object)} callback Function to be called when the event is
-   *   triggered. It will receive the normalized event object.
-   * @param {boolean} opt_capture Flag indicating if listener should be triggered
-   *   during capture phase, instead of during the bubbling phase. Defaults to false.
-   * @return {!DomEventHandle} Can be used to remove the listener.
-   */
-
-		dom.on = function on(element, eventName, callback, opt_capture) {
-			if (core.isString(element)) {
-				return dom.delegate(document, eventName, element, callback);
-			}
-			var customConfig = dom.customEvents[eventName];
-			if (customConfig && customConfig.event) {
-				eventName = customConfig.originalEvent;
-				callback = customConfig.handler.bind(customConfig, callback);
-			}
-			element.addEventListener(eventName, callback, opt_capture);
-			return new DomEventHandle(element, eventName, callback, opt_capture);
-		};
-
-		/**
-   * Listens to the specified event on the given DOM element once. This
-   * function normalizes DOM event payloads and functions so they'll work the
-   * same way on all supported browsers.
-   * @param {!Element} element The DOM element to listen to the event on.
-   * @param {string} eventName The name of the event to listen to.
-   * @param {!function(!Object)} callback Function to be called when the event
-   *   is triggered. It will receive the normalized event object.
-   * @return {!DomEventHandle} Can be used to remove the listener.
-   */
-
-		dom.once = function once(element, eventName, callback) {
-			var domEventHandle = this.on(element, eventName, function () {
-				domEventHandle.removeListener();
-				return callback.apply(this, arguments);
-			});
-			return domEventHandle;
-		};
-
-		/**
-   * Registers a custom event.
-   * @param {string} eventName The name of the custom event.
-   * @param {!Object} customConfig An object with information about how the event
-   *   should be handled.
-   */
-
-		dom.registerCustomEvent = function registerCustomEvent(eventName, customConfig) {
-			dom.customEvents[eventName] = customConfig;
-		};
-
-		/**
-   * Removes all the child nodes on a DOM node.
-   * @param {Element} node Element to remove children from.
-   */
-
-		dom.removeChildren = function removeChildren(node) {
-			var child;
-			while (child = node.firstChild) {
-				node.removeChild(child);
-			}
-		};
-
-		/**
-   * Removes the requested CSS classes from an element.
-   * @param {!Element} element The element to remove CSS classes from.
-   * @param {string} classes CSS classes to remove.
-   */
-
-		dom.removeClasses = function removeClasses(element, classes) {
-			if (!core.isObject(element) || !core.isString(classes)) {
-				return;
-			}
-
-			if ('classList' in element) {
-				dom.removeClassesWithNative_(element, classes);
-			} else {
-				dom.removeClassesWithoutNative_(element, classes);
-			}
-		};
-
-		/**
-   * Removes the requested CSS classes from an element using classList.
-   * @param {!Element} element The element to remove CSS classes from.
-   * @param {string} classes CSS classes to remove.
-   * @protected
-   */
-
-		dom.removeClassesWithNative_ = function removeClassesWithNative_(element, classes) {
-			classes.split(' ').forEach(function (className) {
-				element.classList.remove(className);
-			});
-		};
-
-		/**
-   * Removes the requested CSS classes from an element without using classList.
-   * @param {!Element} element The element to remove CSS classes from.
-   * @param {string} classes CSS classes to remove.
-   * @protected
-   */
-
-		dom.removeClassesWithoutNative_ = function removeClassesWithoutNative_(element, classes) {
-			var elementClassName = ' ' + element.className + ' ';
-
-			classes = classes.split(' ');
-
-			for (var i = 0; i < classes.length; i++) {
-				elementClassName = elementClassName.replace(' ' + classes[i] + ' ', ' ');
-			}
-
-			element.className = elementClassName.trim();
-		};
-
-		/**
-   * Replaces the first element with the second.
-   * @param {Element} element1
-   * @param {Element} element2
-   */
-
-		dom.replace = function replace(element1, element2) {
-			if (element1 && element2 && element1 !== element2 && element1.parentNode) {
-				element1.parentNode.insertBefore(element2, element1);
-				element1.parentNode.removeChild(element1);
-			}
-		};
-
-		/**
-   * The function that replaces `stopImmediatePropagation_` for events.
-   * @protected
-   */
-
-		dom.stopImmediatePropagation_ = function stopImmediatePropagation_() {
-			this.stopped = true;
-			Event.prototype.stopImmediatePropagation.call(this);
-		};
-
-		/**
-   * The function that replaces `stopPropagation` for events.
-   * @protected
-   */
-
-		dom.stopPropagation_ = function stopPropagation_() {
-			this.stopped = true;
-			Event.prototype.stopPropagation.call(this);
-		};
-
-		/**
-   * Checks if the given element supports the given event type.
-   * @param {!Element|string} element The DOM element or element tag name to check.
-   * @param {string} eventName The name of the event to check.
-   * @return {boolean}
-   */
-
-		dom.supportsEvent = function supportsEvent(element, eventName) {
-			if (dom.customEvents[eventName]) {
-				return true;
-			}
-
-			if (core.isString(element)) {
-				if (!elementsByTag[element]) {
-					elementsByTag[element] = document.createElement(element);
-				}
-				element = elementsByTag[element];
-			}
-			return 'on' + eventName in element;
-		};
-
-		/**
-   * Converts the given argument to a DOM element. Strings are assumed to
-   * be selectors, and so a matched element will be returned. If the arg
-   * is already a DOM element it will be the return value.
-   * @param {string|Element|Document} selectorOrElement
-   * @return {Element} The converted element, or null if none was found.
-   */
-
-		dom.toElement = function toElement(selectorOrElement) {
-			if (core.isElement(selectorOrElement) || core.isDocument(selectorOrElement)) {
-				return selectorOrElement;
-			} else if (core.isString(selectorOrElement)) {
-				if (selectorOrElement[0] === '#' && selectorOrElement.indexOf(' ') === -1) {
-					return document.getElementById(selectorOrElement.substr(1));
-				} else {
-					return document.querySelector(selectorOrElement);
-				}
-			} else {
-				return null;
-			}
-		};
-
-		/**
-   * Adds or removes one or more classes from an element. If any of the classes
-   * is present, it will be removed from the element, or added otherwise.
-   * @param {!Element} element The element which classes will be toggled.
-   * @param {string} classes The classes which have to added or removed from the element.
-   */
-
-		dom.toggleClasses = function toggleClasses(element, classes) {
-			if (!core.isObject(element) || !core.isString(classes)) {
-				return;
-			}
-
-			if ('classList' in element) {
-				dom.toggleClassesWithNative_(element, classes);
-			} else {
-				dom.toggleClassesWithoutNative_(element, classes);
-			}
-		};
-
-		/**
-   * Adds or removes one or more classes from an element using classList.
-   * If any of the classes is present, it will be removed from the element,
-   * or added otherwise.
-   * @param {!Element} element The element which classes will be toggled.
-   * @param {string} classes The classes which have to added or removed from the element.
-   */
-
-		dom.toggleClassesWithNative_ = function toggleClassesWithNative_(element, classes) {
-			classes.split(' ').forEach(function (className) {
-				element.classList.toggle(className);
-			});
-		};
-
-		/**
-   * Adds or removes one or more classes from an element without using classList.
-   * If any of the classes is present, it will be removed from the element,
-   * or added otherwise.
-   * @param {!Element} element The element which classes will be toggled.
-   * @param {string} classes The classes which have to added or removed from the element.
-   */
-
-		dom.toggleClassesWithoutNative_ = function toggleClassesWithoutNative_(element, classes) {
-			var elementClassName = ' ' + element.className + ' ';
-
-			classes = classes.split(' ');
-
-			for (var i = 0; i < classes.length; i++) {
-				var className = ' ' + classes[i] + ' ';
-				var classIndex = elementClassName.indexOf(className);
-
-				if (classIndex === -1) {
-					elementClassName = elementClassName + classes[i] + ' ';
-				} else {
-					elementClassName = elementClassName.substring(0, classIndex) + ' ' + elementClassName.substring(classIndex + className.length);
-				}
-			}
-
-			element.className = elementClassName.trim();
-		};
-
-		/**
-   * Triggers the specified event on the given element.
-   * NOTE: This should mostly be used for testing, not on real code.
-   * @param {!Element} element The node that should trigger the event.
-   * @param {string} eventName The name of the event to be triggred.
-   * @param {Object=} opt_eventObj An object with data that should be on the
-   *   triggered event's payload.
-   */
-
-		dom.triggerEvent = function triggerEvent(element, eventName, opt_eventObj) {
-			var eventObj = document.createEvent('HTMLEvents');
-			eventObj.initEvent(eventName, true, true);
-			object.mixin(eventObj, opt_eventObj);
-			element.dispatchEvent(eventObj);
-		};
-
-		return dom;
-	}();
-
-	var elementsByTag = {};
-	dom.customEvents = {};
-
-	this.metal.dom = dom;
 }).call(this);
 'use strict';
 
@@ -1186,6 +356,7 @@ babelHelpers;
    * @return {*}
    */
 
+
 		array.firstDefinedValue = function firstDefinedValue(arr) {
 			for (var i = 0; i < arr.length; i++) {
 				if (arr[i] !== undefined) {
@@ -1200,6 +371,7 @@ babelHelpers;
    * @param {Array.<*>} opt_output Optional output array.
    * @return {Array.<*>} Flat array.
    */
+
 
 		array.flatten = function flatten(arr, opt_output) {
 			var output = opt_output || [];
@@ -1221,6 +393,7 @@ babelHelpers;
    * @template T
    */
 
+
 		array.remove = function remove(arr, obj) {
 			var i = arr.indexOf(obj);
 			var rv;
@@ -1237,6 +410,7 @@ babelHelpers;
    * @return {boolean} True if an element was removed.
    */
 
+
 		array.removeAt = function removeAt(arr, i) {
 			return Array.prototype.splice.call(arr, i, 1).length === 1;
 		};
@@ -1252,6 +426,7 @@ babelHelpers;
    * @return {!Array}
    */
 
+
 		array.slice = function slice(arr, start, opt_end) {
 			var sliced = [];
 			var end = core.isDef(opt_end) ? opt_end : arr.length;
@@ -1265,392 +440,6 @@ babelHelpers;
 	}();
 
 	this.metal.array = array;
-}).call(this);
-'use strict';
-
-(function () {
-	var core = this.metal.core;
-	var array = this.metal.array;
-	var Disposable = this.metal.Disposable;
-	var EventHandle = this.metal.EventHandle;
-
-	/**
-  * EventEmitter utility.
-  * @constructor
-  * @extends {Disposable}
-  */
-
-	var EventEmitter = function (_Disposable) {
-		babelHelpers.inherits(EventEmitter, _Disposable);
-
-		function EventEmitter() {
-			babelHelpers.classCallCheck(this, EventEmitter);
-
-			/**
-    * Holds event listeners scoped by event type.
-    * @type {!Object<string, !Array<!function()>>}
-    * @protected
-    */
-
-			var _this = babelHelpers.possibleConstructorReturn(this, _Disposable.call(this));
-
-			_this.events_ = [];
-
-			/**
-    * The maximum number of listeners allowed for each event type. If the number
-    * becomes higher than the max, a warning will be issued.
-    * @type {number}
-    * @protected
-    */
-			_this.maxListeners_ = 10;
-
-			/**
-    * Configuration option which determines if an event facade should be sent
-    * as a param of listeners when emitting events. If set to true, the facade
-    * will be passed as the first argument of the listener.
-    * @type {boolean}
-    * @protected
-    */
-			_this.shouldUseFacade_ = false;
-			return _this;
-		}
-
-		/**
-   * Adds a listener to the end of the listeners array for the specified events.
-   * @param {!(Array|string)} events
-   * @param {!Function} listener
-   * @param {boolean} opt_default Flag indicating if this listener is a default
-   *   action for this event. Default actions are run last, and only if no previous
-   *   listener call `preventDefault()` on the received event facade.
-   * @return {!EventHandle} Can be used to remove the listener.
-   */
-
-		EventEmitter.prototype.addListener = function addListener(events, listener, opt_default) {
-			this.validateListener_(listener);
-
-			events = this.normalizeEvents_(events);
-			for (var i = 0; i < events.length; i++) {
-				this.addSingleListener_(events[i], listener, opt_default);
-			}
-
-			return new EventHandle(this, events, listener);
-		};
-
-		/**
-   * Adds a listener to the end of the listeners array for a single event.
-   * @param {string} event
-   * @param {!Function} listener
-   * @param {boolean} opt_default Flag indicating if this listener is a default
-   *   action for this event. Default actions are run last, and only if no previous
-   *   listener call `preventDefault()` on the received event facade.
-   * @return {!EventHandle} Can be used to remove the listener.
-   * @param {Function=} opt_origin The original function that was added as a
-   *   listener, if there is any.
-   * @protected
-   */
-
-		EventEmitter.prototype.addSingleListener_ = function addSingleListener_(event, listener, opt_default, opt_origin) {
-			this.emit('newListener', event, listener);
-
-			if (!this.events_[event]) {
-				this.events_[event] = [];
-			}
-			this.events_[event].push({
-				default: opt_default,
-				fn: listener,
-				origin: opt_origin
-			});
-
-			var listeners = this.events_[event];
-			if (listeners.length > this.maxListeners_ && !listeners.warned) {
-				console.warn('Possible EventEmitter memory leak detected. %d listeners added ' + 'for event %s. Use emitter.setMaxListeners() to increase limit.', listeners.length, event);
-				listeners.warned = true;
-			}
-		};
-
-		/**
-   * Disposes of this instance's object references.
-   * @override
-   */
-
-		EventEmitter.prototype.disposeInternal = function disposeInternal() {
-			this.events_ = [];
-		};
-
-		/**
-   * Execute each of the listeners in order with the supplied arguments.
-   * @param {string} event
-   * @param {*} opt_args [arg1], [arg2], [...]
-   * @return {boolean} Returns true if event had listeners, false otherwise.
-   */
-
-		EventEmitter.prototype.emit = function emit(event) {
-			var args = array.slice(arguments, 1);
-			var listeners = (this.events_[event] || []).concat();
-
-			var facade;
-			if (this.getShouldUseFacade()) {
-				facade = {
-					preventDefault: function preventDefault() {
-						facade.preventedDefault = true;
-					},
-					target: this,
-					type: event
-				};
-				args.push(facade);
-			}
-
-			var defaultListeners = [];
-			for (var i = 0; i < listeners.length; i++) {
-				if (listeners[i].default) {
-					defaultListeners.push(listeners[i]);
-				} else {
-					listeners[i].fn.apply(this, args);
-				}
-			}
-			if (!facade || !facade.preventedDefault) {
-				for (var j = 0; j < defaultListeners.length; j++) {
-					defaultListeners[j].fn.apply(this, args);
-				}
-			}
-
-			if (event !== '*') {
-				this.emit.apply(this, ['*', event].concat(args));
-			}
-
-			return listeners.length > 0;
-		};
-
-		/**
-   * Gets the configuration option which determines if an event facade should
-   * be sent as a param of listeners when emitting events. If set to true, the
-   * facade will be passed as the first argument of the listener.
-   * @return {boolean}
-   */
-
-		EventEmitter.prototype.getShouldUseFacade = function getShouldUseFacade() {
-			return this.shouldUseFacade_;
-		};
-
-		/**
-   * Returns an array of listeners for the specified event.
-   * @param {string} event
-   * @return {Array} Array of listeners.
-   */
-
-		EventEmitter.prototype.listeners = function listeners(event) {
-			return (this.events_[event] || []).map(function (listener) {
-				return listener.fn;
-			});
-		};
-
-		/**
-   * Adds a listener that will be invoked a fixed number of times for the
-   * events. After each event is triggered the specified amount of times, the
-   * listener is removed for it.
-   * @param {!(Array|string)} events
-   * @param {number} amount The amount of times this event should be listened
-   * to.
-   * @param {!Function} listener
-   * @return {!EventHandle} Can be used to remove the listener.
-   */
-
-		EventEmitter.prototype.many = function many(events, amount, listener) {
-			events = this.normalizeEvents_(events);
-			for (var i = 0; i < events.length; i++) {
-				this.many_(events[i], amount, listener);
-			}
-
-			return new EventHandle(this, events, listener);
-		};
-
-		/**
-   * Adds a listener that will be invoked a fixed number of times for a single
-   * event. After the event is triggered the specified amount of times, the
-   * listener is removed.
-   * @param {string} event
-   * @param {number} amount The amount of times this event should be listened
-   * to.
-   * @param {!Function} listener
-   * @protected
-   */
-
-		EventEmitter.prototype.many_ = function many_(event, amount, listener) {
-			var self = this;
-
-			if (amount <= 0) {
-				return;
-			}
-
-			function handlerInternal() {
-				if (--amount === 0) {
-					self.removeListener(event, handlerInternal);
-				}
-				listener.apply(self, arguments);
-			}
-
-			self.addSingleListener_(event, handlerInternal, false, listener);
-		};
-
-		/**
-   * Checks if a listener object matches the given listener function. To match,
-   * it needs to either point to that listener or have it as its origin.
-   * @param {!Object} listenerObj
-   * @param {!Function} listener
-   * @return {boolean}
-   * @protected
-   */
-
-		EventEmitter.prototype.matchesListener_ = function matchesListener_(listenerObj, listener) {
-			return listenerObj.fn === listener || listenerObj.origin && listenerObj.origin === listener;
-		};
-
-		/**
-   * Converts the parameter to an array if only one event is given.
-   * @param  {!(Array|string)} events
-   * @return {!Array}
-   * @protected
-   */
-
-		EventEmitter.prototype.normalizeEvents_ = function normalizeEvents_(events) {
-			return core.isString(events) ? [events] : events;
-		};
-
-		/**
-   * Removes a listener for the specified events.
-   * Caution: changes array indices in the listener array behind the listener.
-   * @param {!(Array|string)} events
-   * @param {!Function} listener
-   * @return {!Object} Returns emitter, so calls can be chained.
-   */
-
-		EventEmitter.prototype.off = function off(events, listener) {
-			this.validateListener_(listener);
-
-			events = this.normalizeEvents_(events);
-			for (var i = 0; i < events.length; i++) {
-				var listenerObjs = this.events_[events[i]] || [];
-				this.removeMatchingListenerObjs_(listenerObjs, listener);
-			}
-
-			return this;
-		};
-
-		/**
-   * Adds a listener to the end of the listeners array for the specified events.
-   * @param {!(Array|string)} events
-   * @param {!Function} listener
-   * @return {!EventHandle} Can be used to remove the listener.
-   */
-
-		EventEmitter.prototype.on = function on() {
-			return this.addListener.apply(this, arguments);
-		};
-
-		/**
-   * Adds a one time listener for the events. This listener is invoked only the
-   * next time each event is fired, after which it is removed.
-   * @param {!(Array|string)} events
-   * @param {!Function} listener
-   * @return {!EventHandle} Can be used to remove the listener.
-   */
-
-		EventEmitter.prototype.once = function once(events, listener) {
-			return this.many(events, 1, listener);
-		};
-
-		/**
-   * Removes all listeners, or those of the specified events. It's not a good
-   * idea to remove listeners that were added elsewhere in the code,
-   * especially when it's on an emitter that you didn't create.
-   * @param {(Array|string)=} opt_events
-   * @return {!Object} Returns emitter, so calls can be chained.
-   */
-
-		EventEmitter.prototype.removeAllListeners = function removeAllListeners(opt_events) {
-			if (opt_events) {
-				var events = this.normalizeEvents_(opt_events);
-				for (var i = 0; i < events.length; i++) {
-					this.events_[events[i]] = null;
-				}
-			} else {
-				this.events_ = {};
-			}
-			return this;
-		};
-
-		/**
-   * Removes all listener objects from the given array that match the given
-   * listener function.
-   * @param {!Array.<Object>} listenerObjs
-   * @param {!Function} listener
-   * @protected
-   */
-
-		EventEmitter.prototype.removeMatchingListenerObjs_ = function removeMatchingListenerObjs_(listenerObjs, listener) {
-			for (var i = listenerObjs.length - 1; i >= 0; i--) {
-				if (this.matchesListener_(listenerObjs[i], listener)) {
-					listenerObjs.splice(i, 1);
-				}
-			}
-		};
-
-		/**
-   * Removes a listener for the specified events.
-   * Caution: changes array indices in the listener array behind the listener.
-   * @param {!(Array|string)} events
-   * @param {!Function} listener
-   * @return {!Object} Returns emitter, so calls can be chained.
-   */
-
-		EventEmitter.prototype.removeListener = function removeListener() {
-			return this.off.apply(this, arguments);
-		};
-
-		/**
-   * By default EventEmitters will print a warning if more than 10 listeners
-   * are added for a particular event. This is a useful default which helps
-   * finding memory leaks. Obviously not all Emitters should be limited to 10.
-   * This function allows that to be increased. Set to zero for unlimited.
-   * @param {number} max The maximum number of listeners.
-   * @return {!Object} Returns emitter, so calls can be chained.
-   */
-
-		EventEmitter.prototype.setMaxListeners = function setMaxListeners(max) {
-			this.maxListeners_ = max;
-			return this;
-		};
-
-		/**
-   * Sets the configuration option which determines if an event facade should
-   * be sent as a param of listeners when emitting events. If set to true, the
-   * facade will be passed as the first argument of the listener.
-   * @param {boolean} shouldUseFacade
-   * @return {!Object} Returns emitter, so calls can be chained.
-   */
-
-		EventEmitter.prototype.setShouldUseFacade = function setShouldUseFacade(shouldUseFacade) {
-			this.shouldUseFacade_ = shouldUseFacade;
-			return this;
-		};
-
-		/**
-   * Checks if the given listener is valid, throwing an exception when it's not.
-   * @param  {*} listener
-   * @protected
-   */
-
-		EventEmitter.prototype.validateListener_ = function validateListener_(listener) {
-			if (!core.isFunction(listener)) {
-				throw new TypeError('Listener must be a function');
-			}
-		};
-
-		return EventEmitter;
-	}(Disposable);
-
-	EventEmitter.prototype.registerMetalComponent && EventEmitter.prototype.registerMetalComponent(EventEmitter, 'EventEmitter')
-	this.metal.EventEmitter = EventEmitter;
 }).call(this);
 /*!
  * Polyfill from Google's Closure Library.
@@ -1891,12 +680,2083 @@ babelHelpers;
 }).call(this);
 'use strict';
 
+/**
+ * Disposable utility. When inherited provides the `dispose` function to its
+ * subclass, which is responsible for disposing of any object references
+ * when an instance won't be used anymore. Subclasses should override
+ * `disposeInternal` to implement any specific disposing logic.
+ * @constructor
+ */
+
 (function () {
-	var array = this.metal.array;
+	var Disposable = function () {
+		function Disposable() {
+			babelHelpers.classCallCheck(this, Disposable);
+
+			/**
+    * Flag indicating if this instance has already been disposed.
+    * @type {boolean}
+    * @protected
+    */
+			this.disposed_ = false;
+		}
+
+		/**
+   * Disposes of this instance's object references. Calls `disposeInternal`.
+   */
+
+
+		Disposable.prototype.dispose = function dispose() {
+			if (!this.disposed_) {
+				this.disposeInternal();
+				this.disposed_ = true;
+			}
+		};
+
+		/**
+   * Subclasses should override this method to implement any specific
+   * disposing logic (like clearing references and calling `dispose` on other
+   * disposables).
+   */
+
+
+		Disposable.prototype.disposeInternal = function disposeInternal() {};
+
+		/**
+   * Checks if this instance has already been disposed.
+   * @return {boolean}
+   */
+
+
+		Disposable.prototype.isDisposed = function isDisposed() {
+			return this.disposed_;
+		};
+
+		return Disposable;
+	}();
+
+	this.metal.Disposable = Disposable;
+}).call(this);
+'use strict';
+
+(function () {
 	var core = this.metal.core;
-	var object = this.metal.object;
-	var EventEmitter = this.metal.EventEmitter;
-	var async = this.metal.async;
+
+	var object = function () {
+		function object() {
+			babelHelpers.classCallCheck(this, object);
+		}
+
+		/**
+   * Copies all the members of a source object to a target object.
+   * @param {Object} target Target object.
+   * @param {...Object} var_args The objects from which values will be copied.
+   * @return {Object} Returns the target object reference.
+   */
+
+		object.mixin = function mixin(target) {
+			var key, source;
+			for (var i = 1; i < arguments.length; i++) {
+				source = arguments[i];
+				for (key in source) {
+					target[key] = source[key];
+				}
+			}
+			return target;
+		};
+
+		/**
+   * Returns an object based on its fully qualified external name.
+   * @param {string} name The fully qualified name.
+   * @param {object=} opt_obj The object within which to look; default is
+   *     <code>window</code>.
+   * @return {?} The value (object or primitive) or, if not found, null.
+   */
+
+
+		object.getObjectByName = function getObjectByName(name, opt_obj) {
+			var parts = name.split('.');
+			var cur = opt_obj || window;
+			var part;
+			while (part = parts.shift()) {
+				if (core.isDefAndNotNull(cur[part])) {
+					cur = cur[part];
+				} else {
+					return null;
+				}
+			}
+			return cur;
+		};
+
+		/**
+   * Returns a new object with the same keys as the given one, but with
+   * their values set to the return values of the specified function.
+   * @param {!Object} obj
+   * @param {!function(string, *)} fn
+   * @return {!Object}
+   */
+
+
+		object.map = function map(obj, fn) {
+			var mappedObj = {};
+			var keys = Object.keys(obj);
+			for (var i = 0; i < keys.length; i++) {
+				mappedObj[keys[i]] = fn(keys[i], obj[keys[i]]);
+			}
+			return mappedObj;
+		};
+
+		return object;
+	}();
+
+	this.metal.object = object;
+}).call(this);
+'use strict';
+
+(function () {
+	var string = function () {
+		function string() {
+			babelHelpers.classCallCheck(this, string);
+		}
+
+		/**
+   * Removes the breaking spaces from the left and right of the string and
+   * collapses the sequences of breaking spaces in the middle into single spaces.
+   * The original and the result strings render the same way in HTML.
+   * @param {string} str A string in which to collapse spaces.
+   * @return {string} Copy of the string with normalized breaking spaces.
+   */
+
+		string.collapseBreakingSpaces = function collapseBreakingSpaces(str) {
+			return str.replace(/[\t\r\n ]+/g, ' ').replace(/^[\t\r\n ]+|[\t\r\n ]+$/g, '');
+		};
+
+		/**
+  * Returns a string with at least 64-bits of randomness.
+  * @return {string} A random string, e.g. sn1s7vb4gcic.
+  */
+
+
+		string.getRandomString = function getRandomString() {
+			var x = 2147483648;
+			return Math.floor(Math.random() * x).toString(36) + Math.abs(Math.floor(Math.random() * x) ^ Date.now()).toString(36);
+		};
+
+		/**
+   * Calculates the hashcode for a string. The hashcode value is computed by
+   * the sum algorithm: s[0]*31^(n-1) + s[1]*31^(n-2) + ... + s[n-1]. A nice
+   * property of using 31 prime is that the multiplication can be replaced by
+   * a shift and a subtraction for better performance: 31*i == (i<<5)-i.
+   * Modern VMs do this sort of optimization automatically.
+   * @param {String} val Target string.
+   * @return {Number} Returns the string hashcode.
+   */
+
+
+		string.hashCode = function hashCode(val) {
+			var hash = 0;
+			for (var i = 0, len = val.length; i < len; i++) {
+				hash = 31 * hash + val.charCodeAt(i);
+				hash %= 0x100000000;
+			}
+			return hash;
+		};
+
+		/**
+   * Replaces interval into the string with specified value, e.g.
+   * `replaceInterval("abcde", 1, 4, "")` returns "ae".
+   * @param {string} str The input string.
+   * @param {Number} start Start interval position to be replaced.
+   * @param {Number} end End interval position to be replaced.
+   * @param {string} value The value that replaces the specified interval.
+   * @return {string}
+   */
+
+
+		string.replaceInterval = function replaceInterval(str, start, end, value) {
+			return str.substring(0, start) + value + str.substring(end);
+		};
+
+		return string;
+	}();
+
+	this.metal.string = string;
+}).call(this);
+'use strict';
+
+(function () {
+  var core = this.metal.core;
+  var array = this.metal.array;
+  var async = this.metal.async;
+  var Disposable = this.metal.Disposable;
+  var object = this.metal.object;
+  var string = this.metal.string;
+  this.metal.metal = core;
+  this.metalNamed.metal = {};
+  this.metalNamed.metal.core = core;
+  this.metalNamed.metal.array = array;
+  this.metalNamed.metal.async = async;
+  this.metalNamed.metal.Disposable = Disposable;
+  this.metalNamed.metal.object = object;
+  this.metalNamed.metal.string = string;
+}).call(this);
+'use strict';
+
+(function () {
+	var Disposable = this.metalNamed.metal.Disposable;
+
+	/**
+  * EventHandle utility. Holds information about an event subscription, and
+  * allows removing them easily.
+  * EventHandle is a Disposable, but it's important to note that the
+  * EventEmitter that created it is not the one responsible for disposing it.
+  * That responsibility is for the code that holds a reference to it.
+  * @param {!EventEmitter} emitter Emitter the event was subscribed to.
+  * @param {string} event The name of the event that was subscribed to.
+  * @param {!Function} listener The listener subscribed to the event.
+  * @constructor
+  * @extends {Disposable}
+  */
+
+	var EventHandle = function (_Disposable) {
+		babelHelpers.inherits(EventHandle, _Disposable);
+
+		function EventHandle(emitter, event, listener) {
+			babelHelpers.classCallCheck(this, EventHandle);
+
+
+			/**
+    * The EventEmitter instance that the event was subscribed to.
+    * @type {EventEmitter}
+    * @protected
+    */
+
+			var _this = babelHelpers.possibleConstructorReturn(this, _Disposable.call(this));
+
+			_this.emitter_ = emitter;
+
+			/**
+    * The name of the event that was subscribed to.
+    * @type {string}
+    * @protected
+    */
+			_this.event_ = event;
+
+			/**
+    * The listener subscribed to the event.
+    * @type {Function}
+    * @protected
+    */
+			_this.listener_ = listener;
+			return _this;
+		}
+
+		/**
+   * Disposes of this instance's object references.
+   * @override
+   */
+
+
+		EventHandle.prototype.disposeInternal = function disposeInternal() {
+			this.removeListener();
+			this.emitter_ = null;
+			this.listener_ = null;
+		};
+
+		/**
+   * Removes the listener subscription from the emitter.
+   */
+
+
+		EventHandle.prototype.removeListener = function removeListener() {
+			if (!this.emitter_.isDisposed()) {
+				this.emitter_.removeListener(this.event_, this.listener_);
+			}
+		};
+
+		return EventHandle;
+	}(Disposable);
+
+	EventHandle.prototype.registerMetalComponent && EventHandle.prototype.registerMetalComponent(EventHandle, 'EventHandle')
+	this.metal.EventHandle = EventHandle;
+}).call(this);
+'use strict';
+
+(function () {
+	var core = this.metalNamed.metal.core;
+	var array = this.metalNamed.metal.array;
+	var Disposable = this.metalNamed.metal.Disposable;
+	var EventHandle = this.metal.EventHandle;
+
+	/**
+  * EventEmitter utility.
+  * @constructor
+  * @extends {Disposable}
+  */
+
+	var EventEmitter = function (_Disposable) {
+		babelHelpers.inherits(EventEmitter, _Disposable);
+
+		function EventEmitter() {
+			babelHelpers.classCallCheck(this, EventEmitter);
+
+
+			/**
+    * Holds event listeners scoped by event type.
+    * @type {!Object<string, !Array<!function()>>}
+    * @protected
+    */
+
+			var _this = babelHelpers.possibleConstructorReturn(this, _Disposable.call(this));
+
+			_this.events_ = [];
+
+			/**
+    * The maximum number of listeners allowed for each event type. If the number
+    * becomes higher than the max, a warning will be issued.
+    * @type {number}
+    * @protected
+    */
+			_this.maxListeners_ = 10;
+
+			/**
+    * Configuration option which determines if an event facade should be sent
+    * as a param of listeners when emitting events. If set to true, the facade
+    * will be passed as the first argument of the listener.
+    * @type {boolean}
+    * @protected
+    */
+			_this.shouldUseFacade_ = false;
+			return _this;
+		}
+
+		/**
+   * Adds a listener to the end of the listeners array for the specified events.
+   * @param {!(Array|string)} events
+   * @param {!Function} listener
+   * @param {boolean} opt_default Flag indicating if this listener is a default
+   *   action for this event. Default actions are run last, and only if no previous
+   *   listener call `preventDefault()` on the received event facade.
+   * @return {!EventHandle} Can be used to remove the listener.
+   */
+
+
+		EventEmitter.prototype.addListener = function addListener(events, listener, opt_default) {
+			this.validateListener_(listener);
+
+			events = this.normalizeEvents_(events);
+			for (var i = 0; i < events.length; i++) {
+				this.addSingleListener_(events[i], listener, opt_default);
+			}
+
+			return new EventHandle(this, events, listener);
+		};
+
+		/**
+   * Adds a listener to the end of the listeners array for a single event.
+   * @param {string} event
+   * @param {!Function} listener
+   * @param {boolean} opt_default Flag indicating if this listener is a default
+   *   action for this event. Default actions are run last, and only if no previous
+   *   listener call `preventDefault()` on the received event facade.
+   * @return {!EventHandle} Can be used to remove the listener.
+   * @param {Function=} opt_origin The original function that was added as a
+   *   listener, if there is any.
+   * @protected
+   */
+
+
+		EventEmitter.prototype.addSingleListener_ = function addSingleListener_(event, listener, opt_default, opt_origin) {
+			this.emit('newListener', event, listener);
+
+			if (!this.events_[event]) {
+				this.events_[event] = [];
+			}
+			this.events_[event].push({
+				default: opt_default,
+				fn: listener,
+				origin: opt_origin
+			});
+
+			var listeners = this.events_[event];
+			if (listeners.length > this.maxListeners_ && !listeners.warned) {
+				console.warn('Possible EventEmitter memory leak detected. %d listeners added ' + 'for event %s. Use emitter.setMaxListeners() to increase limit.', listeners.length, event);
+				listeners.warned = true;
+			}
+		};
+
+		/**
+   * Disposes of this instance's object references.
+   * @override
+   */
+
+
+		EventEmitter.prototype.disposeInternal = function disposeInternal() {
+			this.events_ = [];
+		};
+
+		/**
+   * Execute each of the listeners in order with the supplied arguments.
+   * @param {string} event
+   * @param {*} opt_args [arg1], [arg2], [...]
+   * @return {boolean} Returns true if event had listeners, false otherwise.
+   */
+
+
+		EventEmitter.prototype.emit = function emit(event) {
+			var args = array.slice(arguments, 1);
+			var listeners = (this.events_[event] || []).concat();
+
+			var facade;
+			if (this.getShouldUseFacade()) {
+				facade = {
+					preventDefault: function preventDefault() {
+						facade.preventedDefault = true;
+					},
+					target: this,
+					type: event
+				};
+				args.push(facade);
+			}
+
+			var defaultListeners = [];
+			for (var i = 0; i < listeners.length; i++) {
+				if (listeners[i].default) {
+					defaultListeners.push(listeners[i]);
+				} else {
+					listeners[i].fn.apply(this, args);
+				}
+			}
+			if (!facade || !facade.preventedDefault) {
+				for (var j = 0; j < defaultListeners.length; j++) {
+					defaultListeners[j].fn.apply(this, args);
+				}
+			}
+
+			if (event !== '*') {
+				this.emit.apply(this, ['*', event].concat(args));
+			}
+
+			return listeners.length > 0;
+		};
+
+		/**
+   * Gets the configuration option which determines if an event facade should
+   * be sent as a param of listeners when emitting events. If set to true, the
+   * facade will be passed as the first argument of the listener.
+   * @return {boolean}
+   */
+
+
+		EventEmitter.prototype.getShouldUseFacade = function getShouldUseFacade() {
+			return this.shouldUseFacade_;
+		};
+
+		/**
+   * Returns an array of listeners for the specified event.
+   * @param {string} event
+   * @return {Array} Array of listeners.
+   */
+
+
+		EventEmitter.prototype.listeners = function listeners(event) {
+			return (this.events_[event] || []).map(function (listener) {
+				return listener.fn;
+			});
+		};
+
+		/**
+   * Adds a listener that will be invoked a fixed number of times for the
+   * events. After each event is triggered the specified amount of times, the
+   * listener is removed for it.
+   * @param {!(Array|string)} events
+   * @param {number} amount The amount of times this event should be listened
+   * to.
+   * @param {!Function} listener
+   * @return {!EventHandle} Can be used to remove the listener.
+   */
+
+
+		EventEmitter.prototype.many = function many(events, amount, listener) {
+			events = this.normalizeEvents_(events);
+			for (var i = 0; i < events.length; i++) {
+				this.many_(events[i], amount, listener);
+			}
+
+			return new EventHandle(this, events, listener);
+		};
+
+		/**
+   * Adds a listener that will be invoked a fixed number of times for a single
+   * event. After the event is triggered the specified amount of times, the
+   * listener is removed.
+   * @param {string} event
+   * @param {number} amount The amount of times this event should be listened
+   * to.
+   * @param {!Function} listener
+   * @protected
+   */
+
+
+		EventEmitter.prototype.many_ = function many_(event, amount, listener) {
+			var self = this;
+
+			if (amount <= 0) {
+				return;
+			}
+
+			function handlerInternal() {
+				if (--amount === 0) {
+					self.removeListener(event, handlerInternal);
+				}
+				listener.apply(self, arguments);
+			}
+
+			self.addSingleListener_(event, handlerInternal, false, listener);
+		};
+
+		/**
+   * Checks if a listener object matches the given listener function. To match,
+   * it needs to either point to that listener or have it as its origin.
+   * @param {!Object} listenerObj
+   * @param {!Function} listener
+   * @return {boolean}
+   * @protected
+   */
+
+
+		EventEmitter.prototype.matchesListener_ = function matchesListener_(listenerObj, listener) {
+			return listenerObj.fn === listener || listenerObj.origin && listenerObj.origin === listener;
+		};
+
+		/**
+   * Converts the parameter to an array if only one event is given.
+   * @param  {!(Array|string)} events
+   * @return {!Array}
+   * @protected
+   */
+
+
+		EventEmitter.prototype.normalizeEvents_ = function normalizeEvents_(events) {
+			return core.isString(events) ? [events] : events;
+		};
+
+		/**
+   * Removes a listener for the specified events.
+   * Caution: changes array indices in the listener array behind the listener.
+   * @param {!(Array|string)} events
+   * @param {!Function} listener
+   * @return {!Object} Returns emitter, so calls can be chained.
+   */
+
+
+		EventEmitter.prototype.off = function off(events, listener) {
+			this.validateListener_(listener);
+
+			events = this.normalizeEvents_(events);
+			for (var i = 0; i < events.length; i++) {
+				var listenerObjs = this.events_[events[i]] || [];
+				this.removeMatchingListenerObjs_(listenerObjs, listener);
+			}
+
+			return this;
+		};
+
+		/**
+   * Adds a listener to the end of the listeners array for the specified events.
+   * @param {!(Array|string)} events
+   * @param {!Function} listener
+   * @return {!EventHandle} Can be used to remove the listener.
+   */
+
+
+		EventEmitter.prototype.on = function on() {
+			return this.addListener.apply(this, arguments);
+		};
+
+		/**
+   * Adds a one time listener for the events. This listener is invoked only the
+   * next time each event is fired, after which it is removed.
+   * @param {!(Array|string)} events
+   * @param {!Function} listener
+   * @return {!EventHandle} Can be used to remove the listener.
+   */
+
+
+		EventEmitter.prototype.once = function once(events, listener) {
+			return this.many(events, 1, listener);
+		};
+
+		/**
+   * Removes all listeners, or those of the specified events. It's not a good
+   * idea to remove listeners that were added elsewhere in the code,
+   * especially when it's on an emitter that you didn't create.
+   * @param {(Array|string)=} opt_events
+   * @return {!Object} Returns emitter, so calls can be chained.
+   */
+
+
+		EventEmitter.prototype.removeAllListeners = function removeAllListeners(opt_events) {
+			if (opt_events) {
+				var events = this.normalizeEvents_(opt_events);
+				for (var i = 0; i < events.length; i++) {
+					this.events_[events[i]] = null;
+				}
+			} else {
+				this.events_ = {};
+			}
+			return this;
+		};
+
+		/**
+   * Removes all listener objects from the given array that match the given
+   * listener function.
+   * @param {!Array.<Object>} listenerObjs
+   * @param {!Function} listener
+   * @protected
+   */
+
+
+		EventEmitter.prototype.removeMatchingListenerObjs_ = function removeMatchingListenerObjs_(listenerObjs, listener) {
+			for (var i = listenerObjs.length - 1; i >= 0; i--) {
+				if (this.matchesListener_(listenerObjs[i], listener)) {
+					listenerObjs.splice(i, 1);
+				}
+			}
+		};
+
+		/**
+   * Removes a listener for the specified events.
+   * Caution: changes array indices in the listener array behind the listener.
+   * @param {!(Array|string)} events
+   * @param {!Function} listener
+   * @return {!Object} Returns emitter, so calls can be chained.
+   */
+
+
+		EventEmitter.prototype.removeListener = function removeListener() {
+			return this.off.apply(this, arguments);
+		};
+
+		/**
+   * By default EventEmitters will print a warning if more than 10 listeners
+   * are added for a particular event. This is a useful default which helps
+   * finding memory leaks. Obviously not all Emitters should be limited to 10.
+   * This function allows that to be increased. Set to zero for unlimited.
+   * @param {number} max The maximum number of listeners.
+   * @return {!Object} Returns emitter, so calls can be chained.
+   */
+
+
+		EventEmitter.prototype.setMaxListeners = function setMaxListeners(max) {
+			this.maxListeners_ = max;
+			return this;
+		};
+
+		/**
+   * Sets the configuration option which determines if an event facade should
+   * be sent as a param of listeners when emitting events. If set to true, the
+   * facade will be passed as the first argument of the listener.
+   * @param {boolean} shouldUseFacade
+   * @return {!Object} Returns emitter, so calls can be chained.
+   */
+
+
+		EventEmitter.prototype.setShouldUseFacade = function setShouldUseFacade(shouldUseFacade) {
+			this.shouldUseFacade_ = shouldUseFacade;
+			return this;
+		};
+
+		/**
+   * Checks if the given listener is valid, throwing an exception when it's not.
+   * @param  {*} listener
+   * @protected
+   */
+
+
+		EventEmitter.prototype.validateListener_ = function validateListener_(listener) {
+			if (!core.isFunction(listener)) {
+				throw new TypeError('Listener must be a function');
+			}
+		};
+
+		return EventEmitter;
+	}(Disposable);
+
+	EventEmitter.prototype.registerMetalComponent && EventEmitter.prototype.registerMetalComponent(EventEmitter, 'EventEmitter')
+	this.metal.EventEmitter = EventEmitter;
+}).call(this);
+'use strict';
+
+(function () {
+	var Disposable = this.metalNamed.metal.Disposable;
+	var object = this.metalNamed.metal.object;
+
+	/**
+  * EventEmitterProxy utility. It's responsible for linking two EventEmitter
+  * instances together, emitting events from the first emitter through the
+  * second one. That means that listening to a supported event on the target
+  * emitter will mean listening to it on the origin emitter as well.
+  * @param {EventEmitter} originEmitter Events originated on this emitter
+  *   will be fired for the target emitter's listeners as well.
+  * @param {EventEmitter} targetEmitter Event listeners attached to this emitter
+  *   will also be triggered when the event is fired by the origin emitter.
+  * @param {Object} opt_blacklist Optional blacklist of events that should not be
+  *   proxied.
+  * @constructor
+  * @extends {Disposable}
+  */
+
+	var EventEmitterProxy = function (_Disposable) {
+		babelHelpers.inherits(EventEmitterProxy, _Disposable);
+
+		function EventEmitterProxy(originEmitter, targetEmitter, opt_blacklist, opt_whitelist) {
+			babelHelpers.classCallCheck(this, EventEmitterProxy);
+
+
+			/**
+    * Map of events that should not be proxied.
+    * @type {Object}
+    * @protected
+    */
+
+			var _this = babelHelpers.possibleConstructorReturn(this, _Disposable.call(this));
+
+			_this.blacklist_ = opt_blacklist || {};
+
+			/**
+    * The origin emitter. This emitter's events will be proxied through the
+    * target emitter.
+    * @type {EventEmitter}
+    * @protected
+    */
+			_this.originEmitter_ = originEmitter;
+
+			/**
+    * Holds a map of events from the origin emitter that are already being proxied.
+    * @type {Object}
+    * @protected
+    */
+			_this.proxiedEvents_ = {};
+
+			/**
+    * The target emitter. This emitter will emit all events that come from
+    * the origin emitter.
+    * @type {EventEmitter}
+    * @protected
+    */
+			_this.targetEmitter_ = targetEmitter;
+
+			/**
+    * Map of events that should be proxied. If whitelist is set blacklist is ignored.
+    * @type {Object}
+    * @protected
+    */
+			_this.whitelist_ = opt_whitelist;
+
+			_this.startProxy_();
+			return _this;
+		}
+
+		/**
+   * Adds the proxy listener for the given event.
+   * @param {string} event.
+   * @protected
+   */
+
+
+		EventEmitterProxy.prototype.addListener_ = function addListener_(event) {
+			this.originEmitter_.on(event, this.proxiedEvents_[event]);
+		};
+
+		/**
+   * @inheritDoc
+   */
+
+
+		EventEmitterProxy.prototype.disposeInternal = function disposeInternal() {
+			object.map(this.proxiedEvents_, this.removeListener_.bind(this));
+			this.proxiedEvents_ = null;
+			this.originEmitter_ = null;
+			this.targetEmitter_ = null;
+		};
+
+		/**
+   * Proxies the given event from the origin to the target emitter.
+   * @param {string} event
+   */
+
+
+		EventEmitterProxy.prototype.proxyEvent_ = function proxyEvent_(event) {
+			if (!this.shouldProxyEvent_(event)) {
+				return;
+			}
+
+			var self = this;
+			this.proxiedEvents_[event] = function () {
+				var args = [event].concat(Array.prototype.slice.call(arguments, 0));
+				self.targetEmitter_.emit.apply(self.targetEmitter_, args);
+			};
+
+			this.addListener_(event);
+		};
+
+		/**
+   * Removes the proxy listener for the given event.
+   * @param {string} event
+   * @protected
+   */
+
+
+		EventEmitterProxy.prototype.removeListener_ = function removeListener_(event) {
+			this.originEmitter_.removeListener(event, this.proxiedEvents_[event]);
+		};
+
+		/**
+   * Checks if the given event should be proxied.
+   * @param {string} event
+   * @return {boolean}
+   * @protected
+   */
+
+
+		EventEmitterProxy.prototype.shouldProxyEvent_ = function shouldProxyEvent_(event) {
+			if (this.whitelist_ && !this.whitelist_[event]) {
+				return false;
+			}
+			if (this.blacklist_[event]) {
+				return false;
+			}
+			return !this.proxiedEvents_[event];
+		};
+
+		/**
+   * Starts proxying all events from the origin to the target emitter.
+   * @protected
+   */
+
+
+		EventEmitterProxy.prototype.startProxy_ = function startProxy_() {
+			this.targetEmitter_.on('newListener', this.proxyEvent_.bind(this));
+		};
+
+		return EventEmitterProxy;
+	}(Disposable);
+
+	EventEmitterProxy.prototype.registerMetalComponent && EventEmitterProxy.prototype.registerMetalComponent(EventEmitterProxy, 'EventEmitterProxy')
+	this.metal.EventEmitterProxy = EventEmitterProxy;
+}).call(this);
+'use strict';
+
+(function () {
+	var Disposable = this.metalNamed.metal.Disposable;
+
+	/**
+  * EventHandler utility. It's useful for easily removing a group of
+  * listeners from different EventEmitter instances.
+  * @constructor
+  * @extends {Disposable}
+  */
+
+	var EventHandler = function (_Disposable) {
+		babelHelpers.inherits(EventHandler, _Disposable);
+
+		function EventHandler() {
+			babelHelpers.classCallCheck(this, EventHandler);
+
+
+			/**
+    * An array that holds the added event handles, so the listeners can be
+    * removed later.
+    * @type {Array.<EventHandle>}
+    * @protected
+    */
+
+			var _this = babelHelpers.possibleConstructorReturn(this, _Disposable.call(this));
+
+			_this.eventHandles_ = [];
+			return _this;
+		}
+
+		/**
+   * Adds event handles to be removed later through the `removeAllListeners`
+   * method.
+   * @param {...(!EventHandle)} var_args
+   */
+
+
+		EventHandler.prototype.add = function add() {
+			for (var i = 0; i < arguments.length; i++) {
+				this.eventHandles_.push(arguments[i]);
+			}
+		};
+
+		/**
+   * Disposes of this instance's object references.
+   * @override
+   */
+
+
+		EventHandler.prototype.disposeInternal = function disposeInternal() {
+			this.eventHandles_ = null;
+		};
+
+		/**
+   * Removes all listeners that have been added through the `add` method.
+   */
+
+
+		EventHandler.prototype.removeAllListeners = function removeAllListeners() {
+			for (var i = 0; i < this.eventHandles_.length; i++) {
+				this.eventHandles_[i].removeListener();
+			}
+
+			this.eventHandles_ = [];
+		};
+
+		return EventHandler;
+	}(Disposable);
+
+	EventHandler.prototype.registerMetalComponent && EventHandler.prototype.registerMetalComponent(EventHandler, 'EventHandler')
+	this.metal.EventHandler = EventHandler;
+}).call(this);
+'use strict';
+
+(function () {
+  var EventEmitter = this.metal.EventEmitter;
+  var EventEmitterProxy = this.metal.EventEmitterProxy;
+  var EventHandle = this.metal.EventHandle;
+  var EventHandler = this.metal.EventHandler;
+  this.metal.events = EventEmitter;
+  this.metalNamed.events = {};
+  this.metalNamed.events.EventEmitter = EventEmitter;
+  this.metalNamed.events.EventEmitterProxy = EventEmitterProxy;
+  this.metalNamed.events.EventHandle = EventHandle;
+  this.metalNamed.events.EventHandler = EventHandler;
+}).call(this);
+'use strict';
+
+(function () {
+	var EventHandle = this.metalNamed.events.EventHandle;
+
+	/**
+  * This is a special EventHandle, that is responsible for dom events, instead
+  * of EventEmitter events.
+  * @extends {EventHandle}
+  */
+
+	var DomEventHandle = function (_EventHandle) {
+		babelHelpers.inherits(DomEventHandle, _EventHandle);
+
+		/**
+   * The constructor for `DomEventHandle`.
+   * @param {!EventEmitter} emitter Emitter the event was subscribed to.
+   * @param {string} event The name of the event that was subscribed to.
+   * @param {!Function} listener The listener subscribed to the event.
+   * @param {boolean} opt_capture Flag indicating if listener should be triggered
+   *   during capture phase, instead of during the bubbling phase. Defaults to false.
+   * @constructor
+   */
+
+		function DomEventHandle(emitter, event, listener, opt_capture) {
+			babelHelpers.classCallCheck(this, DomEventHandle);
+
+			var _this = babelHelpers.possibleConstructorReturn(this, _EventHandle.call(this, emitter, event, listener));
+
+			_this.capture_ = opt_capture;
+			return _this;
+		}
+
+		/**
+   * @inheritDoc
+   */
+
+
+		DomEventHandle.prototype.removeListener = function removeListener() {
+			this.emitter_.removeEventListener(this.event_, this.listener_, this.capture_);
+		};
+
+		return DomEventHandle;
+	}(EventHandle);
+
+	DomEventHandle.prototype.registerMetalComponent && DomEventHandle.prototype.registerMetalComponent(DomEventHandle, 'DomEventHandle')
+	this.metal.DomEventHandle = DomEventHandle;
+}).call(this);
+'use strict';
+
+(function () {
+	var core = this.metalNamed.metal.core;
+	var object = this.metalNamed.metal.object;
+	var DomEventHandle = this.metal.DomEventHandle;
+
+	var dom = function () {
+		function dom() {
+			babelHelpers.classCallCheck(this, dom);
+		}
+
+		/**
+   * Adds the requested CSS classes to an element.
+   * @param {!Element} element The element to add CSS classes to.
+   * @param {string} classes CSS classes to add.
+   */
+
+		dom.addClasses = function addClasses(element, classes) {
+			if (!core.isObject(element) || !core.isString(classes)) {
+				return;
+			}
+
+			if ('classList' in element) {
+				dom.addClassesWithNative_(element, classes);
+			} else {
+				dom.addClassesWithoutNative_(element, classes);
+			}
+		};
+
+		/**
+   * Adds the requested CSS classes to an element using classList.
+   * @param {!Element} element The element to add CSS classes to.
+   * @param {string} classes CSS classes to add.
+   * @protected
+   */
+
+
+		dom.addClassesWithNative_ = function addClassesWithNative_(element, classes) {
+			classes.split(' ').forEach(function (className) {
+				element.classList.add(className);
+			});
+		};
+
+		/**
+   * Adds the requested CSS classes to an element without using classList.
+   * @param {!Element} element The element to add CSS classes to.
+   * @param {string} classes CSS classes to add.
+   * @protected
+   */
+
+
+		dom.addClassesWithoutNative_ = function addClassesWithoutNative_(element, classes) {
+			var elementClassName = ' ' + element.className + ' ';
+			var classesToAppend = '';
+
+			classes = classes.split(' ');
+
+			for (var i = 0; i < classes.length; i++) {
+				var className = classes[i];
+
+				if (elementClassName.indexOf(' ' + className + ' ') === -1) {
+					classesToAppend += ' ' + className;
+				}
+			}
+
+			if (classesToAppend) {
+				element.className = element.className + classesToAppend;
+			}
+		};
+
+		/**
+   * Appends a child node with text or other nodes to a parent node. If
+   * child is a HTML string it will be automatically converted to a document
+   * fragment before appending it to the parent.
+   * @param {!Element} parent The node to append nodes to.
+   * @param {!(Element|NodeList|string)} child The thing to append to the parent.
+   * @return {!Element} The appended child.
+   */
+
+
+		dom.append = function append(parent, child) {
+			if (core.isString(child)) {
+				child = dom.buildFragment(child);
+			}
+			if (child instanceof NodeList) {
+				var childArr = Array.prototype.slice.call(child);
+				for (var i = 0; i < childArr.length; i++) {
+					parent.appendChild(childArr[i]);
+				}
+			} else {
+				parent.appendChild(child);
+			}
+			return child;
+		};
+
+		/**
+   * Helper for converting a HTML string into a document fragment.
+   * @param {string} htmlString The HTML string to convert.
+   * @return {!Element} The resulting document fragment.
+   */
+
+
+		dom.buildFragment = function buildFragment(htmlString) {
+			var tempDiv = document.createElement('div');
+			tempDiv.innerHTML = '<br>' + htmlString;
+			tempDiv.removeChild(tempDiv.firstChild);
+
+			var fragment = document.createDocumentFragment();
+			while (tempDiv.firstChild) {
+				fragment.appendChild(tempDiv.firstChild);
+			}
+			return fragment;
+		};
+
+		/**
+   * Checks if the first element contains the second one.
+   * @param {!Element} element1
+   * @param {!Element} element2
+   * @return {boolean}
+   */
+
+
+		dom.contains = function contains(element1, element2) {
+			if (core.isDocument(element1)) {
+				// document.contains is not defined on IE9, so call it on documentElement instead.
+				return element1.documentElement.contains(element2);
+			} else {
+				return element1.contains(element2);
+			}
+		};
+
+		/**
+   * Listens to the specified event on the given DOM element, but only calls the
+   * callback with the event when it triggered by elements that match the given
+   * selector.
+   * @param {!Element} element The container DOM element to listen to the event on.
+   * @param {string} eventName The name of the event to listen to.
+   * @param {string} selector The selector that matches the child elements that
+   *   the event should be triggered for.
+   * @param {!function(!Object)} callback Function to be called when the event is
+   *   triggered. It will receive the normalized event object.
+   * @return {!DomEventHandle} Can be used to remove the listener.
+   */
+
+
+		dom.delegate = function delegate(element, eventName, selector, callback) {
+			var customConfig = dom.customEvents[eventName];
+			if (customConfig && customConfig.delegate) {
+				eventName = customConfig.originalEvent;
+				callback = customConfig.handler.bind(customConfig, callback);
+			}
+			return dom.on(element, eventName, dom.handleDelegateEvent_.bind(null, selector, callback));
+		};
+
+		/**
+   * Inserts node in document as last element.
+   * @param {Element} node Element to remove children from.
+   */
+
+
+		dom.enterDocument = function enterDocument(node) {
+			dom.append(document.body, node);
+		};
+
+		/**
+   * Removes node from document.
+   * @param {Element} node Element to remove children from.
+   */
+
+
+		dom.exitDocument = function exitDocument(node) {
+			if (node.parentNode) {
+				node.parentNode.removeChild(node);
+			}
+		};
+
+		/**
+   * This is called when an event is triggered by a delegate listener (see
+   * `dom.delegate` for more details).
+   * @param {string} selector The selector or element that matches the child
+   *   elements that the event should be triggered for.
+   * @param {!function(!Object)} callback Function to be called when the event
+   *   is triggered. It will receive the normalized event object.
+   * @param {!Event} event The event payload.
+   * @return {boolean} False if at least one of the triggered callbacks returns
+   *   false, or true otherwise.
+   */
+
+
+		dom.handleDelegateEvent_ = function handleDelegateEvent_(selector, callback, event) {
+			dom.normalizeDelegateEvent_(event);
+
+			var currentElement = event.target;
+			var returnValue = true;
+
+			while (currentElement && !event.stopped) {
+				if (core.isString(selector) && dom.match(currentElement, selector)) {
+					event.delegateTarget = currentElement;
+					returnValue &= callback(event);
+				}
+				if (currentElement === event.currentTarget) {
+					break;
+				}
+				currentElement = currentElement.parentNode;
+			}
+			event.delegateTarget = null;
+
+			return returnValue;
+		};
+
+		/**
+   * Checks if the given element has the requested css class.
+   * @param {!Element} element
+   * @param {string} className
+   * @return {boolean}
+   */
+
+
+		dom.hasClass = function hasClass(element, className) {
+			if ('classList' in element) {
+				return dom.hasClassWithNative_(element, className);
+			} else {
+				return dom.hasClassWithoutNative_(element, className);
+			}
+		};
+
+		/**
+   * Checks if the given element has the requested css class using classList.
+   * @param {!Element} element
+   * @param {string} className
+   * @return {boolean}
+   * @protected
+   */
+
+
+		dom.hasClassWithNative_ = function hasClassWithNative_(element, className) {
+			return element.classList.contains(className);
+		};
+
+		/**
+   * Checks if the given element has the requested css class without using classList.
+   * @param {!Element} element
+   * @param {string} className
+   * @return {boolean}
+   * @protected
+   */
+
+
+		dom.hasClassWithoutNative_ = function hasClassWithoutNative_(element, className) {
+			return (' ' + element.className + ' ').indexOf(' ' + className + ' ') >= 0;
+		};
+
+		/**
+   * Checks if the given element is empty or not.
+   * @param {!Element} element
+   * @return {boolean}
+   */
+
+
+		dom.isEmpty = function isEmpty(element) {
+			return element.childNodes.length === 0;
+		};
+
+		/**
+   * Check if an element matches a given selector.
+   * @param {Element} element
+   * @param {string} selector
+   * @return {boolean}
+   */
+
+
+		dom.match = function match(element, selector) {
+			if (!element || element.nodeType !== 1) {
+				return false;
+			}
+
+			var p = Element.prototype;
+			var m = p.matches || p.webkitMatchesSelector || p.mozMatchesSelector || p.msMatchesSelector || p.oMatchesSelector;
+			if (m) {
+				return m.call(element, selector);
+			}
+
+			return dom.matchFallback_(element, selector);
+		};
+
+		/**
+   * Check if an element matches a given selector, using an internal implementation
+   * instead of calling existing javascript functions.
+   * @param {Element} element
+   * @param {string} selector
+   * @return {boolean}
+   * @protected
+   */
+
+
+		dom.matchFallback_ = function matchFallback_(element, selector) {
+			var nodes = document.querySelectorAll(selector, element.parentNode);
+			for (var i = 0; i < nodes.length; ++i) {
+				if (nodes[i] === element) {
+					return true;
+				}
+			}
+			return false;
+		};
+
+		/**
+   * Returns the next sibling of the given element that matches the specified
+   * selector, or null if there is none.
+   * @param {!Element} element
+   * @param {?string} selector
+   */
+
+
+		dom.next = function next(element, selector) {
+			do {
+				element = element.nextSibling;
+				if (element && dom.match(element, selector)) {
+					return element;
+				}
+			} while (element);
+			return null;
+		};
+
+		/**
+   * Normalizes the event payload for delegate listeners.
+   * @param {!Event} event
+   */
+
+
+		dom.normalizeDelegateEvent_ = function normalizeDelegateEvent_(event) {
+			event.stopPropagation = dom.stopPropagation_;
+			event.stopImmediatePropagation = dom.stopImmediatePropagation_;
+		};
+
+		/**
+   * Listens to the specified event on the given DOM element. This function normalizes
+   * DOM event payloads and functions so they'll work the same way on all supported
+   * browsers.
+   * @param {!Element|string} element The DOM element to listen to the event on, or
+   *   a selector that should be delegated on the entire document.
+   * @param {string} eventName The name of the event to listen to.
+   * @param {!function(!Object)} callback Function to be called when the event is
+   *   triggered. It will receive the normalized event object.
+   * @param {boolean} opt_capture Flag indicating if listener should be triggered
+   *   during capture phase, instead of during the bubbling phase. Defaults to false.
+   * @return {!DomEventHandle} Can be used to remove the listener.
+   */
+
+
+		dom.on = function on(element, eventName, callback, opt_capture) {
+			if (core.isString(element)) {
+				return dom.delegate(document, eventName, element, callback);
+			}
+			var customConfig = dom.customEvents[eventName];
+			if (customConfig && customConfig.event) {
+				eventName = customConfig.originalEvent;
+				callback = customConfig.handler.bind(customConfig, callback);
+			}
+			element.addEventListener(eventName, callback, opt_capture);
+			return new DomEventHandle(element, eventName, callback, opt_capture);
+		};
+
+		/**
+   * Listens to the specified event on the given DOM element once. This
+   * function normalizes DOM event payloads and functions so they'll work the
+   * same way on all supported browsers.
+   * @param {!Element} element The DOM element to listen to the event on.
+   * @param {string} eventName The name of the event to listen to.
+   * @param {!function(!Object)} callback Function to be called when the event
+   *   is triggered. It will receive the normalized event object.
+   * @return {!DomEventHandle} Can be used to remove the listener.
+   */
+
+
+		dom.once = function once(element, eventName, callback) {
+			var domEventHandle = this.on(element, eventName, function () {
+				domEventHandle.removeListener();
+				return callback.apply(this, arguments);
+			});
+			return domEventHandle;
+		};
+
+		/**
+   * Registers a custom event.
+   * @param {string} eventName The name of the custom event.
+   * @param {!Object} customConfig An object with information about how the event
+   *   should be handled.
+   */
+
+
+		dom.registerCustomEvent = function registerCustomEvent(eventName, customConfig) {
+			dom.customEvents[eventName] = customConfig;
+		};
+
+		/**
+   * Removes all the child nodes on a DOM node.
+   * @param {Element} node Element to remove children from.
+   */
+
+
+		dom.removeChildren = function removeChildren(node) {
+			var child;
+			while (child = node.firstChild) {
+				node.removeChild(child);
+			}
+		};
+
+		/**
+   * Removes the requested CSS classes from an element.
+   * @param {!Element} element The element to remove CSS classes from.
+   * @param {string} classes CSS classes to remove.
+   */
+
+
+		dom.removeClasses = function removeClasses(element, classes) {
+			if (!core.isObject(element) || !core.isString(classes)) {
+				return;
+			}
+
+			if ('classList' in element) {
+				dom.removeClassesWithNative_(element, classes);
+			} else {
+				dom.removeClassesWithoutNative_(element, classes);
+			}
+		};
+
+		/**
+   * Removes the requested CSS classes from an element using classList.
+   * @param {!Element} element The element to remove CSS classes from.
+   * @param {string} classes CSS classes to remove.
+   * @protected
+   */
+
+
+		dom.removeClassesWithNative_ = function removeClassesWithNative_(element, classes) {
+			classes.split(' ').forEach(function (className) {
+				element.classList.remove(className);
+			});
+		};
+
+		/**
+   * Removes the requested CSS classes from an element without using classList.
+   * @param {!Element} element The element to remove CSS classes from.
+   * @param {string} classes CSS classes to remove.
+   * @protected
+   */
+
+
+		dom.removeClassesWithoutNative_ = function removeClassesWithoutNative_(element, classes) {
+			var elementClassName = ' ' + element.className + ' ';
+
+			classes = classes.split(' ');
+
+			for (var i = 0; i < classes.length; i++) {
+				elementClassName = elementClassName.replace(' ' + classes[i] + ' ', ' ');
+			}
+
+			element.className = elementClassName.trim();
+		};
+
+		/**
+   * Replaces the first element with the second.
+   * @param {Element} element1
+   * @param {Element} element2
+   */
+
+
+		dom.replace = function replace(element1, element2) {
+			if (element1 && element2 && element1 !== element2 && element1.parentNode) {
+				element1.parentNode.insertBefore(element2, element1);
+				element1.parentNode.removeChild(element1);
+			}
+		};
+
+		/**
+   * The function that replaces `stopImmediatePropagation_` for events.
+   * @protected
+   */
+
+
+		dom.stopImmediatePropagation_ = function stopImmediatePropagation_() {
+			this.stopped = true;
+			Event.prototype.stopImmediatePropagation.call(this);
+		};
+
+		/**
+   * The function that replaces `stopPropagation` for events.
+   * @protected
+   */
+
+
+		dom.stopPropagation_ = function stopPropagation_() {
+			this.stopped = true;
+			Event.prototype.stopPropagation.call(this);
+		};
+
+		/**
+   * Checks if the given element supports the given event type.
+   * @param {!Element|string} element The DOM element or element tag name to check.
+   * @param {string} eventName The name of the event to check.
+   * @return {boolean}
+   */
+
+
+		dom.supportsEvent = function supportsEvent(element, eventName) {
+			if (dom.customEvents[eventName]) {
+				return true;
+			}
+
+			if (core.isString(element)) {
+				if (!elementsByTag[element]) {
+					elementsByTag[element] = document.createElement(element);
+				}
+				element = elementsByTag[element];
+			}
+			return 'on' + eventName in element;
+		};
+
+		/**
+   * Converts the given argument to a DOM element. Strings are assumed to
+   * be selectors, and so a matched element will be returned. If the arg
+   * is already a DOM element it will be the return value.
+   * @param {string|Element|Document} selectorOrElement
+   * @return {Element} The converted element, or null if none was found.
+   */
+
+
+		dom.toElement = function toElement(selectorOrElement) {
+			if (core.isElement(selectorOrElement) || core.isDocument(selectorOrElement)) {
+				return selectorOrElement;
+			} else if (core.isString(selectorOrElement)) {
+				if (selectorOrElement[0] === '#' && selectorOrElement.indexOf(' ') === -1) {
+					return document.getElementById(selectorOrElement.substr(1));
+				} else {
+					return document.querySelector(selectorOrElement);
+				}
+			} else {
+				return null;
+			}
+		};
+
+		/**
+   * Adds or removes one or more classes from an element. If any of the classes
+   * is present, it will be removed from the element, or added otherwise.
+   * @param {!Element} element The element which classes will be toggled.
+   * @param {string} classes The classes which have to added or removed from the element.
+   */
+
+
+		dom.toggleClasses = function toggleClasses(element, classes) {
+			if (!core.isObject(element) || !core.isString(classes)) {
+				return;
+			}
+
+			if ('classList' in element) {
+				dom.toggleClassesWithNative_(element, classes);
+			} else {
+				dom.toggleClassesWithoutNative_(element, classes);
+			}
+		};
+
+		/**
+   * Adds or removes one or more classes from an element using classList.
+   * If any of the classes is present, it will be removed from the element,
+   * or added otherwise.
+   * @param {!Element} element The element which classes will be toggled.
+   * @param {string} classes The classes which have to added or removed from the element.
+   */
+
+
+		dom.toggleClassesWithNative_ = function toggleClassesWithNative_(element, classes) {
+			classes.split(' ').forEach(function (className) {
+				element.classList.toggle(className);
+			});
+		};
+
+		/**
+   * Adds or removes one or more classes from an element without using classList.
+   * If any of the classes is present, it will be removed from the element,
+   * or added otherwise.
+   * @param {!Element} element The element which classes will be toggled.
+   * @param {string} classes The classes which have to added or removed from the element.
+   */
+
+
+		dom.toggleClassesWithoutNative_ = function toggleClassesWithoutNative_(element, classes) {
+			var elementClassName = ' ' + element.className + ' ';
+
+			classes = classes.split(' ');
+
+			for (var i = 0; i < classes.length; i++) {
+				var className = ' ' + classes[i] + ' ';
+				var classIndex = elementClassName.indexOf(className);
+
+				if (classIndex === -1) {
+					elementClassName = elementClassName + classes[i] + ' ';
+				} else {
+					elementClassName = elementClassName.substring(0, classIndex) + ' ' + elementClassName.substring(classIndex + className.length);
+				}
+			}
+
+			element.className = elementClassName.trim();
+		};
+
+		/**
+   * Triggers the specified event on the given element.
+   * NOTE: This should mostly be used for testing, not on real code.
+   * @param {!Element} element The node that should trigger the event.
+   * @param {string} eventName The name of the event to be triggred.
+   * @param {Object=} opt_eventObj An object with data that should be on the
+   *   triggered event's payload.
+   */
+
+
+		dom.triggerEvent = function triggerEvent(element, eventName, opt_eventObj) {
+			var eventObj = document.createEvent('HTMLEvents');
+			eventObj.initEvent(eventName, true, true);
+			object.mixin(eventObj, opt_eventObj);
+			element.dispatchEvent(eventObj);
+		};
+
+		return dom;
+	}();
+
+	var elementsByTag = {};
+	dom.customEvents = {};
+
+	this.metal.dom = dom;
+}).call(this);
+'use strict';
+
+(function () {
+	var dom = this.metal.dom;
+	var EventEmitterProxy = this.metalNamed.events.EventEmitterProxy;
+
+	/**
+  * DomEventEmitterProxy utility. It extends `EventEmitterProxy` to also accept
+  * dom elements as origin emitters.
+  * @extends {EventEmitterProxy}
+  */
+
+	var DomEventEmitterProxy = function (_EventEmitterProxy) {
+		babelHelpers.inherits(DomEventEmitterProxy, _EventEmitterProxy);
+
+		function DomEventEmitterProxy() {
+			babelHelpers.classCallCheck(this, DomEventEmitterProxy);
+			return babelHelpers.possibleConstructorReturn(this, _EventEmitterProxy.apply(this, arguments));
+		}
+
+		/**
+   * Adds the proxy listener for the given event.
+   * @param {string} event.
+   * @protected
+   * @override
+   */
+
+		DomEventEmitterProxy.prototype.addListener_ = function addListener_(event) {
+			if (this.originEmitter_.addEventListener) {
+				dom.on(this.originEmitter_, event, this.proxiedEvents_[event]);
+			} else {
+				_EventEmitterProxy.prototype.addListener_.call(this, event);
+			}
+		};
+
+		/**
+   * Removes the proxy listener for the given event.
+   * @param {string} event
+   * @protected
+   * @override
+   */
+
+
+		DomEventEmitterProxy.prototype.removeListener_ = function removeListener_(event) {
+			if (this.originEmitter_.removeEventListener) {
+				this.originEmitter_.removeEventListener(event, this.proxiedEvents_[event]);
+			} else {
+				_EventEmitterProxy.prototype.removeListener_.call(this, event);
+			}
+		};
+
+		/**
+   * Checks if the given event should be proxied.
+   * @param {string} event
+   * @return {boolean}
+   * @protected
+   * @override
+   */
+
+
+		DomEventEmitterProxy.prototype.shouldProxyEvent_ = function shouldProxyEvent_(event) {
+			return _EventEmitterProxy.prototype.shouldProxyEvent_.call(this, event) && (!this.originEmitter_.addEventListener || dom.supportsEvent(this.originEmitter_, event));
+		};
+
+		return DomEventEmitterProxy;
+	}(EventEmitterProxy);
+
+	DomEventEmitterProxy.prototype.registerMetalComponent && DomEventEmitterProxy.prototype.registerMetalComponent(DomEventEmitterProxy, 'DomEventEmitterProxy')
+	this.metal.DomEventEmitterProxy = DomEventEmitterProxy;
+}).call(this);
+'use strict';
+
+(function () {
+	var dom = this.metal.dom;
+	var string = this.metalNamed.metal.string;
+
+	/**
+  * Class with static methods responsible for doing browser feature checks.
+  */
+
+	var features = function () {
+		function features() {
+			babelHelpers.classCallCheck(this, features);
+		}
+
+		/**
+   * Some browsers still supports prefixed animation events. This method can
+   * be used to retrieve the current browser event name for both, animation
+   * and transition.
+   * @return {object}
+   */
+
+		features.checkAnimationEventName = function checkAnimationEventName() {
+			if (features.animationEventName_ === undefined) {
+				features.animationEventName_ = {
+					animation: features.checkAnimationEventName_('animation'),
+					transition: features.checkAnimationEventName_('transition')
+				};
+			}
+			return features.animationEventName_;
+		};
+
+		/**
+   * @protected
+   * @param {string} type Type to test: animation, transition.
+   * @return {string} Browser event name.
+   */
+
+
+		features.checkAnimationEventName_ = function checkAnimationEventName_(type) {
+			var prefixes = ['Webkit', 'MS', 'O', ''];
+			var typeTitleCase = string.replaceInterval(type, 0, 1, type.substring(0, 1).toUpperCase());
+			var suffixes = [typeTitleCase + 'End', typeTitleCase + 'End', typeTitleCase + 'End', type + 'end'];
+			for (var i = 0; i < prefixes.length; i++) {
+				if (features.animationElement_.style[prefixes[i] + typeTitleCase] !== undefined) {
+					return prefixes[i].toLowerCase() + suffixes[i];
+				}
+			}
+			return type + 'end';
+		};
+
+		/**
+   * Some browsers (like IE9) change the order of element attributes, when html
+   * is rendered. This method can be used to check if this behavior happens on
+   * the current browser.
+   * @return {boolean}
+   */
+
+
+		features.checkAttrOrderChange = function checkAttrOrderChange() {
+			if (features.attrOrderChange_ === undefined) {
+				var originalContent = '<div data-component="" data-ref=""></div>';
+				var element = document.createElement('div');
+				dom.append(element, originalContent);
+				features.attrOrderChange_ = originalContent !== element.innerHTML;
+			}
+			return features.attrOrderChange_;
+		};
+
+		return features;
+	}();
+
+	features.animationElement_ = document.createElement('div');
+	features.animationEventName_ = undefined;
+	features.attrOrderChange_ = undefined;
+
+	this.metal.features = features;
+}).call(this);
+'use strict';
+
+(function () {
+	var async = this.metalNamed.metal.async;
+	var dom = this.metal.dom;
+
+	/**
+  * Utility functions for running javascript code in the global scope.
+  */
+
+	var globalEval = function () {
+		function globalEval() {
+			babelHelpers.classCallCheck(this, globalEval);
+		}
+
+		/**
+   * Evaluates the given string in the global scope.
+   * @param {string} text
+   * @return {Element} script
+   */
+
+		globalEval.run = function run(text) {
+			var script = document.createElement('script');
+			script.text = text;
+			document.head.appendChild(script).parentNode.removeChild(script);
+			return script;
+		};
+
+		/**
+   * Evaluates the given javascript file in the global scope.
+   * @param {string} src The file's path.
+   * @param {function()=} opt_callback Optional function to be called
+   *   when the script has been run.
+   * @return {Element} script
+   */
+
+
+		globalEval.runFile = function runFile(src, opt_callback) {
+			var script = document.createElement('script');
+			script.src = src;
+
+			var callback = function callback() {
+				script.parentNode.removeChild(script);
+				opt_callback && opt_callback();
+			};
+			dom.on(script, 'load', callback);
+			dom.on(script, 'error', callback);
+			document.head.appendChild(script);
+
+			return script;
+		};
+
+		/**
+   * Evaluates the code referenced by the given script element.
+   * @param {!Element} script
+   * @param {function()=} opt_callback Optional function to be called
+   *   when the script has been run.
+   * @return {Element} script
+   */
+
+
+		globalEval.runScript = function runScript(script, opt_callback) {
+			var callback = function callback() {
+				opt_callback && opt_callback();
+			};
+			if (script.type && script.type !== 'text/javascript') {
+				async.nextTick(callback);
+				return;
+			}
+			if (script.parentNode) {
+				script.parentNode.removeChild(script);
+			}
+			if (script.src) {
+				return globalEval.runFile(script.src, opt_callback);
+			} else {
+				async.nextTick(callback);
+				return globalEval.run(script.text);
+			}
+		};
+
+		/**
+   * Evaluates any script tags present in the given element.
+   * @params {!Element} element
+   * @param {function()=} opt_callback Optional function to be called
+   *   when the script has been run.
+   */
+
+
+		globalEval.runScriptsInElement = function runScriptsInElement(element, opt_callback) {
+			var scripts = element.querySelectorAll('script');
+			if (scripts.length) {
+				globalEval.runScriptsInOrder(scripts, 0, opt_callback);
+			} else if (opt_callback) {
+				async.nextTick(opt_callback);
+			}
+		};
+
+		/**
+   * Runs the given scripts elements in the order that they appear.
+   * @param {!NodeList} scripts
+   * @param {number} index
+   * @param {function()=} opt_callback Optional function to be called
+   *   when the script has been run.
+   */
+
+
+		globalEval.runScriptsInOrder = function runScriptsInOrder(scripts, index, opt_callback) {
+			globalEval.runScript(scripts.item(index), function () {
+				if (index < scripts.length - 1) {
+					globalEval.runScriptsInOrder(scripts, index + 1, opt_callback);
+				} else if (opt_callback) {
+					async.nextTick(opt_callback);
+				}
+			});
+		};
+
+		return globalEval;
+	}();
+
+	this.metal.globalEval = globalEval;
+}).call(this);
+'use strict';
+
+(function () {
+	var async = this.metalNamed.metal.async;
+	var dom = this.metal.dom;
+
+	/**
+  * Utility functions for running styles.
+  */
+
+	var globalEvalStyles = function () {
+		function globalEvalStyles() {
+			babelHelpers.classCallCheck(this, globalEvalStyles);
+		}
+
+		/**
+   * Evaluates the given style.
+   * @param {string} text
+   * @return {Element} style
+   */
+
+		globalEvalStyles.run = function run(text) {
+			var style = document.createElement('style');
+			style.innerHTML = text;
+			document.head.appendChild(style);
+			return style;
+		};
+
+		/**
+   * Evaluates the given style file.
+   * @param {string} href The file's path.
+   * @param {function()=} opt_callback Optional function to be called
+   *   when the styles has been run.
+   * @return {Element} style
+   */
+
+
+		globalEvalStyles.runFile = function runFile(href, opt_callback) {
+			var link = document.createElement('link');
+			link.rel = 'stylesheet';
+			link.href = href;
+			globalEvalStyles.runStyle(link, opt_callback);
+			return link;
+		};
+
+		/**
+   * Evaluates the code referenced by the given style/link element.
+   * @param {!Element} style
+   * @param {function()=} opt_callback Optional function to be called
+   *   when the script has been run.
+   *  @return {Element} style
+   */
+
+
+		globalEvalStyles.runStyle = function runStyle(style, opt_callback) {
+			var callback = function callback() {
+				opt_callback && opt_callback();
+			};
+			if (style.rel && style.rel !== 'stylesheet') {
+				async.nextTick(callback);
+				return;
+			}
+
+			if (style.tagName === 'STYLE') {
+				async.nextTick(callback);
+			} else {
+				dom.on(style, 'load', callback);
+				dom.on(style, 'error', callback);
+			}
+			document.head.appendChild(style);
+			return style;
+		};
+
+		/**
+   * Evaluates any style present in the given element.
+   * TODO: Evaluates running styles in parallel instead of in order.
+   * @params {!Element} element
+   * @param {function()=} opt_callback Optional function to be called
+   *   when the style has been run.
+   */
+
+
+		globalEvalStyles.runStylesInElement = function runStylesInElement(element, opt_callback) {
+			var styles = element.querySelectorAll('style,link');
+			if (styles.length === 0 && opt_callback) {
+				async.nextTick(opt_callback);
+				return;
+			}
+
+			var loadCount = 0;
+			var callback = function callback() {
+				if (opt_callback && ++loadCount === styles.length) {
+					async.nextTick(opt_callback);
+				}
+			};
+			for (var i = 0; i < styles.length; i++) {
+				globalEvalStyles.runStyle(styles[i], callback);
+			}
+		};
+
+		return globalEvalStyles;
+	}();
+
+	this.metal.globalEvalStyles = globalEvalStyles;
+}).call(this);
+'use strict';
+
+(function () {
+	var dom = this.metal.dom;
+	var features = this.metal.features;
+
+
+	var mouseEventMap = {
+		mouseenter: 'mouseover',
+		mouseleave: 'mouseout',
+		pointerenter: 'pointerover',
+		pointerleave: 'pointerout'
+	};
+	Object.keys(mouseEventMap).forEach(function (eventName) {
+		dom.registerCustomEvent(eventName, {
+			delegate: true,
+			handler: function handler(callback, event) {
+				var related = event.relatedTarget;
+				var target = event.delegateTarget;
+				if (!related || related !== target && !target.contains(related)) {
+					event.customType = eventName;
+					return callback(event);
+				}
+			},
+			originalEvent: mouseEventMap[eventName]
+		});
+	});
+
+	var animationEventMap = {
+		animation: 'animationend',
+		transition: 'transitionend'
+	};
+	Object.keys(animationEventMap).forEach(function (eventType) {
+		var eventName = animationEventMap[eventType];
+		dom.registerCustomEvent(eventName, {
+			event: true,
+			delegate: true,
+			handler: function handler(callback, event) {
+				event.customType = eventName;
+				return callback(event);
+			},
+			originalEvent: features.checkAnimationEventName()[eventType]
+		});
+	});
+}).call(this);
+'use strict';
+
+(function () {
+  var dom = this.metal.dom;
+  var DomEventEmitterProxy = this.metal.DomEventEmitterProxy;
+  var DomEventHandle = this.metal.DomEventHandle;
+  var features = this.metal.features;
+  var globalEval = this.metal.globalEval;
+  var globalEvalStyles = this.metal.globalEvalStyles;
+  this.metal.dom = dom;
+  this.metalNamed.dom = {};
+  this.metalNamed.dom.dom = dom;
+  this.metalNamed.dom.DomEventEmitterProxy = DomEventEmitterProxy;
+  this.metalNamed.dom.DomEventHandle = DomEventHandle;
+  this.metalNamed.dom.features = features;
+  this.metalNamed.dom.globalEval = globalEval;
+  this.metalNamed.dom.globalEvalStyles = globalEvalStyles;
+}).call(this);
+'use strict';
+
+(function () {
+	var array = this.metalNamed.metal.array;
+	var async = this.metalNamed.metal.async;
+	var core = this.metalNamed.metal.core;
+	var object = this.metalNamed.metal.object;
+	var EventEmitter = this.metalNamed.events.EventEmitter;
 
 	/**
   * Attribute adds support for having object properties that can be watched for
@@ -1912,6 +2772,7 @@ babelHelpers;
 
 		function Attribute(opt_config) {
 			babelHelpers.classCallCheck(this, Attribute);
+
 
 			/**
     * Object with information about the batch event that is currently
@@ -1957,6 +2818,7 @@ babelHelpers;
    *   precedence than the default value specified in this attribute's configuration.
    */
 
+
 		Attribute.prototype.addAttr = function addAttr(name, config, initialValue) {
 			this.buildAttrInfo_(name, config, initialValue);
 			Object.defineProperty(this, name, this.buildAttrPropertyDef_(name));
@@ -1974,6 +2836,7 @@ babelHelpers;
    *     context it will be used as definition context, otherwise `this`
    *     will be the context.
    */
+
 
 		Attribute.prototype.addAttrs = function addAttrs(configs, initialValues, opt_defineContext) {
 			initialValues = initialValues || {};
@@ -1998,6 +2861,7 @@ babelHelpers;
    * @protected
    */
 
+
 		Attribute.prototype.addAttrsFromStaticHint_ = function addAttrsFromStaticHint_(config) {
 			var ctor = this.constructor;
 			var defineContext = false;
@@ -2014,6 +2878,7 @@ babelHelpers;
    * @throws {Error}
    */
 
+
 		Attribute.prototype.assertValidAttrName_ = function assertValidAttrName_(name) {
 			if (this.constructor.INVALID_ATTRS_MERGED[name]) {
 				throw new Error('It\'s not allowed to create an attribute with the name "' + name + '".');
@@ -2027,6 +2892,7 @@ babelHelpers;
    * @param {*} initialValue The initial value of the attribute.
    * @protected
    */
+
 
 		Attribute.prototype.buildAttrInfo_ = function buildAttrInfo_(name, config, initialValue) {
 			this.assertValidAttrName_(name);
@@ -2044,6 +2910,7 @@ babelHelpers;
    * @return {!Object}
    * @protected
    */
+
 
 		Attribute.prototype.buildAttrPropertyDef_ = function buildAttrPropertyDef_(name) {
 			return {
@@ -2068,6 +2935,7 @@ babelHelpers;
    * @protected
    */
 
+
 		Attribute.prototype.callFunction_ = function callFunction_(fn, args) {
 			if (core.isString(fn)) {
 				return this[fn].apply(this, args);
@@ -2082,6 +2950,7 @@ babelHelpers;
    * @param {*} value The value to be set.
    * @return {*} The final value to be set.
    */
+
 
 		Attribute.prototype.callSetter_ = function callSetter_(name, value) {
 			var info = this.attrsInfo_[name];
@@ -2099,6 +2968,7 @@ babelHelpers;
    * @return {boolean} Flag indicating if value is valid or not.
    */
 
+
 		Attribute.prototype.callValidator_ = function callValidator_(name, value) {
 			var info = this.attrsInfo_[name];
 			var config = info.config;
@@ -2114,6 +2984,7 @@ babelHelpers;
    * @return {boolean}
    */
 
+
 		Attribute.prototype.canSetAttribute = function canSetAttribute(name) {
 			var info = this.attrsInfo_[name];
 			return !info.config.writeOnce || !info.written;
@@ -2122,6 +2993,7 @@ babelHelpers;
 		/**
    * @inheritDoc
    */
+
 
 		Attribute.prototype.disposeInternal = function disposeInternal() {
 			_EventEmitter.prototype.disposeInternal.call(this);
@@ -2133,6 +3005,7 @@ babelHelpers;
    * Emits the attribute change batch event.
    * @protected
    */
+
 
 		Attribute.prototype.emitBatchEvent_ = function emitBatchEvent_() {
 			if (!this.isDisposed()) {
@@ -2150,6 +3023,7 @@ babelHelpers;
    * @return {*}
    */
 
+
 		Attribute.prototype.get = function get(name) {
 			return this[name];
 		};
@@ -2161,6 +3035,7 @@ babelHelpers;
    * @protected
    */
 
+
 		Attribute.prototype.getAttrConfig = function getAttrConfig(name) {
 			return (this.attrsInfo_[name] || {}).config;
 		};
@@ -2171,6 +3046,7 @@ babelHelpers;
    *   returned. If none is given, all attributes will be returned.
    * @return {Object.<string, *>}
    */
+
 
 		Attribute.prototype.getAttrs = function getAttrs(opt_names) {
 			var attrsMap = {};
@@ -2188,6 +3064,7 @@ babelHelpers;
    * @return {Array.<string>}
    */
 
+
 		Attribute.prototype.getAttrNames = function getAttrNames() {
 			return Object.keys(this.attrsInfo_);
 		};
@@ -2199,6 +3076,7 @@ babelHelpers;
    * @return {*}
    * @protected
    */
+
 
 		Attribute.prototype.getAttrValue_ = function getAttrValue_(name) {
 			this.initAttr_(name);
@@ -2213,6 +3091,7 @@ babelHelpers;
    * @param {*} prevVal The previous value of the attribute.
    * @protected
    */
+
 
 		Attribute.prototype.informChange_ = function informChange_(name, prevVal) {
 			if (this.shouldInformChange_(name, prevVal)) {
@@ -2231,6 +3110,7 @@ babelHelpers;
    * @param {string} name The name of the attribute.
    * @protected
    */
+
 
 		Attribute.prototype.initAttr_ = function initAttr_(name) {
 			var info = this.attrsInfo_[name];
@@ -2255,6 +3135,7 @@ babelHelpers;
    * @protected
    */
 
+
 		Attribute.mergeAttrs_ = function mergeAttrs_(values) {
 			return object.mixin.apply(null, [{}].concat(values.reverse()));
 		};
@@ -2266,6 +3147,7 @@ babelHelpers;
    * @static
    */
 
+
 		Attribute.mergeAttrsStatic = function mergeAttrsStatic(ctor) {
 			return core.mergeSuperClassesProperty(ctor, 'ATTRS', Attribute.mergeAttrs_);
 		};
@@ -2275,6 +3157,7 @@ babelHelpers;
    * the current instance.
    * @protected
    */
+
 
 		Attribute.prototype.mergeInvalidAttrs_ = function mergeInvalidAttrs_() {
 			core.mergeSuperClassesProperty(this.constructor, 'INVALID_ATTRS', function (values) {
@@ -2292,6 +3175,7 @@ babelHelpers;
    * @param {string} name The name of the attribute.
    */
 
+
 		Attribute.prototype.removeAttr = function removeAttr(name) {
 			this.attrsInfo_[name] = null;
 			delete this[name];
@@ -2302,6 +3186,7 @@ babelHelpers;
    * @param {!Object} attrChangeData Information about an attribute's update.
    * @protected
    */
+
 
 		Attribute.prototype.scheduleBatchEvent_ = function scheduleBatchEvent_(attrChangeData) {
 			if (!this.scheduledBatchData_) {
@@ -2329,6 +3214,7 @@ babelHelpers;
    * @return {*}
    */
 
+
 		Attribute.prototype.set = function set(name, value) {
 			this[name] = value;
 		};
@@ -2338,6 +3224,7 @@ babelHelpers;
    * @param {!Object.<string,*>} values A map of attribute names to the values they
    *   should be set to.
    */
+
 
 		Attribute.prototype.setAttrs = function setAttrs(values) {
 			var names = Object.keys(values);
@@ -2354,6 +3241,7 @@ babelHelpers;
    * @param {*} value The new value of the attribute.
    * @protected
    */
+
 
 		Attribute.prototype.setAttrValue_ = function setAttrValue_(name, value) {
 			if (!this.canSetAttribute(name) || !this.validateAttrValue_(name, value)) {
@@ -2377,6 +3265,7 @@ babelHelpers;
    * @return {*}
    */
 
+
 		Attribute.prototype.setDefaultValue_ = function setDefaultValue_(name) {
 			var config = this.attrsInfo_[name].config;
 
@@ -2392,6 +3281,7 @@ babelHelpers;
    * @param {string} name The name of the attribute.
    * @return {*}
    */
+
 
 		Attribute.prototype.setInitialValue_ = function setInitialValue_(name) {
 			var info = this.attrsInfo_[name];
@@ -2413,6 +3303,7 @@ babelHelpers;
    * @return {boolean}
    */
 
+
 		Attribute.prototype.shouldInformChange_ = function shouldInformChange_(name, prevVal) {
 			var info = this.attrsInfo_[name];
 			return info.state === Attribute.States.INITIALIZED && (core.isObject(prevVal) || prevVal !== this[name]);
@@ -2425,6 +3316,7 @@ babelHelpers;
    * @param {*} value The value to be validated.
    * @return {boolean} Flag indicating if value is valid or not.
    */
+
 
 		Attribute.prototype.validateAttrValue_ = function validateAttrValue_(name, value) {
 			var info = this.attrsInfo_[name];
@@ -2441,6 +3333,7 @@ babelHelpers;
   * on their constructors, which will be merged together and handled automatically.
   * @type {!Array<string>}
   */
+
 
 	Attribute.prototype.registerMetalComponent && Attribute.prototype.registerMetalComponent(Attribute, 'Attribute')
 	Attribute.INVALID_ATTRS = ['attrs'];
@@ -2461,80 +3354,10 @@ babelHelpers;
 'use strict';
 
 (function () {
-	var Disposable = this.metal.Disposable;
-
-	/**
-  * EventHandler utility. It's useful for easily removing a group of
-  * listeners from different EventEmitter instances.
-  * @constructor
-  * @extends {Disposable}
-  */
-
-	var EventHandler = function (_Disposable) {
-		babelHelpers.inherits(EventHandler, _Disposable);
-
-		function EventHandler() {
-			babelHelpers.classCallCheck(this, EventHandler);
-
-			/**
-    * An array that holds the added event handles, so the listeners can be
-    * removed later.
-    * @type {Array.<EventHandle>}
-    * @protected
-    */
-
-			var _this = babelHelpers.possibleConstructorReturn(this, _Disposable.call(this));
-
-			_this.eventHandles_ = [];
-			return _this;
-		}
-
-		/**
-   * Adds event handles to be removed later through the `removeAllListeners`
-   * method.
-   * @param {...(!EventHandle)} var_args
-   */
-
-		EventHandler.prototype.add = function add() {
-			for (var i = 0; i < arguments.length; i++) {
-				this.eventHandles_.push(arguments[i]);
-			}
-		};
-
-		/**
-   * Disposes of this instance's object references.
-   * @override
-   */
-
-		EventHandler.prototype.disposeInternal = function disposeInternal() {
-			this.eventHandles_ = null;
-		};
-
-		/**
-   * Removes all listeners that have been added through the `add` method.
-   */
-
-		EventHandler.prototype.removeAllListeners = function removeAllListeners() {
-			for (var i = 0; i < this.eventHandles_.length; i++) {
-				this.eventHandles_[i].removeListener();
-			}
-
-			this.eventHandles_ = [];
-		};
-
-		return EventHandler;
-	}(Disposable);
-
-	EventHandler.prototype.registerMetalComponent && EventHandler.prototype.registerMetalComponent(EventHandler, 'EventHandler')
-	this.metal.EventHandler = EventHandler;
-}).call(this);
-'use strict';
-
-(function () {
-	var core = this.metal.core;
+	var core = this.metal.metal;
 	var dom = this.metal.dom;
 	var Attribute = this.metal.Attribute;
-	var EventHandler = this.metal.EventHandler;
+	var EventHandler = this.metalNamed.events.EventHandler;
 
 	/**
   * Toggler component.
@@ -2563,6 +3386,7 @@ babelHelpers;
    * @inheritDoc
    */
 
+
 		Toggler.prototype.disposeInternal = function disposeInternal() {
 			_Attribute.prototype.disposeInternal.call(this);
 			this.headerEventHandler_.removeAllListeners();
@@ -2573,6 +3397,7 @@ babelHelpers;
    * @param {!Element} header
    * @protected
    */
+
 
 		Toggler.prototype.getContentElement_ = function getContentElement_(header) {
 			if (core.isElement(this.content)) {
@@ -2598,6 +3423,7 @@ babelHelpers;
    * @protected
    */
 
+
 		Toggler.prototype.handleClick_ = function handleClick_(event) {
 			this.toggle(event.delegateTarget || event.currentTarget);
 		};
@@ -2607,6 +3433,7 @@ babelHelpers;
    * @param {!Event} event
    * @protected
    */
+
 
 		Toggler.prototype.handleKeydown_ = function handleKeydown_(event) {
 			if (event.keyCode === 13 || event.keyCode === 32) {
@@ -2619,6 +3446,7 @@ babelHelpers;
    * Syncs the component according to the value of the `header` attribute,
    * attaching events to the new element and detaching from any previous one.
    */
+
 
 		Toggler.prototype.syncHeader = function syncHeader() {
 			this.headerEventHandler_.removeAllListeners();
@@ -2634,6 +3462,7 @@ babelHelpers;
 		/**
    * Toggles the content's visibility.
    */
+
 
 		Toggler.prototype.toggle = function toggle(header) {
 			var content = this.getContentElement_(header);
@@ -2655,6 +3484,7 @@ babelHelpers;
 	/**
   * Attributes configuration.
   */
+
 
 	Toggler.prototype.registerMetalComponent && Toggler.prototype.registerMetalComponent(Toggler, 'Toggler')
 	Toggler.ATTRS = {
