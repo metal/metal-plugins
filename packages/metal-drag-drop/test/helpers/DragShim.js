@@ -1,6 +1,6 @@
 'use strict';
 
-import dom from 'metal/src/dom/dom';
+import dom from 'metal-dom';
 import DragShim from '../../src/helpers/DragShim';
 
 describe('DragShim', function() {

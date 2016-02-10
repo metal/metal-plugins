@@ -1,6 +1,6 @@
 'use strict';
 
-import dom from 'metal/src/dom/dom';
+import dom from 'metal-dom';
 
 /**
  * Helper called by the `Drag` instance that creates a shim element

@@ -1,6 +1,6 @@
 'use strict';
 
-import dom from 'metal/src/dom/dom';
+import dom from 'metal-dom';
 
 /**
  * This class has helper functions for testing the drag components

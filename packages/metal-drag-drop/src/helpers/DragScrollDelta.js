@@ -1,9 +1,8 @@
 'use strict';
 
-import dom from 'metal/src/dom/dom';
-import EventEmitter from 'metal/src/events/EventEmitter';
-import EventHandler from 'metal/src/events/EventHandler';
-import Position from 'metal-position/src/Position';
+import dom from 'metal-dom';
+import { EventEmitter, EventHandler } from 'metal-events';
+import Position from 'metal-position';
 
 /**
  * Helper called by the `Drag` instance that emits an event whenever

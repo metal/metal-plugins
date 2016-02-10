@@ -1,8 +1,8 @@
 'use strict';
 
-import dom from 'metal/src/dom/dom';
+import dom from 'metal-dom';
 import DragAutoScroll from '../../src/helpers/DragAutoScroll';
-import Position from 'metal-position/src/Position';
+import Position from 'metal-position';
 
 describe('DragAutoScroll', function() {
 	var autoScroll;

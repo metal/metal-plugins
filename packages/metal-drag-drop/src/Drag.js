@@ -1,14 +1,13 @@
 'use strict';
 
-import core from 'metal/src/core';
-import dom from 'metal/src/dom/dom';
-import object from 'metal/src/object/object';
-import Attribute from 'metal/src/attribute/Attribute';
+import { core, object } from 'metal';
+import dom from 'metal-dom';
+import Attribute from 'metal-attribute';
 import DragAutoScroll from './helpers/DragAutoScroll';
 import DragScrollDelta from './helpers/DragScrollDelta';
 import DragShim from './helpers/DragShim';
-import EventHandler from 'metal/src/events/EventHandler';
-import Position from 'metal-position/src/Position';
+import { EventHandler } from 'metal-events';
+import Position from 'metal-position';
 
 /**
  * Responsible for making elements draggable. Handles all the logic

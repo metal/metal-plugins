@@ -1,12 +1,10 @@
 'use strict';
 
-import array from 'metal/src/array/array';
-import core from 'metal/src/core';
-import dom from 'metal/src/dom/dom';
-import object from 'metal/src/object/object';
+import { array, core, object } from 'metal';
+import dom from 'metal-dom';
 import Drag from './Drag';
-import Position from 'metal-position/src/Position';
-import 'metal/src/dom/events';
+import Position from 'metal-position';
+import 'metal-events';
 
 /**
  * Adds the functionality of dropping dragged elements to specific

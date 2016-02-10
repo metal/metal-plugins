@@ -1,8 +1,8 @@
 'use strict';
 
-import core from 'metal/src/core';
-import Attribute from 'metal/src/attribute/Attribute';
-import Position from 'metal-position/src/Position';
+import core from 'metal';
+import Attribute from 'metal-attribute';
+import Position from 'metal-position';
 
 /**
  * Helper called by the `Drag` instance that scrolls elements when the
