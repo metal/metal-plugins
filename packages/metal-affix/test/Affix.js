@@ -1,7 +1,7 @@
 'use strict';
 
-import dom from 'metal/src/dom/dom';
-import Position from 'metal-position/src/Position';
+import dom from 'metal-dom';
+import Position from 'metal-position';
 import Affix from '../src/Affix';
 
 var affix;

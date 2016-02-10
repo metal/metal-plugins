@@ -1,11 +1,10 @@
 'use strict';
 
-import core from 'metal/src/core';
-import dom from 'metal/src/dom/dom';
-import Attribute from 'metal/src/attribute/Attribute';
-import EventEmitter from 'metal/src/events/EventEmitter';
-import EventEmitterProxy from 'metal/src/events/EventEmitterProxy';
-import Position from 'metal-position/src/Position';
+import core from 'metal';
+import { dom, DomEventEmitterProxy } from 'metal-dom';
+import Attribute from 'metal-attribute';
+import EventEmitter from 'metal-events';
+import Position from 'metal-position';
 
 /**
  * Affix utility.
@@ -19,7 +18,7 @@ class Affix extends Attribute {
 
 		if (!Affix.emitter_) {
 			Affix.emitter_ = new EventEmitter();
-			Affix.proxy_ = new EventEmitterProxy(document, Affix.emitter_, null, {
+			Affix.proxy_ = new DomEventEmitterProxy(document, Affix.emitter_, null, {
 				scroll: true
 			});
 		}
