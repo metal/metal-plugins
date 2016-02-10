@@ -1,8 +1,8 @@
 'use strict';
 
-import Attribute from 'metal/src/attribute/Attribute';
-import core from 'metal/src/core';
-import dom from 'metal/src/dom/dom';
+import Attribute from 'metal-attribute';
+import core from 'metal';
+import dom from 'metal-dom';
 
 /**
  * Clipboard component.
