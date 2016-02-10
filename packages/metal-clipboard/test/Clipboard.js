@@ -1,7 +1,7 @@
 'use strict';
 
-import core from 'metal/src/core';
-import dom from 'metal/src/dom/dom';
+import core from 'metal';
+import dom from 'metal-dom';
 import Clipboard from '../src/Clipboard';
 
 describe('Clipboard', function() {
