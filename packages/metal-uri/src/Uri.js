@@ -84,7 +84,7 @@ class Uri {
 			search.substring(1).split('&').forEach((param) => {
 				var [key, value] = param.split('=');
 				if (core.isDef(value)) {
-					value = decodeURIComponent(value);
+					value = Uri.urlDecode(value);
 				}
 				this.addParameterValue(key, value);
 			});
@@ -440,6 +440,16 @@ class Uri {
 		}
 		paths = paths.map(path => path.charAt(0) === '/' ? path.substring(1) : path);
 		return [basePath].concat(paths).join('/').replace(/\/$/, '');
+	}
+
+	/**
+	 * URL-decodes the string. We need to specially handle '+'s because
+	 * the javascript library doesn't convert them to spaces.
+	 * @param {string} str The string to url decode.
+	 * @return {string} The decoded {@code str}.
+	 */
+	static urlDecode(str) {
+		return decodeURIComponent(str.replace(/\+/g, ' '));
 	}
 
 }
