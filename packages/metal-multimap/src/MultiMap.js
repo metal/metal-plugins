@@ -3,6 +3,11 @@
 import { Disposable } from 'metal';
 
 /**
+ * A cached reference to the create function.
+ */
+var create = Object.create;
+
+/**
  * Case insensitive string Multimap implementation. Allows multiple values for
  * the same key name.
  * @extends {Disposable}
@@ -10,8 +15,8 @@ import { Disposable } from 'metal';
 class MultiMap extends Disposable {
 	constructor() {
 		super();
-		this.keys = {};
-		this.values = {};
+		this.keys = create(null);
+		this.values = create(null);
 	}
 
 	/**
@@ -32,8 +37,8 @@ class MultiMap extends Disposable {
 	 * @chainable
 	 */
 	clear() {
-		this.keys = {};
-		this.values = {};
+		this.keys = create(null);
+		this.values = create(null);
 		return this;
 	}
 
