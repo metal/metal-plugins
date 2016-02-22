@@ -29,6 +29,6 @@
   },
   "devDependencies": {
     "gulp": "^3.8.11",
-		"gulp-metal": "^0.10.0"
+		"gulp-metal": "^0.14.0"
   }
 }
