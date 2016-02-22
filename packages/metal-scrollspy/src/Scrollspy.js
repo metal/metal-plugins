@@ -78,7 +78,7 @@ class Scrollspy extends Attribute {
 			return;
 		}
 
-		var index = this.findBestRegionAt_(scrollTop);
+		var index = this.findBestRegionAt_();
 		if (index !== this.activeIndex) {
 			if (index === -1) {
 				this.deactivateAll();
@@ -108,12 +108,11 @@ class Scrollspy extends Attribute {
 
 	/**
 	 * Finds best region to activate.
-	 * @param {number} scrollTop The scrollTop to use as reference.
 	 * @return {number} The index of best region found.
 	 */
-	findBestRegionAt_(scrollTop) {
+	findBestRegionAt_() {
 		var index = -1;
-		var origin = scrollTop + this.offset + this.scrollElementRegion_.top;
+		var origin = this.getCurrentPosition();
 		if (this.regions.length > 0 && origin >= this.regions[0].top) {
 			for (var i = 0; i < this.regions.length; i++) {
 				var region = this.regions[i];
@@ -125,6 +124,15 @@ class Scrollspy extends Attribute {
 			}
 		}
 		return index;
+	}
+
+	/**
+	 * Gets the current position in the page.
+	 * @return {number}
+	 */
+	getCurrentPosition() {
+		var scrollTop = Position.getScrollTop(this.scrollElement);
+		return scrollTop + this.offset + this.scrollElementRegion_.top;
 	}
 
 	/**
@@ -223,8 +231,8 @@ Scrollspy.ATTRS = {
 	},
 
 	/**
-	 * The scrollElement element to be used as scrollElement area for affix. The scrollElement is
-	 * where the scroll event is listened from.
+	 * The scrollElement element to be used as scrollElement area for scrollspy.
+	 * The scrollElement is where the scroll event is listened from.
 	 * @type {Element|Window}
 	 */
 	scrollElement: {
@@ -243,7 +251,7 @@ Scrollspy.ATTRS = {
 	},
 
 	/**
-	 * Element to be used as alignment reference of affix.
+	 * Element to be used as alignment reference of scrollspy.
 	 * @type {Element}
 	 */
 	element: {
