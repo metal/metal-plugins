@@ -30,11 +30,7 @@ class Scrollspy extends Attribute {
 		 */
 		this.scrollHandle_ = dom.on(this.scrollElement, 'scroll', this.checkPosition.bind(this));
 
-		this.refresh();
-		this.on('elementChanged', this.refresh);
-		this.on('offsetChanged', this.checkPosition);
-		this.on('scrollElementChanged', this.onScrollElementChanged_);
-		this.on('selectorChanged', this.refresh);
+		this.init();
 	}
 
 	/**
@@ -146,6 +142,19 @@ class Scrollspy extends Attribute {
 		scrollHeight += this.scrollElementRegion_.top;
 		scrollHeight -= Position.getClientHeight(this.scrollElement);
 		return scrollHeight;
+	}
+
+	/**
+	 * Initializes the behavior of scrollspy. It's important to have this as a
+	 * separate function so subclasses can override it (babel doesn't allow using
+	 * `this` on constructors before calling `super()`).
+	 */
+	init() {
+		this.refresh();
+		this.on('elementChanged', this.refresh);
+		this.on('offsetChanged', this.checkPosition);
+		this.on('scrollElementChanged', this.onScrollElementChanged_);
+		this.on('selectorChanged', this.refresh);
 	}
 
 	/**
