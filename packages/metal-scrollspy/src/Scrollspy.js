@@ -16,14 +16,6 @@ class Scrollspy extends Attribute {
 		super(opt_config);
 
 		/**
-		 * Holds the active index.
-		 * @type {number}
-		 * @private
-		 * @default -1
-		 */
-		this.activeIndex = -1;
-
-		/**
 		 * Holds the regions cache.
 		 * @type {!Array}
 		 * @private
@@ -225,6 +217,15 @@ Scrollspy.ATTRS = {
 	activeClass: {
 		validator: core.isString,
 		value: 'active'
+	},
+
+	/**
+	 * The index of the currently active link.
+	 * @type {number}
+	 */
+	activeIndex: {
+		validator: core.isNumber,
+		value: -1
 	},
 
 	/**
