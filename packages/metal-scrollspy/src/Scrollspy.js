@@ -63,7 +63,7 @@ class Scrollspy extends Attribute {
 			this.deactivate(this.activeIndex);
 		}
 		this.activeIndex = index;
-		dom.addClasses(this.resolveElement(this.regions[index].link), this.activeClass);
+		dom.addClasses(this.getElementForIndex(index), this.activeClass);
 	}
 
 	/**
@@ -93,7 +93,7 @@ class Scrollspy extends Attribute {
 	 * @param {number} index
 	 */
 	deactivate(index) {
-		dom.removeClasses(this.resolveElement(this.regions[index].link), this.activeClass);
+		dom.removeClasses(this.getElementForIndex(index), this.activeClass);
 	}
 
 	/**
@@ -133,6 +133,15 @@ class Scrollspy extends Attribute {
 	getCurrentPosition() {
 		var scrollTop = Position.getScrollTop(this.scrollElement);
 		return scrollTop + this.offset + this.scrollElementRegion_.top;
+	}
+
+	/**
+	 * Returns the element that should be used for the link at the given index.
+	 * @param {number} index
+	 * @return {!Element}
+	 */
+	getElementForIndex(index) {
+		return this.resolveElement(this.regions[index].link);
 	}
 
 	/**
