@@ -17,24 +17,22 @@
   ],
 	"scripts": {
 		"compile": "babel --presets es2015 -d lib/ src/",
-		"install": "npm run compile",
+		"prepublish": "npm run compile",
 		"test": "gulp test"
 	},
 	"keywords": [
 		"metal"
 	],
   "dependencies": {
-		"babel-cli": "^6.4.5",
-		"babel-preset-es2015": "^6.3.13",
-    "bootstrap": "^3.3.6",
-    "closure-templates": "20140422.0.0",
-    "metal": "metal/metal.js#master",
-		"metal-multimap": "metal/metal-multimap#master",
-		"metal-promise": "metal/metal-promise#master",
-		"metal-uri": "metal/metal-uri#master"
+    "metal": "^1.0.0-rc",
+		"metal-multimap": "^1.0.0-rc",
+		"metal-promise": "^1.0.0-rc.1",
+		"metal-uri": "^1.0.0-rc"
   },
 	"devDependencies": {
+		"babel-cli": "^6.4.5",
+		"babel-preset-es2015": "^6.3.13",
     "gulp": "^3.8.11",
-		"gulp-metal": "^0.9.0"
+		"gulp-metal": "^0.14.0"
 	}
 }
