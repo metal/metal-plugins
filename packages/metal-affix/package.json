@@ -1,6 +1,6 @@
 {
   "name": "metal-affix",
-  "version": "0.0.0",
+  "version": "1.0.0-rc",
   "description": "Metal's affix component",
   "license": "BSD",
   "repository": "metal/metal-affix",
