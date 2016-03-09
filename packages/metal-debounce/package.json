@@ -1,6 +1,6 @@
 {
 	"name": "metal-debounce",
-	"version": "0.0.0",
+	"version": "1.0.0-rc",
 	"description": "Metal's debounce utility",
 	"license": "BSD",
 	"repository": "metal/metal-debounce",
