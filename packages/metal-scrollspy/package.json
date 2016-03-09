@@ -22,10 +22,10 @@
   "dependencies": {
     "bootstrap": "^3.3.6",
     "closure-templates": "20140422.0.0",
-    "metal": "metal/metal.js#master",
-		"metal-attribute": "metal/metal-attribute#master",
-		"metal-dom": "metal/metal-dom#master",
-		"metal-position": "metal/metal-position#master"
+    "metal": "^1.0.0-rc",
+		"metal-attribute": "^1.0.0-rc",
+		"metal-dom": "^1.0.0-rc",
+		"metal-position": "^1.0.0-rc"
   },
   "devDependencies": {
     "gulp": "^3.8.11",
