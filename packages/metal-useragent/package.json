@@ -1,6 +1,6 @@
 {
 	"name": "metal-useragent",
-	"version": "0.0.0",
+	"version": "1.0.0-rc",
 	"description": "Metal.js browser user agent detection.",
 	"license": "BSD",
 	"repository": "metal/metal-useragent",
