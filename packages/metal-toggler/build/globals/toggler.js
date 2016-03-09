@@ -3085,6 +3085,19 @@ babelHelpers;
 		};
 
 		/**
+   * Checks if the value of the attribute with the given name has already been
+   * set. Note that this doesn't run the attribute's getter.
+   * @param {string} name The name of the attribute.
+   * @return {boolean}
+   */
+
+
+		Attribute.prototype.hasBeenSet = function hasBeenSet(name) {
+			var info = this.attrsInfo_[name];
+			return info.state === Attribute.States.INITIALIZED || info.initialValue;
+		};
+
+		/**
    * Informs of changes to an attributes value through an event. Won't trigger
    * the event if the value hasn't changed or if it's being initialized.
    * @param {string} name The name of the attribute.
