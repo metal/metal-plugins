@@ -2,19 +2,19 @@
 
 import { core, object } from 'metal';
 import dom from 'metal-dom';
-import Attribute from 'metal-attribute';
 import DragAutoScroll from './helpers/DragAutoScroll';
 import DragScrollDelta from './helpers/DragScrollDelta';
 import DragShim from './helpers/DragShim';
 import { EventHandler } from 'metal-events';
 import Position from 'metal-position';
+import State from 'metal-state';
 
 /**
  * Responsible for making elements draggable. Handles all the logic
  * for dragging elements. Dropping is handled by `DragDrop`.
- * @extends {Attribute}
+ * @extends {State}
  */
-class Drag extends Attribute {
+class Drag extends State {
 	/**
 	 * @inheritDoc
 	 */
@@ -220,7 +220,7 @@ class Drag extends Attribute {
 	}
 
 	/**
-	 * Constrains the given region according to the current attr configurations.
+	 * Constrains the given region according to the current state configuration.
 	 * @param {!Object} region
 	 * @protected
 	 */
@@ -246,7 +246,7 @@ class Drag extends Attribute {
 	}
 
 	/**
-	 * Constrains the given region within the region defined by the `constrain` attr.
+	 * Constrains the given region within the region defined by the `constrain` state.
 	 * @param {!Object} region
 	 * @protected
 	 */
@@ -272,7 +272,7 @@ class Drag extends Attribute {
 	}
 
 	/**
-	 * Constrains the given region to change according to the `steps` attr.
+	 * Constrains the given region to change according to the `steps` state.
 	 * @param {!Object} region
 	 * @protected
 	 */
@@ -475,7 +475,7 @@ class Drag extends Attribute {
 	}
 
 	/**
-	 * Triggers when the `sources` attribute changes. Detaches events attached to the
+	 * Triggers when the `sources` state changes. Detaches events attached to the
 	 * previous sources and attaches them to the new value instead.
 	 * @protected
 	 */
@@ -532,7 +532,7 @@ class Drag extends Attribute {
 	}
 
 	/**
-	 * Setter for the `autoScroll` attribute.
+	 * Setter for the `autoScroll` state key.
 	 * @param {*} val
 	 * @return {!DragAutoScroll}
 	 */
@@ -543,7 +543,7 @@ class Drag extends Attribute {
 	}
 
 	/**
-	 * Setter for the `constrain` attribute.
+	 * Setter for the `constrain` state key.
 	 * @param {!Element|Object|string} val
 	 * @return {!Element|Object}
 	 * @protected
@@ -556,7 +556,7 @@ class Drag extends Attribute {
 	}
 
 	/**
-	 * Sets the `scrollContainers` attribute.
+	 * Sets the `scrollContainers` state key.
 	 * @param {Element|string} scrollContainers
 	 * @return {!Array<!Element>}
 	 * @protected
@@ -652,7 +652,7 @@ class Drag extends Attribute {
 	}
 
 	/**
-	 * Validates the value of the `constrain` attribute.
+	 * Validates the value of the `constrain` state.
 	 * @param {*} val
 	 * @return {boolean}
 	 * @protected
@@ -663,11 +663,11 @@ class Drag extends Attribute {
 }
 
 /**
- * Attributes definition.
+ * State definition.
  * @type {!Object}
  * @static
  */
-Drag.ATTRS = {
+Drag.STATE = {
 	/**
 	 * Configuration object for the `DragAutoScroll` instance that will be used for
 	 * automatically scrolling the elements in `scrollContainers` during drag when
@@ -838,7 +838,7 @@ Drag.Events = {
 };
 
 /**
- * Holds the values that can be passed to the `dragPlaceholder` attribute.
+ * Holds the values that can be passed to the `dragPlaceholder` state key.
  * @type {!Object}
  * @static
  */

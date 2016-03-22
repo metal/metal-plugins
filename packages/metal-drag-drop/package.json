@@ -23,13 +23,13 @@
   ],
   "dependencies": {
     "metal": "^1.0.0-rc",
-    "metal-attribute": "^1.0.0-rc",
     "metal-events": "^1.0.0-rc",
-    "metal-position": "^1.0.0-rc"
+    "metal-position": "^1.0.0-rc",
+    "metal-state": "metal/metal-state#master"
   },
   "devDependencies": {
     "bootstrap": "^3.3.6",
     "gulp": "^3.8.11",
-		"gulp-metal": "^0.14.0"
+		"gulp-metal": "^1.0.0"
   }
 }

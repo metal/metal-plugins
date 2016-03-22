@@ -228,7 +228,7 @@ describe('Drag', function() {
 		assert.ok(!drag.getActiveDrag());
 	});
 
-	it('should handle changing the value of the "sources" attribute', function() {
+	it('should handle changing the value of the "sources" state', function() {
 		drag = new Drag({
 			minimumDragDistance: 2,
 			sources: item
@@ -896,7 +896,7 @@ describe('Drag', function() {
 	});
 
 	describe('Steps', function() {
-		it('should only move the dragged element by multiples of the values defined in "steps" attr', function() {
+		it('should only move the dragged element by multiples of the values defined in "steps" state', function() {
 			drag = new Drag({
 				sources: item,
 				steps: {

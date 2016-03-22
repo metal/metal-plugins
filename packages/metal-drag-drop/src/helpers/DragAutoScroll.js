@@ -1,14 +1,14 @@
 'use strict';
 
 import core from 'metal';
-import Attribute from 'metal-attribute';
+import State from 'metal-state';
 import Position from 'metal-position';
 
 /**
  * Helper called by the `Drag` instance that scrolls elements when the
  * mouse is near their boundaries.
  */
-class DragAutoScroll extends Attribute {
+class DragAutoScroll extends State {
 	/**
 	 * @inheritDoc
 	 */
@@ -123,11 +123,11 @@ class DragAutoScroll extends Attribute {
 }
 
 /**
- * Attributes definition.
+ * State definition.
  * @type {!Object}
  * @static
  */
-DragAutoScroll.ATTRS = {
+DragAutoScroll.STATE = {
 	/**
 	 * The delay in ms before an element is scrolled automatically.
 	 * @type {number}
