@@ -303,7 +303,7 @@ describe('Scrollspy', function() {
 			});
 		});
 
-		it('should update active element when the value of the offset attr changes', function(done) {
+		it('should update active element when the value of the offset state changes', function(done) {
 			spy = new Scrollspy({
 				element: element,
 				offset: 0
