@@ -203,7 +203,6 @@ class Drag extends State {
 		this.mouseSourceDelta_ = null;
 		this.dragging_ = false;
 		this.dragHandler_.removeAllListeners();
-		this.emit('dragEnd');
 	}
 
 	/**
@@ -577,7 +576,7 @@ class Drag extends State {
 		this.createActiveDragPlaceholder_();
 		dom.addClasses(this.activeDragPlaceholder_, this.draggingClass);
 		this.activeDragPlaceholder_.setAttribute('aria-grabbed', 'true');
-		this.emit('dragStart');
+		this.emit(Drag.Events.START);
 	}
 
 	/**
@@ -836,7 +835,8 @@ Drag.STATE = {
  */
 Drag.Events = {
 	DRAG: 'drag',
-	END: 'end'
+	END: 'end',
+	START: 'start'
 };
 
 /**
