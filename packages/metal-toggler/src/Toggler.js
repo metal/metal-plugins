@@ -2,13 +2,13 @@
 
 import core from 'metal';
 import dom from 'metal-dom';
-import Attribute from 'metal-attribute';
 import { EventHandler } from 'metal-events';
+import State from 'metal-state';
 
 /**
  * Toggler component.
  */
-class Toggler extends Attribute {
+class Toggler extends State {
 	/**
 	 * @inheritDoc
 	 */
@@ -74,7 +74,7 @@ class Toggler extends Attribute {
 	}
 
 	/**
-	 * Syncs the component according to the value of the `header` attribute,
+	 * Syncs the component according to the value of the `header` state,
 	 * attaching events to the new element and detaching from any previous one.
 	 */
 	syncHeader() {
@@ -113,9 +113,9 @@ class Toggler extends Attribute {
 }
 
 /**
- * Attributes configuration.
+ * State configuration.
  */
-Toggler.ATTRS = {
+Toggler.STATE = {
 	/**
 	 * The element where the header/content selectors will be looked for.
 	 * @type {string|!Element}
