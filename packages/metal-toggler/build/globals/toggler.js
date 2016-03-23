@@ -1389,6 +1389,7 @@ babelHelpers;
 'use strict';
 
 (function () {
+	var array = this.metalNamed.metal.array;
 	var Disposable = this.metalNamed.metal.Disposable;
 	var object = this.metalNamed.metal.object;
 
@@ -1434,7 +1435,7 @@ babelHelpers;
 
 			/**
     * Holds a map of events from the origin emitter that are already being proxied.
-    * @type {Object}
+    * @type {Object<string, !EventHandle>}
     * @protected
     */
 			_this.proxiedEvents_ = {};
@@ -1459,14 +1460,28 @@ babelHelpers;
 		}
 
 		/**
-   * Adds the proxy listener for the given event.
-   * @param {string} event.
+   * Adds the given listener for the given event.
+   * @param {string} event
+   * @param {!function()} listener
+   * @return {!EventHandle} The listened event's handle.
    * @protected
    */
 
 
-		EventEmitterProxy.prototype.addListener_ = function addListener_(event) {
-			this.originEmitter_.on(event, this.proxiedEvents_[event]);
+		EventEmitterProxy.prototype.addListener_ = function addListener_(event, listener) {
+			return this.originEmitter_.on(event, listener);
+		};
+
+		/**
+   * Adds the proxy listener for the given event.
+   * @param {string} event
+   * @return {!EventHandle} The listened event's handle.
+   * @protected
+   */
+
+
+		EventEmitterProxy.prototype.addListenerForEvent_ = function addListenerForEvent_(event) {
+			return this.addListener_(event, this.emitOnTarget_.bind(this, event));
 		};
 
 		/**
@@ -1475,10 +1490,22 @@ babelHelpers;
 
 
 		EventEmitterProxy.prototype.disposeInternal = function disposeInternal() {
-			object.map(this.proxiedEvents_, this.removeListener_.bind(this));
+			this.removeListeners_();
 			this.proxiedEvents_ = null;
 			this.originEmitter_ = null;
 			this.targetEmitter_ = null;
+		};
+
+		/**
+   * Emits the specified event type on the target emitter.
+   * @param {string} eventType
+   * @protected
+   */
+
+
+		EventEmitterProxy.prototype.emitOnTarget_ = function emitOnTarget_(eventType) {
+			var args = [eventType].concat(array.slice(arguments, 1));
+			this.targetEmitter_.emit.apply(this.targetEmitter_, args);
 		};
 
 		/**
@@ -1487,29 +1514,42 @@ babelHelpers;
    */
 
 
-		EventEmitterProxy.prototype.proxyEvent_ = function proxyEvent_(event) {
-			if (!this.shouldProxyEvent_(event)) {
-				return;
+		EventEmitterProxy.prototype.proxyEvent = function proxyEvent(event) {
+			if (this.shouldProxyEvent_(event)) {
+				this.proxiedEvents_[event] = this.addListenerForEvent_(event);
 			}
-
-			var self = this;
-			this.proxiedEvents_[event] = function () {
-				var args = [event].concat(Array.prototype.slice.call(arguments, 0));
-				self.targetEmitter_.emit.apply(self.targetEmitter_, args);
-			};
-
-			this.addListener_(event);
 		};
 
 		/**
-   * Removes the proxy listener for the given event.
-   * @param {string} event
+   * Removes the proxy listener for all events.
    * @protected
    */
 
 
-		EventEmitterProxy.prototype.removeListener_ = function removeListener_(event) {
-			this.originEmitter_.removeListener(event, this.proxiedEvents_[event]);
+		EventEmitterProxy.prototype.removeListeners_ = function removeListeners_() {
+			var events = Object.keys(this.proxiedEvents_);
+			for (var i = 0; i < events.length; i++) {
+				this.proxiedEvents_[events[i]].removeListener();
+			}
+			this.proxiedEvents_ = {};
+		};
+
+		/**
+   * Changes the origin emitter. This automatically detaches any events that
+   * were already being proxied from the previous emitter, and starts proxying
+   * them on the new emitter instead.
+   */
+
+
+		EventEmitterProxy.prototype.setOriginEmitter = function setOriginEmitter(originEmitter) {
+			var handles = this.proxiedEvents_;
+			this.removeListeners_();
+			this.originEmitter_ = originEmitter;
+
+			var events = Object.keys(handles);
+			for (var i = 0; i < events.length; i++) {
+				this.proxiedEvents_[events[i]] = this.addListenerForEvent_(events[i]);
+			}
 		};
 
 		/**
@@ -1537,7 +1577,7 @@ babelHelpers;
 
 
 		EventEmitterProxy.prototype.startProxy_ = function startProxy_() {
-			this.targetEmitter_.on('newListener', this.proxyEvent_.bind(this));
+			this.targetEmitter_.on('newListener', this.proxyEvent.bind(this));
 		};
 
 		return EventEmitterProxy;
@@ -1722,7 +1762,9 @@ babelHelpers;
 
 		dom.addClassesWithNative_ = function addClassesWithNative_(element, classes) {
 			classes.split(' ').forEach(function (className) {
-				element.classList.add(className);
+				if (className) {
+					element.classList.add(className);
+				}
 			});
 		};
 
@@ -1751,6 +1793,22 @@ babelHelpers;
 			if (classesToAppend) {
 				element.className = element.className + classesToAppend;
 			}
+		};
+
+		/**
+   * Gets the closest element up the tree from the given element (including
+   * itself) that matches the specified selector, or null if none match.
+   * @param {Element} element
+   * @param {string} selector
+   * @return {Element}
+   */
+
+
+		dom.closest = function closest(element, selector) {
+			while (element && !dom.match(element, selector)) {
+				element = element.parentNode;
+			}
+			return element;
 		};
 
 		/**
@@ -2066,6 +2124,19 @@ babelHelpers;
 		};
 
 		/**
+   * Gets the first parent from the given element that matches the specified
+   * selector, or null if none match.
+   * @param {!Element} element
+   * @param {string} selector
+   * @return {Element}
+   */
+
+
+		dom.parent = function parent(element, selector) {
+			return dom.closest(element.parentNode, selector);
+		};
+
+		/**
    * Registers a custom event.
    * @param {string} eventName The name of the custom event.
    * @param {!Object} customConfig An object with information about how the event
@@ -2119,7 +2190,9 @@ babelHelpers;
 
 		dom.removeClassesWithNative_ = function removeClassesWithNative_(element, classes) {
 			classes.split(' ').forEach(function (className) {
-				element.classList.remove(className);
+				if (className) {
+					element.classList.remove(className);
+				}
 			});
 		};
 
@@ -2333,34 +2406,38 @@ babelHelpers;
 		}
 
 		/**
-   * Adds the proxy listener for the given event.
+   * Adds the given listener for the given event.
    * @param {string} event.
+   * @param {!function()} listener
+   * @return {!EventHandle} The listened event's handle.
    * @protected
    * @override
    */
 
-		DomEventEmitterProxy.prototype.addListener_ = function addListener_(event) {
+		DomEventEmitterProxy.prototype.addListener_ = function addListener_(event, listener) {
 			if (this.originEmitter_.addEventListener) {
-				dom.on(this.originEmitter_, event, this.proxiedEvents_[event]);
+				if (event.startsWith('delegate:')) {
+					var index = event.indexOf(':', 9);
+					var eventName = event.substring(9, index);
+					var selector = event.substring(index + 1);
+					return dom.delegate(this.originEmitter_, eventName, selector, listener);
+				} else {
+					return dom.on(this.originEmitter_, event, listener);
+				}
 			} else {
-				_EventEmitterProxy.prototype.addListener_.call(this, event);
+				return _EventEmitterProxy.prototype.addListener_.call(this, event, listener);
 			}
 		};
 
 		/**
-   * Removes the proxy listener for the given event.
+   * Checks if the given event is supported by the origin element.
    * @param {string} event
    * @protected
-   * @override
    */
 
 
-		DomEventEmitterProxy.prototype.removeListener_ = function removeListener_(event) {
-			if (this.originEmitter_.removeEventListener) {
-				this.originEmitter_.removeEventListener(event, this.proxiedEvents_[event]);
-			} else {
-				_EventEmitterProxy.prototype.removeListener_.call(this, event);
-			}
+		DomEventEmitterProxy.prototype.isSupportedDomEvent_ = function isSupportedDomEvent_(event) {
+			return event.startsWith('delegate:') && event.indexOf(':', 9) !== -1 || dom.supportsEvent(this.originEmitter_, event);
 		};
 
 		/**
@@ -2373,7 +2450,7 @@ babelHelpers;
 
 
 		DomEventEmitterProxy.prototype.shouldProxyEvent_ = function shouldProxyEvent_(event) {
-			return _EventEmitterProxy.prototype.shouldProxyEvent_.call(this, event) && (!this.originEmitter_.addEventListener || dom.supportsEvent(this.originEmitter_, event));
+			return _EventEmitterProxy.prototype.shouldProxyEvent_.call(this, event) && (!this.originEmitter_.addEventListener || this.isSupportedDomEvent_(event));
 		};
 
 		return DomEventEmitterProxy;
@@ -2478,13 +2555,20 @@ babelHelpers;
 		/**
    * Evaluates the given string in the global scope.
    * @param {string} text
+   * @param {function()=} opt_appendFn Optional function to append the node
+   *   into document.
    * @return {Element} script
    */
 
-		globalEval.run = function run(text) {
+		globalEval.run = function run(text, opt_appendFn) {
 			var script = document.createElement('script');
 			script.text = text;
-			document.head.appendChild(script).parentNode.removeChild(script);
+			if (opt_appendFn) {
+				opt_appendFn(script);
+			} else {
+				document.head.appendChild(script);
+			}
+			dom.exitDocument(script);
 			return script;
 		};
 
@@ -2493,21 +2577,28 @@ babelHelpers;
    * @param {string} src The file's path.
    * @param {function()=} opt_callback Optional function to be called
    *   when the script has been run.
+   * @param {function()=} opt_appendFn Optional function to append the node
+   *   into document.
    * @return {Element} script
    */
 
 
-		globalEval.runFile = function runFile(src, opt_callback) {
+		globalEval.runFile = function runFile(src, opt_callback, opt_appendFn) {
 			var script = document.createElement('script');
 			script.src = src;
 
 			var callback = function callback() {
-				script.parentNode.removeChild(script);
+				dom.exitDocument(script);
 				opt_callback && opt_callback();
 			};
 			dom.on(script, 'load', callback);
 			dom.on(script, 'error', callback);
-			document.head.appendChild(script);
+
+			if (opt_appendFn) {
+				opt_appendFn(script);
+			} else {
+				document.head.appendChild(script);
+			}
 
 			return script;
 		};
@@ -2517,11 +2608,13 @@ babelHelpers;
    * @param {!Element} script
    * @param {function()=} opt_callback Optional function to be called
    *   when the script has been run.
+   * @param {function()=} opt_appendFn Optional function to append the node
+   *   into document.
    * @return {Element} script
    */
 
 
-		globalEval.runScript = function runScript(script, opt_callback) {
+		globalEval.runScript = function runScript(script, opt_callback, opt_appendFn) {
 			var callback = function callback() {
 				opt_callback && opt_callback();
 			};
@@ -2529,14 +2622,12 @@ babelHelpers;
 				async.nextTick(callback);
 				return;
 			}
-			if (script.parentNode) {
-				script.parentNode.removeChild(script);
-			}
+			dom.exitDocument(script);
 			if (script.src) {
-				return globalEval.runFile(script.src, opt_callback);
+				return globalEval.runFile(script.src, opt_callback, opt_appendFn);
 			} else {
 				async.nextTick(callback);
-				return globalEval.run(script.text);
+				return globalEval.run(script.text, opt_appendFn);
 			}
 		};
 
@@ -2545,13 +2636,15 @@ babelHelpers;
    * @params {!Element} element
    * @param {function()=} opt_callback Optional function to be called
    *   when the script has been run.
+   * @param {function()=} opt_appendFn Optional function to append the node
+   *   into document.
    */
 
 
-		globalEval.runScriptsInElement = function runScriptsInElement(element, opt_callback) {
+		globalEval.runScriptsInElement = function runScriptsInElement(element, opt_callback, opt_appendFn) {
 			var scripts = element.querySelectorAll('script');
 			if (scripts.length) {
-				globalEval.runScriptsInOrder(scripts, 0, opt_callback);
+				globalEval.runScriptsInOrder(scripts, 0, opt_callback, opt_appendFn);
 			} else if (opt_callback) {
 				async.nextTick(opt_callback);
 			}
@@ -2563,17 +2656,19 @@ babelHelpers;
    * @param {number} index
    * @param {function()=} opt_callback Optional function to be called
    *   when the script has been run.
+   * @param {function()=} opt_appendFn Optional function to append the node
+   *   into document.
    */
 
 
-		globalEval.runScriptsInOrder = function runScriptsInOrder(scripts, index, opt_callback) {
+		globalEval.runScriptsInOrder = function runScriptsInOrder(scripts, index, opt_callback, opt_appendFn) {
 			globalEval.runScript(scripts.item(index), function () {
 				if (index < scripts.length - 1) {
-					globalEval.runScriptsInOrder(scripts, index + 1, opt_callback);
+					globalEval.runScriptsInOrder(scripts, index + 1, opt_callback, opt_appendFn);
 				} else if (opt_callback) {
 					async.nextTick(opt_callback);
 				}
-			});
+			}, opt_appendFn);
 		};
 
 		return globalEval;
@@ -2599,13 +2694,19 @@ babelHelpers;
 		/**
    * Evaluates the given style.
    * @param {string} text
+   * @param {function()=} opt_appendFn Optional function to append the node
+   *   into document.
    * @return {Element} style
    */
 
-		globalEvalStyles.run = function run(text) {
+		globalEvalStyles.run = function run(text, opt_appendFn) {
 			var style = document.createElement('style');
 			style.innerHTML = text;
-			document.head.appendChild(style);
+			if (opt_appendFn) {
+				opt_appendFn(style);
+			} else {
+				document.head.appendChild(style);
+			}
 			return style;
 		};
 
@@ -2614,15 +2715,17 @@ babelHelpers;
    * @param {string} href The file's path.
    * @param {function()=} opt_callback Optional function to be called
    *   when the styles has been run.
+   * @param {function()=} opt_appendFn Optional function to append the node
+   *   into document.
    * @return {Element} style
    */
 
 
-		globalEvalStyles.runFile = function runFile(href, opt_callback) {
+		globalEvalStyles.runFile = function runFile(href, opt_callback, opt_appendFn) {
 			var link = document.createElement('link');
 			link.rel = 'stylesheet';
 			link.href = href;
-			globalEvalStyles.runStyle(link, opt_callback);
+			globalEvalStyles.runStyle(link, opt_callback, opt_appendFn);
 			return link;
 		};
 
@@ -2631,11 +2734,13 @@ babelHelpers;
    * @param {!Element} style
    * @param {function()=} opt_callback Optional function to be called
    *   when the script has been run.
+   * @param {function()=} opt_appendFn Optional function to append the node
+   *   into document.
    *  @return {Element} style
    */
 
 
-		globalEvalStyles.runStyle = function runStyle(style, opt_callback) {
+		globalEvalStyles.runStyle = function runStyle(style, opt_callback, opt_appendFn) {
 			var callback = function callback() {
 				opt_callback && opt_callback();
 			};
@@ -2650,20 +2755,27 @@ babelHelpers;
 				dom.on(style, 'load', callback);
 				dom.on(style, 'error', callback);
 			}
-			document.head.appendChild(style);
+
+			if (opt_appendFn) {
+				opt_appendFn(style);
+			} else {
+				document.head.appendChild(style);
+			}
+
 			return style;
 		};
 
 		/**
    * Evaluates any style present in the given element.
-   * TODO: Evaluates running styles in parallel instead of in order.
    * @params {!Element} element
-   * @param {function()=} opt_callback Optional function to be called
-   *   when the style has been run.
+   * @param {function()=} opt_callback Optional function to be called when the
+   *   style has been run.
+   * @param {function()=} opt_appendFn Optional function to append the node
+   *   into document.
    */
 
 
-		globalEvalStyles.runStylesInElement = function runStylesInElement(element, opt_callback) {
+		globalEvalStyles.runStylesInElement = function runStylesInElement(element, opt_callback, opt_appendFn) {
 			var styles = element.querySelectorAll('style,link');
 			if (styles.length === 0 && opt_callback) {
 				async.nextTick(opt_callback);
@@ -2677,7 +2789,7 @@ babelHelpers;
 				}
 			};
 			for (var i = 0; i < styles.length; i++) {
-				globalEvalStyles.runStyle(styles[i], callback);
+				globalEvalStyles.runStyle(styles[i], callback, opt_appendFn);
 			}
 		};
 
@@ -2759,19 +2871,19 @@ babelHelpers;
 	var EventEmitter = this.metalNamed.events.EventEmitter;
 
 	/**
-  * Attribute adds support for having object properties that can be watched for
+  * State adds support for having object properties that can be watched for
   * changes, as well as configured with validators, setters and other options.
-  * See the `addAttr` method for a complete list of available attribute
-  * configuration options.
+  * See the `addToState` method for a complete list of available configuration
+  * options for each state key.
   * @constructor
   * @extends {EventEmitter}
   */
 
-	var Attribute = function (_EventEmitter) {
-		babelHelpers.inherits(Attribute, _EventEmitter);
+	var State = function (_EventEmitter) {
+		babelHelpers.inherits(State, _EventEmitter);
 
-		function Attribute(opt_config) {
-			babelHelpers.classCallCheck(this, Attribute);
+		function State(opt_config) {
+			babelHelpers.classCallCheck(this, State);
 
 
 			/**
@@ -2786,141 +2898,155 @@ babelHelpers;
 			_this.scheduledBatchData_ = null;
 
 			/**
-    * Object that contains information about all this instance's attributes.
+    * Object that contains information about all this instance's state keys.
     * @type {!Object<string, !Object>}
     * @protected
     */
-			_this.attrsInfo_ = {};
+			_this.stateInfo_ = {};
 
 			_this.setShouldUseFacade(true);
-			_this.mergeInvalidAttrs_();
-			_this.addAttrsFromStaticHint_(opt_config);
+			_this.mergeInvalidKeys_();
+			_this.addToStateFromStaticHint_(opt_config);
 			return _this;
 		}
 
 		/**
-   * Adds the given attribute.
-   * @param {string} name The name of the new attribute.
-   * @param {Object.<string, *>=} config The configuration object for the new attribute.
-   *   This object can have the following keys:
-   *   setter - Function for normalizing new attribute values. It receives the new value
-   *   that was set, and returns the value that should be stored.
-   *   validator - Function that validates new attribute values. When it returns false,
-   *   the new value is ignored.
-   *   value - The default value for this attribute. Note that setting this to an object
-   *   will cause all attribute instances to use the same reference to the object. To
-   *   have each attribute instance use a different reference, use the `valueFn` option
-   *   instead.
-   *   valueFn - A function that returns the default value for this attribute.
-   *   writeOnce - Ignores writes to the attribute after it's been first written to. That is,
-   *   allows writes only when setting the attribute for the first time.
-   * @param {*} initialValue The initial value of the new attribute. This value has higher
-   *   precedence than the default value specified in this attribute's configuration.
+   * Adds the given key to the state.
+   * @param {string} name The name of the new state key.
+   * @param {Object.<string, *>=} config The configuration object for the new
+   *     key. See `addToState` for supported settings.
+   * @param {*} initialValue The initial value of the new key.
    */
 
 
-		Attribute.prototype.addAttr = function addAttr(name, config, initialValue) {
-			this.buildAttrInfo_(name, config, initialValue);
-			Object.defineProperty(this, name, this.buildAttrPropertyDef_(name));
+		State.prototype.addKeyToState = function addKeyToState(name, config, initialValue) {
+			this.buildKeyInfo_(name, config, initialValue);
+			Object.defineProperty(this, name, this.buildKeyPropertyDef_(name));
 		};
 
 		/**
-   * Adds the given attributes.
-   * @param {!Object.<string, !Object>} configs An object that maps the names of all the
-   *   attributes to be added to their configuration objects.
-   * @param {!Object.<string, *>} initialValues An object that maps the names of
-   *   attributes to their initial values. These values have higher precedence than the
-   *   default values specified in the attribute configurations.
-   * @param {boolean|Object=} opt_defineContext If value is false
-   *     `Object.defineProperties` will not be called. If value is a valid
-   *     context it will be used as definition context, otherwise `this`
-   *     will be the context.
+   * Adds the given key(s) to the state, together with its(their) configs.
+   * Config objects support the given settings:
+   *     setter - Function for normalizing state key values. It receives the new
+   *     value that was set, and returns the value that should be stored.
+   *
+   *     validator - Function that validates state key values. When it returns
+   *     false, the new value is ignored.
+   *
+   *     value - The default value for the state key. Note that setting this to
+   *     an object will cause all class instances to use the same reference to
+   *     the object. To have each instance use a different reference for objects,
+   *     use the `valueFn` option instead.
+   *
+   *     valueFn - A function that returns the default value for a state key.
+   *
+   *     writeOnce - Ignores writes to the state key after it's been first
+   *     written to. That is, allows writes only when setting the value for the
+   *     first time.
+   * @param {!Object.<string, !Object>|string} configsOrName An object that maps
+   *     configuration options for keys to be added to the state or the name of
+   *     a single key to be added.
+   * @param {Object.<string, *>=} opt_initialValuesOrConfig An object that maps
+   *     state keys to their initial values. These values have higher precedence
+   *     than the default values specified in the configurations. If a single
+   *     key name was passed as the first param instead though, then this should
+   *     be the configuration object for that key.
+   * @param {boolean|Object|*=} opt_contextOrInitialValue If the first
+   *     param passed to this method was a config object, this should be the
+   *     context where the added state keys will be defined (defaults to `this`),
+   *     or false if they shouldn't be defined at all. If the first param was a
+   *     single key name though, this should be its initial value.
    */
 
 
-		Attribute.prototype.addAttrs = function addAttrs(configs, initialValues, opt_defineContext) {
-			initialValues = initialValues || {};
-			var names = Object.keys(configs);
+		State.prototype.addToState = function addToState(configsOrName, opt_initialValuesOrConfig, opt_contextOrInitialValue) {
+			if (core.isString(configsOrName)) {
+				return this.addKeyToState(configsOrName, opt_initialValuesOrConfig, opt_contextOrInitialValue);
+			}
+
+			var initialValues = opt_initialValuesOrConfig || {};
+			var names = Object.keys(configsOrName);
 
 			var props = {};
 			for (var i = 0; i < names.length; i++) {
 				var name = names[i];
-				this.buildAttrInfo_(name, configs[name], initialValues[name]);
-				props[name] = this.buildAttrPropertyDef_(name);
+				this.buildKeyInfo_(name, configsOrName[name], initialValues[name]);
+				props[name] = this.buildKeyPropertyDef_(name);
 			}
 
-			if (opt_defineContext !== false) {
-				Object.defineProperties(opt_defineContext || this, props);
+			if (opt_contextOrInitialValue !== false) {
+				Object.defineProperties(opt_contextOrInitialValue || this, props);
 			}
 		};
 
 		/**
-   * Adds attributes from super classes static hint `MyClass.ATTRS = {};`.
-   * @param {!Object.<string, !Object>} configs An object that maps the names
-   *     of all the attributes to be added to their configuration objects.
+   * Adds state keys from super classes static hint `MyClass.STATE = {};`.
+   * @param {Object.<string, !Object>=} opt_config An object that maps all the
+   *     configurations for state keys.
    * @protected
    */
 
 
-		Attribute.prototype.addAttrsFromStaticHint_ = function addAttrsFromStaticHint_(config) {
+		State.prototype.addToStateFromStaticHint_ = function addToStateFromStaticHint_(opt_config) {
 			var ctor = this.constructor;
 			var defineContext = false;
-			if (Attribute.mergeAttrsStatic(ctor)) {
+			if (State.mergeStateStatic(ctor)) {
 				defineContext = ctor.prototype;
 			}
-			this.addAttrs(ctor.ATTRS_MERGED, config, defineContext);
+			this.addToState(ctor.STATE_MERGED, opt_config, defineContext);
 		};
 
 		/**
-   * Checks that the given name is a valid attribute name. If it's not, an error
+   * Checks that the given name is a valid state key name. If it's not, an error
    * will be thrown.
    * @param {string} name The name to be validated.
    * @throws {Error}
-   */
-
-
-		Attribute.prototype.assertValidAttrName_ = function assertValidAttrName_(name) {
-			if (this.constructor.INVALID_ATTRS_MERGED[name]) {
-				throw new Error('It\'s not allowed to create an attribute with the name "' + name + '".');
-			}
-		};
-
-		/**
-   * Builds the info object for the requested attribute.
-   * @param {string} name The name of the attribute.
-   * @param {Object} config The config object of the attribute.
-   * @param {*} initialValue The initial value of the attribute.
    * @protected
    */
 
 
-		Attribute.prototype.buildAttrInfo_ = function buildAttrInfo_(name, config, initialValue) {
-			this.assertValidAttrName_(name);
+		State.prototype.assertValidStateKeyName_ = function assertValidStateKeyName_(name) {
+			if (this.constructor.INVALID_KEYS_MERGED[name]) {
+				throw new Error('It\'s not allowed to create a state key with the name "' + name + '".');
+			}
+		};
 
-			this.attrsInfo_[name] = {
+		/**
+   * Builds the info object for the specified state key.
+   * @param {string} name The name of the key.
+   * @param {Object} config The config object for the key.
+   * @param {*} initialValue The initial value of the key.
+   * @protected
+   */
+
+
+		State.prototype.buildKeyInfo_ = function buildKeyInfo_(name, config, initialValue) {
+			this.assertValidStateKeyName_(name);
+
+			this.stateInfo_[name] = {
 				config: config || {},
 				initialValue: initialValue,
-				state: Attribute.States.UNINITIALIZED
+				state: State.KeyStates.UNINITIALIZED
 			};
 		};
 
 		/**
-   * Builds the property definition object for the requested attribute.
-   * @param {string} name The name of the attribute.
+   * Builds the property definition object for the specified state key.
+   * @param {string} name The name of the key.
    * @return {!Object}
    * @protected
    */
 
 
-		Attribute.prototype.buildAttrPropertyDef_ = function buildAttrPropertyDef_(name) {
+		State.prototype.buildKeyPropertyDef_ = function buildKeyPropertyDef_(name) {
 			return {
 				configurable: true,
 				enumerable: true,
 				get: function get() {
-					return this.getAttrValue_(name);
+					return this.getStateKeyValue_(name);
 				},
 				set: function set(val) {
-					this.setAttrValue_(name, val);
+					this.setStateKeyValue_(name, val);
 				}
 			};
 		};
@@ -2936,7 +3062,7 @@ babelHelpers;
    */
 
 
-		Attribute.prototype.callFunction_ = function callFunction_(fn, args) {
+		State.prototype.callFunction_ = function callFunction_(fn, args) {
 			if (core.isString(fn)) {
 				return this[fn].apply(this, args);
 			} else if (core.isFunction(fn)) {
@@ -2945,32 +3071,35 @@ babelHelpers;
 		};
 
 		/**
-   * Calls the attribute's setter, if there is one.
-   * @param {string} name The name of the attribute.
+   * Calls the state key's setter, if there is one.
+   * @param {string} name The name of the key.
    * @param {*} value The value to be set.
+   * @param {*} currentValue The current value.
    * @return {*} The final value to be set.
+   * @protected
    */
 
 
-		Attribute.prototype.callSetter_ = function callSetter_(name, value) {
-			var info = this.attrsInfo_[name];
+		State.prototype.callSetter_ = function callSetter_(name, value, currentValue) {
+			var info = this.stateInfo_[name];
 			var config = info.config;
 			if (config.setter) {
-				value = this.callFunction_(config.setter, [value]);
+				value = this.callFunction_(config.setter, [value, currentValue]);
 			}
 			return value;
 		};
 
 		/**
-   * Calls the attribute's validator, if there is one.
-   * @param {string} name The name of the attribute.
+   * Calls the state key's validator, if there is one.
+   * @param {string} name The name of the key.
    * @param {*} value The value to be validated.
    * @return {boolean} Flag indicating if value is valid or not.
+   * @protected
    */
 
 
-		Attribute.prototype.callValidator_ = function callValidator_(name, value) {
-			var info = this.attrsInfo_[name];
+		State.prototype.callValidator_ = function callValidator_(name, value) {
+			var info = this.stateInfo_[name];
 			var config = info.config;
 			if (config.validator) {
 				return this.callFunction_(config.validator, [value]);
@@ -2979,14 +3108,14 @@ babelHelpers;
 		};
 
 		/**
-   * Checks if the it's allowed to write on the requested attribute.
-   * @param {string} name The name of the attribute.
+   * Checks if the it's allowed to write on the requested state key.
+   * @param {string} name The name of the key.
    * @return {boolean}
    */
 
 
-		Attribute.prototype.canSetAttribute = function canSetAttribute(name) {
-			var info = this.attrsInfo_[name];
+		State.prototype.canSetState = function canSetState(name) {
+			var info = this.stateInfo_[name];
 			return !info.config.writeOnce || !info.written;
 		};
 
@@ -2995,153 +3124,154 @@ babelHelpers;
    */
 
 
-		Attribute.prototype.disposeInternal = function disposeInternal() {
+		State.prototype.disposeInternal = function disposeInternal() {
 			_EventEmitter.prototype.disposeInternal.call(this);
-			this.attrsInfo_ = null;
+			this.stateInfo_ = null;
 			this.scheduledBatchData_ = null;
 		};
 
 		/**
-   * Emits the attribute change batch event.
+   * Emits the state change batch event.
    * @protected
    */
 
 
-		Attribute.prototype.emitBatchEvent_ = function emitBatchEvent_() {
+		State.prototype.emitBatchEvent_ = function emitBatchEvent_() {
 			if (!this.isDisposed()) {
 				var data = this.scheduledBatchData_;
 				this.scheduledBatchData_ = null;
-				this.emit('attrsChanged', data);
+				this.emit('stateChanged', data);
 			}
 		};
 
 		/**
-   * Returns the value of the requested attribute.
-   * Note: this can and should be accomplished by accessing the attribute as a regular property.
-   * This should only be used in cases where a function is actually needed.
+   * Returns the value of the requested state key.
+   * Note: this can and should be accomplished by accessing the value as a
+   * regular property. This should only be used in cases where a function is
+   * actually needed.
    * @param {string} name
    * @return {*}
    */
 
 
-		Attribute.prototype.get = function get(name) {
+		State.prototype.get = function get(name) {
 			return this[name];
 		};
 
 		/**
-   * Gets the config object for the requested attribute.
-   * @param {string} name The attribute's name.
+   * Returns an object that maps state keys to their values.
+   * @param {Array<string>=} opt_names A list of names of the keys that should
+   *   be returned. If none is given, the whole state will be returned.
+   * @return {Object.<string, *>}
+   */
+
+
+		State.prototype.getState = function getState(opt_names) {
+			var state = {};
+			var names = opt_names || this.getStateKeys();
+
+			for (var i = 0; i < names.length; i++) {
+				state[names[i]] = this[names[i]];
+			}
+
+			return state;
+		};
+
+		/**
+   * Gets the config object for the requested state key.
+   * @param {string} name The key's name.
    * @return {Object}
    * @protected
    */
 
 
-		Attribute.prototype.getAttrConfig = function getAttrConfig(name) {
-			return (this.attrsInfo_[name] || {}).config;
+		State.prototype.getStateKeyConfig = function getStateKeyConfig(name) {
+			return (this.stateInfo_[name] || {}).config;
 		};
 
 		/**
-   * Returns an object that maps attribute names to their values.
-   * @param {Array<string>=} opt_names A list of names of the attributes that should be
-   *   returned. If none is given, all attributes will be returned.
-   * @return {Object.<string, *>}
-   */
-
-
-		Attribute.prototype.getAttrs = function getAttrs(opt_names) {
-			var attrsMap = {};
-			var names = opt_names || this.getAttrNames();
-
-			for (var i = 0; i < names.length; i++) {
-				attrsMap[names[i]] = this[names[i]];
-			}
-
-			return attrsMap;
-		};
-
-		/**
-   * Returns an array with all attribute names.
+   * Returns an array with all state keys.
    * @return {Array.<string>}
    */
 
 
-		Attribute.prototype.getAttrNames = function getAttrNames() {
-			return Object.keys(this.attrsInfo_);
+		State.prototype.getStateKeys = function getStateKeys() {
+			return Object.keys(this.stateInfo_);
 		};
 
 		/**
-   * Gets the value of the specified attribute. This is passed as that attribute's
-   * getter to the `Object.defineProperty` call inside the `addAttr` method.
-   * @param {string} name The name of the attribute.
+   * Gets the value of the specified state key. This is passed as that key's
+   * getter to the `Object.defineProperty` call inside the `addKeyToState` method.
+   * @param {string} name The name of the key.
    * @return {*}
    * @protected
    */
 
 
-		Attribute.prototype.getAttrValue_ = function getAttrValue_(name) {
-			this.initAttr_(name);
-
-			return this.attrsInfo_[name].value;
+		State.prototype.getStateKeyValue_ = function getStateKeyValue_(name) {
+			this.initStateKey_(name);
+			return this.stateInfo_[name].value;
 		};
 
 		/**
-   * Checks if the value of the attribute with the given name has already been
-   * set. Note that this doesn't run the attribute's getter.
-   * @param {string} name The name of the attribute.
+   * Checks if the value of the state key with the given name has already been
+   * set. Note that this doesn't run the key's getter.
+   * @param {string} name The name of the key.
    * @return {boolean}
    */
 
 
-		Attribute.prototype.hasBeenSet = function hasBeenSet(name) {
-			var info = this.attrsInfo_[name];
-			return info.state === Attribute.States.INITIALIZED || info.initialValue;
+		State.prototype.hasBeenSet = function hasBeenSet(name) {
+			var info = this.stateInfo_[name];
+			return info.state === State.KeyStates.INITIALIZED || info.initialValue;
 		};
 
 		/**
-   * Informs of changes to an attributes value through an event. Won't trigger
+   * Informs of changes to a state key's value through an event. Won't trigger
    * the event if the value hasn't changed or if it's being initialized.
-   * @param {string} name The name of the attribute.
-   * @param {*} prevVal The previous value of the attribute.
+   * @param {string} name The name of the key.
+   * @param {*} prevVal The previous value of the key.
    * @protected
    */
 
 
-		Attribute.prototype.informChange_ = function informChange_(name, prevVal) {
+		State.prototype.informChange_ = function informChange_(name, prevVal) {
 			if (this.shouldInformChange_(name, prevVal)) {
 				var data = {
-					attrName: name,
+					key: name,
 					newVal: this[name],
 					prevVal: prevVal
 				};
 				this.emit(name + 'Changed', data);
+				this.emit('stateKeyChanged', data);
 				this.scheduleBatchEvent_(data);
 			}
 		};
 
 		/**
-   * Initializes the specified attribute, giving it a first value.
-   * @param {string} name The name of the attribute.
+   * Initializes the specified state key, giving it a first value.
+   * @param {string} name The name of the key.
    * @protected
    */
 
 
-		Attribute.prototype.initAttr_ = function initAttr_(name) {
-			var info = this.attrsInfo_[name];
-			if (info.state !== Attribute.States.UNINITIALIZED) {
+		State.prototype.initStateKey_ = function initStateKey_(name) {
+			var info = this.stateInfo_[name];
+			if (info.state !== State.KeyStates.UNINITIALIZED) {
 				return;
 			}
 
-			info.state = Attribute.States.INITIALIZING;
+			info.state = State.KeyStates.INITIALIZING;
 			this.setInitialValue_(name);
 			if (!info.written) {
-				info.state = Attribute.States.INITIALIZING_DEFAULT;
+				info.state = State.KeyStates.INITIALIZING_DEFAULT;
 				this.setDefaultValue_(name);
 			}
-			info.state = Attribute.States.INITIALIZED;
+			info.state = State.KeyStates.INITIALIZED;
 		};
 
 		/**
-   * Merges an array of values for the ATTRS property into a single object.
+   * Merges an array of values for the STATE property into a single object.
    * @param {!Array} values The values to be merged.
    * @return {!Object} The merged value.
    * @static
@@ -3149,31 +3279,31 @@ babelHelpers;
    */
 
 
-		Attribute.mergeAttrs_ = function mergeAttrs_(values) {
+		State.mergeState_ = function mergeState_(values) {
 			return object.mixin.apply(null, [{}].concat(values.reverse()));
 		};
 
 		/**
-   * Merges the ATTRS static variable for the given constructor function.
+   * Merges the STATE static variable for the given constructor function.
    * @param  {!Function} ctor Constructor function.
    * @return {boolean} Returns true if merge happens, false otherwise.
    * @static
    */
 
 
-		Attribute.mergeAttrsStatic = function mergeAttrsStatic(ctor) {
-			return core.mergeSuperClassesProperty(ctor, 'ATTRS', Attribute.mergeAttrs_);
+		State.mergeStateStatic = function mergeStateStatic(ctor) {
+			return core.mergeSuperClassesProperty(ctor, 'STATE', State.mergeState_);
 		};
 
 		/**
-   * Merges the values of the `INVALID_ATTRS` static for the whole hierarchy of
+   * Merges the values of the `INVALID_KEYS` static for the whole hierarchy of
    * the current instance.
    * @protected
    */
 
 
-		Attribute.prototype.mergeInvalidAttrs_ = function mergeInvalidAttrs_() {
-			core.mergeSuperClassesProperty(this.constructor, 'INVALID_ATTRS', function (values) {
+		State.prototype.mergeInvalidKeys_ = function mergeInvalidKeys_() {
+			core.mergeSuperClassesProperty(this.constructor, 'INVALID_KEYS', function (values) {
 				return array.flatten(values).reduce(function (merged, val) {
 					if (val) {
 						merged[val] = true;
@@ -3184,24 +3314,24 @@ babelHelpers;
 		};
 
 		/**
-   * Removes the requested attribute.
-   * @param {string} name The name of the attribute.
+   * Removes the requested state key.
+   * @param {string} name The name of the key.
    */
 
 
-		Attribute.prototype.removeAttr = function removeAttr(name) {
-			this.attrsInfo_[name] = null;
+		State.prototype.removeStateKey = function removeStateKey(name) {
+			this.stateInfo_[name] = null;
 			delete this[name];
 		};
 
 		/**
-   * Schedules an attribute change batch event to be emitted asynchronously.
-   * @param {!Object} attrChangeData Information about an attribute's update.
+   * Schedules a state change batch event to be emitted asynchronously.
+   * @param {!Object} changeData Information about a state key's update.
    * @protected
    */
 
 
-		Attribute.prototype.scheduleBatchEvent_ = function scheduleBatchEvent_(attrChangeData) {
+		State.prototype.scheduleBatchEvent_ = function scheduleBatchEvent_(changeData) {
 			if (!this.scheduledBatchData_) {
 				async.nextTick(this.emitBatchEvent_, this);
 				this.scheduledBatchData_ = {
@@ -3209,78 +3339,40 @@ babelHelpers;
 				};
 			}
 
-			var name = attrChangeData.attrName;
+			var name = changeData.key;
 			var changes = this.scheduledBatchData_.changes;
 			if (changes[name]) {
-				changes[name].newVal = attrChangeData.newVal;
+				changes[name].newVal = changeData.newVal;
 			} else {
-				changes[name] = attrChangeData;
+				changes[name] = changeData;
 			}
 		};
 
 		/**
-   * Sets the value of the requested attribute.
-   * Note: this can and should be accomplished by setting the attribute as a regular property.
-   * This should only be used in cases where a function is actually needed.
+   * Sets the value of the requested state key.
+   * Note: this can and should be accomplished by setting the state key as a
+   * regular property. This should only be used in cases where a function is
+   * actually needed.
    * @param {string} name
    * @param {*} value
    * @return {*}
    */
 
 
-		Attribute.prototype.set = function set(name, value) {
+		State.prototype.set = function set(name, value) {
 			this[name] = value;
 		};
 
 		/**
-   * Sets the value of all the specified attributes.
-   * @param {!Object.<string,*>} values A map of attribute names to the values they
-   *   should be set to.
-   */
-
-
-		Attribute.prototype.setAttrs = function setAttrs(values) {
-			var names = Object.keys(values);
-
-			for (var i = 0; i < names.length; i++) {
-				this[names[i]] = values[names[i]];
-			}
-		};
-
-		/**
-   * Sets the value of the specified attribute. This is passed as that attribute's
-   * setter to the `Object.defineProperty` call inside the `addAttr` method.
-   * @param {string} name The name of the attribute.
-   * @param {*} value The new value of the attribute.
+   * Sets the default value of the requested state key.
+   * @param {string} name The name of the key.
+   * @return {*}
    * @protected
    */
 
 
-		Attribute.prototype.setAttrValue_ = function setAttrValue_(name, value) {
-			if (!this.canSetAttribute(name) || !this.validateAttrValue_(name, value)) {
-				return;
-			}
-
-			var info = this.attrsInfo_[name];
-			if (info.initialValue === undefined && info.state === Attribute.States.UNINITIALIZED) {
-				info.state = Attribute.States.INITIALIZED;
-			}
-
-			var prevVal = this[name];
-			info.value = this.callSetter_(name, value);
-			info.written = true;
-			this.informChange_(name, prevVal);
-		};
-
-		/**
-   * Sets the default value of the requested attribute.
-   * @param {string} name The name of the attribute.
-   * @return {*}
-   */
-
-
-		Attribute.prototype.setDefaultValue_ = function setDefaultValue_(name) {
-			var config = this.attrsInfo_[name].config;
+		State.prototype.setDefaultValue_ = function setDefaultValue_(name) {
+			var config = this.stateInfo_[name].config;
 
 			if (config.value !== undefined) {
 				this[name] = config.value;
@@ -3290,14 +3382,15 @@ babelHelpers;
 		};
 
 		/**
-   * Sets the initial value of the requested attribute.
-   * @param {string} name The name of the attribute.
+   * Sets the initial value of the requested state key.
+   * @param {string} name The name of the key.
    * @return {*}
+   * @protected
    */
 
 
-		Attribute.prototype.setInitialValue_ = function setInitialValue_(name) {
-			var info = this.attrsInfo_[name];
+		State.prototype.setInitialValue_ = function setInitialValue_(name) {
+			var info = this.stateInfo_[name];
 			if (info.initialValue !== undefined) {
 				this[name] = info.initialValue;
 				info.initialValue = undefined;
@@ -3305,79 +3398,122 @@ babelHelpers;
 		};
 
 		/**
-   * Checks if we should inform about an attributes update. Updates are ignored
-   * during attribute initialization. Otherwise, updates to primitive values
-   * are only informed when the new value is different from the previous
-   * one. Updates to objects (which includes functions and arrays) are always
-   * informed outside initialization though, since we can't be sure if all of
-   * the internal data has stayed the same.
-   * @param {string} name The name of the attribute.
-   * @param {*} prevVal The previous value of the attribute.
-   * @return {boolean}
+   * Sets the value of all the specified state keys.
+   * @param {!Object.<string,*>} values A map of state keys to the values they
+   *   should be set to.
    */
 
 
-		Attribute.prototype.shouldInformChange_ = function shouldInformChange_(name, prevVal) {
-			var info = this.attrsInfo_[name];
-			return info.state === Attribute.States.INITIALIZED && (core.isObject(prevVal) || prevVal !== this[name]);
+		State.prototype.setState = function setState(values) {
+			var names = Object.keys(values);
+
+			for (var i = 0; i < names.length; i++) {
+				this[names[i]] = values[names[i]];
+			}
 		};
 
 		/**
-   * Validates the attribute's value, which includes calling the validator defined
-   * in the attribute's configuration object, if there is one.
-   * @param {string} name The name of the attribute.
-   * @param {*} value The value to be validated.
-   * @return {boolean} Flag indicating if value is valid or not.
+   * Sets the value of the specified state key. This is passed as that key's
+   * setter to the `Object.defineProperty` call inside the `addKeyToState`
+   * method.
+   * @param {string} name The name of the key.
+   * @param {*} value The new value of the key.
+   * @protected
    */
 
 
-		Attribute.prototype.validateAttrValue_ = function validateAttrValue_(name, value) {
-			var info = this.attrsInfo_[name];
+		State.prototype.setStateKeyValue_ = function setStateKeyValue_(name, value) {
+			if (!this.canSetState(name) || !this.validateKeyValue_(name, value)) {
+				return;
+			}
 
-			return info.state === Attribute.States.INITIALIZING_DEFAULT || this.callValidator_(name, value);
+			var info = this.stateInfo_[name];
+			if (info.initialValue === undefined && info.state === State.KeyStates.UNINITIALIZED) {
+				info.state = State.KeyStates.INITIALIZED;
+			}
+
+			var prevVal = this[name];
+			info.value = this.callSetter_(name, value, prevVal);
+			info.written = true;
+			this.informChange_(name, prevVal);
 		};
 
-		return Attribute;
+		/**
+   * Checks if we should inform about a state update. Updates are ignored during
+   * state initialization. Otherwise, updates to primitive values are only
+   * informed when the new value is different from the previous one. Updates to
+   * objects (which includes functions and arrays) are always informed outside
+   * initialization though, since we can't be sure if all of the internal data
+   * has stayed the same.
+   * @param {string} name The name of the key.
+   * @param {*} prevVal The previous value of the key.
+   * @return {boolean}
+   * @protected
+   */
+
+
+		State.prototype.shouldInformChange_ = function shouldInformChange_(name, prevVal) {
+			var info = this.stateInfo_[name];
+			return info.state === State.KeyStates.INITIALIZED && (core.isObject(prevVal) || prevVal !== this[name]);
+		};
+
+		/**
+   * Validates the state key's value, which includes calling the validator
+   * defined in the key's configuration object, if there is one.
+   * @param {string} name The name of the key.
+   * @param {*} value The value to be validated.
+   * @return {boolean} Flag indicating if value is valid or not.
+   * @protected
+   */
+
+
+		State.prototype.validateKeyValue_ = function validateKeyValue_(name, value) {
+			var info = this.stateInfo_[name];
+
+			return info.state === State.KeyStates.INITIALIZING_DEFAULT || this.callValidator_(name, value);
+		};
+
+		return State;
 	}(EventEmitter);
 
 	/**
-  * A list with attribute names that will automatically be rejected as invalid.
-  * Subclasses can define their own invalid attributes by setting this static
-  * on their constructors, which will be merged together and handled automatically.
+  * A list with state key names that will automatically be rejected as invalid.
+  * Subclasses can define their own invalid keys by setting this static on their
+  * constructors, which will be merged together and handled automatically.
   * @type {!Array<string>}
   */
 
 
-	Attribute.prototype.registerMetalComponent && Attribute.prototype.registerMetalComponent(Attribute, 'Attribute')
-	Attribute.INVALID_ATTRS = ['attrs'];
+	State.prototype.registerMetalComponent && State.prototype.registerMetalComponent(State, 'State')
+	State.INVALID_KEYS = ['state', 'stateKey'];
 
 	/**
-  * Constants that represent the states that an attribute can be in.
+  * Constants that represent the states that an a state key can be in.
   * @type {!Object}
   */
-	Attribute.States = {
+	State.KeyStates = {
 		UNINITIALIZED: 0,
 		INITIALIZING: 1,
 		INITIALIZING_DEFAULT: 2,
 		INITIALIZED: 3
 	};
 
-	this.metal.Attribute = Attribute;
+	this.metal.State = State;
 }).call(this);
 'use strict';
 
 (function () {
 	var core = this.metal.metal;
 	var dom = this.metal.dom;
-	var Attribute = this.metal.Attribute;
 	var EventHandler = this.metalNamed.events.EventHandler;
+	var State = this.metal.State;
 
 	/**
   * Toggler component.
   */
 
-	var Toggler = function (_Attribute) {
-		babelHelpers.inherits(Toggler, _Attribute);
+	var Toggler = function (_State) {
+		babelHelpers.inherits(Toggler, _State);
 
 		/**
    * @inheritDoc
@@ -3386,7 +3522,7 @@ babelHelpers;
 		function Toggler(opt_config) {
 			babelHelpers.classCallCheck(this, Toggler);
 
-			var _this = babelHelpers.possibleConstructorReturn(this, _Attribute.call(this, opt_config));
+			var _this = babelHelpers.possibleConstructorReturn(this, _State.call(this, opt_config));
 
 			_this.headerEventHandler_ = new EventHandler();
 
@@ -3401,7 +3537,7 @@ babelHelpers;
 
 
 		Toggler.prototype.disposeInternal = function disposeInternal() {
-			_Attribute.prototype.disposeInternal.call(this);
+			_State.prototype.disposeInternal.call(this);
 			this.headerEventHandler_.removeAllListeners();
 		};
 
@@ -3456,7 +3592,7 @@ babelHelpers;
 		};
 
 		/**
-   * Syncs the component according to the value of the `header` attribute,
+   * Syncs the component according to the value of the `header` state,
    * attaching events to the new element and detaching from any previous one.
    */
 
@@ -3492,15 +3628,15 @@ babelHelpers;
 		};
 
 		return Toggler;
-	}(Attribute);
+	}(State);
 
 	/**
-  * Attributes configuration.
+  * State configuration.
   */
 
 
 	Toggler.prototype.registerMetalComponent && Toggler.prototype.registerMetalComponent(Toggler, 'Toggler')
-	Toggler.ATTRS = {
+	Toggler.STATE = {
 		/**
    * The element where the header/content selectors will be looked for.
    * @type {string|!Element}
