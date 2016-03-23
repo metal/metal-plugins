@@ -1,13 +1,13 @@
 'use strict';
 
-import Attribute from 'metal-attribute';
 import core from 'metal';
 import dom from 'metal-dom';
+import State from 'metal-state';
 
 /**
  * Clipboard component.
  */
-class Clipboard extends Attribute {
+class Clipboard extends State {
 	/**
 	 * Delegates a click event to the passed selector.
 	 */
@@ -49,11 +49,11 @@ class Clipboard extends Attribute {
 }
 
 /**
- * Attributes definition.
+ * State definition.
  * @type {!Object}
  * @static
  */
-Clipboard.ATTRS = {
+Clipboard.STATE = {
 	/**
 	 * A function that returns the name of the clipboard action that should be done
 	 * when for the given element (either 'copy' or 'cut').
@@ -102,9 +102,9 @@ Clipboard.ATTRS = {
 /**
  * ClipboardAction component.
  */
-class ClipboardAction extends Attribute {
+class ClipboardAction extends State {
 	/**
-	 * Initializes selection either from a `text` or `target` attribute.
+	 * Initializes selection either from a `text` or `target` state.
 	 */
 	constructor(opt_config) {
 		super(opt_config);
@@ -186,7 +186,7 @@ class ClipboardAction extends Attribute {
 	}
 
 	/**
-	 * Selects the content from element passed on `target` attribute.
+	 * Selects the content from element passed on `target` state.
 	 */
 	selectTarget() {
 		if (this.target.nodeName === 'INPUT' || this.target.nodeName === 'TEXTAREA') {
@@ -205,7 +205,7 @@ class ClipboardAction extends Attribute {
 	}
 
 	/**
-	 * Selects the content from value passed on `text` attribute.
+	 * Selects the content from value passed on `text` state.
 	 */
 	selectValue() {
 		this.removeFakeElement();
@@ -226,11 +226,11 @@ class ClipboardAction extends Attribute {
 }
 
 /**
- * Attributes definition.
+ * State definition.
  * @type {!Object}
  * @static
  */
-ClipboardAction.ATTRS = {
+ClipboardAction.STATE = {
 	/**
 	 * The action to be performed (either 'copy' or 'cut').
 	 * @type {string}
