@@ -2,14 +2,14 @@
 
 import core from 'metal';
 import { dom, DomEventEmitterProxy } from 'metal-dom';
-import Attribute from 'metal-attribute';
+import State from 'metal-state';
 import EventEmitter from 'metal-events';
 import Position from 'metal-position';
 
 /**
  * Affix utility.
  */
-class Affix extends Attribute {
+class Affix extends State {
 	/**
 	 * @inheritDoc
 	 */
@@ -115,7 +115,7 @@ Affix.Position = {
 	Default: 'affix'
 };
 
-Affix.ATTRS = {
+Affix.STATE = {
 	/**
 	 * The scrollElement element to be used as scrollElement area for affix. The scrollElement is
 	 * where the scroll event is listened from.
