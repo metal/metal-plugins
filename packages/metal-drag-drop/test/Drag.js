@@ -141,6 +141,33 @@ describe('Drag', function() {
 		assert.ok(!drag.isDragging());
 	});
 
+	it('should emit `dragStart` event when source starts being dragged', function() {
+		drag = new Drag({
+			sources: item
+		});
+		var listener = sinon.stub();
+		drag.on('dragStart', listener);
+
+		DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
+		assert.strictEqual(1, listener.callCount);
+	});
+
+	it('should emit `dragEnd` event when source stops being dragged', function() {
+		drag = new Drag({
+			sources: item
+		});
+		var listener = sinon.stub();
+		drag.on('dragEnd', listener);
+
+		DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
+		assert.strictEqual(0, listener.callCount);
+
+		DragTestHelper.triggerMouseEvent(document, 'mouseup');
+		assert.strictEqual(1, listener.callCount);
+	});
+
 	it('should get the active drag element', function() {
 		drag = new Drag({
 			sources: item
