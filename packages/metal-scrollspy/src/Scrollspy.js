@@ -2,13 +2,13 @@
 
 import core from 'metal';
 import dom from 'metal-dom';
-import Attribute from 'metal-attribute';
 import Position from 'metal-position';
+import State from 'metal-state';
 
 /**
  * Scrollspy utility.
  */
-class Scrollspy extends Attribute {
+class Scrollspy extends State {
 	/**
 	 * @inheritDoc
 	 */
@@ -158,7 +158,7 @@ class Scrollspy extends Attribute {
 	}
 
 	/**
-	 * Fired when the value of the `scrollElement` attribute changes.
+	 * Fired when the value of the `scrollElement` state changes.
 	 * Refreshes the spy and updates the event handler to listen to the new scroll element.
 	 * @param {!Event} event
 	 * @protected
@@ -217,10 +217,9 @@ class Scrollspy extends Attribute {
 	}
 }
 
-Scrollspy.ATTRS = {
+Scrollspy.STATE = {
 	/**
 	 * Class to be used as active class.
-	 * @attribute activeClass
 	 * @type {string}
 	 */
 	activeClass: {
