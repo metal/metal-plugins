@@ -33,17 +33,17 @@ describe('Clipboard', function() {
 			assert.strictEqual('copy', document.execCommand.args[0][0]);
 		});
 
-		it('should copy text from "text" attribute fn to clipboard', function() {
+		it('should copy text from "text" state fn to clipboard', function() {
 			dom.append(container, '<div data-clipboard data-text="From data-text"></div>');
 
 			clipboard = new Clipboard({
 				text: function() {
-					return 'From text attribute fn';
+					return 'From text state fn';
 				}
 			});
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
 
-			assert.strictEqual('From text attribute fn', window.getSelection().toString());
+			assert.strictEqual('From text state fn', window.getSelection().toString());
 			assert.strictEqual(1, document.execCommand.callCount);
 			assert.strictEqual('copy', document.execCommand.args[0][0]);
 		});
@@ -85,7 +85,7 @@ describe('Clipboard', function() {
 			assert.strictEqual('cut', document.execCommand.args[0][0]);
 		});
 
-		it('should copy text to clipboard using the action specified by the action attribute', function() {
+		it('should copy text to clipboard using the action specified by the action state', function() {
 			dom.append(container, '<div data-clipboard data-text="From data-text" data-action="cut"></div>');
 
 			clipboard = new Clipboard({
@@ -162,7 +162,7 @@ describe('Clipboard', function() {
 			assert.strictEqual('copy', document.execCommand.args[0][0]);
 		});
 
-		it('should copy text from the element given in the "target" attribute', function() {
+		it('should copy text from the element given in the "target" state', function() {
 			dom.append(container, '<div data-clipboard data-target="#target"></div>');
 			dom.append(container, '<div id="target">From div</div>');
 			dom.append(container, '<span id="target2">From span</span>');
