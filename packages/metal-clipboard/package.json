@@ -1,6 +1,6 @@
 {
 	"name": "metal-clipboard",
-	"version": "1.0.0-rc",
+	"version": "1.0.0-rc.1",
 	"description": "Metal's component for copying content to the clipboard",
 	"license": "BSD",
 	"repository": "metal/metal-clipboard",
