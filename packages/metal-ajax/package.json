@@ -9,7 +9,7 @@
     "npm": ">=3.0.0"
   },
   "main": "lib/Ajax.js",
-  "browser": "src/Ajax.js",
+  "jsnext:main": "src/Ajax.js",
   "files": [
 		"lib",
 		"src",
@@ -33,6 +33,6 @@
 		"babel-cli": "^6.4.5",
 		"babel-preset-es2015": "^6.3.13",
     "gulp": "^3.8.11",
-		"gulp-metal": "^0.14.0"
+		"gulp-metal": "^1.0.0"
 	}
 }
