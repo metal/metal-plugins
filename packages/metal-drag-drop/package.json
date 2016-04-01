@@ -22,10 +22,10 @@
     "metal"
   ],
   "dependencies": {
-    "metal": "^1.0.0-rc",
-    "metal-events": "^1.0.0-rc",
-    "metal-position": "^1.0.0-rc",
-    "metal-state": "metal/metal-state#master"
+    "metal": "^1.0.0-rc.1",
+    "metal-events": "^1.0.0-rc.1",
+    "metal-position": "^1.0.0-rc.1",
+    "metal-state": "^1.0.0-rc.1"
   },
   "devDependencies": {
     "bootstrap": "^3.3.6",
