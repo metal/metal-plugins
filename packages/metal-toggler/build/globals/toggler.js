@@ -342,12 +342,15 @@ babelHelpers;
    */
 
 		array.equal = function equal(arr1, arr2) {
+			if (arr1.length !== arr2.length) {
+				return false;
+			}
 			for (var i = 0; i < arr1.length; i++) {
 				if (arr1[i] !== arr2[i]) {
 					return false;
 				}
 			}
-			return arr1.length === arr2.length;
+			return true;
 		};
 
 		/**
@@ -740,8 +743,6 @@ babelHelpers;
 'use strict';
 
 (function () {
-	var core = this.metal.core;
-
 	var object = function () {
 		function object() {
 			babelHelpers.classCallCheck(this, object);
@@ -770,22 +771,16 @@ babelHelpers;
    * @param {string} name The fully qualified name.
    * @param {object=} opt_obj The object within which to look; default is
    *     <code>window</code>.
-   * @return {?} The value (object or primitive) or, if not found, null.
+   * @return {?} The value (object or primitive) or, if not found, undefined.
    */
 
 
 		object.getObjectByName = function getObjectByName(name, opt_obj) {
+			var scope = opt_obj || window;
 			var parts = name.split('.');
-			var cur = opt_obj || window;
-			var part;
-			while (part = parts.shift()) {
-				if (core.isDefAndNotNull(cur[part])) {
-					cur = cur[part];
-				} else {
-					return null;
-				}
-			}
-			return cur;
+			return parts.reduce(function (part, key) {
+				return part[key];
+			}, scope);
 		};
 
 		/**
@@ -892,7 +887,7 @@ babelHelpers;
   var object = this.metal.object;
   var string = this.metal.string;
   this.metal.metal = core;
-  this.metalNamed.metal = {};
+  this.metalNamed.metal = this.metalNamed.metal || {};
   this.metalNamed.metal.core = core;
   this.metalNamed.metal.array = array;
   this.metalNamed.metal.async = async;
@@ -977,7 +972,6 @@ babelHelpers;
 		return EventHandle;
 	}(Disposable);
 
-	EventHandle.prototype.registerMetalComponent && EventHandle.prototype.registerMetalComponent(EventHandle, 'EventHandle')
 	this.metal.EventHandle = EventHandle;
 }).call(this);
 'use strict';
@@ -1383,7 +1377,6 @@ babelHelpers;
 		return EventEmitter;
 	}(Disposable);
 
-	EventEmitter.prototype.registerMetalComponent && EventEmitter.prototype.registerMetalComponent(EventEmitter, 'EventEmitter')
 	this.metal.EventEmitter = EventEmitter;
 }).call(this);
 'use strict';
@@ -1391,7 +1384,6 @@ babelHelpers;
 (function () {
 	var array = this.metalNamed.metal.array;
 	var Disposable = this.metalNamed.metal.Disposable;
-	var object = this.metalNamed.metal.object;
 
 	/**
   * EventEmitterProxy utility. It's responsible for linking two EventEmitter
@@ -1583,7 +1575,6 @@ babelHelpers;
 		return EventEmitterProxy;
 	}(Disposable);
 
-	EventEmitterProxy.prototype.registerMetalComponent && EventEmitterProxy.prototype.registerMetalComponent(EventEmitterProxy, 'EventEmitterProxy')
 	this.metal.EventEmitterProxy = EventEmitterProxy;
 }).call(this);
 'use strict';
@@ -1657,7 +1648,6 @@ babelHelpers;
 		return EventHandler;
 	}(Disposable);
 
-	EventHandler.prototype.registerMetalComponent && EventHandler.prototype.registerMetalComponent(EventHandler, 'EventHandler')
 	this.metal.EventHandler = EventHandler;
 }).call(this);
 'use strict';
@@ -1668,7 +1658,7 @@ babelHelpers;
   var EventHandle = this.metal.EventHandle;
   var EventHandler = this.metal.EventHandler;
   this.metal.events = EventEmitter;
-  this.metalNamed.events = {};
+  this.metalNamed.events = this.metalNamed.events || {};
   this.metalNamed.events.EventEmitter = EventEmitter;
   this.metalNamed.events.EventEmitterProxy = EventEmitterProxy;
   this.metalNamed.events.EventHandle = EventHandle;
@@ -1719,7 +1709,6 @@ babelHelpers;
 		return DomEventHandle;
 	}(EventHandle);
 
-	DomEventHandle.prototype.registerMetalComponent && DomEventHandle.prototype.registerMetalComponent(DomEventHandle, 'DomEventHandle')
 	this.metal.DomEventHandle = DomEventHandle;
 }).call(this);
 'use strict';
@@ -2456,7 +2445,6 @@ babelHelpers;
 		return DomEventEmitterProxy;
 	}(EventEmitterProxy);
 
-	DomEventEmitterProxy.prototype.registerMetalComponent && DomEventEmitterProxy.prototype.registerMetalComponent(DomEventEmitterProxy, 'DomEventEmitterProxy')
 	this.metal.DomEventEmitterProxy = DomEventEmitterProxy;
 }).call(this);
 'use strict';
@@ -2853,7 +2841,7 @@ babelHelpers;
   var globalEval = this.metal.globalEval;
   var globalEvalStyles = this.metal.globalEvalStyles;
   this.metal.dom = dom;
-  this.metalNamed.dom = {};
+  this.metalNamed.dom = this.metalNamed.dom || {};
   this.metalNamed.dom.dom = dom;
   this.metalNamed.dom.DomEventEmitterProxy = DomEventEmitterProxy;
   this.metalNamed.dom.DomEventHandle = DomEventHandle;
@@ -3484,7 +3472,6 @@ babelHelpers;
   */
 
 
-	State.prototype.registerMetalComponent && State.prototype.registerMetalComponent(State, 'State')
 	State.INVALID_KEYS = ['state', 'stateKey'];
 
 	/**
@@ -3635,7 +3622,6 @@ babelHelpers;
   */
 
 
-	Toggler.prototype.registerMetalComponent && Toggler.prototype.registerMetalComponent(Toggler, 'Toggler')
 	Toggler.STATE = {
 		/**
    * The element where the header/content selectors will be looked for.
