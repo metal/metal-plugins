@@ -115,6 +115,7 @@ babelHelpers;
    * TODO(*): Rethink superclass loop.
    */
 
+
 		core.collectSuperClassesProperty = function collectSuperClassesProperty(constructor, propertyName) {
 			var propertyValues = [constructor[propertyName]];
 			while (constructor.__proto__ && !constructor.__proto__.isPrototypeOf(Function)) {
@@ -131,6 +132,7 @@ babelHelpers;
    * @param {!function()} fn
    * @return {string}
    */
+
 
 		core.getFunctionName = function getFunctionName(fn) {
 			if (!fn.name) {
@@ -150,6 +152,7 @@ babelHelpers;
    * @throws {Error} when invoked to indicate the method should be overridden.
    */
 
+
 		core.getUid = function getUid(opt_object) {
 			if (opt_object) {
 				return opt_object[core.UID_PROPERTY] || (opt_object[core.UID_PROPERTY] = core.uniqueIdCounter_++);
@@ -163,6 +166,7 @@ babelHelpers;
    * @return {?} The first argument.
    */
 
+
 		core.identityFunction = function identityFunction(opt_returnValue) {
 			return opt_returnValue;
 		};
@@ -172,6 +176,7 @@ babelHelpers;
    * @param {?} val Variable to test.
    * @return {boolean} Whether variable is boolean.
    */
+
 
 		core.isBoolean = function isBoolean(val) {
 			return typeof val === 'boolean';
@@ -183,6 +188,7 @@ babelHelpers;
    * @return {boolean} Whether variable is defined.
    */
 
+
 		core.isDef = function isDef(val) {
 			return val !== undefined;
 		};
@@ -192,6 +198,7 @@ babelHelpers;
    * @param {*} val
    * @return {Boolean}
    */
+
 
 		core.isDefAndNotNull = function isDefAndNotNull(val) {
 			return core.isDef(val) && !core.isNull(val);
@@ -203,6 +210,7 @@ babelHelpers;
    * @return {Boolean}
    */
 
+
 		core.isDocument = function isDocument(val) {
 			return val && (typeof val === 'undefined' ? 'undefined' : babelHelpers.typeof(val)) === 'object' && val.nodeType === 9;
 		};
@@ -212,6 +220,7 @@ babelHelpers;
    * @param {*} val
    * @return {Boolean}
    */
+
 
 		core.isElement = function isElement(val) {
 			return val && (typeof val === 'undefined' ? 'undefined' : babelHelpers.typeof(val)) === 'object' && val.nodeType === 1;
@@ -223,6 +232,7 @@ babelHelpers;
    * @return {boolean} Whether variable is a function.
    */
 
+
 		core.isFunction = function isFunction(val) {
 			return typeof val === 'function';
 		};
@@ -232,6 +242,7 @@ babelHelpers;
    * @param {*} val
    * @return {Boolean}
    */
+
 
 		core.isNull = function isNull(val) {
 			return val === null;
@@ -243,6 +254,7 @@ babelHelpers;
    * @return {boolean} Whether variable is a number.
    */
 
+
 		core.isNumber = function isNumber(val) {
 			return typeof val === 'number';
 		};
@@ -252,6 +264,7 @@ babelHelpers;
    * @param {*} val
    * @return {Boolean}
    */
+
 
 		core.isWindow = function isWindow(val) {
 			return val !== null && val === val.window;
@@ -264,6 +277,7 @@ babelHelpers;
    * @return {boolean} Whether variable is an object.
    */
 
+
 		core.isObject = function isObject(val) {
 			var type = typeof val === 'undefined' ? 'undefined' : babelHelpers.typeof(val);
 			return type === 'object' && val !== null || type === 'function';
@@ -275,6 +289,7 @@ babelHelpers;
    * @return {Boolean}
    */
 
+
 		core.isPromise = function isPromise(val) {
 			return val && (typeof val === 'undefined' ? 'undefined' : babelHelpers.typeof(val)) === 'object' && typeof val.then === 'function';
 		};
@@ -284,6 +299,7 @@ babelHelpers;
    * @param {*} val
    * @return {Boolean}
    */
+
 
 		core.isString = function isString(val) {
 			return typeof val === 'string';
@@ -301,6 +317,7 @@ babelHelpers;
    *   Should return the merged value to be stored on the current class.
    * @return {boolean} Returns true if merge happens, false otherwise.
    */
+
 
 		core.mergeSuperClassesProperty = function mergeSuperClassesProperty(constructor, propertyName, opt_mergeFn) {
 			var mergedName = propertyName + '_MERGED';
@@ -321,6 +338,7 @@ babelHelpers;
    * @return {void} Nothing.
    */
 
+
 		core.nullFunction = function nullFunction() {};
 
 		return core;
@@ -331,6 +349,7 @@ babelHelpers;
   * @type {String}
   * @protected
   */
+
 
 	core.UID_PROPERTY = 'core_' + (Math.random() * 1e9 >>> 0);
 
@@ -361,12 +380,15 @@ babelHelpers;
    */
 
 		array.equal = function equal(arr1, arr2) {
+			if (arr1.length !== arr2.length) {
+				return false;
+			}
 			for (var i = 0; i < arr1.length; i++) {
 				if (arr1[i] !== arr2[i]) {
 					return false;
 				}
 			}
-			return arr1.length === arr2.length;
+			return true;
 		};
 
 		/**
@@ -374,6 +396,7 @@ babelHelpers;
    * @param {!Array} arr
    * @return {*}
    */
+
 
 		array.firstDefinedValue = function firstDefinedValue(arr) {
 			for (var i = 0; i < arr.length; i++) {
@@ -389,6 +412,7 @@ babelHelpers;
    * @param {Array.<*>} opt_output Optional output array.
    * @return {Array.<*>} Flat array.
    */
+
 
 		array.flatten = function flatten(arr, opt_output) {
 			var output = opt_output || [];
@@ -410,6 +434,7 @@ babelHelpers;
    * @template T
    */
 
+
 		array.remove = function remove(arr, obj) {
 			var i = arr.indexOf(obj);
 			var rv;
@@ -426,6 +451,7 @@ babelHelpers;
    * @return {boolean} True if an element was removed.
    */
 
+
 		array.removeAt = function removeAt(arr, i) {
 			return Array.prototype.splice.call(arr, i, 1).length === 1;
 		};
@@ -440,6 +466,7 @@ babelHelpers;
    *   start index will be included.
    * @return {!Array}
    */
+
 
 		array.slice = function slice(arr, start, opt_end) {
 			var sliced = [];
@@ -719,6 +746,7 @@ babelHelpers;
    * Disposes of this instance's object references. Calls `disposeInternal`.
    */
 
+
 		Disposable.prototype.dispose = function dispose() {
 			if (!this.disposed_) {
 				this.disposeInternal();
@@ -732,12 +760,14 @@ babelHelpers;
    * disposables).
    */
 
+
 		Disposable.prototype.disposeInternal = function disposeInternal() {};
 
 		/**
    * Checks if this instance has already been disposed.
    * @return {boolean}
    */
+
 
 		Disposable.prototype.isDisposed = function isDisposed() {
 			return this.disposed_;
@@ -751,8 +781,6 @@ babelHelpers;
 'use strict';
 
 (function () {
-	var core = this.metal.core;
-
 	var object = function () {
 		function object() {
 			babelHelpers.classCallCheck(this, object);
@@ -781,21 +809,16 @@ babelHelpers;
    * @param {string} name The fully qualified name.
    * @param {object=} opt_obj The object within which to look; default is
    *     <code>window</code>.
-   * @return {?} The value (object or primitive) or, if not found, null.
+   * @return {?} The value (object or primitive) or, if not found, undefined.
    */
 
+
 		object.getObjectByName = function getObjectByName(name, opt_obj) {
+			var scope = opt_obj || window;
 			var parts = name.split('.');
-			var cur = opt_obj || window;
-			var part;
-			while (part = parts.shift()) {
-				if (core.isDefAndNotNull(cur[part])) {
-					cur = cur[part];
-				} else {
-					return null;
-				}
-			}
-			return cur;
+			return parts.reduce(function (part, key) {
+				return part[key];
+			}, scope);
 		};
 
 		/**
@@ -805,6 +828,7 @@ babelHelpers;
    * @param {!function(string, *)} fn
    * @return {!Object}
    */
+
 
 		object.map = function map(obj, fn) {
 			var mappedObj = {};
@@ -845,6 +869,7 @@ babelHelpers;
   * @return {string} A random string, e.g. sn1s7vb4gcic.
   */
 
+
 		string.getRandomString = function getRandomString() {
 			var x = 2147483648;
 			return Math.floor(Math.random() * x).toString(36) + Math.abs(Math.floor(Math.random() * x) ^ Date.now()).toString(36);
@@ -859,6 +884,7 @@ babelHelpers;
    * @param {String} val Target string.
    * @return {Number} Returns the string hashcode.
    */
+
 
 		string.hashCode = function hashCode(val) {
 			var hash = 0;
@@ -879,6 +905,7 @@ babelHelpers;
    * @return {string}
    */
 
+
 		string.replaceInterval = function replaceInterval(str, start, end, value) {
 			return str.substring(0, start) + value + str.substring(end);
 		};
@@ -898,7 +925,7 @@ babelHelpers;
   var object = this.metal.object;
   var string = this.metal.string;
   this.metal.metal = core;
-  this.metalNamed.metal = {};
+  this.metalNamed.metal = this.metalNamed.metal || {};
   this.metalNamed.metal.core = core;
   this.metalNamed.metal.array = array;
   this.metalNamed.metal.async = async;
@@ -959,6 +986,12 @@ babelHelpers;
 	var Disposable = this.metalNamed.metal.Disposable;
 
 	/**
+  * A cached reference to the create function.
+  */
+
+	var create = Object.create;
+
+	/**
   * Case insensitive string Multimap implementation. Allows multiple values for
   * the same key name.
   * @extends {Disposable}
@@ -972,8 +1005,8 @@ babelHelpers;
 
 			var _this = babelHelpers.possibleConstructorReturn(this, _Disposable.call(this));
 
-			_this.keys = {};
-			_this.values = {};
+			_this.keys = create(null);
+			_this.values = create(null);
 			return _this;
 		}
 
@@ -983,6 +1016,7 @@ babelHelpers;
    * @param {*} value
    * @chainable
    */
+
 
 		MultiMap.prototype.add = function add(name, value) {
 			this.keys[name.toLowerCase()] = name;
@@ -996,9 +1030,10 @@ babelHelpers;
    * @chainable
    */
 
+
 		MultiMap.prototype.clear = function clear() {
-			this.keys = {};
-			this.values = {};
+			this.keys = create(null);
+			this.values = create(null);
 			return this;
 		};
 
@@ -1009,6 +1044,7 @@ babelHelpers;
    * @chainable
    */
 
+
 		MultiMap.prototype.contains = function contains(name) {
 			return name.toLowerCase() in this.values;
 		};
@@ -1016,6 +1052,7 @@ babelHelpers;
 		/**
    * @inheritDoc
    */
+
 
 		MultiMap.prototype.disposeInternal = function disposeInternal() {
 			this.values = null;
@@ -1027,6 +1064,7 @@ babelHelpers;
    * @return {*}
    * @chainable
    */
+
 
 		MultiMap.prototype.get = function get(name) {
 			var values = this.values[name.toLowerCase()];
@@ -1041,6 +1079,7 @@ babelHelpers;
    * @return {Array.<*>}
    */
 
+
 		MultiMap.prototype.getAll = function getAll(name) {
 			return this.values[name.toLowerCase()];
 		};
@@ -1050,6 +1089,7 @@ babelHelpers;
    * @return {boolean}
    */
 
+
 		MultiMap.prototype.isEmpty = function isEmpty() {
 			return this.size() === 0;
 		};
@@ -1058,6 +1098,7 @@ babelHelpers;
    * Gets array of key names.
    * @return {Array.<string>}
    */
+
 
 		MultiMap.prototype.names = function names() {
 			var _this2 = this;
@@ -1073,6 +1114,7 @@ babelHelpers;
    * @chainable
    */
 
+
 		MultiMap.prototype.remove = function remove(name) {
 			delete this.keys[name.toLowerCase()];
 			delete this.values[name.toLowerCase()];
@@ -1087,6 +1129,7 @@ babelHelpers;
    * @chainable
    */
 
+
 		MultiMap.prototype.set = function set(name, value) {
 			this.keys[name.toLowerCase()] = name;
 			this.values[name.toLowerCase()] = [value];
@@ -1098,6 +1141,7 @@ babelHelpers;
    * @return {number}
    */
 
+
 		MultiMap.prototype.size = function size() {
 			return this.names().length;
 		};
@@ -1107,6 +1151,7 @@ babelHelpers;
    * @return {string}
    */
 
+
 		MultiMap.prototype.toString = function toString() {
 			return JSON.stringify(this.values);
 		};
@@ -1114,7 +1159,6 @@ babelHelpers;
 		return MultiMap;
 	}(Disposable);
 
-	MultiMap.prototype.registerMetalComponent && MultiMap.prototype.registerMetalComponent(MultiMap, 'MultiMap')
 	this.metal.MultiMap = MultiMap;
 }).call(this);
 'use strict';
@@ -1124,6 +1168,7 @@ babelHelpers;
 	var string = this.metalNamed.metal.string;
 	var parse = this.metal.parse;
 	var MultiMap = this.metal.MultiMap;
+
 
 	var parseFn_ = parse;
 
@@ -1160,6 +1205,7 @@ babelHelpers;
    * @chainable
    */
 
+
 		Uri.prototype.addParametersFromMultiMap = function addParametersFromMultiMap(multimap) {
 			var _this = this;
 
@@ -1178,6 +1224,7 @@ babelHelpers;
    * @chainable
    */
 
+
 		Uri.prototype.addParameterValue = function addParameterValue(name, value) {
 			this.ensureQueryInitialized_();
 			if (core.isDef(value)) {
@@ -1194,6 +1241,7 @@ babelHelpers;
    * @chainable
    */
 
+
 		Uri.prototype.addParameterValues = function addParameterValues(name, values) {
 			var _this2 = this;
 
@@ -1208,6 +1256,7 @@ babelHelpers;
    * extracted from URI search part.
    * @protected
    */
+
 
 		Uri.prototype.ensureQueryInitialized_ = function ensureQueryInitialized_() {
 			var _this3 = this;
@@ -1239,6 +1288,7 @@ babelHelpers;
    * @return {string}
    */
 
+
 		Uri.prototype.getHash = function getHash() {
 			return this.url.hash || '';
 		};
@@ -1247,6 +1297,7 @@ babelHelpers;
    * Gets the host part of uri. E.g. <code>[hostname]:[port]</code>.
    * @return {string}
    */
+
 
 		Uri.prototype.getHost = function getHost() {
 			var host = this.getHostname();
@@ -1264,6 +1315,7 @@ babelHelpers;
    * @return {string}
    */
 
+
 		Uri.prototype.getHostname = function getHostname() {
 			var hostname = this.url.hostname;
 			if (hostname === Uri.HOSTNAME_PLACEHOLDER) {
@@ -1276,6 +1328,7 @@ babelHelpers;
    * Gets the origin part of uri. E.g. <code>http://[hostname]:[port]</code>.
    * @return {string}
    */
+
 
 		Uri.prototype.getOrigin = function getOrigin() {
 			var host = this.getHost();
@@ -1294,6 +1347,7 @@ babelHelpers;
    *   string.
    */
 
+
 		Uri.prototype.getParameterValue = function getParameterValue(name) {
 			this.ensureQueryInitialized_();
 			return this.query.get(name);
@@ -1307,6 +1361,7 @@ babelHelpers;
    *   query parameter values.
    */
 
+
 		Uri.prototype.getParameterValues = function getParameterValues(name) {
 			this.ensureQueryInitialized_();
 			return this.query.getAll(name);
@@ -1318,6 +1373,7 @@ babelHelpers;
    *   strings.
    */
 
+
 		Uri.prototype.getParameterNames = function getParameterNames() {
 			this.ensureQueryInitialized_();
 			return this.query.names();
@@ -1328,6 +1384,7 @@ babelHelpers;
    * @return {!function()}
    */
 
+
 		Uri.getParseFn = function getParseFn() {
 			return parseFn_;
 		};
@@ -1336,6 +1393,7 @@ babelHelpers;
    * Gets the pathname part of uri.
    * @return {string}
    */
+
 
 		Uri.prototype.getPathname = function getPathname() {
 			return this.url.pathname;
@@ -1346,6 +1404,7 @@ babelHelpers;
    * @return {string}
    */
 
+
 		Uri.prototype.getPort = function getPort() {
 			return this.url.port;
 		};
@@ -1354,6 +1413,7 @@ babelHelpers;
    * Gets the protocol part of uri. E.g. <code>http:</code>.
    * @return {string}
    */
+
 
 		Uri.prototype.getProtocol = function getProtocol() {
 			return this.url.protocol;
@@ -1364,6 +1424,7 @@ babelHelpers;
    * parameters.
    * @return {string}
    */
+
 
 		Uri.prototype.getSearch = function getSearch() {
 			var _this4 = this;
@@ -1392,6 +1453,7 @@ babelHelpers;
    * @return {boolean}
    */
 
+
 		Uri.prototype.hasParameter = function hasParameter(name) {
 			this.ensureQueryInitialized_();
 			return this.query.contains(name);
@@ -1401,6 +1463,7 @@ babelHelpers;
    * Makes this URL unique by adding a random param to it. Useful for avoiding
    * cache.
    */
+
 
 		Uri.prototype.makeUnique = function makeUnique() {
 			this.setParameterValue(Uri.RANDOM_PARAM, string.getRandomString());
@@ -1413,6 +1476,7 @@ babelHelpers;
    * @param {string=} opt_uri
    * @return {string} URI with protocol and hostname placeholder.
    */
+
 
 		Uri.prototype.maybeAddProtocolAndHostname_ = function maybeAddProtocolAndHostname_(opt_uri) {
 			var url = opt_uri;
@@ -1451,6 +1515,7 @@ babelHelpers;
    * @param {!Object}
    */
 
+
 		Uri.normalizeObject = function normalizeObject(parsed) {
 			var length = parsed.pathname ? parsed.pathname.length : 0;
 			if (length > 1 && parsed.pathname[length - 1] === '/') {
@@ -1464,6 +1529,7 @@ babelHelpers;
    * @param {*=} opt_uri Optional string URI to parse
    */
 
+
 		Uri.parse = function parse(opt_uri) {
 			return Uri.normalizeObject(parseFn_(opt_uri));
 		};
@@ -1473,6 +1539,7 @@ babelHelpers;
    * @param {string} name The parameter to remove.
    * @chainable
    */
+
 
 		Uri.prototype.removeParameter = function removeParameter(name) {
 			this.ensureQueryInitialized_();
@@ -1485,6 +1552,7 @@ babelHelpers;
    * @chainable
    */
 
+
 		Uri.prototype.removeUnique = function removeUnique() {
 			this.removeParameter(Uri.RANDOM_PARAM);
 			return this;
@@ -1496,6 +1564,7 @@ babelHelpers;
    * @chainable
    */
 
+
 		Uri.prototype.setHash = function setHash(hash) {
 			this.url.hash = hash;
 			return this;
@@ -1506,6 +1575,7 @@ babelHelpers;
    * @param {string} hostname
    * @chainable
    */
+
 
 		Uri.prototype.setHostname = function setHostname(hostname) {
 			this.url.hostname = hostname;
@@ -1520,6 +1590,7 @@ babelHelpers;
    * @chainable
    */
 
+
 		Uri.prototype.setParameterValue = function setParameterValue(name, value) {
 			this.removeParameter(name);
 			this.addParameterValue(name, value);
@@ -1533,6 +1604,7 @@ babelHelpers;
    * @param {*} value The new value.
    * @chainable
    */
+
 
 		Uri.prototype.setParameterValues = function setParameterValues(name, values) {
 			var _this5 = this;
@@ -1550,6 +1622,7 @@ babelHelpers;
    * @chainable
    */
 
+
 		Uri.prototype.setPathname = function setPathname(pathname) {
 			this.url.pathname = pathname;
 			return this;
@@ -1560,6 +1633,7 @@ babelHelpers;
    * @param {*} port Port number.
    * @chainable
    */
+
 
 		Uri.prototype.setPort = function setPort(port) {
 			this.url.port = port;
@@ -1572,6 +1646,7 @@ babelHelpers;
    * @param {!function()} parseFn
    */
 
+
 		Uri.setParseFn = function setParseFn(parseFn) {
 			parseFn_ = parseFn;
 		};
@@ -1581,6 +1656,7 @@ babelHelpers;
    * @param {string} protocol
    * @chainable
    */
+
 
 		Uri.prototype.setProtocol = function setProtocol(protocol) {
 			this.url.protocol = protocol;
@@ -1594,6 +1670,7 @@ babelHelpers;
    * @return {string} The string form of the url.
    * @override
    */
+
 
 		Uri.prototype.toString = function toString() {
 			var href = '';
@@ -1611,6 +1688,7 @@ babelHelpers;
    * @param {...string} ...paths Any number of paths to be joined with the base url.
    * @static
    */
+
 
 		Uri.joinPaths = function joinPaths(basePath) {
 			for (var _len = arguments.length, paths = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -1633,6 +1711,7 @@ babelHelpers;
    * @return {string} The decoded {@code str}.
    */
 
+
 		Uri.urlDecode = function urlDecode(str) {
 			return decodeURIComponent(str.replace(/\+/g, ' '));
 		};
@@ -1646,6 +1725,7 @@ babelHelpers;
   * @default http:
   * @static
   */
+
 
 	Uri.DEFAULT_PROTOCOL = 'http:';
 
