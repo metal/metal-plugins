@@ -21,10 +21,10 @@
 	],
   "dependencies": {
     "bootstrap": "^3.3.6",
-    "metal": "^1.0.0-rc",
-		"metal-state": "metal/metal-state#master",
-		"metal-dom": "^1.0.0-rc.1",
-		"metal-position": "^1.0.0-rc"
+    "metal": "^1.0.0-rc.1",
+		"metal-state": "^1.0.0-rc.1",
+		"metal-dom": "^1.0.0-rc.2",
+		"metal-position": "^1.0.0-rc.1"
   },
   "devDependencies": {
     "gulp": "^3.8.11",
