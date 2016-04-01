@@ -21,9 +21,9 @@
 		"metal"
 	],
   "dependencies": {
-    "metal": "^1.0.0-rc",
-		"metal-state": "metal/metal-state#master",
-		"metal-dom": "^1.0.0-rc.1"
+    "metal": "^1.0.0-rc.1",
+		"metal-state": "^1.0.0-rc.1",
+		"metal-dom": "^1.0.0-rc.2"
   },
 	"devDependencies": {
     "bootstrap": "^3.3.6",
