@@ -796,6 +796,36 @@ describe('Drag', function() {
 			assert.strictEqual(containerRegion.bottom - 20, listener.args[1][0].y);
 		});
 
+		it('should only drag item within the limits defined by the "constrain" object', function() {
+			drag = new Drag({
+				constrain: function(region) {
+					var width = region.right - region.left;
+					var right = Math.min(region.right, 60);
+					return {
+						bottom: region.botton,
+						left: right - width,
+						right: right,
+						top: region.top
+					};
+				},
+				sources: item
+			});
+
+			var listener = sinon.stub();
+			drag.on(Drag.Events.DRAG, listener);
+
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 30, 30);
+			assert.strictEqual(1, listener.callCount);
+			assert.strictEqual(30, listener.args[0][0].x);
+			assert.strictEqual(30, listener.args[0][0].y);
+
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 60, 50);
+			assert.strictEqual(2, listener.callCount);
+			assert.strictEqual(40, listener.args[1][0].x);
+			assert.strictEqual(50, listener.args[1][0].y);
+		});
+
 		it('should only continue dragging item when the mouse returns to previous position inside the "constrain" limits', function() {
 			drag = new Drag({
 				constrain: {

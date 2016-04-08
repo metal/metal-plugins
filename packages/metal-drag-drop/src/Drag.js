@@ -252,7 +252,14 @@ class Drag extends State {
 	 */
 	constrainToRegion_(region) {
 		var constrain = this.constrain;
-		if (constrain) {
+		if (!constrain) {
+			return;
+		}
+
+		if (core.isFunction(constrain)) {
+			object.mixin(region, constrain(region));
+
+		} else {
 			if (core.isElement(constrain)) {
 				constrain = Position.getRegion(constrain, true);
 			}
@@ -697,7 +704,7 @@ Drag.STATE = {
 	 * to anywhere on the page. Can be either already an object with the
 	 * boundaries relative to the document, or an element to use the boundaries
 	 * from, or even a selector for finding that element.
-	 * @type {!Element|Object|string}
+	 * @type {!Element|Object|function()|string}
 	 */
 	constrain: {
 		setter: 'setterConstrainFn',

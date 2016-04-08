@@ -7,5 +7,6 @@ metal.registerTasks({
 	bundleFileName: 'dragDrop.js',
 	globalName: 'metal',
 	mainBuildJsTasks: ['build:globals'],
-	moduleName: 'metal-drag-drop'
+	moduleName: 'metal-drag-drop',
+	noSoy: true
 });
