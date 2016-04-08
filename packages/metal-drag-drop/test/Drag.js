@@ -240,7 +240,62 @@ describe('Drag', function() {
 		assert.ok(!drag.getActiveDrag());
 	});
 
-	it('should handle changing the value of the "sources" state', function() {
+	it('should handle changing the value of the "container" property', function(done) {
+		var parent = document.createElement('div');
+		dom.replace(item, parent);
+		dom.append(parent, item);
+
+		var parent2 = document.createElement('div');
+		dom.replace(item2, parent2);
+		dom.append(parent2, item2);
+
+		drag = new Drag({
+			container: parent,
+			minimumDragDistance: 2,
+			sources: '.item'
+		});
+
+		DragTestHelper.triggerMouseEvent(item2, 'mousedown', 20, 20);
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
+		assert.ok(!drag.getActiveDrag());
+
+		drag.container = parent2;
+		drag.once('stateChanged', function() {
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
+			assert.ok(!drag.getActiveDrag());
+
+			DragTestHelper.triggerMouseEvent(item2, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
+			assert.strictEqual(item2, drag.getActiveDrag());
+			done();
+		});
+	});
+
+	it('should not stop dragging specified element source when container changes', function(done) {
+		var parent = document.createElement('div');
+		dom.replace(item, parent);
+		dom.append(parent, item);
+
+		var parent2 = document.createElement('div');
+		dom.enterDocument(parent2);
+
+		drag = new Drag({
+			container: parent,
+			minimumDragDistance: 2,
+			sources: item
+		});
+
+		drag.container = parent2;
+		drag.once('stateChanged', function() {
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
+			assert.strictEqual(item, drag.getActiveDrag());
+			done();
+		});
+	});
+
+	it('should handle changing the value of the "sources" property', function() {
 		drag = new Drag({
 			minimumDragDistance: 2,
 			sources: item

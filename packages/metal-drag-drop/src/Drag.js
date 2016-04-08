@@ -106,6 +106,7 @@ class Drag extends State {
 		this.on(Drag.Events.DRAG, this.defaultDragFn_, true);
 		this.on(Drag.Events.END, this.defaultEndFn_, true);
 		this.on('sourcesChanged', this.handleSourcesChanged_.bind(this));
+		this.on('containerChanged', this.handleContainerChanged_.bind(this));
 		this.dragScrollDelta_.on('scrollDelta', this.handleScrollDelta_.bind(this));
 		dom.on(document, 'keydown', this.handleKeyDown_.bind(this));
 	}
@@ -478,6 +479,18 @@ class Drag extends State {
 		} else if (event.keyCode === 13 || event.keyCode === 32) {
 			// Enter or space will start the drag action.
 			this.handleDragStartEvent_(event);
+		}
+	}
+
+	/**
+	 * Triggers when the `container` state changes. Detaches events attached to the
+	 * previous container and attaches them to the new value instead.
+	 * @protected
+	 */
+	handleContainerChanged_() {
+		if (core.isString(this.sources)) {
+			this.sourceHandler_.removeAllListeners();
+			this.attachSourceEvents_();
 		}
 	}
 
