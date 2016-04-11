@@ -118,6 +118,38 @@ describe('DragDrop', function() {
 		assert.ok(!dom.hasClass(target2, 'targetOver'));
 	});
 
+	it('should update elements that match "targets" selector when "container" is changed', function() {
+		var parent = document.createElement('div');
+		dom.replace(target, parent);
+		dom.append(parent, target);
+
+		var parent2 = document.createElement('div');
+		dom.replace(target2, parent2);
+		dom.append(parent2, target2);
+
+		dragDrop = new DragDrop({
+			container: parent,
+			sources: item,
+			targets: '.target'
+		});
+		assert.deepEqual([target], dragDrop.targets);
+
+		dragDrop.container = parent2;
+		assert.deepEqual([target2], dragDrop.targets);
+	});
+
+	it('should change target that was given as element when "container" is changed', function() {
+		dragDrop = new DragDrop({
+			container: parent,
+			sources: item,
+			targets: target
+		});
+		assert.deepEqual([target], dragDrop.targets);
+
+		dragDrop.container = document.createElement('div');
+		assert.deepEqual([target], dragDrop.targets);
+	});
+
 	it('should trigger "targetEnter" event when mouse enters target', function() {
 		dragDrop = new DragDrop({
 			sources: item,

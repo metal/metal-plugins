@@ -107,12 +107,37 @@ class DragDrop extends Drag {
 	}
 
 	/**
+	 * Triggers when the `container` state changes. Overrides default method so
+	 * it will also update `targets` when container changes.
+	 * @param {!Object} data
+	 * @param {!Object} event
+	 * @protected
+	 */
+	handleContainerChanged_(data, event) {
+		super.handleContainerChanged_(data, event);
+		if (this.prevTargetsSelector_) {
+			this.targets = this.prevTargetsSelector_;
+		}
+	}
+
+	/**
 	 * Removes a target from this `DragDrop` instance.
 	 * @param {!Element} target
 	 */
 	removeTarget(target) {
 		array.remove(this.targets, target);
 		this.targets = this.targets;
+	}
+
+	/**
+	 * Sets the `targets` state property.
+	 * @param {Element|string} val
+	 * @return {!Array<!Element>}
+	 * @protected
+	 */
+	setterTargetsFn_(val) {
+		this.prevTargetsSelector_ = core.isString(val) ? val : null;
+		return this.toElements_(val);
 	}
 
 	/**
@@ -185,7 +210,7 @@ DragDrop.STATE = {
 	 * @type {!Element|string}
 	 */
 	targets: {
-		setter: 'toElements_',
+		setter: 'setterTargetsFn_',
 		validator: 'validateElementOrString_'
 	}
 };
