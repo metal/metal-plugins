@@ -492,6 +492,9 @@ class Drag extends State {
 			this.sourceHandler_.removeAllListeners();
 			this.attachSourceEvents_();
 		}
+		if (this.prevScrollContainersSelector_) {
+			this.scrollContainers = this.prevScrollContainersSelector_;
+		}
 	}
 
 	/**
@@ -577,12 +580,13 @@ class Drag extends State {
 
 	/**
 	 * Sets the `scrollContainers` state key.
-	 * @param {Element|string} scrollContainers
+	 * @param {Element|string} val
 	 * @return {!Array<!Element>}
 	 * @protected
 	 */
-	setterScrollContainersFn_(scrollContainers) {
-		var elements = this.toElements_(scrollContainers);
+	setterScrollContainersFn_(val) {
+		this.prevScrollContainersSelector_ = core.isString(val) ? val : null;
+		var elements = this.toElements_(val);
 		elements.push(document);
 		return elements;
 	}

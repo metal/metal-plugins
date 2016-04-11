@@ -703,6 +703,30 @@ describe('Drag', function() {
 			assert.deepEqual([scroll2, document], drag.scrollContainers);
 		});
 
+		it('should update elements that match "scrollContainers" selector when "container" is changed', function() {
+			var scroll = document.querySelector('.scroll');
+
+			var scroll2 = scroll.cloneNode(true);
+			var parent = document.createElement('div');
+			dom.append(parent, scroll2);
+			dom.enterDocument(parent);
+
+			var scroll3 = scroll.cloneNode(true);
+			var parent2 = document.createElement('div');
+			dom.append(parent2, scroll3);
+			dom.enterDocument(parent2);
+
+			drag = new Drag({
+				container: parent,
+				scrollContainers: '.scroll',
+				sources: item
+			});
+			assert.deepEqual([scroll2, document], drag.scrollContainers);
+
+			drag.container = parent2;
+			assert.deepEqual([scroll3, document], drag.scrollContainers);
+		});
+
 		it('should auto scroll the document when dragging near boundaries', function(done) {
 			document.body.style.height = '3000px';
 			document.body.style.overflow = 'scroll';
