@@ -151,6 +151,7 @@ describe('Drag', function() {
 		DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
 		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 		assert.strictEqual(1, listener.callCount);
+		assert.ok(listener.args[0][0]);
 	});
 
 	it('should get the active drag element', function() {

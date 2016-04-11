@@ -381,7 +381,7 @@ class Drag extends State {
 		}
 
 		if (!this.isDragging()) {
-			this.startDragging_();
+			this.startDragging_(event);
 			this.dragScrollDelta_.start(this.activeDragPlaceholder_, this.scrollContainers);
 		}
 		if (this.autoScroll) {
@@ -404,7 +404,7 @@ class Drag extends State {
 			this.calculateInitialPosition_(event.targetTouches ? event.targetTouches[0] : event);
 			event.preventDefault();
 			if (event.type === 'keydown') {
-				this.startDragging_();
+				this.startDragging_(event);
 			} else {
 				this.dragHandler_.add.apply(
 					this.dragHandler_,
@@ -593,14 +593,17 @@ class Drag extends State {
 
 	/**
 	 * Starts dragging the selected source.
+	 * @param {!Event} event
 	 * @protected
 	 */
-	startDragging_() {
+	startDragging_(event) {
 		this.dragging_ = true;
 		this.createActiveDragPlaceholder_();
 		dom.addClasses(this.activeDragPlaceholder_, this.draggingClass);
 		this.activeDragPlaceholder_.setAttribute('aria-grabbed', 'true');
-		this.emit(Drag.Events.START);
+		this.emit(Drag.Events.START, {
+			originalEvent: event
+		});
 	}
 
 	/**
