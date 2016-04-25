@@ -2,7 +2,7 @@
 
 A Metal.js set of common data structures:
 
-	1) TreeNode
+	* [TreeNode](https://github.com/metal/metal-structs/blob/master/src/TreeNode.js): Generic tree node data structure with arbitrary number of child nodes.
 
 ## Setup
 
