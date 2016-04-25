@@ -2,6 +2,11 @@
 
 import { array } from 'metal';
 
+/**
+ * Generic tree node data structure with arbitrary number of child nodes.
+ * @param {V} value Value.
+ * @constructor
+ */
 class TreeNode {
 
 	constructor(value) {
