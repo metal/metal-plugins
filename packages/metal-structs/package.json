@@ -1,0 +1,34 @@
+{
+	"name": "metal-structs",
+	"version": "0.0.0",
+	"description": "A Metal.js set of common data structures.",
+	"license": "BSD",
+	"repository": "metal/metal-structs",
+	"engines": {
+		"node": ">=0.12.0",
+		"npm": ">=3.0.0"
+	},
+	"main": "src/all/structs.js",
+	"files": [
+		"lib",
+		"src",
+		"test"
+	],
+	"scripts": {
+		"compile": "babel --presets es2015 -d lib/ src/",
+		"publish": "npm run compile",
+		"test": "gulp test"
+	},
+	"keywords": [
+		"metal"
+	],
+	"dependencies": {
+		"metal": "metal/metal.js#master"
+	},
+	"devDependencies": {
+		"babel-cli": "^6.4.5",
+		"babel-preset-es2015": "^6.3.13",
+		"gulp": "^3.8.11",
+		"gulp-metal": "^1.0.0"
+	}
+}
