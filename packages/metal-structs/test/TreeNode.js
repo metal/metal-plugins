@@ -132,4 +132,38 @@ describe('TreeNode', function() {
 		assert.notOk(child00.isLeaf());
 		assert.ok(child01.isLeaf());
 	});
+
+	it('should traverse depth-first in pre-order', function() {
+		let A = new TreeNode('A');
+		let B = new TreeNode('B');
+		let C = new TreeNode('C');
+		let D = new TreeNode('D');
+		let E = new TreeNode('E');
+		let F = new TreeNode('F');
+		A.addChild(B);
+		A.addChild(C);
+		B.addChild(D);
+		C.addChild(E);
+		C.addChild(F);
+		let path = [];
+		A.traverse((node) => path.push(node.getValue()));
+		assert.deepEqual(['A', 'B', 'D', 'C', 'E', 'F'], path);
+	});
+
+	it('should traverse depth-first in post-order', function() {
+		let A = new TreeNode('A');
+		let B = new TreeNode('B');
+		let C = new TreeNode('C');
+		let D = new TreeNode('D');
+		let E = new TreeNode('E');
+		let F = new TreeNode('F');
+		A.addChild(B);
+		A.addChild(C);
+		B.addChild(D);
+		C.addChild(E);
+		C.addChild(F);
+		let path = [];
+		A.traverse(null, (node) => path.push(node.getValue()));
+		assert.deepEqual(['D', 'B', 'E', 'F', 'C', 'A'], path);
+	});
 });

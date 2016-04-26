@@ -163,6 +163,34 @@ class TreeNode {
 		this.parent_ = parent;
 	}
 
+	/**
+	 * Traverses the subtree. The first callback starts with this node,
+	 * and visits the descendant nodes depth-first, in preorder.
+	 * The second callback, starts with deepest child then visits
+	 * the ancestor nodes depth-first, in postorder. E.g.
+	 *
+	 *  	 A
+	 *    / \
+	 *   B   C
+	 *  /   / \
+	 * D   E   F
+	 *
+	 * preorder -> ['A', 'B', 'D', 'C', 'E', 'F']
+	 * postorder -> ['D', 'B', 'E', 'F', 'C', 'A']
+	 *
+	 * @param  {function=} opt_preorderFn The callback to execute when visiting descendant nodes.
+	 * @param  {function=} opt_postorderFn The callback to execute when visiting ancestor nodes.
+	 */
+	traverse(opt_preorderFn, opt_postorderFn) {
+		if (opt_preorderFn) {
+			opt_preorderFn(this);
+		}
+		this.getChildren().forEach((child) => child.traverse(opt_preorderFn, opt_postorderFn));
+		if (opt_postorderFn) {
+			opt_postorderFn(this);
+		}
+	}
+
 }
 
 /**
