@@ -178,8 +178,8 @@ class TreeNode {
 	 * preorder -> ['A', 'B', 'D', 'C', 'E', 'F']
 	 * postorder -> ['D', 'B', 'E', 'F', 'C', 'A']
 	 *
-	 * @param  {function=} opt_preorderFn The callback to execute when visiting descendant nodes.
-	 * @param  {function=} opt_postorderFn The callback to execute when visiting ancestor nodes.
+	 * @param {function=} opt_preorderFn The callback to execute when visiting a node.
+	 * @param {function=} opt_postorderFn The callback to execute before leaving a node.
 	 */
 	traverse(opt_preorderFn, opt_postorderFn) {
 		if (opt_preorderFn) {
