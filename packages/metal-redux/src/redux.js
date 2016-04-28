@@ -1,5 +1,6 @@
 'use strict';
 
+import connect from './connect';
 import Provider from './Provider';
 
-export { Provider };
+export { connect, Provider };
