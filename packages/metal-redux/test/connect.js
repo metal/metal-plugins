@@ -97,21 +97,38 @@ describe('connect', function() {
 			assert.strictEqual(store, child.getStore());
 		});
 
-		it('should subscribe to given store', function() {
+		it('should not subscribe to given store by default', function() {
 			var store = buildStoreStub();
 			var TestComponent = connect()(OriginalComponent);
+			component = new TestComponent({
+				store
+			});
+			assert.strictEqual(0, store.subscribe.callCount);
+		});
+
+		it('should not throw error when detaching and no "mapStoreStateToConfig" was given', function() {
+			var TestComponent = connect()(OriginalComponent);
+			component = new TestComponent({
+				store: buildStoreStub()
+			});
+			assert.doesNotThrow(() => component.detach());
+		});
+
+		it('should subscribe to given store if "mapStoreStateToConfig" is given', function() {
+			var store = buildStoreStub();
+			var TestComponent = connect(sinon.stub())(OriginalComponent);
 			component = new TestComponent({
 				store
 			});
 			assert.strictEqual(1, store.subscribe.callCount);
 		});
 
-		it('should unsubscribe to given store when detached', function() {
+		it('should unsubscribe to given store when detached if "mapStoreStateToConfig"', function() {
 			var unsubscribe = sinon.stub();
 			var store = buildStoreStub();
 			store.subscribe.returns(unsubscribe);
 
-			var TestComponent = connect()(OriginalComponent);
+			var TestComponent = connect(sinon.stub())(OriginalComponent);
 			component = new TestComponent({
 				store
 			});

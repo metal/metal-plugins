@@ -40,6 +40,7 @@ const defaultMergeConfig = (stateConfig, dispatchConfig, parentConfig) => {
  *     wraps it, adding to it the helper behaviors provided by this module.
  */
 function connect(mapStoreStateToConfig, mapDispatchToConfig, mergeConfig, options = {}) {
+	var shouldSubscribe = !!mapStoreStateToConfig;
 	mapStoreStateToConfig = mapStoreStateToConfig || defaultMapStateToProps;
 	mapDispatchToConfig = mapDispatchToConfig || defaultMapDispatchToProps;
 	mergeConfig = mergeConfig || defaultMergeConfig;
@@ -63,9 +64,11 @@ function connect(mapStoreStateToConfig, mapDispatchToConfig, mergeConfig, option
 			 * Lifecycle. Subscribes to the store's state changes.
 			 */
 			attached() {
-				this.unsubscribeStore_ = this.getStore().subscribe(
-					this.handleStoreChange_.bind(this)
-				);
+				if (shouldSubscribe) {
+					this.unsubscribeStore_ = this.getStore().subscribe(
+						this.handleStoreChange_.bind(this)
+					);
+				}
 			}
 
 			/**
@@ -81,8 +84,10 @@ function connect(mapStoreStateToConfig, mapDispatchToConfig, mergeConfig, option
 			 * Lifecycle. Unsubscribes from the store's state changes.
 			 */
 			detached() {
-				this.unsubscribeStore_();
-				this.unsubscribeStore_ = null;
+				if (this.unsubscribeStore_) {
+					this.unsubscribeStore_();
+					this.unsubscribeStore_ = null;
+				}
 			}
 
 			/**
