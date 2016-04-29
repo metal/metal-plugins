@@ -20,7 +20,8 @@
     "metal"
   ],
   "dependencies": {
-    "metal-incremental-dom": "^1.0.0-rc.13"
+    "metal-incremental-dom": "^1.0.0-rc.14",
+    "metal-state": "^1.0.0-rc.3"
   },
   "devDependencies": {
     "gulp": "^3.8.11",

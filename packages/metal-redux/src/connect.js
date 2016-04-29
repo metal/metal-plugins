@@ -6,6 +6,9 @@ import IncrementalDomRenderer from 'metal-incremental-dom';
 
 const defaultMapStateToProps = () => ({});
 const defaultMapDispatchToProps = dispatch => ({ dispatch });
+const defaultMergeConfig = (stateConfig, dispatchConfig, parentConfig) => {
+	return object.mixin({}, stateConfig, dispatchConfig, parentConfig);
+};
 
 /**
  * Connects the given `Component` to the flux store it receives, updating it
@@ -23,16 +26,39 @@ const defaultMapDispatchToProps = dispatch => ({ dispatch });
  *     config data that should be used by the component. If this param isn't
  *     given, the default behavior will pass the `dispatch` function itself to
  *     the config object.
+ * @param {function(!Object, !Object, !Object)=} An optional function that
+ *     recevies all three original config objects (the one built from store
+ *     state, the one build from the dispatch function and the one from the
+ *     parent), and merges them. By default a simple merge is done.
+ * @param {Object=} options An optional options object. Available options are:
+ *       - {boolean} pure: Flag indicating if the component is a "pure"
+ *         component. That means that it only depends on the specified store
+ *         state and the config received from the parent. If "true", this data
+ *         will be shallowly compared on `shouldUpdate`. Defaults to "true".
  * @return {!function(!Function)} A function that should be called with a
  *     component constructor, and returns another component constructor that
  *     wraps it, adding to it the helper behaviors provided by this module.
  */
-function connect(mapStoreStateToConfig, mapDispatchToConfig) {
+function connect(mapStoreStateToConfig, mapDispatchToConfig, mergeConfig, options = {}) {
 	mapStoreStateToConfig = mapStoreStateToConfig || defaultMapStateToProps;
 	mapDispatchToConfig = mapDispatchToConfig || defaultMapDispatchToProps;
+	mergeConfig = mergeConfig || defaultMergeConfig;
+	var { pure = true } = options;
 
 	return function(WrappedComponent) {
 		class Connect extends Component {
+			/**
+			 * @inheritDoc
+			 */
+			constructor(opt_config, opt_parentElement) {
+				super(opt_config, opt_parentElement);
+				this.hasStoreConfigChanged_ = false;
+				this.hasOwnConfigChanged_ = false;
+				if (pure) {
+					this.on('configChanged', this.handleConfigChanged_);
+				}
+			}
+
 			/**
 			 * Lifecycle. Subscribes to the store's state changes.
 			 */
@@ -40,14 +66,6 @@ function connect(mapStoreStateToConfig, mapDispatchToConfig) {
 				this.unsubscribeStore_ = this.getStore().subscribe(
 					this.handleStoreChange_.bind(this)
 				);
-			}
-
-			/**
-			 * Lifecycle. Unsubscribes from the store's state changes.
-			 */
-			detached() {
-				this.unsubscribeStore_();
-				this.unsubscribeStore_ = null;
 			}
 
 			/**
@@ -60,29 +78,25 @@ function connect(mapStoreStateToConfig, mapDispatchToConfig) {
 			}
 
 			/**
+			 * Lifecycle. Unsubscribes from the store's state changes.
+			 */
+			detached() {
+				this.unsubscribeStore_();
+				this.unsubscribeStore_ = null;
+			}
+
+			/**
 			 * Returns the full config data that should be passed to the wrapped
 			 * component.
 			 * @param {!Object}
 			 * @protected
 			 */
 			getChildConfig_() {
-				return object.mixin(
-					{},
+				return mergeConfig(
 					this.config,
-					this.getChildStoreStateConfig_(this.storeState),
+					this.getStoreConfig_(this.storeState),
 					mapDispatchToConfig(this.getStore().dispatch)
 				);
-			}
-
-			/**
-			 * Returns the config data built from the store state, that should be
-			 * passed to the wrapped component.
-			 * @param {!Object}
-			 * @protected
-			 */
-			getChildStoreStateConfig_(storeState) {
-				this.childConfig_ = mapStoreStateToConfig(storeState);
-				return this.childConfig_;
 			}
 
 			/**
@@ -102,18 +116,59 @@ function connect(mapStoreStateToConfig, mapDispatchToConfig) {
 			}
 
 			/**
+			 * Returns the config data built from the store state, that should be
+			 * passed to the wrapped component.
+			 * @param {!Object}
+			 * @protected
+			 */
+			getStoreConfig_(storeState) {
+				this.storeConfig_ = mapStoreStateToConfig(storeState);
+				return this.storeConfig_;
+			}
+
+			/**
+			 * Handles the event indicating that the config object has changed.
+			 * @param {!Object} data
+			 * @protected
+			 */
+			handleConfigChanged_(data) {
+				this.hasOwnConfigChanged_ = !object.shallowEqual(
+					data.prevVal,
+					data.newVal
+				);
+			}
+
+			/**
 			 * Handles a store state change. Make sure to only update the wrapped
 			 * component if at least one of its config data changed.
 			 * @protected
 			 */
 			handleStoreChange_() {
 				var storeState = this.getStore().getState();
-				var prevChildConfig = this.childConfig_;
-				var childConfig = this.getChildStoreStateConfig_(storeState);
-				if (object.shallowEqual(prevChildConfig, childConfig)) {
+				var prevStoreConfig = this.storeConfig_;
+				var storeConfig = this.getStoreConfig_(storeState);
+				if (object.shallowEqual(prevStoreConfig, storeConfig)) {
 					return;
 				}
+				this.hasStoreConfigChanged_ = true;
 				this.storeState = storeState;
+			}
+
+			/**
+			 * Lifecycle. Resets the flags indicating that data has changed.
+			 */
+			rendered() {
+				this.hasStoreConfigChanged_ = false;
+				this.hasOwnConfigChanged_ = false;
+			}
+
+			/**
+			 * Checks if the component should be rerendered. If the component is
+			 * "pure" then it shouldn't be updated if its data hasn't changed.
+			 * @return {boolean}
+			 */
+			shouldUpdate() {
+				return !pure || this.hasStoreConfigChanged_ || this.hasOwnConfigChanged_;
 			}
 		}
 		Connect.STATE = {

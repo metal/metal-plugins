@@ -11,7 +11,7 @@ describe('connect', function() {
 
 	beforeEach(function() {
 		class TestComponent extends Component {
-			getRenderer() {
+			createRenderer() {
 				var renderer = new IncrementalDomRenderer(this);
 				renderer.renderIncDom = () => {
 					IncrementalDOM.elementOpen('div');
@@ -259,6 +259,83 @@ describe('connect', function() {
 			child.config.foo();
 			assert.strictEqual(1, store.dispatch.callCount);
 			assert.strictEqual('foo', store.dispatch.args[0][0]);
+		});
+	});
+
+	describe('pure', function() {
+		var MainComponent;
+		var TestComponent;
+
+		beforeEach(function() {
+			class MainTempComponent extends Component {
+				createRenderer() {
+					var renderer = new IncrementalDomRenderer(this);
+					renderer.renderIncDom = function() {
+						var args = [TestComponent, 'connect', []];
+						args.push('foo', this.component_.foo);
+						args.push('store', this.component_.store);
+						IncrementalDOM.elementVoid.apply(null, args);
+					};
+					return renderer;
+				}
+			}
+			MainComponent = MainTempComponent;
+			MainComponent.STATE = {
+				bar: {
+					value: 'bar'
+				},
+				foo: {
+					value: 'foo'
+				},
+				store: {
+					value: buildStoreStub()
+				}
+			};
+		});
+
+		it('should not update inner component when pure component\'s config values don\'t change', function(done) {
+			TestComponent = connect()(OriginalComponent);
+
+			component = new MainComponent();
+			var child = component.components.connect;
+			var renderer = child.getRenderer();
+			sinon.spy(renderer, 'renderIncDom');
+
+			component.bar = 'bar2';
+			component.once('stateSynced', function() {
+				assert.strictEqual(0, renderer.renderIncDom.callCount);
+				done();
+			});
+		});
+
+		it('should update inner component when pure component\'s config values change', function(done) {
+			TestComponent = connect()(OriginalComponent);
+
+			component = new MainComponent();
+			var child = component.components.connect;
+			var renderer = child.getRenderer();
+			sinon.spy(renderer, 'renderIncDom');
+
+			component.foo = 'foo2';
+			component.once('stateSynced', function() {
+				assert.strictEqual(1, renderer.renderIncDom.callCount);
+				done();
+			});
+		});
+
+		it('should update inner component when non pure component\'s config values don\'t change', function(done) {
+			TestComponent = connect(null, null, null, { pure: false })(OriginalComponent);
+
+			component = new MainComponent();
+			var child = component.components.connect;
+			var renderer = child.getRenderer();
+			sinon.spy(renderer, 'renderIncDom');
+
+			component.bar = 'bar2';
+			component.once('stateSynced', function() {
+				assert.strictEqual(1, renderer.renderIncDom.callCount);
+				done();
+			});
 		});
 	});
 });
