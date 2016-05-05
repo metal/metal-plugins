@@ -37,10 +37,10 @@ describe('Provider', function() {
 		assert.ok(provider);
 		assert.ok(child);
 		assert.strictEqual(provider.element, component.element);
-		assert.strictEqual(child.element, provider.element);
-		assert.strictEqual(1, component.element.childNodes.length);
-		assert.strictEqual('CHILD', component.element.tagName);
-		assert.strictEqual('Child', component.element.textContent);
+		assert.strictEqual(1, provider.element.childNodes.length);
+		assert.strictEqual(child.element, provider.element.childNodes[0]);
+		assert.strictEqual('CHILD', child.element.tagName);
+		assert.strictEqual('Child', child.element.textContent);
 	});
 
 	it('should pass store object down to children as context', function() {

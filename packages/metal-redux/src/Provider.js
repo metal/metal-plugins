@@ -29,7 +29,9 @@ class ProviderRenderer extends IncrementalDomRenderer {
 	 * @override
 	 */
 	renderIncDom() {
+		IncrementalDOM.elementOpen('div');
 		this.component_.config.children();
+		IncrementalDOM.elementClose('div');
 	}
 }
 
