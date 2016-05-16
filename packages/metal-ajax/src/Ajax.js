@@ -44,10 +44,11 @@ class Ajax {
 	 * @param {MultiMap=} opt_params
 	 * @param {number=} opt_timeout
 	 * @param {boolean=} opt_sync
+	 * @param {boolean=} opt_withCredentials
 	 * @return {Promise} Deferred ajax request.
 	 * @protected
 	 */
-	static request(url, method, body, opt_headers, opt_params, opt_timeout, opt_sync) {
+	static request(url, method, body, opt_headers, opt_params, opt_timeout, opt_sync, opt_withCredentials) {
 		var request = new XMLHttpRequest();
 
 		var promise = new Promise(function(resolve, reject) {
@@ -75,6 +76,10 @@ class Ajax {
 		}
 
 		request.open(method, url, !opt_sync);
+
+		if (opt_withCredentials) {
+			request.withCredentials = true;
+		}
 
 		if (opt_headers) {
 			opt_headers.names().forEach(function(name) {

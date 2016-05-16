@@ -62,6 +62,26 @@ describe('Ajax', function() {
 				.cancel();
 		});
 
+		it('should send request with credentials', function(done) {
+			let withCredentials = true;
+			Ajax.request('/url', 'POST', null, null, null, null, false, withCredentials)
+				.then(function(xhrResponse) {
+					assert.ok(xhrResponse.withCredentials);
+					done();
+				});
+			this.requests[0].respond(200);
+		});
+
+		it('should send request without credentials', function(done) {
+			let withCredentials = false;
+			Ajax.request('/url', 'POST', null, null, null, null, false, withCredentials)
+				.then(function(xhrResponse) {
+					assert.notOk(xhrResponse.withCredentials);
+					done();
+				});
+			this.requests[0].respond(200);
+		});
+
 		it('should send request with different http method', function(done) {
 			Ajax.request('/url', 'POST')
 				.then(function(xhrResponse) {
