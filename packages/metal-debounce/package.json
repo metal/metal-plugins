@@ -8,18 +8,24 @@
 		"node": ">=0.12.0",
 		"npm": ">=3.0.0"
 	},
-	"main": "src/debounce.js",
+	"jsnext:main": "src/debounce.js",
+	"main": "lib/debounce.js",
 	"files": [
+		"lib",
 		"src/**/*.js",
 		"test/**/*.js"
 	],
 	"scripts": {
+		"compile": "babel --presets es2015 -d lib/ src/",
+		"prepublish": "npm run compile",
 		"test": "gulp test"
 	},
 	"keywords": [
 		"metal"
 	],
 	"devDependencies": {
+		"babel-cli": "^6.4.5",
+		"babel-preset-es2015": "^6.3.13",
 		"gulp": "^3.8.11",
 		"gulp-metal": "^0.14.0"
 	}
