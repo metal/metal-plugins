@@ -54,6 +54,7 @@ babelHelpers;
    * @static
   */
 
+
 		UA.matchUserAgent = function matchUserAgent(str) {
 			return UA.userAgent.indexOf(str) !== -1;
 		};
@@ -63,6 +64,7 @@ babelHelpers;
    * @param {string} userAgent The user agent string.
    * @static
    */
+
 
 		UA.testUserAgent = function testUserAgent(userAgent) {
 			/**
@@ -130,6 +132,7 @@ babelHelpers;
   * @type {object}
   * @static
   */
+
 
 	UA.globals = {
 		window: window
