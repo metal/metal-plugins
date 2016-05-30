@@ -30,7 +30,7 @@ class ProviderRenderer extends IncrementalDomRenderer {
 	 */
 	renderIncDom() {
 		IncrementalDOM.elementOpen('div');
-		this.component_.config.children();
+		this.component_.config.children.forEach(IncrementalDomRenderer.renderChild);
 		IncrementalDOM.elementClose('div');
 	}
 }
