@@ -8,8 +8,8 @@
     "node": ">=0.12.0",
     "npm": ">=3.0.0"
   },
-  "main": "lib/React.js",
-  "jsnext:main": "src/React.js",
+  "main": "lib/bridge.js",
+  "jsnext:main": "src/bridge.js",
   "files": [
     "lib",
     "src",
