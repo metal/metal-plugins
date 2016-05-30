@@ -13,7 +13,7 @@ describe('bridge', function() {
 
 	beforeEach(function() {
 		sinon.spy(React, 'createElement');
-		sinon.stub(ReactDOM, 'render');
+		sinon.stub(ReactDOM, 'render').returns('instance');
 	});
 
 	afterEach(function() {
@@ -44,6 +44,12 @@ describe('bridge', function() {
 		component = new BridgeComponent(config);
 
 		assert.deepEqual(config, React.createElement.args[0][1]);
+	});
+
+	it('should return instance from getInstance function', function() {
+		var BridgeComponent = bridge(ReactComponent);
+		component = new BridgeComponent();
+		assert.strictEqual('instance', component.getInstance());
 	});
 
 	it('should pass Metal.js children as react elements', function() {
