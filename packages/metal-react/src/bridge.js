@@ -32,14 +32,44 @@ export default function(ReactComponent) {
 			IncrementalDOM.skip();
 			IncrementalDOM.elementClose('div');
 
-			var data = object.mixin({}, this.config);
-			delete data.children;
 			this.instance_ = ReactDOM.render(
-			  React.createElement(ReactComponent, data),
+				convertToReactElement(ReactComponent, this.config),
 			  element
 			);
 		}
 	}
 	BridgeComponent.RENDERER = IncrementalDomRenderer;
 	return BridgeComponent;
+}
+
+/**
+ * Converts the given tag type and config object into a react element.
+ * @param {string} tag
+ * @param {!Object} config
+ * @return {!ReactElement}
+ */
+function convertToReactElement(tag, config) {
+	var data = object.mixin({}, config);
+	var children = convertToReactElements(config.children);
+	delete data.children;
+	return React.createElement(tag, data, children);
+}
+
+/**
+ * Converts the given Metal.js children array into react elements.
+ * @param {!Array<!Object>} children
+ * @return {!Array<!ReactElement>}
+ */
+function convertToReactElements(children = []) {
+	var elements = [];
+	for (var i = 0; i < children.length; i++) {
+		var element;
+		if (children[i].tag) {
+			element = convertToReactElement(children[i].tag, children[i].config);
+		} else {
+			element = children[i].text;
+		}
+		elements.push(element);
+	}
+	return elements;
 }

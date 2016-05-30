@@ -2,6 +2,8 @@
 
 import bridge from '../src/bridge';
 import dom from 'metal-dom';
+import Component from 'metal-component';
+import IncrementalDomRenderer from 'metal-incremental-dom';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -42,5 +44,32 @@ describe('bridge', function() {
 		component = new BridgeComponent(config);
 
 		assert.deepEqual(config, React.createElement.args[0][1]);
+	});
+
+	it('should pass Metal.js children as react elements', function() {
+		var BridgeComponent = bridge(ReactComponent);
+
+		class TestComponent extends BridgeComponent {
+			render() {
+				IncrementalDOM.elementOpen(BridgeComponent);
+				IncrementalDOM.elementOpen('div', null, null, 'foo', 'bar');
+				IncrementalDOM.text('Hello World');
+				IncrementalDOM.elementClose('div');
+				IncrementalDOM.elementClose(BridgeComponent);
+			}
+		}
+		TestComponent.RENDERER = IncrementalDomRenderer;
+
+		component = new TestComponent();
+		assert.strictEqual(1, ReactDOM.render.callCount);
+
+		var element = ReactDOM.render.args[0][0];
+		var children = element.props.children;
+		assert.ok(Array.isArray(children));
+		assert.strictEqual(1, children.length);
+		assert.strictEqual('div', children[0].type);
+		assert.strictEqual('bar', children[0].props.foo);
+		assert.strictEqual(1, children[0].props.children.length);
+		assert.strictEqual('Hello World', children[0].props.children[0]);
 	});
 });
