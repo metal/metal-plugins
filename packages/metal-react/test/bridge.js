@@ -55,6 +55,38 @@ describe('bridge', function() {
 		assert.strictEqual('Hello John Doe', reactEl.textContent);
 	});
 
+	it('should unmount react component on dispose', function() {
+		var unmounted = false;
+		class UnmountedReactComponent extends React.Component {
+			componentWillUnmount() {
+				unmounted = true;
+			}
+
+			render() {
+				return React.createElement('div');
+			}
+		}
+
+		var UnmountedComponent = bridge(UnmountedReactComponent);
+		component = new UnmountedComponent();
+		assert.ok(!unmounted);
+
+		component.dispose();
+		assert.ok(unmounted);
+	});
+
+	it('should not throw error when disposing unreredered component', function() {
+		class UnmountedReactComponent extends React.Component {
+			render() {
+				return React.createElement('div');
+			}
+		}
+
+		var UnmountedComponent = bridge(UnmountedReactComponent);
+		component = new UnmountedComponent({}, false);
+		assert.doesNotThrow(() => component.dispose());
+	});
+
 	it('should return instance from getInstance function', function() {
 		var HelloComponent = bridge(HelloReactComponent);
 		component = new HelloComponent();

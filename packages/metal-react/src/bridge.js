@@ -22,6 +22,15 @@ export default function(ReactComponent) {
 		}
 
 		/**
+		 * Unmounts the react component when disposed.
+		 */
+		disposed() {
+			if (this.element) {
+				ReactDOM.unmountComponentAtNode(this.element);
+			}
+		}
+
+		/**
 		 * Renders this component, by letting react do its job inside a given
 		 * container element. Passes all received config properties to the react
 		 * component as props.
