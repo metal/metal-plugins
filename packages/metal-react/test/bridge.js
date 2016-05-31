@@ -7,75 +7,95 @@ import IncrementalDomRenderer from 'metal-incremental-dom';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+class HelloReactComponent extends React.Component {
+	render() {
+		return React.createElement(
+			'div',
+			{
+				className: 'react-comp'
+			},
+			'Hello ',
+			this.props.name ? this.props.name : 'World'
+		);
+	}
+}
+
 describe('bridge', function() {
 	var component;
-	var ReactComponent = () => {};
-
-	beforeEach(function() {
-		sinon.spy(React, 'createElement');
-		sinon.stub(ReactDOM, 'render').returns('instance');
-	});
 
 	afterEach(function() {
 		if (component) {
 			component.dispose();
 		}
-		React.createElement.restore();
-		ReactDOM.render.restore();
 	});
 
 	it('should render react component inside container', function() {
-		var BridgeComponent = bridge(ReactComponent);
-		component = new BridgeComponent();
+		var HelloComponent = bridge(HelloReactComponent);
+		component = new HelloComponent();
 
 		assert.ok(dom.hasClass(component.element, 'metal-react-container'));
-		assert.strictEqual(1, React.createElement.callCount);
-		assert.strictEqual(ReactComponent, React.createElement.args[0][0]);
-		assert.strictEqual(1, ReactDOM.render.callCount);
-		assert.strictEqual(component.element, ReactDOM.render.args[0][1]);
+		assert.strictEqual(1, component.element.childNodes.length);
+
+		var reactEl = component.element.childNodes[0];
+		assert.ok(dom.hasClass(reactEl, 'react-comp'));
+		assert.strictEqual('Hello World', reactEl.textContent);
 	});
 
 	it('should pass config as props', function() {
-		var BridgeComponent = bridge(ReactComponent);
-		var config = {
-			foo: 'fooValue',
-			bar: 'barValue'
-		};
-		component = new BridgeComponent(config);
+		var HelloComponent = bridge(HelloReactComponent);
+		component = new HelloComponent({
+			name: 'John Doe'
+		});
 
-		assert.deepEqual(config, React.createElement.args[0][1]);
+		assert.ok(dom.hasClass(component.element, 'metal-react-container'));
+		assert.strictEqual(1, component.element.childNodes.length);
+
+		var reactEl = component.element.childNodes[0];
+		assert.ok(dom.hasClass(reactEl, 'react-comp'));
+		assert.strictEqual('Hello John Doe', reactEl.textContent);
 	});
 
 	it('should return instance from getInstance function', function() {
-		var BridgeComponent = bridge(ReactComponent);
-		component = new BridgeComponent();
-		assert.strictEqual('instance', component.getInstance());
+		var HelloComponent = bridge(HelloReactComponent);
+		component = new HelloComponent();
+		assert.ok(component.getInstance() instanceof React.Component);
 	});
 
 	it('should pass Metal.js children as react elements', function() {
-		var BridgeComponent = bridge(ReactComponent);
-
-		class TestComponent extends BridgeComponent {
+		class ChildrenReactComponent extends React.Component {
 			render() {
-				IncrementalDOM.elementOpen(BridgeComponent);
-				IncrementalDOM.elementOpen('div', null, null, 'foo', 'bar');
+				return React.createElement(
+					'div',
+					{
+						className: 'children-comp'
+					},
+					this.props.children
+				);
+			}
+		}
+		var ChildrenComponent = bridge(ChildrenReactComponent);
+
+		class TestComponent extends Component {
+			render() {
+				IncrementalDOM.elementOpen(ChildrenComponent);
+				IncrementalDOM.elementOpen('div', null, null, 'data-foo', 'bar');
 				IncrementalDOM.text('Hello World');
 				IncrementalDOM.elementClose('div');
-				IncrementalDOM.elementClose(BridgeComponent);
+				IncrementalDOM.elementClose(ChildrenComponent);
 			}
 		}
 		TestComponent.RENDERER = IncrementalDomRenderer;
 
 		component = new TestComponent();
-		assert.strictEqual(1, ReactDOM.render.callCount);
 
-		var element = ReactDOM.render.args[0][0];
-		var children = element.props.children;
-		assert.ok(Array.isArray(children));
-		assert.strictEqual(1, children.length);
-		assert.strictEqual('div', children[0].type);
-		assert.strictEqual('bar', children[0].props.foo);
-		assert.strictEqual(1, children[0].props.children.length);
-		assert.strictEqual('Hello World', children[0].props.children[0]);
+		assert.ok(dom.hasClass(component.element, 'metal-react-container'));
+		assert.strictEqual(1, component.element.childNodes.length);
+
+		var reactEl = component.element.childNodes[0];
+		assert.ok(dom.hasClass(reactEl, 'children-comp'));
+		assert.strictEqual(1, reactEl.childNodes.length);
+		assert.strictEqual('DIV', reactEl.childNodes[0].tagName);
+		assert.strictEqual('bar', reactEl.childNodes[0].getAttribute('data-foo'));
+		assert.strictEqual('Hello World', reactEl.childNodes[0].textContent);
 	});
 });
