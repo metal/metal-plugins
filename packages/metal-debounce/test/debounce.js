@@ -1,6 +1,6 @@
 'use strict';
 
-import debounce from '../src/debounce';
+import { cancelDebounce, debounce } from '../src/debounce';
 
 describe('debounce', function() {
 	it('should only call received function with the last called args after a delay', function(done) {
@@ -35,5 +35,18 @@ describe('debounce', function() {
 			assert.strictEqual(expectedContext, context);
 			done();
 		}, 200);
+	});
+
+	it('should only call received function with the last called args after a delay', function(done) {
+		var fn = sinon.stub();
+
+		var debounced = debounce(fn, 200);
+		debounced(1, 2, 3);
+		cancelDebounce(debounced);
+
+		setTimeout(function() {
+			assert.strictEqual(0, fn.callCount);
+			done();
+		}, 210);
 	});
 });
