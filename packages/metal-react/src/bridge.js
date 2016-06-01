@@ -61,6 +61,7 @@ function convertToReactElement(tag, config) {
 	var data = object.mixin({}, config);
 	var children = convertToReactElements(config.children);
 	delete data.children;
+	delete data.ref;
 	return React.createElement(tag, data, children);
 }
 
