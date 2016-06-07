@@ -1,4 +1,4 @@
-# metal-transitionWrapper
+# metal-css-transitions
 
 Metal component used to apply css transitions
 
