@@ -139,7 +139,7 @@ class TransitionWrapper extends JSXComponent {
 
 		return (
 			<span>
-				{
+				{!!children.length &&
 					children.map(
 						child => {
 							return (
