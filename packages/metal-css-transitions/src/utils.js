@@ -1,10 +1,30 @@
 export function getChildrenMap(children) {
+	let COUNTER = 1;
+
 	const retObj = {};
+
+	const keys = children.map(
+		child => child.config ? child.config.key : undefined
+	);
 
 	children.forEach(
 		child => {
 			if (child && child.config) {
-				retObj[child.config.key] = child;
+				let {key} = child.config;
+
+				if (!key) {
+					while (keys.indexOf(COUNTER) !== -1) {
+						COUNTER += 1;
+					}
+
+					key = COUNTER;
+
+					keys.push(key);
+
+					child.config.key = key;
+				}
+
+				retObj[key] = child;
 			}
 		}
 	);

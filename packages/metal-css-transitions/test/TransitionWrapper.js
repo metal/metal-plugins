@@ -41,13 +41,13 @@ describe('TransitionWrapper', function() {
 	);
 
 	it(
-		'renders with children',
+		'renders with one child',
 		() => {
 			class App extends JSXComponent {
 				render() {
 					return (
 						<TransitionWrapper appearTimeout={1000} enterTimeout={1000} leaveTimeout={1000} name="test">
-							<div class="child" key={1}>Child</div>
+							<div class="child">Child</div>
 						</TransitionWrapper>
 					);
 				}
@@ -56,6 +56,27 @@ describe('TransitionWrapper', function() {
 			component = new App();
 
 			assert(component.element.querySelector('.child'));
+		}
+	);
+
+	it(
+		'renders with multiple children',
+		() => {
+			class App extends JSXComponent {
+				render() {
+					return (
+						<TransitionWrapper appearTimeout={1000} enterTimeout={1000} leaveTimeout={1000} name="test">
+							<div class="child1" key={1}>Child</div>
+							<div class="child2" key={2}>Child</div>
+						</TransitionWrapper>
+					);
+				}
+			}
+
+			component = new App();
+
+			assert(component.element.querySelector('.child1'));
+			assert(component.element.querySelector('.child2'));
 		}
 	);
 
