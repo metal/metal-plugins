@@ -3,8 +3,6 @@
 import JSXComponent from 'metal-jsx';
 import Types from 'metal-state-validators';
 
-import CSSUtil from './CSSUtil';
-
 export const DELAY_TIME = 10;
 
 class TransitionChild extends JSXComponent {
@@ -12,43 +10,17 @@ class TransitionChild extends JSXComponent {
 		this.transition = this.transition.bind(this);
 	}
 
-	transition(type, finishCallback, animationLength) {
-		var node = this.element;
-
-		const className = ` ${this.transitionName}-${type}`;
-		const activeClassName = ` ${className}-active`;
-
-		let timeout = null;
-
-		const timeoutCallback = () => {
-			clearTimeout(timeout);
-
-			CSSUtil.removeClass(node, activeClassName);
-			CSSUtil.removeClass(node, className);
-
-			if (finishCallback) {
-				finishCallback();
-			}
-		};
-
-		CSSUtil.addClass(node, className);
-
-		this.delayActive(activeClassName, node);
-
-		timeout = setTimeout(timeoutCallback, animationLength);
+	appear() {
+		this.transition('appear', null, this.appearTimeout);
 	}
 
 	delayActive(className, node) {
 		setTimeout(
 			() => {
-				CSSUtil.addClass(node, className);
+				node.classList.add(className);
 			},
 			DELAY_TIME
 		);
-	}
-
-	appear() {
-		this.transition('appear', null, this.appearTimeout);
 	}
 
 	enter() {
@@ -57,6 +29,31 @@ class TransitionChild extends JSXComponent {
 
 	leave(callback) {
 		this.transition('leave', callback, this.leaveTimeout);
+	}
+
+	transition(type, finishCallback, animationLength) {
+		const node = this.element;
+
+		const className = `${this.transitionName}-${type}`;
+		const activeClassName = `${className}-active`;
+
+		let timeout = null;
+
+		const timeoutCallback = () => {
+			clearTimeout(timeout);
+
+			node.classList.remove(activeClassName, className);
+
+			if (finishCallback) {
+				finishCallback();
+			}
+		};
+
+		node.classList.add(className);
+
+		this.delayActive(activeClassName, node);
+
+		timeout = setTimeout(timeoutCallback, animationLength);
 	}
 
 	render() {

@@ -3,8 +3,8 @@
 var metal = require('gulp-metal');
 
 metal.registerTasks({
-	bundleCssFileName: 'app.css',
-	bundleFileName: 'App.js',
+	buildSrc: 'example/*.js',
+	bundleFileName: 'Example.js',
 	moduleName: 'metal-css-transitions',
 	noSoy: true
 });
