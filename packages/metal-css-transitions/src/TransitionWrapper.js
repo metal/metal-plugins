@@ -20,7 +20,9 @@ class TransitionWrapper extends JSXComponent {
 				if (child && child.config) {
 					const {key} = child.config;
 
-					this.components[key].appear();
+					if (key) {
+						this.components[key].appear();
+					}
 				}
 			}
 		);
@@ -112,15 +114,18 @@ TransitionWrapper.STATE = {
 	},
 
 	enterTimeout: {
-		validator: Types.number
+		validator: Types.number,
+		value: 0
 	},
 
 	leaveTimeout: {
-		validator: Types.number
+		validator: Types.number,
+		value: 0
 	},
 
 	appearTimeout: {
-		validator: Types.number
+		validator: Types.number,
+		value: 0
 	},
 
 	_childrenMap: {
