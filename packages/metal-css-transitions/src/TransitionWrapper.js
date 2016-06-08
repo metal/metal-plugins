@@ -4,70 +4,14 @@ import JSXComponent from 'metal-jsx';
 import Types from 'metal-state-validators';
 
 import TransitionChild from './TransitionChild';
-
-function getChildrenMap(children) {
-	const retObj = {};
-
-	children.forEach(
-		child => {
-			if (child && child.config) {
-				retObj[child.config.key] = child;
-			}
-		}
-	);
-
-	return retObj;
-}
-
-function mergeChildrenMap(next = {}, prev = {}) {
-	function getValueForKey(key) {
-		if (next.hasOwnProperty(key)) {
-			return next[key];
-		} else {
-			return prev[key];
-		}
-	}
-
-	const nextKeysPending = {};
-
-	let pendingKeys = [];
-
-	for (let prevKey in prev) {
-		if (next.hasOwnProperty(prevKey)) {
-			if (pendingKeys.length) {
-				nextKeysPending[prevKey] = pendingKeys;
-
-				pendingKeys = [];
-			}
-		} else {
-			pendingKeys.push(prevKey);
-		}
-	}
-
-	const mergedMap = {};
-
-	for (let nextKey in next) {
-		if (nextKeysPending.hasOwnProperty(nextKey)) {
-			for (let i = 0; i < nextKeysPending[nextKey].length; i++) {
-				const pendingNextKey = nextKeysPending[nextKey][i];
-
-				mergedMap[nextKeysPending[nextKey][i]] = getValueForKey(pendingNextKey);
-			}
-		}
-
-		mergedMap[nextKey] = getValueForKey(nextKey);
-	}
-
-	for (let i = 0; i < pendingKeys.length; i++) {
-		mergedMap[pendingKeys[i]] = getValueForKey(pendingKeys[i]);
-	}
-
-	return mergedMap;
-}
+import {getChildrenMap, mergeChildrenMap} from './utils';
 
 class TransitionWrapper extends JSXComponent {
 	created() {
 		this._childrenMap = getChildrenMap(this.children);
+
+		this.handleChildrenEnter = this.handleChildrenEnter.bind(this);
+		this.handleChildrenLeave = this.handleChildrenLeave.bind(this);
 	}
 
 	attached() {
@@ -82,7 +26,43 @@ class TransitionWrapper extends JSXComponent {
 		);
 	}
 
-	syncChildren(newChildren = [], prevChildren = []) {
+	finishLeave(key) {
+		const newChildrenMap = this._childrenMap;
+
+		delete newChildrenMap[key];
+
+		this._childrenMap = newChildrenMap;
+	}
+
+	handleChildrenEnter(newChildren, prevKeyMap) {
+		newChildren.forEach(
+			child => {
+				if (child && child.config) {
+					const {key} = child.config;
+
+					if (key && !prevKeyMap[key]) {
+						this.components[key].enter();
+					}
+				}
+			}
+		);
+	}
+
+	handleChildrenLeave(prevChildren, newKeyMap) {
+		prevChildren.forEach(
+			child => {
+				if (child && child.config) {
+					const {key} = child.config;
+
+					if (key && !newKeyMap[key]) {
+						this.components[key].leave(this.finishLeave.bind(this, key));
+					}
+				}
+			}
+		);
+	}
+
+	syncChildren(newChildren, prevChildren = []) {
 		const newKeyMap = getChildrenMap(newChildren);
 		const prevKeyMap = getChildrenMap(prevChildren);
 
@@ -91,39 +71,10 @@ class TransitionWrapper extends JSXComponent {
 				_childrenMap: mergeChildrenMap(newKeyMap, prevKeyMap)
 			},
 			() => {
-				newChildren.forEach(
-					child => {
-						if (child && child.config) {
-							const {key} = child.config;
-
-							if (key && !prevKeyMap[key]) {
-								this.components[key].enter();
-							}
-						}
-					}
-				);
-
-				prevChildren.forEach(
-					child => {
-						if (child && child.config) {
-							const {key} = child.config;
-
-							if (key && !newKeyMap[key]) {
-								this.components[key].leave(this.finishLeave.bind(this, key));
-							}
-						}
-					}
-				);
+				this.handleChildrenEnter(newChildren, prevKeyMap);
+				this.handleChildrenLeave(prevChildren, newKeyMap);
 			}
 		);
-	}
-
-	finishLeave(key) {
-		const newChildrenMap = this._childrenMap;
-
-		delete newChildrenMap[key];
-
-		this._childrenMap = newChildrenMap;
 	}
 
 	render() {

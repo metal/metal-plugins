@@ -17,9 +17,26 @@ describe('TransitionWrapper', function() {
 	it(
 		'renders',
 		() => {
-			const component = new TransitionWrapper();
+			component = new TransitionWrapper();
 
 			assert(component);
+		}
+	);
+
+	it(
+		'renders without children',
+		() => {
+			class App extends JSXComponent {
+				render() {
+					return (
+						<TransitionWrapper elementClasses="wrapper"></TransitionWrapper>
+					);
+				}
+			}
+
+			component = new App();
+
+			assert.strictEqual('wrapper', component.element.className);
 		}
 	);
 
@@ -29,21 +46,132 @@ describe('TransitionWrapper', function() {
 			class App extends JSXComponent {
 				render() {
 					return (
-						<TransitionWrapper
-						appearTimeout={1000}
-						enterTimeout={1000}
-						leaveTimeout={1000}
-						name="test"
-						>
+						<TransitionWrapper appearTimeout={1000} enterTimeout={1000} leaveTimeout={1000} name="test">
 							<div class="child" key={1}>Child</div>
 						</TransitionWrapper>
-						);
+					);
 				}
 			}
 
-			const component = new App();
+			component = new App();
 
 			assert(component.element.querySelector('.child'));
+		}
+	);
+
+	it(
+		'should call setState when new children are supplied',
+		(done) => {
+			component = new TransitionWrapper();
+
+			const setStateSpy = sinon.spy(component, 'setState');
+
+			assert.isFalse(setStateSpy.called);
+			component.children = [{}];
+
+			setTimeout(
+				() => {
+					assert.isTrue(setStateSpy.called);
+					done()
+				},
+				100
+			);
+		}
+	);
+
+	it(
+		'should call syncChildren with empty args',
+		(done) => {
+			component = new TransitionWrapper();
+
+			const setStateSpy = sinon.spy(component, 'setState');
+
+			assert.isFalse(setStateSpy.called);
+			component.children = [];
+
+			setTimeout(
+				() => {
+					assert.isTrue(setStateSpy.called);
+					done()
+				},
+				100
+			);
+		}
+	);
+
+	it(
+		'should process entering children and call .enter()',
+		() => {
+			component = new TransitionWrapper();
+
+			const stubFn = sinon.stub();
+			const KEY = 1;
+
+			component.components[KEY] = {
+				enter: stubFn
+			};
+
+			const children = [
+				{
+					config: {
+						key: KEY
+					}
+				}
+			];
+
+			assert.isFalse(stubFn.called);
+
+			component.handleChildrenEnter(children, {})
+
+			assert.isTrue(stubFn.called);
+
+			delete component.components[KEY];
+		}
+	);
+
+	it(
+		'should process exiting children and call .leave()',
+		() => {
+			component = new TransitionWrapper();
+
+			const stubFn = sinon.stub();
+			const KEY = 1;
+
+			component.components[KEY] = {
+				leave: stubFn
+			};
+
+			const children = [
+				{
+					config: {
+						key: KEY
+					}
+				}
+			];
+
+			assert.isFalse(stubFn.called);
+
+			component.handleChildrenLeave(children, {})
+
+			assert.isTrue(stubFn.called);
+
+			delete component.components[KEY];
+		}
+	);
+
+	it(
+		'should remove key from _childrenMap state',
+		() => {
+			component = new TransitionWrapper();
+			const KEY = 1;
+
+			component._childrenMap = {[KEY]: 'test'};
+
+			assert(component._childrenMap[KEY]);
+
+			component.finishLeave(KEY);
+
+			assert.deepEqual(component._childrenMap, {});
 		}
 	);
 });
