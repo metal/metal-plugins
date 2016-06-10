@@ -131,7 +131,7 @@ class TransitionWrapper extends JSXComponent {
 					children.map(
 						child => {
 							return (
-								<TransitionChild appearTimeout={this.appearTimeout} enterTimeout={this.enterTimeout} leaveTimeout={this.leaveTimeout} ref={child.config.key} transitionName={this.name}>
+								<TransitionChild name={this.name} ref={child.config.key}>
 									{child}
 								</TransitionChild>
 							)
@@ -145,16 +145,6 @@ class TransitionWrapper extends JSXComponent {
 
 TransitionWrapper.STATE = {
 	/**
-	 * Length of appear transition.
-	 * @type {number}
-	 * @default 0
-	 */
-	appearTimeout: {
-		validator: Types.number,
-		value: 0
-	},
-
-	/**
 	 * Map of each child to its corresponding key value.
 	 * @type {object}
 	 * @default {}
@@ -162,26 +152,6 @@ TransitionWrapper.STATE = {
 	 */
 	childrenMap_: {
 		value: {}
-	},
-
-	/**
-	 * Length of enter transition.
-	 * @type {number}
-	 * @default 0
-	 */
-	enterTimeout: {
-		validator: Types.number,
-		value: 0
-	},
-
-	/**
-	 * Length of leave transition.
-	 * @type {number}
-	 * @default 0
-	 */
-	leaveTimeout: {
-		validator: Types.number,
-		value: 0
 	},
 
 	/**

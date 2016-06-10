@@ -46,7 +46,7 @@ describe('TransitionWrapper', function() {
 			class App extends JSXComponent {
 				render() {
 					return (
-						<TransitionWrapper appearTimeout={1000} enterTimeout={1000} leaveTimeout={1000} name="test">
+						<TransitionWrapper name="test">
 							<div class="child">Child</div>
 						</TransitionWrapper>
 					);
@@ -65,7 +65,7 @@ describe('TransitionWrapper', function() {
 			class App extends JSXComponent {
 				render() {
 					return (
-						<TransitionWrapper appearTimeout={1000} enterTimeout={1000} leaveTimeout={1000} name="test">
+						<TransitionWrapper name="test">
 							<div class="child1" key={1}>Child</div>
 							<div class="child2" key={2}>Child</div>
 						</TransitionWrapper>
@@ -142,7 +142,7 @@ describe('TransitionWrapper', function() {
 
 			assert.isFalse(stubFn.called);
 
-			component.handleChildrenEnter(children, {})
+			component.handleChildrenEnter_(children, {})
 
 			assert.isTrue(stubFn.called);
 
@@ -172,7 +172,7 @@ describe('TransitionWrapper', function() {
 
 			assert.isFalse(stubFn.called);
 
-			component.handleChildrenLeave(children, {})
+			component.handleChildrenLeave_(children, {})
 
 			assert.isTrue(stubFn.called);
 
@@ -181,18 +181,18 @@ describe('TransitionWrapper', function() {
 	);
 
 	it(
-		'should remove key from _childrenMap state',
+		'should remove key from childrenMap_ state',
 		() => {
 			component = new TransitionWrapper();
 			const KEY = 1;
 
-			component._childrenMap = {[KEY]: 'test'};
+			component.childrenMap_ = {[KEY]: 'test'};
 
-			assert(component._childrenMap[KEY]);
+			assert(component.childrenMap_[KEY]);
 
-			component.finishLeave(KEY);
+			component.finishLeave_(KEY);
 
-			assert.deepEqual(component._childrenMap, {});
+			assert.deepEqual(component.childrenMap_, {});
 		}
 	);
 });

@@ -31,6 +31,8 @@
     ]
   },
   "dependencies": {
+    "metal-anim": "^1.0.0-rc.1",
+    "metal-dom": "^1.0.0-rc.7",
     "metal-jsx": "^1.0.0-rc.15",
     "metal-state-validators": "^0.1.1"
   },
