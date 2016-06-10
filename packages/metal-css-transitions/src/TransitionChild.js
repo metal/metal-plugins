@@ -1,5 +1,7 @@
 'use strict';
 
+import Anim from 'metal-anim';
+import dom from 'metal-dom';
 import JSXComponent from 'metal-jsx';
 import Types from 'metal-state-validators';
 
@@ -20,7 +22,7 @@ class TransitionChild extends JSXComponent {
 	 * Handles `appear` type css transition.
 	 */
 	appear() {
-		this.transition_('appear', null, this.appearTimeout);
+		this.transition_('appear');
 	}
 
 	/**
@@ -33,6 +35,8 @@ class TransitionChild extends JSXComponent {
 		setTimeout(
 			() => {
 				node.classList.add(className);
+
+				Anim.emulateTransitionEnd(node);
 			},
 			DELAY_TIME
 		);
@@ -42,7 +46,7 @@ class TransitionChild extends JSXComponent {
 	 * Handles `enter` type css transition.
 	 */
 	enter() {
-		this.transition_('enter', null, this.enterTimeout);
+		this.transition_('enter');
 	}
 
 	/**
@@ -50,27 +54,22 @@ class TransitionChild extends JSXComponent {
 	 * @param {function()} callback Function to run after transition.
 	 */
 	leave(callback) {
-		this.transition_('leave', callback, this.leaveTimeout);
+		this.transition_('leave', callback);
 	}
 
 	/**
 	 * Handles adding the transition classname to the component element.
 	 * @param {string} type Classname to apply to node.
 	 * @param {function()} finishCallback Callback method to execute after transition.
-	 * @param {number} transitionLength Transition length in miliseconds.
 	 * @protected
 	 */
-	transition_(type, finishCallback, transitionLength) {
+	transition_(type, finishCallback) {
 		const node = this.element;
 
 		const className = `${this.name}-${type}`;
 		const activeClassName = `${className}-active`;
 
-		let timeout = null;
-
-		const timeoutCallback = () => {
-			clearTimeout(timeout);
-
+		const callback = () => {
 			node.classList.remove(activeClassName, className);
 
 			if (finishCallback) {
@@ -78,11 +77,11 @@ class TransitionChild extends JSXComponent {
 			}
 		};
 
+		dom.once(node, 'transitionend', callback);
+
 		node.classList.add(className);
 
 		this.delayActive_(activeClassName, node);
-
-		timeout = setTimeout(timeoutCallback, transitionLength);
 	}
 
 	/**
@@ -94,30 +93,6 @@ class TransitionChild extends JSXComponent {
 }
 
 TransitionChild.STATE = {
-	/**
-	 * Length of appear transition.
-	 * @type {number}
-	 */
-	appearTimeout: {
-		validator: Types.number
-	},
-
-	/**
-	* Length of enter transition.
-	* @type {number}
-	*/
-	enterTimeout: {
-		validator: Types.number
-	},
-
-	/**
-	* Length of leave transition.
-	* @type {number}
-	*/
-	leaveTimeout: {
-		validator: Types.number
-	},
-
 	/**
 	 * Name of transition.
 	 * @type {string}
