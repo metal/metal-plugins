@@ -28,7 +28,7 @@ describe('TransitionChild', function() {
 		const node = document.createElement('div');
 
 		assert.strictEqual('', node.className);
-		component.delayActive('test', node);
+		component.delayActive_('test', node);
 		assert.strictEqual('', node.className);
 
 		setTimeout(
@@ -49,7 +49,7 @@ describe('TransitionChild', function() {
 		class App extends JSXComponent {
 			render() {
 				return (
-					<TransitionChild transitionName={TRANS_NAME} ref="transitionChild">
+					<TransitionChild name={TRANS_NAME} ref="transitionChild">
 						<div></div>
 					</TransitionChild>
 					);
@@ -61,7 +61,7 @@ describe('TransitionChild', function() {
 
 		const transitionChild = app.components.transitionChild;
 
-		transitionChild.transition(TRANS_TYPE, null, DELAY);
+		transitionChild.transition_(TRANS_TYPE, null, DELAY);
 
 		assert.strictEqual(`${TRANS_NAME}-${TRANS_TYPE}`, appElem.className);
 
@@ -89,7 +89,7 @@ describe('TransitionChild', function() {
 		class App extends JSXComponent {
 			render() {
 				return (
-					<TransitionChild transitionName="test" ref="transitionChild">
+					<TransitionChild name="test" ref="transitionChild">
 						<div></div>
 					</TransitionChild>
 					);
@@ -99,7 +99,7 @@ describe('TransitionChild', function() {
 		const app = new App();
 		const transitionChild = app.components.transitionChild;
 
-		transitionChild.transition(null, stubFn, DELAY);
+		transitionChild.transition_(null, stubFn, DELAY);
 
 		assert.isFalse(stubFn.called);
 
@@ -113,30 +113,30 @@ describe('TransitionChild', function() {
 		);
 	});
 
-	it('should call transition with appear', function() {
+	it('should call transition_ with appear', function() {
 		const component = new TransitionChild();
 
-		const transitionFn = sinon.stub(component, 'transition');
+		const transitionFn = sinon.stub(component, 'transition_');
 
 		assert.isFalse(transitionFn.called);
 		component.appear();
 		assert.isTrue(transitionFn.calledWith('appear'));
 	});
 
-	it('should call transition with enter', function() {
+	it('should call transition_ with enter', function() {
 		const component = new TransitionChild();
 
-		const transitionFn = sinon.stub(component, 'transition');
+		const transitionFn = sinon.stub(component, 'transition_');
 
 		assert.isFalse(transitionFn.called);
 		component.enter();
 		assert.isTrue(transitionFn.calledWith('enter'));
 	});
 
-	it('should call transition with leave', function() {
+	it('should call transition_ with leave', function() {
 		const component = new TransitionChild();
 
-		const transitionFn = sinon.stub(component, 'transition');
+		const transitionFn = sinon.stub(component, 'transition_');
 
 		assert.isFalse(transitionFn.called);
 		component.leave();
