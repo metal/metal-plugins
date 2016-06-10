@@ -6,14 +6,23 @@ import Types from 'metal-state-validators';
 import TransitionChild from './TransitionChild';
 import {getChildrenMap, mergeChildrenMap} from './utils';
 
+/**
+ * TransitionWrapper component
+ */
 class TransitionWrapper extends JSXComponent {
+	/**
+	 * @inheritDoc
+	 */
 	created() {
-		this._childrenMap = getChildrenMap(this.children);
+		this.childrenMap_ = getChildrenMap(this.children);
 
-		this.handleChildrenEnter = this.handleChildrenEnter.bind(this);
-		this.handleChildrenLeave = this.handleChildrenLeave.bind(this);
+		this.handleChildrenEnter_ = this.handleChildrenEnter_.bind(this);
+		this.handleChildrenLeave_ = this.handleChildrenLeave_.bind(this);
 	}
 
+	/**
+	 * Executes the `appear` method on each child.
+	 */
 	attached() {
 		this.children.forEach(
 			child => {
@@ -28,15 +37,26 @@ class TransitionWrapper extends JSXComponent {
 		);
 	}
 
-	finishLeave(key) {
-		const newChildrenMap = this._childrenMap;
+	/**
+	 * Removes child from `childrenMap_`.
+	 * @param {string|number} key The unique identifier of the child element that left.
+	 * @protected
+	 */
+	finishLeave_(key) {
+		const newChildrenMap = this.childrenMap_;
 
 		delete newChildrenMap[key];
 
-		this._childrenMap = newChildrenMap;
+		this.childrenMap_ = newChildrenMap;
 	}
 
-	handleChildrenEnter(newChildren, prevKeyMap) {
+	/**
+	 * Executes the `enter` method on each new entering child.
+	 * @param {!Array} newChildren Children elements that are entering.
+	 * @param {!Object} prevKeyMap Map of children who are already present.
+	 * @protected
+	 */
+	handleChildrenEnter_(newChildren, prevKeyMap) {
 		newChildren.forEach(
 			child => {
 				if (child && child.config) {
@@ -50,40 +70,55 @@ class TransitionWrapper extends JSXComponent {
 		);
 	}
 
-	handleChildrenLeave(prevChildren, newKeyMap) {
+	/**
+	 * Executes the `leave` method on each child that leaves.
+	 * @param {!Array} prevChildren Children who are already present.
+	 * @param {!Object} newKeyMap Map of new children.
+	 * @protected
+	 */
+	handleChildrenLeave_(prevChildren, newKeyMap) {
 		prevChildren.forEach(
 			child => {
 				if (child && child.config) {
 					const {key} = child.config;
 
 					if (key && !newKeyMap[key]) {
-						this.components[key].leave(this.finishLeave.bind(this, key));
+						this.components[key].leave(this.finishLeave_.bind(this, key));
 					}
 				}
 			}
 		);
 	}
 
+	/**
+	 * Sorts children, creates new `childrenMap_` and passes them to
+	 * `handleChildrenEnter_` and `handleChildrenLeave_`.
+	 * @param {!Array} newChildren New children elements.
+	 * @param {!Array} prevChildren Previous children elements.
+	 */
 	syncChildren(newChildren, prevChildren = []) {
 		const newKeyMap = getChildrenMap(newChildren);
 		const prevKeyMap = getChildrenMap(prevChildren);
 
 		this.setState(
 			{
-				_childrenMap: mergeChildrenMap(newKeyMap, prevKeyMap)
+				childrenMap_: mergeChildrenMap(newKeyMap, prevKeyMap)
 			},
 			() => {
-				this.handleChildrenEnter(newChildren, prevKeyMap);
-				this.handleChildrenLeave(prevChildren, newKeyMap);
+				this.handleChildrenEnter_(newChildren, prevKeyMap);
+				this.handleChildrenLeave_(prevChildren, newKeyMap);
 			}
 		);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	render() {
 		const children = [];
 
-		for (let key in this._childrenMap) {
-			const child = this._childrenMap[key];
+		for (let key in this.childrenMap_) {
+			const child = this.childrenMap_[key];
 
 			if (child) {
 				children.push(child);
@@ -109,27 +144,52 @@ class TransitionWrapper extends JSXComponent {
 }
 
 TransitionWrapper.STATE = {
-	name: {
-		validator: Types.string
-	},
-
-	enterTimeout: {
-		validator: Types.number,
-		value: 0
-	},
-
-	leaveTimeout: {
-		validator: Types.number,
-		value: 0
-	},
-
+	/**
+	 * Length of appear transition.
+	 * @type {number}
+	 * @default 0
+	 */
 	appearTimeout: {
 		validator: Types.number,
 		value: 0
 	},
 
-	_childrenMap: {
+	/**
+	 * Map of each child to its corresponding key value.
+	 * @type {object}
+	 * @default {}
+	 * @protected
+	 */
+	childrenMap_: {
 		value: {}
+	},
+
+	/**
+	 * Length of enter transition.
+	 * @type {number}
+	 * @default 0
+	 */
+	enterTimeout: {
+		validator: Types.number,
+		value: 0
+	},
+
+	/**
+	 * Length of leave transition.
+	 * @type {number}
+	 * @default 0
+	 */
+	leaveTimeout: {
+		validator: Types.number,
+		value: 0
+	},
+
+	/**
+	 * Name of css transition.
+	 * @type {string}
+	 */
+	name: {
+		validator: Types.string
 	}
 }
 

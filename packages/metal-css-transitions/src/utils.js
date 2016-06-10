@@ -1,3 +1,10 @@
+'use strict';
+
+/**
+ * Processes an array of components, creating an object with keys and values.
+ * If the component does not already have a key, it will be given a unique key.
+ * @param {!Array} children Array of metal components.
+ */
 export function getChildrenMap(children) {
 	let COUNTER = 1;
 
@@ -32,6 +39,11 @@ export function getChildrenMap(children) {
 	return retObj;
 }
 
+/**
+ * Merges two children maps so that there are no duplicates.
+ * @param {!Object} next Map of new children components.
+ * @param {!Object} prev Map of previous children components.
+ */
 export function mergeChildrenMap(next = {}, prev = {}) {
 	function getValueForKey(key) {
 		if (next.hasOwnProperty(key)) {
