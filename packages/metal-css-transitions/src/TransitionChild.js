@@ -70,10 +70,11 @@ class TransitionChild extends JSXComponent {
 		const activeClassName = `${className}-active`;
 
 		const callback = () => {
-			node.classList.remove(activeClassName, className);
-
 			if (finishCallback) {
 				finishCallback();
+			}
+			else {
+				node.classList.remove(activeClassName, className);
 			}
 		};
 
