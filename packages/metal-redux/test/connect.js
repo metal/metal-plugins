@@ -85,7 +85,7 @@ describe('connect', function() {
 					var renderer = new IncrementalDomRenderer(this);
 					renderer.renderIncDom = function() {
 						IncrementalDOM.elementOpen(Provider, null, [], 'store', store);
-						IncrementalDOM.elementVoid(TestComponent, 'connect');
+						IncrementalDOM.elementVoid(TestComponent, null, null, 'ref', 'connect');
 						IncrementalDOM.elementClose(Provider);
 					};
 					return renderer;
@@ -240,6 +240,22 @@ describe('connect', function() {
 				done();
 			});
 		});
+
+		it('should receive store state and component config in "mapStoreStateToConfig"', function() {
+			var store = buildStoreStub();
+			var storeState = {};
+			store.getState.returns(storeState);
+
+			var mapDispatchToConfig = sinon.stub();
+			var TestComponent = connect(mapDispatchToConfig)(OriginalComponent);
+			component = new TestComponent({
+				store
+			});
+
+			assert.strictEqual(1, mapDispatchToConfig.callCount);
+			assert.strictEqual(storeState, mapDispatchToConfig.args[0][0]);
+			assert.deepEqual({}, mapDispatchToConfig.args[0][1]);
+		});
 	});
 
 	describe('mapDispatchToConfig', function() {
@@ -288,7 +304,7 @@ describe('connect', function() {
 				createRenderer() {
 					var renderer = new IncrementalDomRenderer(this);
 					renderer.renderIncDom = function() {
-						var args = [TestComponent, 'connect', []];
+						var args = [TestComponent, null, null, 'ref', 'connect'];
 						args.push('foo', this.component_.foo);
 						args.push('store', this.component_.store);
 						IncrementalDOM.elementVoid.apply(null, args);

@@ -26,8 +26,8 @@ describe('Provider', function() {
 	it('should render the children received', function() {
 		var TestComponent = createTestComponentClass();
 		TestComponent.RENDERER.prototype.renderIncDom = function() {
-			IncrementalDOM.elementOpen(Provider, 'provider');
-			IncrementalDOM.elementVoid(ChildComponent, 'child');
+			IncrementalDOM.elementOpen(Provider, null, null, 'ref', 'provider');
+			IncrementalDOM.elementVoid(ChildComponent, null, null, 'ref', 'child');
 			IncrementalDOM.elementClose(Provider);
 		};
 
@@ -47,8 +47,8 @@ describe('Provider', function() {
 		var store = {};
 		var TestComponent = createTestComponentClass();
 		TestComponent.RENDERER.prototype.renderIncDom = function() {
-			IncrementalDOM.elementOpen(Provider, 'provider', ['store', store]);
-			IncrementalDOM.elementVoid(ChildComponent, 'child');
+			IncrementalDOM.elementOpen(Provider, null, null, 'ref', 'provider', 'store', store);
+			IncrementalDOM.elementVoid(ChildComponent, null, null, 'ref', 'child');
 			IncrementalDOM.elementClose(Provider);
 		};
 

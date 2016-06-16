@@ -97,10 +97,15 @@ function connect(mapStoreStateToConfig, mapDispatchToConfig, mergeConfig, option
 			 * @protected
 			 */
 			getChildConfig_() {
-				return mergeConfig(
-					this.config,
-					this.getStoreConfig_(this.storeState),
-					mapDispatchToConfig(this.getStore().dispatch)
+				return object.mixin(
+					mergeConfig(
+						this.config,
+						this.getStoreConfig_(this.storeState),
+						mapDispatchToConfig(this.getStore().dispatch)
+					),
+					{
+						ref: 'child'
+					}
 				);
 			}
 
@@ -127,7 +132,10 @@ function connect(mapStoreStateToConfig, mapDispatchToConfig, mergeConfig, option
 			 * @protected
 			 */
 			getStoreConfig_(storeState) {
-				this.storeConfig_ = mapStoreStateToConfig(storeState);
+				this.storeConfig_ = mapStoreStateToConfig(
+					storeState,
+					this.components.child ? this.components.child.config : {}
+				);
 				return this.storeConfig_;
 			}
 
