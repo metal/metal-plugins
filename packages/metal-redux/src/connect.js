@@ -55,9 +55,6 @@ function connect(mapStoreStateToConfig, mapDispatchToConfig, mergeConfig, option
 				super(opt_config, opt_parentElement);
 				this.hasStoreConfigChanged_ = false;
 				this.hasOwnConfigChanged_ = false;
-				if (pure) {
-					this.on('configChanged', this.handleConfigChanged_);
-				}
 			}
 
 			/**
@@ -68,6 +65,18 @@ function connect(mapStoreStateToConfig, mapDispatchToConfig, mergeConfig, option
 					this.unsubscribeStore_ = this.getStore().subscribe(
 						this.handleStoreChange_.bind(this)
 					);
+				}
+			}
+
+			/**
+			 * Lifecycle. Runs when a new config value has been set.
+			 * @param {!Object} newVal
+			 * @param {!Object} prevVal
+			 * @protected
+			 */
+			configChanged(newVal, prevVal) {
+				if (pure) {
+					this.hasOwnConfigChanged_ = !object.shallowEqual(prevVal, newVal);
 				}
 			}
 
@@ -137,18 +146,6 @@ function connect(mapStoreStateToConfig, mapDispatchToConfig, mergeConfig, option
 					this.components.child ? this.components.child.config : {}
 				);
 				return this.storeConfig_;
-			}
-
-			/**
-			 * Handles the event indicating that the config object has changed.
-			 * @param {!Object} data
-			 * @protected
-			 */
-			handleConfigChanged_(data) {
-				this.hasOwnConfigChanged_ = !object.shallowEqual(
-					data.prevVal,
-					data.newVal
-				);
 			}
 
 			/**
