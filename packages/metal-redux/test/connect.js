@@ -11,18 +11,14 @@ describe('connect', function() {
 
 	beforeEach(function() {
 		class TestComponent extends Component {
-			createRenderer() {
-				var renderer = new IncrementalDomRenderer(this);
-				renderer.renderIncDom = () => {
-					IncrementalDOM.elementOpen('div');
-					IncrementalDOM.text(this.config.foo);
-					IncrementalDOM.elementClose('div');
-				};
-				return renderer;
+			render() {
+				IncrementalDOM.elementOpen('div');
+				IncrementalDOM.text(this.config.foo);
+				IncrementalDOM.elementClose('div');
 			}
 		}
+		TestComponent.RENDERER = IncrementalDomRenderer;
 		OriginalComponent = TestComponent;
-		OriginalComponent.RENDERER = IncrementalDomRenderer;
 	});
 
 	afterEach(function() {
@@ -239,6 +235,39 @@ describe('connect', function() {
 				assert.strictEqual('foo', child.element.textContent);
 				done();
 			});
+		});
+
+		it('should subscribe parent components to store before child components', function() {
+			var store = buildStoreStub();
+			store.getState.returns({
+				foo: 'foo'
+			});
+
+			var ChildComponent = connect(state => state)(OriginalComponent);
+			class ParentComponent extends Component {
+				render() {
+					IncrementalDOM.elementVoid(
+						ChildComponent,
+						null,
+						null,
+						'store',
+						this.config.store
+					);
+				}
+			}
+			ParentComponent.RENDERER = IncrementalDomRenderer;
+			var TestComponent = connect(state => state)(ParentComponent);
+
+			component = new TestComponent({
+				store
+			});
+			store.getState.returns({
+				foo: 'bar'
+			});
+			assert.strictEqual(2, store.subscribe.callCount);
+
+			store.subscribe.args[0][0]();
+			assert.strictEqual(store.getState(), component.storeState);
 		});
 
 		it('should receive store state and component config in "mapStoreStateToConfig"', function() {

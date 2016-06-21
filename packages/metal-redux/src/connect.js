@@ -58,13 +58,16 @@ function connect(mapStoreStateToConfig, mapDispatchToConfig, mergeConfig, option
 			}
 
 			/**
-			 * Lifecycle. Subscribes to the store's state changes.
+			 * Adds the given config object to the specified array, so they can be passed
+			 * as arguments to incremental dom calls.
+			 * @param {!Array}
+			 * @param {!Object}
+			 * @protected
 			 */
-			attached() {
-				if (shouldSubscribe) {
-					this.unsubscribeStore_ = this.getStore().subscribe(
-						this.handleStoreChange_.bind(this)
-					);
+			addToArray_(arr, config) {
+				var keys = Object.keys(config);
+				for (var i = 0; i < keys.length; i++) {
+					arr.push(keys[i], config[keys[i]]);
 				}
 			}
 
@@ -78,15 +81,6 @@ function connect(mapStoreStateToConfig, mapDispatchToConfig, mergeConfig, option
 				if (pure) {
 					this.hasOwnConfigChanged_ = !object.shallowEqual(prevVal, newVal);
 				}
-			}
-
-			/**
-			 * Overrides the default renderer creation.
-			 * @return {!ConnectRenderer}
-			 * @override
-			 */
-			createRenderer() {
-				return new ConnectRenderer(this, WrappedComponent);
 			}
 
 			/**
@@ -165,6 +159,21 @@ function connect(mapStoreStateToConfig, mapDispatchToConfig, mergeConfig, option
 			}
 
 			/**
+			 * Renders the wrapped component with the appropriate data.
+			 */
+			render() {
+				if (shouldSubscribe && !this.unsubscribeStore_) {
+					this.unsubscribeStore_ = this.getStore().subscribe(
+						this.handleStoreChange_.bind(this)
+					);
+				}
+
+				var args = [WrappedComponent, null, []];
+				this.addToArray_(args, this.getChildConfig_());
+				IncrementalDOM.elementVoid.apply(null, args);
+			}
+
+			/**
 			 * Lifecycle. Resets the flags indicating that data has changed.
 			 */
 			rendered() {
@@ -181,6 +190,7 @@ function connect(mapStoreStateToConfig, mapDispatchToConfig, mergeConfig, option
 				return !pure || this.hasStoreConfigChanged_ || this.hasOwnConfigChanged_;
 			}
 		}
+		Connect.RENDERER = IncrementalDomRenderer;
 		Connect.STATE = {
 			storeState: {
 				valueFn: function() {
@@ -190,43 +200,6 @@ function connect(mapStoreStateToConfig, mapDispatchToConfig, mergeConfig, option
 		};
 		return Connect;
 	};
-}
-
-/**
- * The renderer used by the components returned by `connect`.
- */
-class ConnectRenderer extends IncrementalDomRenderer {
-	/**
-	 * @inheritDoc
-	 */
-	constructor(comp, childCtor) {
-			super(comp);
-			this.childCtor_ = childCtor;
-	}
-
-	/**
-	 * Adds the given config object to the specified array, so they can be passed
-	 * as arguments to incremental dom calls.
-	 * @param {!Array}
-	 * @param {!Object}
-	 * @protected
-	 */
-	addToArray_(arr, config) {
-		var keys = Object.keys(config);
-		for (var i = 0; i < keys.length; i++) {
-			arr.push(keys[i], config[keys[i]]);
-		}
-	}
-
-	/**
-	 * Overrides the default method from `IncrementalDomRenderer` to render the
-	 * wrapped component with the appropriate data.
-	 */
-	renderIncDom() {
-		var args = [this.childCtor_, null, []];
-		this.addToArray_(args, this.component_.getChildConfig_());
-		IncrementalDOM.elementVoid.apply(null, args);
-	}
 }
 
 export default connect;
