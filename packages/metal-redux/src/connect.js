@@ -137,7 +137,7 @@ function connect(mapStoreStateToConfig, mapDispatchToConfig, mergeConfig, option
 			getStoreConfig_(storeState) {
 				this.storeConfig_ = mapStoreStateToConfig(
 					storeState,
-					this.components.child ? this.components.child.config : {}
+					this.config
 				);
 				return this.storeConfig_;
 			}

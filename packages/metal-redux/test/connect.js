@@ -278,12 +278,13 @@ describe('connect', function() {
 			var mapDispatchToConfig = sinon.stub();
 			var TestComponent = connect(mapDispatchToConfig)(OriginalComponent);
 			component = new TestComponent({
-				store
+				store,
+				foo: 'foo'
 			});
 
 			assert.strictEqual(1, mapDispatchToConfig.callCount);
 			assert.strictEqual(storeState, mapDispatchToConfig.args[0][0]);
-			assert.deepEqual({}, mapDispatchToConfig.args[0][1]);
+			assert.deepEqual(component.config, mapDispatchToConfig.args[0][1]);
 		});
 	});
 
