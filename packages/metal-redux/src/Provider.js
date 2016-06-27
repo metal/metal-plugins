@@ -29,7 +29,16 @@ class ProviderRenderer extends IncrementalDomRenderer {
 	 * @override
 	 */
 	renderIncDom() {
-		this.component_.config.children.forEach(IncrementalDomRenderer.renderChild);
+		const {children} = this.component_.config;
+
+		if (children && children.length > 1) {
+			IncrementalDOM.elementOpen('span');
+			this.component_.config.children.forEach(IncrementalDomRenderer.renderChild);
+			IncrementalDOM.elementClose('span');
+		}
+		else {
+			this.component_.config.children.forEach(IncrementalDomRenderer.renderChild);
+		}
 	}
 }
 

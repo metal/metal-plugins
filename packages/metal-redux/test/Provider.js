@@ -23,7 +23,7 @@ describe('Provider', function() {
 		}
 	});
 
-	it('should render the children received', function() {
+	it('should render a single child received', function() {
 		var TestComponent = createTestComponentClass();
 		TestComponent.RENDERER.prototype.renderIncDom = function() {
 			IncrementalDOM.elementOpen(Provider, null, null, 'ref', 'provider');
@@ -40,8 +40,32 @@ describe('Provider', function() {
 		assert.strictEqual(provider.element, component.element);
 		assert.strictEqual(1, provider.element.childNodes.length);
 		assert.strictEqual(child.element, provider.element);
+		assert.strictEqual('CHILD', provider.element.tagName);
 		assert.strictEqual('CHILD', child.element.tagName);
 		assert.strictEqual('Child', child.element.textContent);
+	});
+
+	it('should render multiple children received and wrap with a span', function() {
+		var TestComponent = createTestComponentClass();
+		TestComponent.RENDERER.prototype.renderIncDom = function() {
+			IncrementalDOM.elementOpen(Provider, null, null, 'ref', 'provider');
+			IncrementalDOM.elementVoid(ChildComponent, null, null, 'ref', 'child');
+			IncrementalDOM.elementVoid(ChildComponent, null, null, 'ref', 'child2');
+			IncrementalDOM.elementClose(Provider);
+		};
+
+		component = new TestComponent();
+		var provider = component.components.provider;
+		var child = component.components.child;
+		var child2 = component.components.child2;
+
+		assert.ok(provider);
+		assert.ok(child);
+		assert.ok(child2);
+		assert.strictEqual(2, provider.element.childNodes.length);
+		assert.strictEqual('SPAN', provider.element.tagName);
+		assert.strictEqual('Child', child.element.textContent);
+		assert.strictEqual('Child', child2.element.textContent);
 	});
 
 	it('should pass store object down to children as context', function() {
