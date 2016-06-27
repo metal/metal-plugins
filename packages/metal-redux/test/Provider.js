@@ -34,11 +34,12 @@ describe('Provider', function() {
 		component = new TestComponent();
 		var provider = component.components.provider;
 		var child = component.components.child;
+
 		assert.ok(provider);
 		assert.ok(child);
 		assert.strictEqual(provider.element, component.element);
 		assert.strictEqual(1, provider.element.childNodes.length);
-		assert.strictEqual(child.element, provider.element.childNodes[0]);
+		assert.strictEqual(child.element, provider.element);
 		assert.strictEqual('CHILD', child.element.tagName);
 		assert.strictEqual('Child', child.element.textContent);
 	});
