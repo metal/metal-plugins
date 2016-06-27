@@ -1,6 +1,6 @@
 'use strict';
 
-import { object } from 'metal';
+import { core, object } from 'metal';
 import Component from 'metal-component';
 import IncrementalDomRenderer from 'metal-incremental-dom';
 
@@ -8,6 +8,15 @@ const defaultMapStateToProps = () => ({});
 const defaultMapDispatchToProps = dispatch => ({ dispatch });
 const defaultMergeConfig = (stateConfig, dispatchConfig, parentConfig) => {
 	return object.mixin({}, stateConfig, dispatchConfig, parentConfig);
+};
+const wrapActionCreators = actionCreators => {
+	return dispatch => Object.keys(actionCreators).reduce(
+		(config, key) => {
+			config[key] = (...args) => dispatch(actionCreators[key](...args));
+			return config;
+		},
+		{}
+	);
 };
 
 /**
@@ -21,11 +30,14 @@ const defaultMergeConfig = (stateConfig, dispatchConfig, parentConfig) => {
  *     receives the current store state and returns an object with the config
  *     data that should be used by the component. If this param isn't given,
  *     the default behavior won't pass any store state data to the component.
- * @param {function(!function())=} mapDispatchToConfig An optional function that
- *     receives the store's `dispatch` function and returns an object with
- *     config data that should be used by the component. If this param isn't
- *     given, the default behavior will pass the `dispatch` function itself to
- *     the config object.
+ * @param {Object.<string, function>|function(!function())=} mapDispatchToConfig
+ *     An optional function or object that maps action creators to the store's
+ *     `dispatch` function. If it is a function, it receives the store's `dispatch`
+ *     function and returns an object with config data that should be used by the
+ *     component. If it is an object, each value is assumed to be an action creator,
+ *     which will automaitcally be wrapped by the `dispatch` function so that they
+ *     can be invoked directly. If this param isn't given, the default behavior will
+ *     pass the `dispatch` function itself to the config object.
  * @param {function(!Object, !Object, !Object)=} An optional function that
  *     recevies all three original config objects (the one built from store
  *     state, the one build from the dispatch function and the one from the
@@ -42,9 +54,15 @@ const defaultMergeConfig = (stateConfig, dispatchConfig, parentConfig) => {
 function connect(mapStoreStateToConfig, mapDispatchToConfig, mergeConfig, options = {}) {
 	var shouldSubscribe = !!mapStoreStateToConfig;
 	mapStoreStateToConfig = mapStoreStateToConfig || defaultMapStateToProps;
-	mapDispatchToConfig = mapDispatchToConfig || defaultMapDispatchToProps;
 	mergeConfig = mergeConfig || defaultMergeConfig;
 	var { pure = true } = options;
+
+	var mapDispatchIsFunc = core.isFunction(mapDispatchToConfig);
+	if (!mapDispatchIsFunc && core.isObject(mapDispatchToConfig)) {
+		mapDispatchToConfig = wrapActionCreators(mapDispatchToConfig);
+	} else if (!mapDispatchIsFunc) {
+		mapDispatchToConfig = defaultMapDispatchToProps;
+	}
 
 	return function(WrappedComponent) {
 		class Connect extends Component {

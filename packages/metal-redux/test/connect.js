@@ -323,6 +323,26 @@ describe('connect', function() {
 			assert.strictEqual(1, store.dispatch.callCount);
 			assert.strictEqual('foo', store.dispatch.args[0][0]);
 		});
+
+		it('should wrap an object of action creators with the store\'s dispatch function', function() {
+			function foo(val) {
+				return val;
+			}
+			var TestComponent = connect(null, {foo})(OriginalComponent);
+			component = new TestComponent({
+				store: buildStoreStub()
+			});
+
+			var store = component.getStore();
+			var names = Object.keys(component.components);
+			var child = component.components[names[0]];
+			assert.ok(!child.config.dispatch);
+			assert.ok(child.config.foo);
+			assert.strictEqual(0, store.dispatch.callCount);
+
+			child.config.foo('bar');
+			assert(store.dispatch.calledWithExactly('bar'));
+		});
 	});
 
 	describe('pure', function() {
