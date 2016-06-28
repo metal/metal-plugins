@@ -1,6 +1,6 @@
 {
   "name": "metal-redux",
-  "version": "1.0.0-rc.9",
+  "version": "1.0.0-rc.10",
   "description": "A set of helpers for building projects using Metal.js and Redux",
   "license": "BSD",
   "repository": "metal/metal-redux",
