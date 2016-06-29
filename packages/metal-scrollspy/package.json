@@ -8,12 +8,16 @@
     "node": ">=0.12.0",
     "npm": ">=3.0.0"
   },
-	"main": "src/Scrollspy.js",
+  "jsnext:main": "src/Scrollspy.js",
+	"main": "lib/Scrollspy.js",
   "files": [
+		"lib",
     "src",
     "test"
   ],
 	"scripts": {
+		"compile": "babel --presets metal -d lib/ src/",
+		"prepublish": "npm run compile",
 		"test": "gulp test"
 	},
 	"keywords": [
@@ -27,6 +31,8 @@
 		"metal-position": "^1.0.0-rc.1"
   },
   "devDependencies": {
+		"babel-cli": "^6.4.5",
+		"babel-preset-metal": "^4.0.0",
     "gulp": "^3.8.11",
 		"gulp-metal": "^1.0.0"
   }
