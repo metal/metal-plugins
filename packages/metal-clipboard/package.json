@@ -8,12 +8,16 @@
 		"node": ">=0.12.0",
 		"npm": ">=3.0.0"
 	},
-	"main": "src/Clipboard.js",
+	"jsnext:main": "src/Clipboard.js",
+	"main": "lib/Clipboard.js",
 	"files": [
+		"lib",
 		"src",
 		"test"
 	],
 	"scripts": {
+		"compile": "babel --presets metal -d lib/ src/",
+		"prepublish": "npm run compile",
 		"test": "gulp test"
 	},
 	"keywords": [
@@ -26,6 +30,8 @@
 		"metal-dom": "^1.0.0-rc.2"
   },
 	"devDependencies": {
+		"babel-cli": "^6.4.5",
+    "babel-preset-metal": "^4.0.0",
     "bootstrap": "^3.3.6",
 		"gulp": "^3.8.11",
 		"gulp-metal": "^1.0.0"
