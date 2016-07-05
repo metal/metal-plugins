@@ -25,10 +25,10 @@
 	],
   "dependencies": {
     "bootstrap": "^3.3.6",
-    "metal": "^1.0.0-rc.1",
-		"metal-state": "^1.0.0-rc.1",
-		"metal-dom": "^1.0.0-rc.2",
-		"metal-position": "^1.0.0-rc.1"
+    "metal": "^1.0.0",
+		"metal-state": "^1.0.0",
+		"metal-dom": "^1.0.0",
+		"metal-position": "^1.0.0"
   },
   "devDependencies": {
 		"babel-cli": "^6.4.5",
