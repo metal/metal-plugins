@@ -1,23 +1,23 @@
 {
   "name": "metal-drag-drop",
-  "version": "1.0.0-rc.4",
+  "version": "1.0.0",
   "description": "Metal's drag and drop component.",
   "license": "BSD",
   "repository": "metal/metal-drag-drop",
-	"engines": {
-		"node": ">=0.12.0",
-		"npm": ">=3.0.0"
-	},
-	"jsnext:main": "src/all/drag.js",
-	"main": "lib/all/drag.js",
-	"files": [
-		"lib",
-		"src/**/*.js",
-		"test/**/*.js"
-	],
+  "engines": {
+    "node": ">=0.12.0",
+    "npm": ">=3.0.0"
+  },
+  "jsnext:main": "src/all/drag.js",
+  "main": "lib/all/drag.js",
+  "files": [
+    "lib",
+    "src/**/*.js",
+    "test/**/*.js"
+  ],
   "scripts": {
-		"compile": "babel --presets metal -d lib/ src/",
-		"prepublish": "npm run compile",
+    "compile": "babel --presets metal -d lib/ src/",
+    "prepublish": "npm run compile",
     "test": "gulp test"
   },
   "keywords": [
@@ -32,10 +32,10 @@
     "metal-state": "^1.0.0"
   },
   "devDependencies": {
-		"babel-cli": "^6.4.5",
-		"babel-preset-metal": "^4.0.0",
+    "babel-cli": "^6.4.5",
+    "babel-preset-metal": "^4.0.0",
     "bootstrap": "^3.3.6",
     "gulp": "^3.8.11",
-		"gulp-metal": "^1.0.0"
+    "gulp-metal": "^1.0.0"
   }
 }
