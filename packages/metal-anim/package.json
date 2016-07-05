@@ -1,6 +1,6 @@
 {
   "name": "metal-anim",
-  "version": "1.0.0-rc.3",
+  "version": "1.0.0",
   "description": "Metal's animation utility",
   "license": "BSD",
   "repository": "metal/metal-anim",
@@ -8,16 +8,16 @@
     "node": ">=0.12.0",
     "npm": ">=3.0.0"
   },
-	"jsnext:main": "src/Anim.js",
+  "jsnext:main": "src/Anim.js",
   "main": "lib/Anim.js",
   "files": [
-		"lib",
+    "lib",
     "src/**/*.js",
     "test/**/*.js"
   ],
   "scripts": {
-		"compile": "babel --presets metal -d lib/ src/",
-		"prepublish": "npm run compile",
+    "compile": "babel --presets metal -d lib/ src/",
+    "prepublish": "npm run compile",
     "test": "gulp test"
   },
   "keywords": [
@@ -28,7 +28,7 @@
     "metal-dom": "^1.0.0"
   },
   "devDependencies": {
-		"babel-cli": "^6.4.5",
+    "babel-cli": "^6.4.5",
     "babel-preset-metal": "^4.0.0",
     "gulp": "^3.8.11",
     "gulp-metal": "^1.0.0"
