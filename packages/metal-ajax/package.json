@@ -1,9 +1,9 @@
 {
-	"name": "metal-ajax",
-	"version": "1.0.0-rc.3",
-	"description": "Metal.js utility to perform Ajax requests",
-	"license": "BSD",
-	"repository": "metal/metal-ajax",
+  "name": "metal-ajax",
+  "version": "1.0.0",
+  "description": "Metal.js utility to perform Ajax requests",
+  "license": "BSD",
+  "repository": "metal/metal-ajax",
   "engines": {
     "node": ">=0.12.0",
     "npm": ">=3.0.0"
@@ -11,28 +11,28 @@
   "main": "lib/Ajax.js",
   "jsnext:main": "src/Ajax.js",
   "files": [
-		"lib",
-		"src",
-		"test"
+    "lib",
+    "src",
+    "test"
   ],
-	"scripts": {
-		"compile": "babel --presets metal -d lib/ src/",
-		"prepublish": "npm run compile",
-		"test": "gulp test"
-	},
-	"keywords": [
-		"metal"
-	],
+  "scripts": {
+    "compile": "babel --presets metal -d lib/ src/",
+    "prepublish": "npm run compile",
+    "test": "gulp test"
+  },
+  "keywords": [
+    "metal"
+  ],
   "dependencies": {
     "metal": "^1.0.0",
-		"metal-multimap": "^1.0.0",
-		"metal-promise": "^1.0.0",
-		"metal-uri": "^1.0.0"
+    "metal-multimap": "^1.0.0",
+    "metal-promise": "^1.0.0",
+    "metal-uri": "^1.0.0"
   },
-	"devDependencies": {
-		"babel-cli": "^6.4.5",
-		"babel-preset-metal": "^4.0.0",
+  "devDependencies": {
+    "babel-cli": "^6.4.5",
+    "babel-preset-metal": "^4.0.0",
     "gulp": "^3.8.11",
-		"gulp-metal": "^1.0.0"
-	}
+    "gulp-metal": "^1.0.0"
+  }
 }
