@@ -28,7 +28,7 @@
     "metal"
   ],
   "dependencies": {
-    "metal-incremental-dom": "^1.0.0-rc.34",
+    "metal-incremental-dom": "^1.0.0",
     "react": "^15.1.0",
     "react-dom": "^15.1.0"
   },
