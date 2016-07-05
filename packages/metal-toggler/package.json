@@ -1,28 +1,28 @@
 {
-	"name": "metal-toggler",
-	"version": "1.0.0-rc.2",
-	"description": "Metal's toggler component",
-	"license": "BSD",
-	"repository": "metal/metal-toggler",
+  "name": "metal-toggler",
+  "version": "1.0.0",
+  "description": "Metal's toggler component",
+  "license": "BSD",
+  "repository": "metal/metal-toggler",
   "engines": {
     "node": ">=0.12.0",
     "npm": ">=3.0.0"
   },
-	"jsnext:main": "src/Toggler.js",
-	"main": "lib/Toggler.js",
+  "jsnext:main": "src/Toggler.js",
+  "main": "lib/Toggler.js",
   "files": [
-		"lib",
-		"src",
-		"test"
+    "lib",
+    "src",
+    "test"
   ],
-	"scripts": {
-		"compile": "babel --presets metal -d lib/ src/",
-		"prepublish": "npm run compile",
-		"test": "gulp test"
-	},
-	"keywords": [
-		"metal"
-	],
+  "scripts": {
+    "compile": "babel --presets metal -d lib/ src/",
+    "prepublish": "npm run compile",
+    "test": "gulp test"
+  },
+  "keywords": [
+    "metal"
+  ],
   "dependencies": {
     "bootstrap": "^3.3.6",
     "metal": "^1.0.0",
@@ -31,9 +31,9 @@
     "metal-events": "^1.0.0"
   },
   "devDependencies": {
-		"babel-cli": "^6.4.5",
-		"babel-preset-metal": "^4.0.0",
+    "babel-cli": "^6.4.5",
+    "babel-preset-metal": "^4.0.0",
     "gulp": "^3.8.11",
-		"gulp-metal": "^1.0.0"
+    "gulp-metal": "^1.0.0"
   }
 }
