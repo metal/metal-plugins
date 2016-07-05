@@ -1,39 +1,39 @@
 {
-	"name": "metal-scrollspy",
-	"version": "1.0.0-rc.2",
-	"description": "Metal's scrollspy component",
-	"license": "BSD",
-	"repository": "metal/metal-scrollspy",
+  "name": "metal-scrollspy",
+  "version": "1.0.0",
+  "description": "Metal's scrollspy component",
+  "license": "BSD",
+  "repository": "metal/metal-scrollspy",
   "engines": {
     "node": ">=0.12.0",
     "npm": ">=3.0.0"
   },
   "jsnext:main": "src/Scrollspy.js",
-	"main": "lib/Scrollspy.js",
+  "main": "lib/Scrollspy.js",
   "files": [
-		"lib",
+    "lib",
     "src",
     "test"
   ],
-	"scripts": {
-		"compile": "babel --presets metal -d lib/ src/",
-		"prepublish": "npm run compile",
-		"test": "gulp test"
-	},
-	"keywords": [
-		"metal"
-	],
+  "scripts": {
+    "compile": "babel --presets metal -d lib/ src/",
+    "prepublish": "npm run compile",
+    "test": "gulp test"
+  },
+  "keywords": [
+    "metal"
+  ],
   "dependencies": {
     "bootstrap": "^3.3.6",
     "metal": "^1.0.0",
-		"metal-state": "^1.0.0",
-		"metal-dom": "^1.0.0",
-		"metal-position": "^1.0.0"
+    "metal-state": "^1.0.0",
+    "metal-dom": "^1.0.0",
+    "metal-position": "^1.0.0"
   },
   "devDependencies": {
-		"babel-cli": "^6.4.5",
-		"babel-preset-metal": "^4.0.0",
+    "babel-cli": "^6.4.5",
+    "babel-preset-metal": "^4.0.0",
     "gulp": "^3.8.11",
-		"gulp-metal": "^1.0.0"
+    "gulp-metal": "^1.0.0"
   }
 }
