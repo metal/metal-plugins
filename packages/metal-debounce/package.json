@@ -1,32 +1,32 @@
 {
-	"name": "metal-debounce",
-	"version": "1.0.0-rc.3",
-	"description": "Metal's debounce utility",
-	"license": "BSD",
-	"repository": "metal/metal-debounce",
-	"engines": {
-		"node": ">=0.12.0",
-		"npm": ">=3.0.0"
-	},
-	"jsnext:main": "src/debounce.js",
-	"main": "lib/debounce.js",
-	"files": [
-		"lib",
-		"src/**/*.js",
-		"test/**/*.js"
-	],
-	"scripts": {
-		"compile": "babel --presets metal -d lib/ src/",
-		"prepublish": "npm run compile",
-		"test": "gulp test"
-	},
-	"keywords": [
-		"metal"
-	],
-	"devDependencies": {
-		"babel-cli": "^6.4.5",
-		"babel-preset-metal": "^4.0.0",
-		"gulp": "^3.8.11",
-		"gulp-metal": "^0.14.0"
-	}
+  "name": "metal-debounce",
+  "version": "1.0.0",
+  "description": "Metal's debounce utility",
+  "license": "BSD",
+  "repository": "metal/metal-debounce",
+  "engines": {
+    "node": ">=0.12.0",
+    "npm": ">=3.0.0"
+  },
+  "jsnext:main": "src/debounce.js",
+  "main": "lib/debounce.js",
+  "files": [
+    "lib",
+    "src/**/*.js",
+    "test/**/*.js"
+  ],
+  "scripts": {
+    "compile": "babel --presets metal -d lib/ src/",
+    "prepublish": "npm run compile",
+    "test": "gulp test"
+  },
+  "keywords": [
+    "metal"
+  ],
+  "devDependencies": {
+    "babel-cli": "^6.4.5",
+    "babel-preset-metal": "^4.0.0",
+    "gulp": "^3.8.11",
+    "gulp-metal": "^0.14.0"
+  }
 }
