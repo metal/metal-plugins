@@ -2,7 +2,7 @@
 
 import JSXComponent from 'metal-jsx';
 
-import TransitionWrapper from '../src/TransitionWrapper';
+import Transition from '../src/TransitionWrapper';
 
 class App extends JSXComponent {
 	created() {
@@ -27,11 +27,11 @@ class App extends JSXComponent {
 			<span>
 				<button data-onclick={this.onClick}>ClickMe</button>
 
-				<TransitionWrapper name="test" appearTimeout={500} enterTimeout={500} leaveTimeout={500}>
+				<Transition name="test">
 					{
 						this.getChildren()
 					}
-				</TransitionWrapper>
+				</Transition>
 			</span>
 		);
 	}
