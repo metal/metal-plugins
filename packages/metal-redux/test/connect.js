@@ -12,9 +12,7 @@ describe('connect', function() {
 	beforeEach(function() {
 		class TestComponent extends JSXComponent {
 			render() {
-				IncrementalDOM.elementOpen('div');
-				IncrementalDOM.text(this.props.foo);
-				IncrementalDOM.elementClose('div');
+				return <div>{this.props.foo}</div>;
 			}
 		}
 		OriginalComponent = TestComponent;
@@ -77,9 +75,9 @@ describe('connect', function() {
 			var TestComponent = connect()(OriginalComponent);
 			class MainComponent extends JSXComponent {
 				render() {
-					IncrementalDOM.elementOpen(Provider, null, [], 'store', store);
-					IncrementalDOM.elementVoid(TestComponent, null, null, 'ref', 'connect');
-					IncrementalDOM.elementClose(Provider);
+					return <Provider store={store}>
+						<TestComponent ref="connect" />
+					</Provider>
 				}
 			}
 
@@ -242,13 +240,7 @@ describe('connect', function() {
 			var ChildComponent = connect(state => state)(OriginalComponent);
 			class ParentComponent extends JSXComponent {
 				render() {
-					IncrementalDOM.elementVoid(
-						ChildComponent,
-						null,
-						null,
-						'store',
-						this.props.store
-					);
+					return <ChildComponent store={this.props.store} />
 				}
 			}
 			var TestComponent = connect(state => state)(ParentComponent);
@@ -347,10 +339,11 @@ describe('connect', function() {
 		beforeEach(function() {
 			class MainTempComponent extends JSXComponent {
 				render() {
-					var args = [TestComponent, null, null, 'ref', 'connect'];
-					args.push('foo', this.props.foo);
-					args.push('store', this.props.store);
-					IncrementalDOM.elementVoid.apply(null, args);
+					return <TestComponent
+						foo={this.props.foo}
+						ref="connect"
+						store={this.props.store}
+					/>;
 				}
 			}
 			MainComponent = MainTempComponent;
