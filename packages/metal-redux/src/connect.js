@@ -1,19 +1,18 @@
 'use strict';
 
 import { core, object } from 'metal';
-import Component from 'metal-component';
-import IncrementalDomRenderer from 'metal-incremental-dom';
+import JSXComponent from 'metal-jsx';
 
 const defaultMapStateToProps = () => ({});
 const defaultMapDispatchToProps = dispatch => ({ dispatch });
-const defaultMergeConfig = (stateConfig, dispatchConfig, parentConfig) => {
-	return object.mixin({}, stateConfig, dispatchConfig, parentConfig);
+const defaultMergeProps = (stateProps, dispatchProps, parentProps) => {
+	return object.mixin({}, stateProps, dispatchProps, parentProps);
 };
 const wrapActionCreators = actionCreators => {
 	return dispatch => Object.keys(actionCreators).reduce(
-		(config, key) => {
-			config[key] = (...args) => dispatch(actionCreators[key](...args));
-			return config;
+		(props, key) => {
+			props[key] = (...args) => dispatch(actionCreators[key](...args));
+			return props;
 		},
 		{}
 	);
@@ -26,79 +25,53 @@ const wrapActionCreators = actionCreators => {
  * calls to `store.dispatch`.
  * This is based on the similar helper built for React on the react-redux
  * project, which can be accessed here: https://github.com/reactjs/react-redux.
- * @param {function(!Object)=} mapStoreStateToConfig An optional function that
- *     receives the current store state and returns an object with the config
+ * @param {function(!Object)=} mapStoreStateToProps An optional function that
+ *     receives the current store state and returns an object with the props
  *     data that should be used by the component. If this param isn't given,
  *     the default behavior won't pass any store state data to the component.
- * @param {Object.<string, function>|function(!function())=} mapDispatchToConfig
+ * @param {Object.<string, function>|function(!function())=} mapDispatchToProps
  *     An optional function or object that maps action creators to the store's
  *     `dispatch` function. If it is a function, it receives the store's `dispatch`
- *     function and returns an object with config data that should be used by the
+ *     function and returns an object with props data that should be used by the
  *     component. If it is an object, each value is assumed to be an action creator,
  *     which will automaitcally be wrapped by the `dispatch` function so that they
  *     can be invoked directly. If this param isn't given, the default behavior will
- *     pass the `dispatch` function itself to the config object.
+ *     pass the `dispatch` function itself to the props object.
  * @param {function(!Object, !Object, !Object)=} An optional function that
- *     recevies all three original config objects (the one built from store
+ *     recevies all three original props objects (the one built from store
  *     state, the one build from the dispatch function and the one from the
  *     parent), and merges them. By default a simple merge is done.
  * @param {Object=} options An optional options object. Available options are:
  *       - {boolean} pure: Flag indicating if the component is a "pure"
  *         component. That means that it only depends on the specified store
- *         state and the config received from the parent. If "true", this data
+ *         state and the props received from the parent. If "true", this data
  *         will be shallowly compared on `shouldUpdate`. Defaults to "true".
  * @return {!function(!Function)} A function that should be called with a
  *     component constructor, and returns another component constructor that
  *     wraps it, adding to it the helper behaviors provided by this module.
  */
-function connect(mapStoreStateToConfig, mapDispatchToConfig, mergeConfig, options = {}) {
-	var shouldSubscribe = !!mapStoreStateToConfig;
-	mapStoreStateToConfig = mapStoreStateToConfig || defaultMapStateToProps;
-	mergeConfig = mergeConfig || defaultMergeConfig;
+function connect(mapStoreStateToProps, mapDispatchToProps, mergeProps, options = {}) {
+	var shouldSubscribe = !!mapStoreStateToProps;
+	mapStoreStateToProps = mapStoreStateToProps || defaultMapStateToProps;
+	mergeProps = mergeProps || defaultMergeProps;
 	var { pure = true } = options;
 
-	var mapDispatchIsFunc = core.isFunction(mapDispatchToConfig);
-	if (!mapDispatchIsFunc && core.isObject(mapDispatchToConfig)) {
-		mapDispatchToConfig = wrapActionCreators(mapDispatchToConfig);
+	var mapDispatchIsFunc = core.isFunction(mapDispatchToProps);
+	if (!mapDispatchIsFunc && core.isObject(mapDispatchToProps)) {
+		mapDispatchToProps = wrapActionCreators(mapDispatchToProps);
 	} else if (!mapDispatchIsFunc) {
-		mapDispatchToConfig = defaultMapDispatchToProps;
+		mapDispatchToProps = defaultMapDispatchToProps;
 	}
 
 	return function(WrappedComponent) {
-		class Connect extends Component {
+		class Connect extends JSXComponent {
 			/**
 			 * @inheritDoc
 			 */
-			constructor(opt_config, opt_parentElement) {
-				super(opt_config, opt_parentElement);
-				this.hasStoreConfigChanged_ = false;
-				this.hasOwnConfigChanged_ = false;
-			}
-
-			/**
-			 * Adds the given config object to the specified array, so they can be passed
-			 * as arguments to incremental dom calls.
-			 * @param {!Array}
-			 * @param {!Object}
-			 * @protected
-			 */
-			addToArray_(arr, config) {
-				var keys = Object.keys(config);
-				for (var i = 0; i < keys.length; i++) {
-					arr.push(keys[i], config[keys[i]]);
-				}
-			}
-
-			/**
-			 * Lifecycle. Runs when a new config value has been set.
-			 * @param {!Object} newVal
-			 * @param {!Object} prevVal
-			 * @protected
-			 */
-			configChanged(newVal, prevVal) {
-				if (pure) {
-					this.hasOwnConfigChanged_ = !object.shallowEqual(prevVal, newVal);
-				}
+			constructor(opt_props, opt_parentElement) {
+				super(opt_props, opt_parentElement);
+				this.hasStorePropsChanged_ = false;
+				this.hasOwnPropsChanged_ = false;
 			}
 
 			/**
@@ -112,17 +85,17 @@ function connect(mapStoreStateToConfig, mapDispatchToConfig, mergeConfig, option
 			}
 
 			/**
-			 * Returns the full config data that should be passed to the wrapped
+			 * Returns the full props data that should be passed to the wrapped
 			 * component.
 			 * @param {!Object}
 			 * @protected
 			 */
-			getChildConfig_() {
+			getChildProps_() {
 				return object.mixin(
-					mergeConfig(
-						this.config,
-						this.getStoreConfig_(this.storeState),
-						mapDispatchToConfig(this.getStore().dispatch)
+					mergeProps(
+						this.props,
+						this.getStoreProps_(this.state.storeState),
+						mapDispatchToProps(this.getStore().dispatch)
 					),
 					{
 						ref: 'child'
@@ -135,43 +108,54 @@ function connect(mapStoreStateToConfig, mapDispatchToConfig, mergeConfig, option
 			 * @return {!Object}
 			 */
 			getStore() {
-				var store = this.config.store || this.context.store;
+				var store = this.props.store || this.context.store;
 				if (!store) {
 					throw new Error(
-						'Could not find "store" either in "context" or "config". Either ' +
-						'your component inside "Provider" or explicitly pass the store ' +
-						'via config to this component.'
+						'Could not find "store" either in "context" or "props". Either ' +
+						'pass your component inside "Provider" or explicitly pass the ' +
+						'store via props to this component.'
 					);
 				}
 				return store;
 			}
 
 			/**
-			 * Returns the config data built from the store state, that should be
+			 * Returns the props data built from the store state, that should be
 			 * passed to the wrapped component.
 			 * @param {!Object}
 			 * @protected
 			 */
-			getStoreConfig_(storeState) {
-				this.storeConfig_ = mapStoreStateToConfig(
+			getStoreProps_(storeState) {
+				this.storeProps_ = mapStoreStateToProps(
 					storeState,
-					this.config
+					this.props
 				);
-				return this.storeConfig_;
+				return this.storeProps_;
 			}
 
 			/**
 			 * Handles a store state change. Make sure to only update the wrapped
-			 * component if at least one of its config data changed.
+			 * component if at least one of its props data changed.
 			 * @protected
 			 */
 			handleStoreChange_() {
 				var storeState = this.getStore().getState();
-				var prevStoreConfig = this.storeConfig_;
-				var storeConfig = this.getStoreConfig_(storeState);
-				this.storeState = storeState;
-				if (!object.shallowEqual(prevStoreConfig, storeConfig)) {
-					this.hasStoreConfigChanged_ = true;
+				var prevStoreProps = this.storeProps_;
+				var storeProps = this.getStoreProps_(storeState);
+				if (!object.shallowEqual(prevStoreProps, storeProps)) {
+					this.hasStorePropsChanged_ = true;
+				}
+				this.state.storeState = storeState;
+			}
+
+			/**
+			 * Lifecycle. Runs when props values have changed.
+			 * @param {!Object} prevVal
+			 * @protected
+			 */
+			propsChanged(prevVal) {
+				if (pure) {
+					this.hasOwnPropsChanged_ = !object.shallowEqual(prevVal, this.props);
 				}
 			}
 
@@ -185,17 +169,15 @@ function connect(mapStoreStateToConfig, mapDispatchToConfig, mergeConfig, option
 					);
 				}
 
-				var args = [WrappedComponent, null, []];
-				this.addToArray_(args, this.getChildConfig_());
-				IncrementalDOM.elementVoid.apply(null, args);
+				return <WrappedComponent {...this.getChildProps_()} />;
 			}
 
 			/**
 			 * Lifecycle. Resets the flags indicating that data has changed.
 			 */
 			rendered() {
-				this.hasStoreConfigChanged_ = false;
-				this.hasOwnConfigChanged_ = false;
+				this.hasStorePropsChanged_ = false;
+				this.hasOwnPropsChanged_ = false;
 			}
 
 			/**
@@ -204,10 +186,9 @@ function connect(mapStoreStateToConfig, mapDispatchToConfig, mergeConfig, option
 			 * @return {boolean}
 			 */
 			shouldUpdate() {
-				return !pure || this.hasStoreConfigChanged_ || this.hasOwnConfigChanged_;
+				return !pure || this.hasStorePropsChanged_ || this.hasOwnPropsChanged_;
 			}
 		}
-		Connect.RENDERER = IncrementalDomRenderer;
 		Connect.STATE = {
 			storeState: {
 				valueFn: function() {

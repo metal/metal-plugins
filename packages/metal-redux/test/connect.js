@@ -1,8 +1,8 @@
 'use strict';
 
+import { async } from 'metal';
 import connect from '../src/connect';
-import Component from 'metal-component';
-import IncrementalDomRenderer from 'metal-incremental-dom';
+import JSXComponent from 'metal-jsx';
 import Provider from '../src/Provider';
 
 describe('connect', function() {
@@ -10,14 +10,13 @@ describe('connect', function() {
 	var component;
 
 	beforeEach(function() {
-		class TestComponent extends Component {
+		class TestComponent extends JSXComponent {
 			render() {
 				IncrementalDOM.elementOpen('div');
-				IncrementalDOM.text(this.config.foo);
+				IncrementalDOM.text(this.props.foo);
 				IncrementalDOM.elementClose('div');
 			}
 		}
-		TestComponent.RENDERER = IncrementalDomRenderer;
 		OriginalComponent = TestComponent;
 	});
 
@@ -46,7 +45,7 @@ describe('connect', function() {
 		assert.strictEqual(component.element, child.element);
 	});
 
-	it('should pass any config data to the inner component', function() {
+	it('should pass any props data to the inner component', function() {
 		var TestComponent = connect()(OriginalComponent);
 		component = new TestComponent({
 			foo: 'foo',
@@ -55,7 +54,7 @@ describe('connect', function() {
 
 		var names = Object.keys(component.components);
 		var child = component.components[names[0]];
-		assert.strictEqual('foo', child.config.foo);
+		assert.strictEqual('foo', child.props.foo);
 	});
 
 	describe('store', function() {
@@ -76,15 +75,11 @@ describe('connect', function() {
 		it('should use store from Provider parent when there is one', function() {
 			var store = buildStoreStub();
 			var TestComponent = connect()(OriginalComponent);
-			class MainComponent extends Component {
-				createRenderer() {
-					var renderer = new IncrementalDomRenderer(this);
-					renderer.renderIncDom = function() {
-						IncrementalDOM.elementOpen(Provider, null, [], 'store', store);
-						IncrementalDOM.elementVoid(TestComponent, null, null, 'ref', 'connect');
-						IncrementalDOM.elementClose(Provider);
-					};
-					return renderer;
+			class MainComponent extends JSXComponent {
+				render() {
+					IncrementalDOM.elementOpen(Provider, null, [], 'store', store);
+					IncrementalDOM.elementVoid(TestComponent, null, null, 'ref', 'connect');
+					IncrementalDOM.elementClose(Provider);
 				}
 			}
 
@@ -102,7 +97,7 @@ describe('connect', function() {
 			assert.strictEqual(0, store.subscribe.callCount);
 		});
 
-		it('should not throw error when detaching and no "mapStoreStateToConfig" was given', function() {
+		it('should not throw error when detaching and no "mapStoreStateToProps" was given', function() {
 			var TestComponent = connect()(OriginalComponent);
 			component = new TestComponent({
 				store: buildStoreStub()
@@ -110,7 +105,7 @@ describe('connect', function() {
 			assert.doesNotThrow(() => component.detach());
 		});
 
-		it('should subscribe to given store if "mapStoreStateToConfig" is given', function() {
+		it('should subscribe to given store if "mapStoreStateToProps" is given', function() {
 			var store = buildStoreStub();
 			var TestComponent = connect(sinon.stub())(OriginalComponent);
 			component = new TestComponent({
@@ -119,7 +114,7 @@ describe('connect', function() {
 			assert.strictEqual(1, store.subscribe.callCount);
 		});
 
-		it('should unsubscribe to given store when detached if "mapStoreStateToConfig"', function() {
+		it('should unsubscribe to given store when detached if "mapStoreStateToProps"', function() {
 			var unsubscribe = sinon.stub();
 			var store = buildStoreStub();
 			store.subscribe.returns(unsubscribe);
@@ -135,7 +130,7 @@ describe('connect', function() {
 		});
 	});
 
-	describe('mapStoreStateToConfig', function() {
+	describe('mapStoreStateToProps', function() {
 		it('should not pass anything from store state to inner component by default', function() {
 			var store = buildStoreStub();
 			store.getState.returns({
@@ -149,31 +144,31 @@ describe('connect', function() {
 
 			var names = Object.keys(component.components);
 			var child = component.components[names[0]];
-			assert.ok(!child.config.foo);
+			assert.ok(!child.props.foo);
 		});
 
-		it('should pass data specified by "mapStoreStateToConfig" to inner component', function() {
+		it('should pass data specified by "mapStoreStateToProps" to inner component', function() {
 			var store = buildStoreStub();
 			store.getState.returns({
 				foo: 'foo',
 				bar: 'bar'
 			});
 
-			function mapDispatchToConfig(state) {
+			function mapStoreStateToProps(state) {
 				return {
 					foo: state.foo
 				};
 			}
 
-			var TestComponent = connect(mapDispatchToConfig)(OriginalComponent);
+			var TestComponent = connect(mapStoreStateToProps)(OriginalComponent);
 			component = new TestComponent({
 				store
 			});
 
 			var names = Object.keys(component.components);
 			var child = component.components[names[0]];
-			assert.strictEqual('foo', child.config.foo);
-			assert.ok(!child.config.bar);
+			assert.strictEqual('foo', child.props.foo);
+			assert.ok(!child.props.bar);
 		});
 
 		it('should update inner component when the store state it uses changes', function(done) {
@@ -189,7 +184,7 @@ describe('connect', function() {
 
 			var names = Object.keys(component.components);
 			var child = component.components[names[0]];
-			assert.strictEqual('foo', child.config.foo);
+			assert.strictEqual('foo', child.props.foo);
 			assert.strictEqual('foo', child.element.textContent);
 
 			assert.strictEqual(1, store.subscribe.callCount);
@@ -198,8 +193,8 @@ describe('connect', function() {
 			});
 			store.subscribe.args[0][0]();
 
-			component.once('stateSynced', function() {
-				assert.strictEqual('bar', child.config.foo);
+			component.once('rendered', function() {
+				assert.strictEqual('bar', child.props.foo);
 				assert.strictEqual('bar', child.element.textContent);
 				done();
 			});
@@ -219,21 +214,21 @@ describe('connect', function() {
 
 			var names = Object.keys(component.components);
 			var child = component.components[names[0]];
-			sinon.spy(child, 'render');
-			assert.strictEqual('foo', child.config.foo);
+			assert.strictEqual('foo', child.props.foo);
 			assert.strictEqual('foo', child.element.textContent);
-
 			assert.strictEqual(1, store.subscribe.callCount);
+
+			var listener = sinon.stub();
+			component.on('rendered', listener);
+
 			store.getState.returns({
 				foo: 'foo',
 				bar: 'bar2'
 			});
 			store.subscribe.args[0][0]();
 
-			component.once('stateSynced', function() {
-				assert.ok(!child.render.called);
-				assert.strictEqual('foo', child.config.foo);
-				assert.strictEqual('foo', child.element.textContent);
+			async.nextTick(function() {
+				assert.strictEqual(0, listener.callCount);
 				done();
 			});
 		});
@@ -245,18 +240,17 @@ describe('connect', function() {
 			});
 
 			var ChildComponent = connect(state => state)(OriginalComponent);
-			class ParentComponent extends Component {
+			class ParentComponent extends JSXComponent {
 				render() {
 					IncrementalDOM.elementVoid(
 						ChildComponent,
 						null,
 						null,
 						'store',
-						this.config.store
+						this.props.store
 					);
 				}
 			}
-			ParentComponent.RENDERER = IncrementalDomRenderer;
 			var TestComponent = connect(state => state)(ParentComponent);
 
 			component = new TestComponent({
@@ -268,28 +262,28 @@ describe('connect', function() {
 			assert.strictEqual(2, store.subscribe.callCount);
 
 			store.subscribe.args[0][0]();
-			assert.strictEqual(store.getState(), component.storeState);
+			assert.strictEqual(store.getState(), component.state.storeState);
 		});
 
-		it('should receive store state and component config in "mapStoreStateToConfig"', function() {
+		it('should receive store state and component props in "mapStoreStateToProps"', function() {
 			var store = buildStoreStub();
 			var storeState = {};
 			store.getState.returns(storeState);
 
-			var mapDispatchToConfig = sinon.stub();
-			var TestComponent = connect(mapDispatchToConfig)(OriginalComponent);
+			var mapDispatchToProps = sinon.stub();
+			var TestComponent = connect(mapDispatchToProps)(OriginalComponent);
 			component = new TestComponent({
 				store,
 				foo: 'foo'
 			});
 
-			assert.strictEqual(1, mapDispatchToConfig.callCount);
-			assert.strictEqual(storeState, mapDispatchToConfig.args[0][0]);
-			assert.deepEqual(component.config, mapDispatchToConfig.args[0][1]);
+			assert.strictEqual(1, mapDispatchToProps.callCount);
+			assert.strictEqual(storeState, mapDispatchToProps.args[0][0]);
+			assert.deepEqual(component.props, mapDispatchToProps.args[0][1]);
 		});
 	});
 
-	describe('mapDispatchToConfig', function() {
+	describe('mapDispatchToProps', function() {
 		it('should pass dispatch function from store to inner component by default', function() {
 			var store = buildStoreStub();
 			var TestComponent = connect()(OriginalComponent);
@@ -299,16 +293,16 @@ describe('connect', function() {
 
 			var names = Object.keys(component.components);
 			var child = component.components[names[0]];
-			assert.strictEqual(store.dispatch, child.config.dispatch);
+			assert.strictEqual(store.dispatch, child.props.dispatch);
 		});
 
-		it('should pass data specified by "mapDispatchToConfig" instead of dispatch function to inner component', function() {
-			function mapDispatchToConfig(dispatch) {
+		it('should pass data specified by "mapDispatchToProps" instead of dispatch function to inner component', function() {
+			function mapDispatchToProps(dispatch) {
 				return {
 					foo: () => dispatch('foo')
 				};
 			}
-			var TestComponent = connect(null, mapDispatchToConfig)(OriginalComponent);
+			var TestComponent = connect(null, mapDispatchToProps)(OriginalComponent);
 			component = new TestComponent({
 				store: buildStoreStub()
 			});
@@ -316,11 +310,11 @@ describe('connect', function() {
 			var store = component.getStore();
 			var names = Object.keys(component.components);
 			var child = component.components[names[0]];
-			assert.ok(!child.config.dispatch);
-			assert.ok(child.config.foo);
+			assert.ok(!child.props.dispatch);
+			assert.ok(child.props.foo);
 			assert.strictEqual(0, store.dispatch.callCount);
 
-			child.config.foo();
+			child.props.foo();
 			assert.strictEqual(1, store.dispatch.callCount);
 			assert.strictEqual('foo', store.dispatch.args[0][0]);
 		});
@@ -337,11 +331,11 @@ describe('connect', function() {
 			var store = component.getStore();
 			var names = Object.keys(component.components);
 			var child = component.components[names[0]];
-			assert.ok(!child.config.dispatch);
-			assert.ok(child.config.foo);
+			assert.ok(!child.props.dispatch);
+			assert.ok(child.props.foo);
 			assert.strictEqual(0, store.dispatch.callCount);
 
-			child.config.foo('bar');
+			child.props.foo('bar');
 			assert(store.dispatch.calledWithExactly('bar'));
 		});
 	});
@@ -351,20 +345,16 @@ describe('connect', function() {
 		var TestComponent;
 
 		beforeEach(function() {
-			class MainTempComponent extends Component {
-				createRenderer() {
-					var renderer = new IncrementalDomRenderer(this);
-					renderer.renderIncDom = function() {
-						var args = [TestComponent, null, null, 'ref', 'connect'];
-						args.push('foo', this.component_.foo);
-						args.push('store', this.component_.store);
-						IncrementalDOM.elementVoid.apply(null, args);
-					};
-					return renderer;
+			class MainTempComponent extends JSXComponent {
+				render() {
+					var args = [TestComponent, null, null, 'ref', 'connect'];
+					args.push('foo', this.props.foo);
+					args.push('store', this.props.store);
+					IncrementalDOM.elementVoid.apply(null, args);
 				}
 			}
 			MainComponent = MainTempComponent;
-			MainComponent.STATE = {
+			MainComponent.PROPS = {
 				bar: {
 					value: 'bar'
 				},
@@ -377,7 +367,7 @@ describe('connect', function() {
 			};
 		});
 
-		it('should not update inner component when pure component\'s config values don\'t change', function(done) {
+		it('should not update inner component when pure component\'s prop values don\'t change', function(done) {
 			TestComponent = connect()(OriginalComponent);
 
 			component = new MainComponent();
@@ -385,14 +375,14 @@ describe('connect', function() {
 			var renderer = child.getRenderer();
 			sinon.spy(renderer, 'renderIncDom');
 
-			component.bar = 'bar2';
+			component.props.bar = 'bar2';
 			component.once('stateSynced', function() {
 				assert.strictEqual(0, renderer.renderIncDom.callCount);
 				done();
 			});
 		});
 
-		it('should update inner component when pure component\'s config values change', function(done) {
+		it('should update inner component when pure component\'s prop values change', function(done) {
 			TestComponent = connect()(OriginalComponent);
 
 			component = new MainComponent();
@@ -400,14 +390,14 @@ describe('connect', function() {
 			var renderer = child.getRenderer();
 			sinon.spy(renderer, 'renderIncDom');
 
-			component.foo = 'foo2';
+			component.props.foo = 'foo2';
 			component.once('stateSynced', function() {
 				assert.strictEqual(1, renderer.renderIncDom.callCount);
 				done();
 			});
 		});
 
-		it('should update inner component when non pure component\'s config values don\'t change', function(done) {
+		it('should update inner component when non pure component\'s prop values don\'t change', function(done) {
 			TestComponent = connect(null, null, null, { pure: false })(OriginalComponent);
 
 			component = new MainComponent();
@@ -415,14 +405,14 @@ describe('connect', function() {
 			var renderer = child.getRenderer();
 			sinon.spy(renderer, 'renderIncDom');
 
-			component.bar = 'bar2';
+			component.props.bar = 'bar2';
 			component.once('stateSynced', function() {
 				assert.strictEqual(1, renderer.renderIncDom.callCount);
 				done();
 			});
 		});
 
-		it('should always pass the newest state to mapStoreToConfig', function(done) {
+		it('should always pass the newest state to mapStoreStateToProps', function(done) {
 			var mapStub = sinon.stub().returns({bar: 'baz'});
 			var storeStub = buildStoreStub();
 			storeStub.getState.returns(1)
@@ -437,15 +427,15 @@ describe('connect', function() {
 			var emitChange = storeStub.subscribe.firstCall.args[0];
 			emitChange();
 
-			component.once('stateSynced', function() {
-				assert.strictEqual(mapStub.firstCall.args[0], 0);
-				assert.strictEqual(mapStub.secondCall.args[0], 1);
-				component.foo = 'bar';
+			assert.strictEqual(2, mapStub.callCount);
+			assert.strictEqual(mapStub.firstCall.args[0], 0);
+			assert.strictEqual(mapStub.secondCall.args[0], 1);
 
-				component.once('stateSynced', function() {
-					assert.strictEqual(mapStub.thirdCall.args[0], 1);
-					done();
-				});
+			component.props.foo = 'bar';
+			component.once('rendered', function() {
+				assert.strictEqual(3, mapStub.callCount);
+				assert.strictEqual(mapStub.thirdCall.args[0], 1);
+				done();
 			});
 		});
 	});

@@ -1,12 +1,12 @@
 'use strict';
 
-import Component from 'metal-component';
 import IncrementalDomRenderer from 'metal-incremental-dom';
+import JSXComponent from 'metal-jsx';
 
 /**
  * Provides a redux store instance to all descendant components.
  */
-class Provider extends Component {
+class Provider extends JSXComponent {
 	/**
 	 * Defines the store as a child context, meaning that it will be passed down
 	 * to all descendant components.
@@ -14,34 +14,23 @@ class Provider extends Component {
 	 */
 	getChildContext() {
 		return {
-			store: this.config.store
+			store: this.props.store
 		};
 	}
-}
 
-/**
- * The renderer used by `Provider`.
- */
-class ProviderRenderer extends IncrementalDomRenderer {
 	/**
 	 * Renders a wrapper element for the provider (since it's required by
 	 * Metal.js), and its children inside it.
 	 * @override
 	 */
-	renderIncDom() {
-		const {children} = this.component_.config;
-
+	render() {
+		const {children} = this.props;
 		if (children && children.length > 1) {
-			IncrementalDOM.elementOpen('span');
-			this.component_.config.children.forEach(IncrementalDomRenderer.renderChild);
-			IncrementalDOM.elementClose('span');
-		}
-		else {
-			this.component_.config.children.forEach(IncrementalDomRenderer.renderChild);
+			return <span>{this.props.children}</span>;
+		} else {
+			return this.props.children;
 		}
 	}
 }
-
-Provider.RENDERER = ProviderRenderer;
 
 export default Provider;
