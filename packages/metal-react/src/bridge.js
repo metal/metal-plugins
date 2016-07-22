@@ -1,8 +1,8 @@
 'use strict';
 
 import { object } from 'metal';
-import Component from 'metal-component';
 import IncrementalDomRenderer from 'metal-incremental-dom';
+import JSXComponent from 'metal-jsx';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -13,7 +13,7 @@ import ReactDOM from 'react-dom';
  * @return {!functon()} A metal component wrapping the given React one.
  */
 export default function(ReactComponent) {
-	class BridgeComponent extends Component {
+	class BridgeComponent extends JSXComponent {
 		/**
 		 * Returns the current instance for the react component.
 		 */
@@ -42,7 +42,7 @@ export default function(ReactComponent) {
 			IncrementalDOM.elementClose('div');
 
 			this.instance_ = ReactDOM.render(
-				convertToReactElement(ReactComponent, this.config),
+				convertToReactElement(ReactComponent, this.props),
 			  element
 			);
 		}
@@ -52,14 +52,14 @@ export default function(ReactComponent) {
 }
 
 /**
- * Converts the given tag type and config object into a react element.
+ * Converts the given tag type and props object into a react element.
  * @param {string} tag
- * @param {!Object} config
+ * @param {!Object} props
  * @return {!ReactElement}
  */
-function convertToReactElement(tag, config) {
-	var data = object.mixin({}, config);
-	var children = convertToReactElements(config.children);
+function convertToReactElement(tag, props) {
+	var data = object.mixin({}, props);
+	var children = convertToReactElements(props.children);
 	delete data.children;
 	delete data.ref;
 	return React.createElement(tag, data, children);

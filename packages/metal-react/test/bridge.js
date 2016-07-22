@@ -41,7 +41,7 @@ describe('bridge', function() {
 		assert.strictEqual('Hello World', reactEl.textContent);
 	});
 
-	it('should pass config as props', function() {
+	it('should pass props to react component', function() {
 		var HelloComponent = bridge(HelloReactComponent);
 		component = new HelloComponent({
 			name: 'John Doe'
@@ -109,11 +109,9 @@ describe('bridge', function() {
 
 		class TestComponent extends Component {
 			render() {
-				IncrementalDOM.elementOpen(ChildrenComponent);
-				IncrementalDOM.elementOpen('div', null, null, 'data-foo', 'bar');
-				IncrementalDOM.text('Hello World');
-				IncrementalDOM.elementClose('div');
-				IncrementalDOM.elementClose(ChildrenComponent);
+				return <ChildrenComponent>
+					<div data-foo="bar">Hello World</div>
+				</ChildrenComponent>;
 			}
 		}
 		TestComponent.RENDERER = IncrementalDomRenderer;
