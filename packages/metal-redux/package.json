@@ -1,6 +1,6 @@
 {
   "name": "metal-redux",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "A set of helpers for building projects using Metal.js and Redux",
   "license": "BSD",
   "repository": "metal/metal-redux",
@@ -21,7 +21,10 @@
     "test": "gulp test"
   },
   "babel": {
-    "presets": ["metal", "metal-jsx"]
+    "presets": [
+      "metal",
+      "metal-jsx"
+    ]
   },
   "keywords": [
     "metal"
