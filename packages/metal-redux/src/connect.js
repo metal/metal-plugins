@@ -169,11 +169,10 @@ function connect(mapStoreStateToConfig, mapDispatchToConfig, mergeConfig, option
 				var storeState = this.getStore().getState();
 				var prevStoreConfig = this.storeConfig_;
 				var storeConfig = this.getStoreConfig_(storeState);
-				if (object.shallowEqual(prevStoreConfig, storeConfig)) {
-					return;
-				}
-				this.hasStoreConfigChanged_ = true;
 				this.storeState = storeState;
+				if (!object.shallowEqual(prevStoreConfig, storeConfig)) {
+					this.hasStoreConfigChanged_ = true;
+				}
 			}
 
 			/**
