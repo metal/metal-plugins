@@ -219,6 +219,7 @@ describe('connect', function() {
 
 			var names = Object.keys(component.components);
 			var child = component.components[names[0]];
+			sinon.spy(child, 'render');
 			assert.strictEqual('foo', child.config.foo);
 			assert.strictEqual('foo', child.element.textContent);
 
@@ -230,7 +231,7 @@ describe('connect', function() {
 			store.subscribe.args[0][0]();
 
 			component.once('stateSynced', function(data) {
-				assert.ok(!data.changes.storeState);
+				assert.ok(!child.render.called);
 				assert.strictEqual('foo', child.config.foo);
 				assert.strictEqual('foo', child.element.textContent);
 				done();
@@ -419,6 +420,33 @@ describe('connect', function() {
 				assert.strictEqual(1, renderer.renderIncDom.callCount);
 				done();
 			});
+		});
+
+		it('should always pass the newest state to mapStoreToConfig', function(done) {
+			var mapStub = sinon.stub().returns({bar: 'baz'});
+			var storeStub = buildStoreStub();
+			storeStub.getState.returns(1)
+				.onFirstCall().returns(0);
+
+			TestComponent = connect(mapStub)(OriginalComponent);
+			component = new MainComponent(
+				{
+					store: storeStub
+				}
+			);
+			var emitChange = storeStub.subscribe.firstCall.args[0];
+			emitChange();
+
+			component.once('stateSynced', function() {
+				assert.strictEqual(mapStub.firstCall.args[0], 0);
+				assert.strictEqual(mapStub.secondCall.args[0], 1);
+				component.foo = 'bar';
+
+				component.once('stateSynced', function() {
+					assert.strictEqual(mapStub.thirdCall.args[0], 1);
+					done();
+				})
+			})
 		});
 	});
 });
