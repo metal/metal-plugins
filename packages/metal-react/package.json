@@ -1,6 +1,6 @@
 {
   "name": "metal-react",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "A function that transforms React components into Metal.js components",
   "license": "BSD",
   "repository": "metal/metal-react",
