@@ -230,7 +230,7 @@ describe('connect', function() {
 			});
 			store.subscribe.args[0][0]();
 
-			component.once('stateSynced', function(data) {
+			component.once('stateSynced', function() {
 				assert.ok(!child.render.called);
 				assert.strictEqual('foo', child.config.foo);
 				assert.strictEqual('foo', child.element.textContent);
@@ -445,8 +445,8 @@ describe('connect', function() {
 				component.once('stateSynced', function() {
 					assert.strictEqual(mapStub.thirdCall.args[0], 1);
 					done();
-				})
-			})
+				});
+			});
 		});
 	});
 });
