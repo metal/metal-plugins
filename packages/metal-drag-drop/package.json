@@ -26,10 +26,10 @@
     "metal"
   ],
   "dependencies": {
-    "metal": "^1.0.0",
-    "metal-events": "^1.0.0",
-    "metal-position": "^1.0.0",
-    "metal-state": "^1.0.0"
+    "metal": "^2.0.0",
+    "metal-events": "^2.0.0",
+    "metal-position": "^2.0.0",
+    "metal-state": "^2.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.4.5",
