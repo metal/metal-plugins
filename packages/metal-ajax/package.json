@@ -1,6 +1,6 @@
 {
   "name": "metal-ajax",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Metal.js utility to perform Ajax requests",
   "license": "BSD",
   "repository": "metal/metal-ajax",
