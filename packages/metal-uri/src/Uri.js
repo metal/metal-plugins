@@ -2,7 +2,7 @@
 
 import { core, string } from 'metal';
 import parse from './parse';
-import MultiMap from 'metal-multimap';
+import { MultiMap } from 'metal-structs';
 
 var parseFn_ = parse;
 

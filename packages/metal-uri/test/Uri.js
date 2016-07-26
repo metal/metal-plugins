@@ -1,7 +1,7 @@
 'use strict';
 
 import Uri from '../src/Uri';
-import MultiMap from 'metal-multimap';
+import { MultiMap } from 'metal-structs';
 
 describe('Uri', function() {
 	it('should support empty uri', function() {

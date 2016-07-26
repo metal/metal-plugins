@@ -25,7 +25,7 @@
   ],
   "dependencies": {
     "metal": "^2.0.0",
-    "metal-multimap": "^2.0.0"
+    "metal-structs": "^1.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.4.5",
