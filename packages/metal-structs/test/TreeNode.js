@@ -98,12 +98,12 @@ describe('TreeNode', function() {
 		let child01 = new TreeNode();
 		tree.addChild(child00);
 		child00.addChild(child01);
-		assert.notOk(tree.contains(tree));
+		assert.ok(!tree.contains(tree));
 		assert.ok(tree.contains(child00));
 		assert.ok(tree.contains(child01));
-		assert.notOk(child00.contains(child00));
+		assert.ok(!child00.contains(child00));
 		assert.ok(child00.contains(child01));
-		assert.notOk(child01.contains(child01));
+		assert.ok(!child01.contains(child01));
 	});
 
 	it('should get the root node as the node itself if there is no parent', function() {
@@ -128,8 +128,8 @@ describe('TreeNode', function() {
 		let child01 = new TreeNode();
 		tree.addChild(child00);
 		child00.addChild(child01);
-		assert.notOk(tree.isLeaf());
-		assert.notOk(child00.isLeaf());
+		assert.ok(!tree.isLeaf());
+		assert.ok(!child00.isLeaf());
 		assert.ok(child01.isLeaf());
 	});
 
