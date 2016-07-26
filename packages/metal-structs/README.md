@@ -2,7 +2,7 @@
 
 A Metal.js set of common data structures:
 
-* [Multimap](https://github.com/metal/metal-structs/blob/master/src/Multimap.js): Generic tree node data structure with arbitrary number of child nodes.
+* [MultiMap](https://github.com/metal/metal-structs/blob/master/src/MultiMap.js): Generic tree node data structure with arbitrary number of child nodes.
 * [TreeNode](https://github.com/metal/metal-structs/blob/master/src/TreeNode.js): Case insensitive string Multimap implementation.
 
 ## Setup
