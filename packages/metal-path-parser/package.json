@@ -8,8 +8,8 @@
 		"node": ">=0.12.0",
 		"npm": ">=3.0.0"
 	},
-	"main": "lib/PathParser.js",
-	"jsnext:main": "src/PathParser.js",
+	"main": "lib/pathParser.js",
+	"jsnext:main": "src/pathParser.js",
 	"files": [
 		"lib",
 		"src",
