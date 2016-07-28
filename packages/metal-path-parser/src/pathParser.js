@@ -1,5 +1,7 @@
 'use strict';
 
+import core from 'metal';
+
 var regex = /\/([^\/:(]*)(?:\:([A-Za-z0-9_]+))?(?:\(([^)]*)\))?([^\/]*)/g;
 
 /**
@@ -25,7 +27,7 @@ export function parse(path) {
 			}
 			tokens.push({
 				name: matches[2] ? matches[2] : '' + unnamedCount++,
-				pattern: matches[3]
+				pattern: matches[3] || '[^\\/]+'
 			});
 		}
 		currPath += matches[4];
@@ -36,4 +38,17 @@ export function parse(path) {
 		tokens.push(currPath);
 	}
 	return tokens;
+}
+
+export function toRegex(path) {
+	var regex = '';
+	var parsed = parse(path);
+	for (var i = 0; i < parsed.length; i++) {
+		if (core.isString(parsed[i])) {
+			regex += parsed[i].replace('/', '\\/');
+		} else {
+			regex += '(' + parsed[i].pattern + ')';
+		}
+	}
+	return new RegExp(regex);
 }
