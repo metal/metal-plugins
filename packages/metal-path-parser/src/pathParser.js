@@ -2,7 +2,7 @@
 
 import core from 'metal';
 
-var regex = /([\/])?(?:(?:\:(\w+)(?:\(((?:\\.|[^\\()])*)\))?|\(((?:\\.|[^\\()])+)\))([+*?])?)/g;
+const REGEX = /([\/])?(?:(?:\:(\w+)(?:\(((?:\\.|[^\\()])*)\))?|\(((?:\\.|[^\\()])+)\))([+*?])?)/g;
 
 function convertMatchesToObj(matches) {
 	return {
@@ -21,9 +21,30 @@ function convertTokensToRegex(tokens) {
 		if (core.isString(tokens[i])) {
 			regex += tokens[i].replace('/', '\\/');
 		} else {
-			regex += tokens[i].prefix + '(' + tokens[i].pattern + ')';
+			let capture = '(?:' + tokens[i].pattern + ')';
+
+			if (tokens[i].repeat) {
+				capture += '(?:\\/' + capture + ')*';
+			}
+
+			capture = tokens[i].prefix + '(' + capture + ')';
+
+			if (tokens[i].optional) {
+				if (!tokens[i].partial) {
+					capture = '(?:' + capture + ')';
+				}
+				capture += '?';
+			}
+			regex += capture;
 		}
 	}
+
+	if (/\/$/.test(regex)) {
+		regex += '?';
+	} else {
+		regex += '\\/?';
+	}
+
 	regex += '$';
 	return new RegExp(regex);
 }
@@ -42,9 +63,9 @@ export function parse(route) {
 	let currPath = '';
 	let index = 0;
 
-	let matches = regex.exec(route);
+	let matches = REGEX.exec(route);
 	while (matches) {
-		var data = convertMatchesToObj(matches);
+		const data = convertMatchesToObj(matches);
 
 		currPath = route.slice(index, matches.index);
 		index = matches.index + data.match.length;
@@ -52,13 +73,14 @@ export function parse(route) {
 
 		tokens.push({
 			name: data.name ? data.name : '' + unnamedCount++,
+			partial: route[index] && route[index] !== data.prefix,
 			prefix: data.prefix || '',
 			pattern: data.paramPattern || data.unnamedPattern || '[^\\/]+',
 			repeat: data.modifier === '*' || data.modifier === '+',
 			optional: data.modifier === '*' || data.modifier === '?'
 		});
 
-		matches = regex.exec(route);
+		matches = REGEX.exec(route);
 	}
 
 	if (index < route.length) {
