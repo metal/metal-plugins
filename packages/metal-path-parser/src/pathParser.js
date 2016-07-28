@@ -2,7 +2,18 @@
 
 import core from 'metal';
 
-var regex = /\/([^\/:(]*)(?:\:([A-Za-z0-9_]+))?(?:\(([^)]*)\))?([^\/]*)/g;
+var regex = /([\/])?(?:(?:\:(\w+)(?:\(((?:\\.|[^\\()])*)\))?|\(((?:\\.|[^\\()])+)\))([+*?])?)/g;
+
+function convertMatchesToObj(matches) {
+	return {
+		match: matches[0],
+		prefix: matches[1],
+		name: matches[2],
+		paramPattern: matches[3],
+		unnamedPattern: matches[4],
+		modifier: matches[5]
+	};
+}
 
 function convertTokensToRegex(tokens) {
 	let regex = '';
@@ -10,7 +21,7 @@ function convertTokensToRegex(tokens) {
 		if (core.isString(tokens[i])) {
 			regex += tokens[i].replace('/', '\\/');
 		} else {
-			regex += '(' + tokens[i].pattern + ')';
+			regex += tokens[i].prefix + '(' + tokens[i].pattern + ')';
 		}
 	}
 	regex += '$';
@@ -29,25 +40,29 @@ export function parse(route) {
 	let unnamedCount = 0;
 	const tokens = [];
 	let currPath = '';
+	let index = 0;
 
 	let matches = regex.exec(route);
 	while (matches) {
-		currPath += '/' + matches[1];
-		if (matches[2] || matches[3]) {
-			tokens.push(currPath);
-			currPath = '';
+		var data = convertMatchesToObj(matches);
 
-			tokens.push({
-				name: matches[2] ? matches[2] : '' + unnamedCount++,
-				pattern: matches[3] || '[^\\/]+'
-			});
-		}
-		currPath += matches[4];
+		currPath = route.slice(index, matches.index);
+		index = matches.index + data.match.length;
+		tokens.push(currPath);
+
+		tokens.push({
+			name: data.name ? data.name : '' + unnamedCount++,
+			prefix: data.prefix || '',
+			pattern: data.paramPattern || data.unnamedPattern || '[^\\/]+',
+			repeat: data.modifier === '*' || data.modifier === '+',
+			optional: data.modifier === '*' || data.modifier === '?'
+		});
+
 		matches = regex.exec(route);
 	}
 
-	if (currPath) {
-		tokens.push(currPath);
+	if (index < route.length) {
+		tokens.push(route.substr(index));
 	}
 	return tokens;
 }
