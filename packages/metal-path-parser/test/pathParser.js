@@ -55,8 +55,16 @@ describe('pathParser', function() {
 	});
 
 	describe('toRegex', function() {
-		it('should return the original path if it has no params', function() {
-			assert.strictEqual('/\\/my\\/path$/', toRegex('/my/path').toString());
+		it('should return regex that will match path with and without trailing slash', function() {
+			let regex = toRegex('/my/path');
+			assert.ok(regex.test('/my/path'));
+			assert.ok(regex.test('/my/path/'));
+			assert.ok(!regex.test('/my/path/or/not'));
+
+			regex = toRegex('/my/path/');
+			assert.ok(regex.test('/my/path'));
+			assert.ok(regex.test('/my/path/'));
+			assert.ok(!regex.test('/my/path/or/not'));
 		});
 
 		it('should return regex that will match params', function() {
@@ -71,12 +79,69 @@ describe('pathParser', function() {
 
 		it('should return regex that will match params according to their own regex', function() {
 			const regex = toRegex('/my/path/:foo(\\d+)');
+			assert.ok(!'/my/path'.match(regex));
 			assert.ok(!'/not/my/path'.match(regex));
 			assert.ok(!'/my/path/nan'.match(regex));
 
 			const match = '/my/path/42'.match(regex);
 			assert.ok(match);
 			assert.strictEqual('42', match[1]);
+		});
+
+		it('should return regex matching paths with optional params', function() {
+			const regex = toRegex('/my/path/pre:optfoo?/and1/:required/and2/:optbar?');
+			assert.ok(!'/not/my/path'.match(regex));
+			assert.ok(!'/my/path'.match(regex));
+			assert.ok(!'/my/path/10/and1/and2/20'.match(regex));
+			assert.ok(!'/my/path/and1/and2'.match(regex));
+			assert.ok(!'/my/path/and1/test/and2'.match(regex));
+
+			let match = '/my/path/pre/and1/test/and2'.match(regex);
+			assert.ok(match);
+			assert.ok(!match[1]);
+			assert.strictEqual('test', match[2]);
+			assert.ok(!match[3]);
+
+			match = '/my/path/pre10/and1/test/and2/20'.match(regex);
+			assert.ok(match);
+			assert.strictEqual('10', match[1]);
+			assert.strictEqual('test', match[2]);
+			assert.strictEqual('20', match[3]);
+		});
+
+		it('should return regex matching paths with params that repeat one or more times', function() {
+			const regex = toRegex('/my/path/pre:foo+/and/:bar+');
+			assert.ok(!'/not/my/path'.match(regex));
+			assert.ok(!'/my/path'.match(regex));
+			assert.ok(!'/my/path/pre/and'.match(regex));
+			assert.ok(!'/my/path/prefoo/and'.match(regex));
+
+			let match = '/my/path/prefoo/and/bar'.match(regex);
+			assert.ok(match);
+			assert.strictEqual('foo', match[1]);
+			assert.strictEqual('bar', match[2]);
+
+			match = '/my/path/prefoo/foo/foo/and/bar/bar'.match(regex);
+			assert.ok(match);
+			assert.strictEqual('foo/foo/foo', match[1]);
+			assert.strictEqual('bar/bar', match[2]);
+		});
+
+		it('should return regex matching paths with params that repeat zeno or more times', function() {
+			const regex = toRegex('/my/path/pre:foo*/and/:bar*');
+			assert.ok(!'/not/my/path'.match(regex));
+			assert.ok(!'/my/path'.match(regex));
+			assert.ok(!'/my/path/pre'.match(regex));
+
+			let match = '/my/path/pre/and'.match(regex);
+			assert.ok(match);
+			assert.ok(!match[1]);
+			assert.ok(!match[2]);
+
+			match = '/my/path/prefoo/foo/foo/and/bar/bar'.match(regex);
+			assert.ok(match);
+			assert.strictEqual('foo/foo/foo', match[1]);
+			assert.strictEqual('bar/bar', match[2]);
 		});
 	});
 
@@ -107,8 +172,8 @@ describe('pathParser', function() {
 			assert.deepEqual(expectedData, data);
 		});
 
-		it.skip('should return empty object if optional param is not given', function() {
-			const data = extractData('/my/path/:foo?', '/my/path');
+		it('should return object without optional param if it\'s not given', function() {
+			let data = extractData('/my/path/:foo?', '/my/path');
 			assert.deepEqual({}, data);
 		});
 
