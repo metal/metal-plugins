@@ -1,11 +1,16 @@
 'use strict';
 
-import { parse, toRegex } from '../src/pathParser';
+import { extractData, parse, toRegex } from '../src/pathParser';
 
 describe('pathParser', function() {
 	describe('parse', function() {
 		it('should parse simple path with no params', function() {
 			const parsed = parse('/my/path');
+			assert.deepEqual(['/my/path'], parsed);
+		});
+
+		it('should add leading "/" when missing in given path', function() {
+			const parsed = parse('my/path');
 			assert.deepEqual(['/my/path'], parsed);
 		});
 
@@ -51,7 +56,7 @@ describe('pathParser', function() {
 
 	describe('toRegex', function() {
 		it('should return the original path if it has no params', function() {
-			assert.strictEqual('/\\/my\\/path/', toRegex('/my/path').toString());
+			assert.strictEqual('/\\/my\\/path$/', toRegex('/my/path').toString());
 		});
 
 		it('should return regex that will match params', function() {
@@ -72,6 +77,49 @@ describe('pathParser', function() {
 			const match = '/my/path/42'.match(regex);
 			assert.ok(match);
 			assert.strictEqual('42', match[1]);
+		});
+	});
+
+	describe('extractData', function() {
+		it('should return null if path doesn\'t match given format', function() {
+			assert.strictEqual(null, extractData('/my/path', '/other/path'));
+		});
+
+		it('should return empty object if original route has no params', function() {
+			assert.deepEqual({}, extractData('/my/path', '/my/path'));
+		});
+
+		it('should return param data found extracted from real path', function() {
+			const data = extractData('/my/path/:foo/:bar', '/my/path/test/test2');
+			const expectedData = {
+				foo: 'test',
+				bar: 'test2'
+			};
+			assert.deepEqual(expectedData, data);
+		});
+
+		it('should return unnamed param data found extracted from real path', function() {
+			const data = extractData('/my/path/prefix-(\\d+)/(\\w+)', '/my/path/prefix-10/test');
+			const expectedData = {
+				0: '10',
+				1: 'test'
+			};
+			assert.deepEqual(expectedData, data);
+		});
+
+		it('should return empty object if optional param is not given', function() {
+			const data = extractData('/my/path/:foo?', '/my/path/');
+			assert.deepEqual({}, data);
+		});
+
+		it('should also extract data when given parsed tokens instead of the route string', function() {
+			const tokens = parse('/my/path/:foo/(\\d+)');
+			const data = extractData(tokens, '/my/path/test/10');
+			const expectedData = {
+				foo: 'test',
+				0: '10'
+			};
+			assert.deepEqual(expectedData, data);
 		});
 	});
 });
