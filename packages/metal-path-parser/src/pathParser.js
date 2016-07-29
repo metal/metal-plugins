@@ -148,8 +148,11 @@ export function extractData(routeOrTokens, path) {
 	let paramIndex = 1;
 	for (let i = 0; i < tokens.length; i++) {
 		if (!core.isString(tokens[i])) {
-			const value = match[paramIndex++];
+			let value = match[paramIndex++];
 			if (core.isDef(value)) {
+				if (tokens[i].repeat) {
+					value = value.split('/');
+				}
 				data[tokens[i].name] = value;
 			}
 		}
