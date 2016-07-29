@@ -8,7 +8,7 @@ describe('pathParser', function() {
 			const parsed = parse('/my/path');
 			assert.deepEqual(['/my/path'], parsed);
 		});
-		
+
 		it('should parse path with params', function() {
 			const parsed = parse('/my/path/prefix-:foo/and/:bar-suffix');
 			assert.strictEqual(5, parsed.length);
@@ -170,6 +170,14 @@ describe('pathParser', function() {
 		it('should return object without optional param if it\'s not given', function() {
 			let data = extractData('/my/path/:foo?', '/my/path');
 			assert.deepEqual({}, data);
+		});
+
+		it('should return repeatable param values as arrays', function() {
+			const data = extractData('/my/path/:foo*', '/my/path/test/test2/test3');
+			const expectedData = {
+				foo: ['test', 'test2', 'test3']
+			};
+			assert.deepEqual(expectedData, data);
 		});
 
 		it('should also extract data when given parsed tokens instead of the route string', function() {
