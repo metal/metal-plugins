@@ -49,6 +49,9 @@ class Ajax {
 	 * @protected
 	 */
 	static request(url, method, body, opt_headers, opt_params, opt_timeout, opt_sync, opt_withCredentials) {
+		url = url || '';
+		method = method || 'GET';
+
 		var request = new XMLHttpRequest();
 
 		var promise = new Promise(function(resolve, reject) {
