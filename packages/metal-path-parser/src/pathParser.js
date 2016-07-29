@@ -29,13 +29,13 @@ function convertTokensToRegex(tokens) {
 	let regex = '';
 	for (let i = 0; i < tokens.length; i++) {
 		if (core.isString(tokens[i])) {
-			regex += tokens[i].replace('/', '\\/');
+			regex += escape(tokens[i]);
 		} else {
 			let capture = encloseNonCapturingGroup(tokens[i].pattern);
 			if (tokens[i].repeat) {
 				capture += encloseNonCapturingGroup('\\/' + capture) + '*';
 			}
-			capture = `${tokens[i].prefix}(${capture})`;
+			capture = escape(tokens[i].prefix) + `(${capture})`;
 			if (tokens[i].optional) {
 				if (!tokens[i].partial) {
 					capture = encloseNonCapturingGroup(capture);
@@ -55,6 +55,15 @@ function convertTokensToRegex(tokens) {
  */
 function encloseNonCapturingGroup(pattern) {
 	return `(?:${pattern})`;
+}
+
+/**
+ * Escapes the given string to show up in the path regex.
+ * @param {string} str
+ * @return {string}
+ */
+function escape(str) {
+	return str.replace('/', '\\/');
 }
 
 /**
