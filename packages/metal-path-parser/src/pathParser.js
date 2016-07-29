@@ -118,7 +118,8 @@ export function toRegex(route) {
  * @param {!Array|string} routeOrTokens Either a route format string or tokens
  *     previously parsed via the `parse` function.
  * @param {string} The path to extract param data from.
- * @return {!Object<string, string>}
+ * @return {Object<string, string>} The data object, or null if the path doesn't
+ *     match the given format.
  */
 export function extractData(routeOrTokens, path) {
 	const data = {};
