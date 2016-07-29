@@ -1,5 +1,5 @@
 'use strict';
-import JSXComponent from 'metal-jsx';
+import Component from 'metal-jsx';
 
 import TransitionWrapper from '../src/TransitionWrapper';
 
@@ -26,10 +26,11 @@ describe('TransitionWrapper', function() {
 	it(
 		'renders without children',
 		() => {
-			class App extends JSXComponent {
+			class App extends Component {
 				render() {
 					return (
-						<TransitionWrapper elementClasses="wrapper"></TransitionWrapper>
+						<TransitionWrapper elementClasses="wrapper">
+						</TransitionWrapper>
 					);
 				}
 			}
@@ -43,13 +44,13 @@ describe('TransitionWrapper', function() {
 	it(
 		'renders with one child',
 		() => {
-			class App extends JSXComponent {
+			class App extends Component {
 				render() {
 					return (
 						<TransitionWrapper name="test">
 							<div class="child">Child</div>
 						</TransitionWrapper>
-					);
+						);
 				}
 			}
 
@@ -62,14 +63,14 @@ describe('TransitionWrapper', function() {
 	it(
 		'renders with multiple children',
 		() => {
-			class App extends JSXComponent {
+			class App extends Component {
 				render() {
 					return (
 						<TransitionWrapper name="test">
 							<div class="child1" key={1}>Child</div>
 							<div class="child2" key={2}>Child</div>
 						</TransitionWrapper>
-					);
+						);
 				}
 			}
 
@@ -88,7 +89,7 @@ describe('TransitionWrapper', function() {
 			const setStateSpy = sinon.spy(component, 'setState');
 
 			assert.isFalse(setStateSpy.called);
-			component.children = [{}];
+			component.props.children = [{}];
 
 			setTimeout(
 				() => {
@@ -108,7 +109,7 @@ describe('TransitionWrapper', function() {
 			const setStateSpy = sinon.spy(component, 'setState');
 
 			assert.isFalse(setStateSpy.called);
-			component.children = [];
+			component.props.children = [];
 
 			setTimeout(
 				() => {
@@ -186,13 +187,15 @@ describe('TransitionWrapper', function() {
 			component = new TransitionWrapper();
 			const KEY = 1;
 
-			component.childrenMap_ = {[KEY]: 'test'};
+			component.state.childrenMap_ = {
+				[KEY]: 'test'
+			};
 
-			assert(component.childrenMap_[KEY]);
+			assert(component.state.childrenMap_[KEY]);
 
 			component.finishLeave_(KEY);
 
-			assert.deepEqual(component.childrenMap_, {});
+			assert.deepEqual(component.state.childrenMap_, {});
 		}
 	);
 });
