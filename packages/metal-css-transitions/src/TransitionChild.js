@@ -2,15 +2,14 @@
 
 import Anim from 'metal-anim';
 import dom from 'metal-dom';
-import JSXComponent from 'metal-jsx';
-import Types from 'metal-state-validators';
+import Component, { Config } from 'metal-jsx';
 
 export const DELAY_TIME = 10;
 
 /**
  * TransitionChild component
  */
-class TransitionChild extends JSXComponent {
+class TransitionChild extends Component {
 	/**
 	 * @inheritDoc
 	 */
@@ -66,14 +65,13 @@ class TransitionChild extends JSXComponent {
 	transition_(type, finishCallback) {
 		const node = this.element;
 
-		const className = `${this.name}-${type}`;
+		const className = `${this.props.name}-${type}`;
 		const activeClassName = `${className}-active`;
 
 		const callback = () => {
 			if (finishCallback) {
 				finishCallback();
-			}
-			else {
+			} else {
 				node.classList.remove(activeClassName, className);
 			}
 		};
@@ -89,18 +87,16 @@ class TransitionChild extends JSXComponent {
 	 * @inheritDoc
 	 */
 	render() {
-		return this.children[0];
+		return this.props.children[0];
 	}
 }
 
-TransitionChild.STATE = {
+TransitionChild.PROPS = {
 	/**
 	 * Name of transition.
 	 * @type {string}
 	 */
-	name: {
-		validator: Types.string
-	}
+	name: Config.string()
 };
 
 export default TransitionChild;

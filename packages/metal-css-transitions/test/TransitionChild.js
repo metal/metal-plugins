@@ -1,5 +1,5 @@
 'use strict';
-import JSXComponent from 'metal-jsx';
+import Component from 'metal-jsx';
 
 import TransitionChild, { DELAY_TIME } from '../src/TransitionChild';
 
@@ -46,7 +46,7 @@ describe('TransitionChild', function() {
 		const TRANS_NAME = 'test';
 		const TRANS_TYPE = 'appear';
 
-		class App extends JSXComponent {
+		class App extends Component {
 			render() {
 				return (
 					<TransitionChild name={TRANS_NAME} ref="transitionChild">
@@ -86,7 +86,7 @@ describe('TransitionChild', function() {
 		const DELAY = 100;
 		const stubFn = sinon.stub();
 
-		class App extends JSXComponent {
+		class App extends Component {
 			render() {
 				return (
 					<TransitionChild name="test" ref="transitionChild">
