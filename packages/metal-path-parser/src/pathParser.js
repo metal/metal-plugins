@@ -21,15 +21,6 @@ function convertMatchesToObj(matches) {
 }
 
 /**
- * Encloses the given regex pattern into a non capturing group.
- * @param {string} pattern
- * @return {string}
- */
-function encloseNonCapturingGroup(pattern) {
-	return `(?:${pattern})`;
-}
-
-/**
  * Converts the given tokens parsed from a route format string to a regex.
  * @param {!Array<string|!Object>} tokens
  * @return {!RegExp}
@@ -54,15 +45,30 @@ function convertTokensToRegex(tokens) {
 			regex += capture;
 		}
 	}
+	return new RegExp(makeTrailingSlashOptional(regex) + '$');
+}
 
+/**
+ * Encloses the given regex pattern into a non capturing group.
+ * @param {string} pattern
+ * @return {string}
+ */
+function encloseNonCapturingGroup(pattern) {
+	return `(?:${pattern})`;
+}
+
+/**
+ * Makes trailing slash optional on paths.
+ * @param {string} regex
+ * @param {string}
+ */
+function makeTrailingSlashOptional(regex) {
 	if (/\/$/.test(regex)) {
 		regex += '?';
 	} else {
 		regex += '\\/?';
 	}
-
-	regex += '$';
-	return new RegExp(regex);
+	return regex;
 }
 
 /**
