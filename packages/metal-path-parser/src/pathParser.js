@@ -66,19 +66,11 @@ function convertTokensToRegex(tokens) {
 }
 
 /**
- * Guarantes that the route will start with a "/".
- */
-function normalizePath(route) {
-	return route[0] === '/' ? route : '/' + route;
-}
-
-/**
  * Parses the given route format string into tokens representing its contents.
  * @return {!Array<string|!Object>} An array of tokens that can be either plain
  *     strings (part of the route) or objects containing informations on params.
  */
 export function parse(route) {
-	route = normalizePath(route);
 	let unnamedCount = 0;
 	const tokens = [];
 	let currPath = '';

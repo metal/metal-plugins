@@ -8,12 +8,7 @@ describe('pathParser', function() {
 			const parsed = parse('/my/path');
 			assert.deepEqual(['/my/path'], parsed);
 		});
-
-		it('should add leading "/" when missing in given path', function() {
-			const parsed = parse('my/path');
-			assert.deepEqual(['/my/path'], parsed);
-		});
-
+		
 		it('should parse path with params', function() {
 			const parsed = parse('/my/path/prefix-:foo/and/:bar-suffix');
 			assert.strictEqual(5, parsed.length);
