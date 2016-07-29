@@ -1,6 +1,6 @@
 'use strict';
 
-import {getChildrenMap, mergeChildrenMap} from '../src/utils';
+import { getChildrenMap, mergeChildrenMap } from '../src/utils';
 
 describe('getChildrenMap', function() {
 	it(
@@ -21,8 +21,8 @@ describe('getChildrenMap', function() {
 
 			const obj = getChildrenMap(arr);
 
-			assert.deepEqual(obj['foo'], arr[0]);
-			assert.deepEqual(obj['bar'], arr[1]);
+			assert.deepEqual(obj.foo, arr[0]);
+			assert.deepEqual(obj.bar, arr[1]);
 		}
 	);
 });

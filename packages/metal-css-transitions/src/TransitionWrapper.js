@@ -1,20 +1,19 @@
 'use strict';
 
-import JSXComponent from 'metal-jsx';
-import Types from 'metal-state-validators';
+import Component, { Config } from 'metal-jsx';
 
 import TransitionChild from './TransitionChild';
-import {getChildrenMap, mergeChildrenMap} from './utils';
+import { getChildrenMap, mergeChildrenMap } from './utils';
 
 /**
  * TransitionWrapper component
  */
-class TransitionWrapper extends JSXComponent {
+class TransitionWrapper extends Component {
 	/**
 	 * @inheritDoc
 	 */
 	created() {
-		this.childrenMap_ = getChildrenMap(this.children);
+		this.state.childrenMap_ = getChildrenMap(this.props.children);
 
 		this.handleChildrenEnter_ = this.handleChildrenEnter_.bind(this);
 		this.handleChildrenLeave_ = this.handleChildrenLeave_.bind(this);
@@ -24,7 +23,7 @@ class TransitionWrapper extends JSXComponent {
 	 * Executes the `appear` method on each child.
 	 */
 	attached() {
-		this.children.forEach(
+		this.props.children.forEach(
 			child => {
 				if (child && child.config) {
 					const {key} = child.config;
@@ -43,11 +42,11 @@ class TransitionWrapper extends JSXComponent {
 	 * @protected
 	 */
 	finishLeave_(key) {
-		const newChildrenMap = this.childrenMap_;
+		const newChildrenMap = this.state.childrenMap_;
 
 		delete newChildrenMap[key];
 
-		this.childrenMap_ = newChildrenMap;
+		this.state.childrenMap_ = newChildrenMap;
 	}
 
 	/**
@@ -117,8 +116,10 @@ class TransitionWrapper extends JSXComponent {
 	render() {
 		const children = [];
 
-		for (let key in this.childrenMap_) {
-			const child = this.childrenMap_[key];
+		const {childrenMap_} = this.state;
+
+		for (let key in childrenMap_) {
+			const child = childrenMap_[key];
 
 			if (child) {
 				children.push(child);
@@ -129,19 +130,25 @@ class TransitionWrapper extends JSXComponent {
 			<span>
 				{!!children.length &&
 					children.map(
-						child => {
-							return (
-								<TransitionChild name={this.name} ref={child.config.key}>
-									{child}
-								</TransitionChild>
-							)
-						}
+						child => (
+							<TransitionChild name={this.props.name} ref={child.config.key}>
+								{child}
+							</TransitionChild>
+						)
 					)
 				}
 			</span>
 		);
 	}
 }
+
+TransitionWrapper.PROPS = {
+	/**
+	 * Name of css transition.
+	 * @type {string}
+	 */
+	name: Config.string()
+};
 
 TransitionWrapper.STATE = {
 	/**
@@ -150,17 +157,7 @@ TransitionWrapper.STATE = {
 	 * @default {}
 	 * @protected
 	 */
-	childrenMap_: {
-		value: {}
-	},
-
-	/**
-	 * Name of css transition.
-	 * @type {string}
-	 */
-	name: {
-		validator: Types.string
-	}
-}
+	childrenMap_: Config.value({})
+};
 
 export default TransitionWrapper;

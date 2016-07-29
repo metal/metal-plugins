@@ -1,20 +1,20 @@
 'use strict';
 
-import JSXComponent from 'metal-jsx';
+import Component, {Config} from 'metal-jsx';
 
 import Transition from '../src/TransitionWrapper';
 
-class App extends JSXComponent {
+class App extends Component {
 	created() {
-		this.onClick = this.onClick.bind(this);
+		this.onClick_ = this.onClick_.bind(this);
 	}
 
-	onClick() {
-		this.index += 2;
+	onClick_() {
+		this.state.index += 2;
 	}
 
-	getChildren() {
-		const {index} = this;
+	getChildren_() {
+		const {index} = this.state;
 
 		return [
 			<div class="child" key={index}>child {index}</div>,
@@ -25,11 +25,11 @@ class App extends JSXComponent {
 	render() {
 		return (
 			<span>
-				<button data-onclick={this.onClick}>ClickMe</button>
+				<button data-onclick={this.onClick_}>ClickMe</button>
 
 				<Transition name="test">
 					{
-						this.getChildren()
+						this.getChildren_()
 					}
 				</Transition>
 			</span>
@@ -38,9 +38,7 @@ class App extends JSXComponent {
 }
 
 App.STATE = {
-	index: {
-		value: 1
-	}
-}
+	index: Config.value(1)
+};
 
 export default App;
