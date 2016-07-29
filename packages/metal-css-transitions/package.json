@@ -1,7 +1,7 @@
 {
   "name": "metal-css-transitions",
-  "version": "0.1.1",
 	"description": "Metal component used to apply css transitions",
+  "version": "2.0.1",
   "license": "BSD",
   "repository": "bryceosterhaus/metal-css-transitions",
   "engines": {
