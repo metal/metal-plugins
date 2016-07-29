@@ -21,6 +21,15 @@ function convertMatchesToObj(matches) {
 }
 
 /**
+ * Encloses the given regex pattern into a non capturing group.
+ * @param {string} pattern
+ * @return {string}
+ */
+function encloseNonCapturingGroup(pattern) {
+	return `(?:${pattern})`;
+}
+
+/**
  * Converts the given tokens parsed from a route format string to a regex.
  * @param {!Array<string|!Object>} tokens
  * @return {!RegExp}
@@ -31,17 +40,14 @@ function convertTokensToRegex(tokens) {
 		if (core.isString(tokens[i])) {
 			regex += tokens[i].replace('/', '\\/');
 		} else {
-			let capture = '(?:' + tokens[i].pattern + ')';
-
+			let capture = encloseNonCapturingGroup(tokens[i].pattern);
 			if (tokens[i].repeat) {
-				capture += '(?:\\/' + capture + ')*';
+				capture += encloseNonCapturingGroup('\\/' + capture) + '*';
 			}
-
-			capture = tokens[i].prefix + '(' + capture + ')';
-
+			capture = `${tokens[i].prefix}(${capture})`;
 			if (tokens[i].optional) {
 				if (!tokens[i].partial) {
-					capture = '(?:' + capture + ')';
+					capture = encloseNonCapturingGroup(capture);
 				}
 				capture += '?';
 			}
