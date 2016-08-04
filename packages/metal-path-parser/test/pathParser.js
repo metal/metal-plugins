@@ -64,6 +64,15 @@ describe('pathParser', function() {
 			assert.ok(!regex.test('/not/my/path'));
 		});
 
+		it('should return regex that will match path with queries', function() {
+			const regex = toRegex('/my/path?foo=bar');
+			assert.ok(regex.test('/my/path?foo=bar'));
+			assert.ok(!regex.test('/my/path?foo=foo'));
+			assert.ok(!regex.test('/my/path/'));
+			assert.ok(!regex.test('/my/path/'));
+			assert.ok(!regex.test('not/my/path?foo=bar'));
+		});
+
 		it('should return regex that will match params', function() {
 			const regex = toRegex('/my/path/prefix-:foo/and/:bar-suffix');
 			assert.ok(!'/not/my/path'.match(regex));
