@@ -55,11 +55,13 @@ describe('pathParser', function() {
 			assert.ok(regex.test('/my/path'));
 			assert.ok(regex.test('/my/path/'));
 			assert.ok(!regex.test('/my/path/or/not'));
+			assert.ok(!regex.test('/not/my/path'));
 
 			regex = toRegex('/my/path/');
 			assert.ok(regex.test('/my/path'));
 			assert.ok(regex.test('/my/path/'));
 			assert.ok(!regex.test('/my/path/or/not'));
+			assert.ok(!regex.test('/not/my/path'));
 		});
 
 		it('should return regex that will match params', function() {
