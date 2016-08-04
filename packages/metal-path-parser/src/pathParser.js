@@ -63,7 +63,7 @@ function encloseNonCapturingGroup(pattern) {
  * @return {string}
  */
 function escape(str) {
-	return str.replace('/', '\\/');
+	return str.replace(/([.+*?=^!:${}()[\]|\/\\])/g, '\\$1');
 }
 
 /**
