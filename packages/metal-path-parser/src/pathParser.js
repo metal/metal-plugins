@@ -45,7 +45,7 @@ function convertTokensToRegex(tokens) {
 			regex += capture;
 		}
 	}
-	return new RegExp(makeTrailingSlashOptional(regex) + '$');
+	return new RegExp('^' + makeTrailingSlashOptional(regex) + '$');
 }
 
 /**
