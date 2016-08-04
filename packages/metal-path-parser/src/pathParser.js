@@ -82,10 +82,17 @@ function makeTrailingSlashOptional(regex) {
 
 /**
  * Parses the given route format string into tokens representing its contents.
+ * @param {!Array|string} routeOrTokens Either a route format string or tokens
+ *     previously parsed via the `parse` function.
  * @return {!Array<string|!Object>} An array of tokens that can be either plain
  *     strings (part of the route) or objects containing informations on params.
  */
-export function parse(route) {
+export function parse(routeOrTokens) {
+	if (!core.isString(routeOrTokens)) {
+		return routeOrTokens;
+	}
+
+	const route = routeOrTokens;
 	let unnamedCount = 0;
 	const tokens = [];
 	let currPath = '';
@@ -120,10 +127,12 @@ export function parse(route) {
 /**
  * Converts the given route format string to a regex that can extract param
  * data from paths matching it.
+ * @param {!Array|string} routeOrTokens Either a route format string or tokens
+ *     previously parsed via the `parse` function.
  * @return {!RegExp}
  */
-export function toRegex(route) {
-	return convertTokensToRegex(parse(route));
+export function toRegex(routeOrTokens) {
+	return convertTokensToRegex(parse(routeOrTokens));
 }
 
 /**
@@ -136,9 +145,7 @@ export function toRegex(route) {
  */
 export function extractData(routeOrTokens, path) {
 	const data = {};
-	const tokens = core.isString(routeOrTokens) ?
-		parse(routeOrTokens) :
-		routeOrTokens;
+	const tokens = parse(routeOrTokens);
 	const match = path.match(convertTokensToRegex(tokens));
 
 	if (!match) {
