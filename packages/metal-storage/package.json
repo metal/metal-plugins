@@ -1,0 +1,37 @@
+{
+	"name": "metal-storage",
+	"version": "0.0.0",
+	"description": "Provides a convenient API for data persistence using a selected data storage mechanism",
+	"license": "BSD",
+	"repository": "metal/metal-storage",
+	"engines": {
+		"node": ">=0.12.0",
+		"npm": ">=3.0.0"
+	},
+	"main": "lib/Storage.js",
+	"jsnext:main": "src/Storage.js",
+	"files": [
+		"lib",
+		"src",
+		"test"
+	],
+	"scripts": {
+		"build": "gulp build",
+		"compile": "babel --presets metal -d lib/ src/",
+		"prepublish": "npm run compile",
+		"test": "gulp test",
+		"watch": "gulp build:watch"
+	},
+	"keywords": [
+		"metal"
+	],
+	"dependencies": {
+		"metal": "^2.0.0"
+	},
+	"devDependencies": {
+		"babel-cli": "^6.4.5",
+		"babel-preset-metal": "^4.0.0",
+		"gulp": "^3.8.11",
+		"gulp-metal": "^1.0.0"
+	}
+}
