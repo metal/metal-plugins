@@ -4,16 +4,16 @@ import { getChildrenMap, mergeChildrenMap } from '../src/utils';
 
 describe('getChildrenMap', function() {
 	it(
-		'should create a keyed object based on config.key',
+		'should create a keyed object based on props.key',
 		() => {
 			const arr = [
 				{
-					config: {
+					props: {
 						key: 'foo'
 					}
 				},
 				{
-					config: {
+					props: {
 						key: 'bar'
 					}
 				}
@@ -27,16 +27,16 @@ describe('getChildrenMap', function() {
 	);
 
 	it(
-		'should create a keyed object based on config.key when keys are numbers',
+		'should create a keyed object based on props.key when keys are numbers',
 		() => {
 			const arr = [
 				{
-					config: {
+					props: {
 						key: 2
 					}
 				},
 				{
-					config: {
+					props: {
 						key: 1
 					}
 				}

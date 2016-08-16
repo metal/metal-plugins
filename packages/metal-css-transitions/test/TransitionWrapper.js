@@ -135,7 +135,7 @@ describe('TransitionWrapper', function() {
 
 			const children = [
 				{
-					config: {
+					props: {
 						key: KEY
 					}
 				}
@@ -165,7 +165,7 @@ describe('TransitionWrapper', function() {
 
 			const children = [
 				{
-					config: {
+					props: {
 						key: KEY
 					}
 				}
