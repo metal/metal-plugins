@@ -25,8 +25,8 @@ class TransitionWrapper extends Component {
 	attached() {
 		this.props.children.forEach(
 			child => {
-				if (child && child.config) {
-					const {key} = child.config;
+				if (child && child.props) {
+					const {key} = child.props;
 
 					if (key) {
 						this.components[key].appear();
@@ -58,8 +58,8 @@ class TransitionWrapper extends Component {
 	handleChildrenEnter_(newChildren, prevKeyMap) {
 		newChildren.forEach(
 			child => {
-				if (child && child.config) {
-					const {key} = child.config;
+				if (child && child.props) {
+					const {key} = child.props;
 
 					if (key && !prevKeyMap.has(key)) {
 						this.components[key].enter();
@@ -78,8 +78,8 @@ class TransitionWrapper extends Component {
 	handleChildrenLeave_(prevChildren, newKeyMap) {
 		prevChildren.forEach(
 			child => {
-				if (child && child.config) {
-					const {key} = child.config;
+				if (child && child.props) {
+					const {key} = child.props;
 
 					if (key && !newKeyMap.has(key)) {
 						this.components[key].leave(this.finishLeave_.bind(this, key));
@@ -131,7 +131,7 @@ class TransitionWrapper extends Component {
 				{!!children.length &&
 			children.map(
 				child => (
-				<TransitionChild name={this.props.name} ref={child.config.key}>
+				<TransitionChild name={this.props.name} ref={child.props.key}>
 								{child}
 							</TransitionChild>
 				)

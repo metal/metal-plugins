@@ -11,13 +11,13 @@ export function getChildrenMap(children) {
 	const retMap = new Map();
 
 	const keys = children.map(
-		child => child.config ? child.config.key : undefined
+		child => child.props ? child.props.key : undefined
 	);
 
 	children.forEach(
 		child => {
-			if (child && child.config) {
-				let {key} = child.config;
+			if (child && child.props) {
+				let {key} = child.props;
 
 				if (!key) {
 					while (keys.indexOf(COUNTER) !== -1) {
@@ -28,7 +28,7 @@ export function getChildrenMap(children) {
 
 					keys.push(key);
 
-					child.config.key = key;
+					child.props.key = key;
 				}
 
 				retMap.set(key, child);
