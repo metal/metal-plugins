@@ -31,7 +31,7 @@ describe('TransitionWrapper', function() {
 					return (
 						<TransitionWrapper elementClasses="wrapper">
 						</TransitionWrapper>
-					);
+						);
 				}
 			}
 
@@ -143,7 +143,7 @@ describe('TransitionWrapper', function() {
 
 			assert.isFalse(stubFn.called);
 
-			component.handleChildrenEnter_(children, {})
+			component.handleChildrenEnter_(children, new Map())
 
 			assert.isTrue(stubFn.called);
 
@@ -173,7 +173,7 @@ describe('TransitionWrapper', function() {
 
 			assert.isFalse(stubFn.called);
 
-			component.handleChildrenLeave_(children, {})
+			component.handleChildrenLeave_(children, new Map())
 
 			assert.isTrue(stubFn.called);
 
@@ -187,15 +187,107 @@ describe('TransitionWrapper', function() {
 			component = new TransitionWrapper();
 			const KEY = 1;
 
-			component.state.childrenMap_ = {
-				[KEY]: 'test'
-			};
-
-			assert(component.state.childrenMap_[KEY]);
+			component.state.childrenMap_ = new Map().set(KEY, 'test');
 
 			component.finishLeave_(KEY);
 
-			assert.deepEqual(component.state.childrenMap_, {});
+			assert.isFalse(component.state.childrenMap_.has(KEY));
+		}
+	);
+
+	it(
+		'should render children in the order they are given when keys are numbers',
+		(done) => {
+			class App extends Component {
+				render() {
+					return (
+						<TransitionWrapper name="test">
+							{this.props.children}
+						</TransitionWrapper>
+						);
+				}
+			}
+
+			component = new App(
+				{
+					children: [
+						<div class="child" key={1}>1</div>,
+						<div class="child" key={2}>2</div>
+					]
+				}
+			);
+
+			let children = component.element.querySelectorAll('.child');
+
+			assert.strictEqual(children[0].innerHTML, '1');
+			assert.strictEqual(children[1].innerHTML, '2');
+
+			component.props.children = [
+				<div class="child" key={3}>3</div>,
+				<div class="child" key={1}>1</div>,
+				<div class="child" key={2}>2</div>
+			];
+
+			setTimeout(
+				() => {
+					children = component.element.querySelectorAll('.child');
+
+					assert.strictEqual(children[0].innerHTML, '3');
+					assert.strictEqual(children[1].innerHTML, '1');
+					assert.strictEqual(children[2].innerHTML, '2');
+
+					done();
+				},
+				100
+			);
+		}
+	);
+
+	it(
+		'should render children in the order they are given when keys are strings',
+		(done) => {
+			class App extends Component {
+				render() {
+					return (
+						<TransitionWrapper name="test">
+							{this.props.children}
+						</TransitionWrapper>
+						);
+				}
+			}
+
+			component = new App(
+				{
+					children: [
+						<div class="child" key="1">1</div>,
+						<div class="child" key="2">2</div>
+					]
+				}
+			);
+
+			let children = component.element.querySelectorAll('.child');
+
+			assert.strictEqual(children[0].innerHTML, '1');
+			assert.strictEqual(children[1].innerHTML, '2');
+
+			component.props.children = [
+				<div class="child" key="3">3</div>,
+				<div class="child" key="1">1</div>,
+				<div class="child" key="2">2</div>
+			];
+
+			setTimeout(
+				() => {
+					children = component.element.querySelectorAll('.child');
+
+					assert.strictEqual(children[0].innerHTML, '3');
+					assert.strictEqual(children[1].innerHTML, '1');
+					assert.strictEqual(children[2].innerHTML, '2');
+
+					done();
+				},
+				100
+			);
 		}
 	);
 });

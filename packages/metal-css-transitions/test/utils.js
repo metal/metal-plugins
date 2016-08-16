@@ -21,8 +21,31 @@ describe('getChildrenMap', function() {
 
 			const obj = getChildrenMap(arr);
 
-			assert.deepEqual(obj.foo, arr[0]);
-			assert.deepEqual(obj.bar, arr[1]);
+			assert.strictEqual(obj.get('foo'), arr[0]);
+			assert.strictEqual(obj.get('bar'), arr[1]);
+		}
+	);
+
+	it(
+		'should create a keyed object based on config.key when keys are numbers',
+		() => {
+			const arr = [
+				{
+					config: {
+						key: 2
+					}
+				},
+				{
+					config: {
+						key: 1
+					}
+				}
+			];
+
+			const obj = getChildrenMap(arr);
+
+			assert.strictEqual(obj.get(2), arr[0]);
+			assert.strictEqual(obj.get(1), arr[1]);
 		}
 	);
 });
@@ -31,35 +54,27 @@ describe('mergeChildrenMap', function() {
 	it(
 		'should merge objects',
 		() => {
-			const newObj = {
-				1: 1,
-				2: 2
-			};
+			const newMap = new Map(
+				[
+					[1, 'one'],
+					[2, 'two']
+				]
+			);
 
-			const oldObj = {
-				2: 'two',
-				3: 'three'
-			};
+			const oldMap = new Map(
+				[
+					[2, 'twotwo'],
+					[3, 'three']
+				]
+			);
 
-			let mergedObj = mergeChildrenMap(newObj, oldObj);
+			let mergedMap = mergeChildrenMap(newMap, oldMap);
 
-			let expectedObj = {
-				1: 1,
-				2: 2,
-				3: 'three'
-			};
+			assert.strictEqual(mergedMap.get(2), 'two');
 
-			assert.deepEqual(mergedObj, expectedObj);
+			mergedMap = mergeChildrenMap(oldMap, newMap);
 
-			mergedObj = mergeChildrenMap(oldObj, newObj);
-
-			expectedObj = {
-				1: 1,
-				2: 'two',
-				3: 'three'
-			};
-
-			assert.deepEqual(mergedObj, expectedObj);
+			assert.strictEqual(mergedMap.get(2), 'twotwo');
 		}
 	);
 
@@ -68,7 +83,7 @@ describe('mergeChildrenMap', function() {
 		() => {
 			const obj = mergeChildrenMap();
 
-			assert(obj);
+			assert(obj instanceof Map);
 		}
 	);
 });
