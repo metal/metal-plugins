@@ -89,10 +89,10 @@ describe('Storage', function() {
 	it('should get returns Storage.ErrorCode.INVALID_VALUE for issues within mechanism deserialization', function() {
 		class MockMechanism extends LocalStorageMechanism {
 			get() {
-				return NaN;
+				return '{';
 			}
 		}
 		var storage = new Storage(new MockMechanism());
-		assert.strictEqual(undefined, storage.get());
+		assert.throws(() => storage.get(), Storage.ErrorCode.INVALID_VALUE);
 	});
 });
