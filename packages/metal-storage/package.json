@@ -1,6 +1,6 @@
 {
 	"name": "metal-storage",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Provides a convenient API for data persistence using a selected data storage mechanism",
 	"license": "BSD",
 	"repository": "metal/metal-storage",
