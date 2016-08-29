@@ -60,6 +60,20 @@ class MultiMap extends Disposable {
 	}
 
 	/**
+	 * Creates a `MultiMap` instance from the given object.
+	 * @param {!Object} obj
+	 * @return {!MultiMap}
+	 */
+	static fromObject(obj) {
+		var map = new MultiMap();
+		var keys = Object.keys(obj);
+		for (var i = 0; i < keys.length; i++) {
+			map.set(keys[i], obj[keys[i]]);
+		}
+		return map;
+	}
+
+	/**
 	 * Gets the first added value from a key name.
 	 * @param {string} name
 	 * @return {*}
