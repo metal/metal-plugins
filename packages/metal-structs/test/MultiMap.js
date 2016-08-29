@@ -105,4 +105,13 @@ describe('MultiMap', function() {
 		assert.deepEqual(['KEY1'], map.names());
 	});
 
+	it('should create map from object contents', function() {
+		var map = MultiMap.fromObject({
+			key1: 1,
+			key2: 2
+		});
+		assert.strictEqual(1, map.get('key1'));
+		assert.strictEqual(2, map.get('key2'));
+	});
+
 });
