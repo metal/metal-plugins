@@ -228,4 +228,55 @@ describe('KeyboardFocusManager', function() {
 		});
 		assert.strictEqual(component.refs.el0, document.activeElement);
 	});
+
+	describe('setFocusHandler', function() {
+		it('should focus the element returned by the custom focus handler', function() {
+			component = new TestComponent();
+			manager = new KeyboardFocusManager(component, 'button')
+				.setFocusHandler(() => component.refs.el2)
+				.start();
+
+			dom.triggerEvent(component.refs.el0, 'keyup', {
+				keyCode: 10
+			});
+			assert.strictEqual(component.refs.el2, document.activeElement);
+		});
+
+		it('should focus the element with the ref returned by the custom focus handler', function() {
+			component = new TestComponent();
+			manager = new KeyboardFocusManager(component, 'button')
+				.setFocusHandler(() => 'el2')
+				.start();
+
+			dom.triggerEvent(component.refs.el0, 'keyup', {
+				keyCode: 10
+			});
+			assert.strictEqual(component.refs.el2, document.activeElement);
+		});
+
+		it('should not focus on any element if the custom focus handler returns nothing', function() {
+			component = new TestComponent();
+			manager = new KeyboardFocusManager(component, 'button')
+				.setFocusHandler(() => null)
+				.start();
+
+			var prevActiveElement = document.activeElement;
+			dom.triggerEvent(component.refs.el0, 'keyup', {
+				keyCode: 39
+			});
+			assert.strictEqual(prevActiveElement, document.activeElement);
+		});
+
+		it('should run default behavior if custom focus handler returns "true"', function() {
+			component = new TestComponent();
+			manager = new KeyboardFocusManager(component, 'button')
+				.setFocusHandler(() => true)
+				.start();
+
+			dom.triggerEvent(component.refs.el0, 'keyup', {
+				keyCode: 39
+			});
+			assert.strictEqual(component.refs.el1, document.activeElement);
+		});
+	});
 });

@@ -65,8 +65,13 @@ class KeyboardFocusManager extends Disposable {
 	 * @protected
 	 */
 	handleKey_(event) {
-		const ref = this.handleKeyDefault_(event.keyCode);
-		const element = this.component_.refs[ref];
+		let element = this.focusHandler_ && this.focusHandler_(event);
+		if (!this.focusHandler_ || element === true) {
+			element = this.handleKeyDefault_(event.keyCode);
+		}
+		if (!core.isElement(element)) {
+			element = this.component_.refs[element];
+		}
 		if (element) {
 			element.focus();
 		}
@@ -100,7 +105,26 @@ class KeyboardFocusManager extends Disposable {
 	}
 
 	/**
+	 * Sets a handler function that will be called to decide which element should
+	 * be focused according to the key that was pressed. It will receive the key
+	 * event and should return one of the following:
+	 *   - `true`, if the default behavior should be triggered instead.
+	 *   - A string, representing a `ref` to the component element that should be
+	 *       focused.
+	 *   - The element itself that should be focused.
+	 *   - Anything else, if nothing should be focused (skipping default behavior
+	 *       too).
+	 * @param {function(key: string)} focusHandler
+	 * @chainable
+	 */
+	setFocusHandler(focusHandler) {
+		this.focusHandler_ = focusHandler;
+		return this;
+	}
+
+	/**
 	 * Starts listening to keyboard events and handling element focus.
+	 * @chainable
 	 */
 	start() {
 		if (!this.handle_) {
@@ -110,16 +134,19 @@ class KeyboardFocusManager extends Disposable {
 				this.handleKey_
 			);
 		}
+		return this;
 	}
 
 	/**
 	 * Stops listening to keyboard events and handling element focus.
+	 * @chainable
 	 */
 	stop() {
 		if (this.handle_) {
 			this.handle_.removeListener();
 			this.handle_ = null;
 		}
+		return this;
 	}
 }
 
