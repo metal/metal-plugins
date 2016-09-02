@@ -1,6 +1,6 @@
 {
   "name": "metal-keyboard-focus",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Manages focus on components via keyboard events",
   "license": "BSD",
   "repository": "metal/metal-keyboard-focus",
