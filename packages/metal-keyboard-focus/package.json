@@ -1,7 +1,7 @@
 {
   "name": "metal-keyboard-focus",
   "version": "0.0.0",
-  "description": "Manages focus on dom elements via keyboard events",
+  "description": "Manages focus on components via keyboard events",
   "license": "BSD",
   "repository": "metal/metal-keyboard-focus",
   "engines": {

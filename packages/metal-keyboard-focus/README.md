@@ -1,6 +1,6 @@
 # metal-keyboard-focus
 
-Manages focus on dom elements via keyboard events
+Manages focus on components via keyboard events.
 
 ## Setup
 
