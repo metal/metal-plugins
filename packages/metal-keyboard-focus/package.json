@@ -8,8 +8,8 @@
     "node": ">=0.12.0",
     "npm": ">=3.0.0"
   },
-  "main": "lib/KeyboardFocus.js",
-  "jsnext:main": "src/KeyboardFocus.js",
+  "main": "lib/KeyboardFocusManager.js",
+  "jsnext:main": "src/KeyboardFocusManager.js",
   "files": [
     "lib",
     "src",
