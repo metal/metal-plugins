@@ -67,11 +67,12 @@ class KeyboardFocusManager extends Disposable {
 	 * @protected
 	 */
 	getNextFocusable_(position, increment) {
+		const initialPosition = position;
 		let element;
 		do {
-			position += increment;
+			position = this.increment_(position, increment);
 			element = this.component_.refs[this.buildRef_(position)];
-		} while (element && element.getAttribute('data-unfocusable') === 'true');
+		} while (this.isFocusable_(element) && position !== initialPosition);
 		return element;
 	}
 
@@ -119,6 +120,49 @@ class KeyboardFocusManager extends Disposable {
 				// Right/down arrow keys will focus the next element.
 				return this.getNextFocusable_(position, 1);
 		}
+	}
+
+	/**
+	 * Increments the given position, making sure to follow circular rules if
+	 * enabled.
+	 * @param {number} position
+	 * @param {number} increment
+	 * @return {number}
+	 * @protected
+	 */
+	increment_(position, increment) {
+		const size = this.circularLength_;
+		position += increment;
+		if (core.isNumber(size)) {
+			if (position < 0) {
+				position = size - 1;
+			} else if (position >= size) {
+				position = 0;
+			}
+		}
+		return position;
+	}
+
+	/**
+	 * Checks if the given element is focusable.
+	 * @param {Element} element
+	 * @return {boolean}
+	 * @protected
+	 */
+	isFocusable_(element) {
+		return element && element.getAttribute('data-unfocusable') === 'true';
+	}
+
+	/**
+	 * Sets the length of the focusable elements. If a number is passed, the
+	 * default focusing behavior will follow a circular pattern, going from the
+	 * last to the first element, and vice versa.
+	 * @param {?number} circularLength
+	 * @chainable
+	 */
+	setCircularLength(circularLength) {
+		this.circularLength_ = circularLength;
+		return this;
 	}
 
 	/**

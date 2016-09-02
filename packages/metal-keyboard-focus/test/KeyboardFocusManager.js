@@ -251,6 +251,90 @@ describe('KeyboardFocusManager', function() {
 		assert.strictEqual(component.refs.el0, document.activeElement);
 	});
 
+	describe('setCircularLength', function() {
+		it('should focus last element when the left arrow key is pressed on first element', function() {
+			component = new TestComponent();
+			manager = new KeyboardFocusManager(component, 'button')
+				.setCircularLength(3)
+				.start();
+
+			dom.triggerEvent(component.refs.el0, 'keyup', {
+				keyCode: 37
+			});
+			assert.strictEqual(component.refs.el2, document.activeElement);
+		});
+
+		it('should focus last element when the up arrow key is pressed on first element', function() {
+			component = new TestComponent();
+			manager = new KeyboardFocusManager(component, 'button')
+				.setCircularLength(3)
+				.start();
+
+			dom.triggerEvent(component.refs.el0, 'keyup', {
+				keyCode: 38
+			});
+			assert.strictEqual(component.refs.el2, document.activeElement);
+		});
+
+		it('should focus first element when the right arrow key is pressed on last element', function() {
+			component = new TestComponent();
+			manager = new KeyboardFocusManager(component, 'button')
+				.setCircularLength(3)
+				.start();
+
+			dom.triggerEvent(component.refs.el2, 'keyup', {
+				keyCode: 39
+			});
+			assert.strictEqual(component.refs.el0, document.activeElement);
+		});
+
+		it('should focus first element when the down arrow key is pressed on last element', function() {
+			component = new TestComponent();
+			manager = new KeyboardFocusManager(component, 'button')
+				.setCircularLength(3)
+				.start();
+
+			dom.triggerEvent(component.refs.el2, 'keyup', {
+				keyCode: 40
+			});
+			assert.strictEqual(component.refs.el0, document.activeElement);
+		});
+
+		it('should focus next element when right/down arrow key is pressed on non last element', function() {
+			component = new TestComponent();
+			manager = new KeyboardFocusManager(component, 'button')
+				.setCircularLength(3)
+				.start();
+
+			dom.triggerEvent(component.refs.el0, 'keyup', {
+				keyCode: 39
+			});
+			assert.strictEqual(component.refs.el1, document.activeElement);
+
+			dom.triggerEvent(component.refs.el1, 'keyup', {
+				keyCode: 40
+			});
+			assert.strictEqual(component.refs.el2, document.activeElement);
+		});
+
+		it('should focus previous element when left/up arrow key is pressed on non first element', function() {
+			component = new TestComponent();
+			manager = new KeyboardFocusManager(component, 'button')
+				.setCircularLength(3)
+				.start();
+
+			dom.triggerEvent(component.refs.el2, 'keyup', {
+				keyCode: 37
+			});
+			assert.strictEqual(component.refs.el1, document.activeElement);
+
+			dom.triggerEvent(component.refs.el1, 'keyup', {
+				keyCode: 38
+			});
+			assert.strictEqual(component.refs.el0, document.activeElement);
+		});
+	});
+
 	describe('setFocusHandler', function() {
 		it('should focus the element returned by the custom focus handler', function() {
 			component = new TestComponent();
