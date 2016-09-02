@@ -6,9 +6,10 @@ import { core, Disposable } from 'metal';
  * Listens to keyboard events and uses them to move focus between different
  * elements from a component (via the arrow keys for example).
  * By default `KeyboardFocusManager` will assume that all focusable elements
- * in the component will have refs that follow the pattern "el<position>", where
- * "position" is a number. The arrow keys will then automatically move between
- * elements by incrementing/decrementing the position.
+ * in the component will have refs that follow the pattern in
+ * KeyboardFocusManager.REF_REGEX, which includes a position number. The arrow
+ * keys will then automatically move between elements by
+ * incrementing/decrementing this position.
  * It's possible to fully customize this behavior by passing a function to
  * `setFocusHandler`. For more details check this function's docs.
  */
@@ -27,12 +28,13 @@ class KeyboardFocusManager extends Disposable {
 
 	/**
 	 * Builds a ref string for the given position.
+	 * @param {string} prefix
 	 * @param {number|string} position
 	 * @return {string}
 	 * @protected
 	 */
-	buildRef_(position) {
-		return 'el' + position;
+	buildRef_(prefix, position) {
+		return prefix + position;
 	}
 
 	/**
@@ -46,32 +48,20 @@ class KeyboardFocusManager extends Disposable {
 	}
 
 	/**
-	 * Gets the position of the given element, according to its ref.
-	 * @param {!Element} element
-	 * @return {?number}
-	 * @protected
-	 */
-	getElementPosition_(element) {
-		const ref = element.getAttribute('ref');
-		if (ref) {
-			return parseInt(ref.substr(2), 10);
-		}
-	}
-
-	/**
 	 * Gets the next focusable element, that is, the next element that doesn't
 	 * have the `data-unfocusable` attribute set to `true`.
+	 * @param {string} prefix
 	 * @param {number} position
 	 * @param {number} increment
 	 * @return {Element}
 	 * @protected
 	 */
-	getNextFocusable_(position, increment) {
+	getNextFocusable_(prefix, position, increment) {
 		const initialPosition = position;
 		let element;
 		do {
 			position = this.increment_(position, increment);
-			element = this.component_.refs[this.buildRef_(position)];
+			element = this.component_.refs[this.buildRef_(prefix, position)];
 		} while (this.isFocusable_(element) && position !== initialPosition);
 		return element;
 	}
@@ -85,7 +75,7 @@ class KeyboardFocusManager extends Disposable {
 	handleKey_(event) {
 		let element = this.focusHandler_ && this.focusHandler_(event);
 		if (!this.focusHandler_ || element === true) {
-			element = this.handleKeyDefault_(event.keyCode);
+			element = this.handleKeyDefault_(event);
 		}
 		if (!core.isElement(element)) {
 			element = this.component_.refs[element];
@@ -98,27 +88,30 @@ class KeyboardFocusManager extends Disposable {
 	/**
 	 * Handles a key press according to the default behavior. Assumes that all
 	 * focusable elements in the component will have refs that follow the pattern
-	 * "el<position>", where "position" is a number. The arrow keys will then
-	 * automatically move between elements by incrementing/decrementing the
-	 * position.
-	 * @param {number} keyCode
+	 * in KeyboardFocusManager.REF_REGEX, which includes a position number. The
+	 * arrow keys will then automatically move between elements by
+	 * incrementing/decrementing the position.
+	 * @param {!Event} event
 	 * @protected
 	 */
-	handleKeyDefault_(keyCode) {
-		let position = this.getElementPosition_(event.delegateTarget);
-		if (!core.isDefAndNotNull(position)) {
+	handleKeyDefault_(event) {
+		const ref = event.delegateTarget.getAttribute('ref');
+		const matches = KeyboardFocusManager.REF_REGEX.exec(ref);
+		if (!matches) {
 			return;
 		}
 
-		switch (keyCode) {
+		let position = parseInt(matches[1], 10);
+		const prefix = ref.substr(0, ref.length - matches[1].length);
+		switch (event.keyCode) {
 			case 37:
 			case 38:
 				// Left/up arrow keys will focus the previous element.
-				return this.getNextFocusable_(position, -1);
+				return this.getNextFocusable_(prefix, position, -1);
 			case 39:
 			case 40:
 				// Right/down arrow keys will focus the next element.
-				return this.getNextFocusable_(position, 1);
+				return this.getNextFocusable_(prefix, position, 1);
 		}
 	}
 
@@ -210,5 +203,7 @@ class KeyboardFocusManager extends Disposable {
 		return this;
 	}
 }
+
+KeyboardFocusManager.REF_REGEX = /.+-(\d+)$/;
 
 export default KeyboardFocusManager;

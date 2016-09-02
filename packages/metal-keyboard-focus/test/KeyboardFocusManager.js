@@ -8,9 +8,9 @@ import KeyboardFocusManager from '../src/KeyboardFocusManager';
 class TestComponent extends Component {
 	render() {
 		IncrementalDOM.elementOpen('div');
-		IncrementalDOM.elementVoid('button', null, null, 'ref', 'el0');
-		IncrementalDOM.elementVoid('button', null, null, 'ref', 'el1');
-		IncrementalDOM.elementVoid('button', null, null, 'ref', 'el2');
+		IncrementalDOM.elementVoid('button', null, null, 'ref', 'el-0');
+		IncrementalDOM.elementVoid('button', null, null, 'ref', 'el-1');
+		IncrementalDOM.elementVoid('button', null, null, 'ref', 'el-2');
 		IncrementalDOM.elementClose('div');
 	}
 }
@@ -34,10 +34,10 @@ describe('KeyboardFocusManager', function() {
 		manager = new KeyboardFocusManager(component, 'button');
 		manager.start();
 
-		dom.triggerEvent(component.refs.el1, 'keydown', {
+		dom.triggerEvent(component.refs['el-1'], 'keydown', {
 			keyCode: 37
 		});
-		assert.strictEqual(component.refs.el0, document.activeElement);
+		assert.strictEqual(component.refs['el-0'], document.activeElement);
 	});
 
 	it('should focus previous element when the up arrow key is pressed', function() {
@@ -45,10 +45,10 @@ describe('KeyboardFocusManager', function() {
 		manager = new KeyboardFocusManager(component, 'button');
 		manager.start();
 
-		dom.triggerEvent(component.refs.el1, 'keydown', {
+		dom.triggerEvent(component.refs['el-1'], 'keydown', {
 			keyCode: 38
 		});
-		assert.strictEqual(component.refs.el0, document.activeElement);
+		assert.strictEqual(component.refs['el-0'], document.activeElement);
 	});
 
 	it('should not change focus when the left/up arrow keys are pressed on first element', function() {
@@ -57,12 +57,12 @@ describe('KeyboardFocusManager', function() {
 		manager.start();
 
 		const prevActiveElement = document.activeElement;
-		dom.triggerEvent(component.refs.el0, 'keydown', {
+		dom.triggerEvent(component.refs['el-0'], 'keydown', {
 			keyCode: 37
 		});
 		assert.strictEqual(prevActiveElement, document.activeElement);
 
-		dom.triggerEvent(component.refs.el0, 'keydown', {
+		dom.triggerEvent(component.refs['el-0'], 'keydown', {
 			keyCode: 38
 		});
 		assert.strictEqual(prevActiveElement, document.activeElement);
@@ -73,10 +73,10 @@ describe('KeyboardFocusManager', function() {
 		manager = new KeyboardFocusManager(component, 'button');
 		manager.start();
 
-		dom.triggerEvent(component.refs.el0, 'keydown', {
+		dom.triggerEvent(component.refs['el-0'], 'keydown', {
 			keyCode: 39
 		});
-		assert.strictEqual(component.refs.el1, document.activeElement);
+		assert.strictEqual(component.refs['el-1'], document.activeElement);
 	});
 
 	it('should focus next element when the down arrow key is pressed', function() {
@@ -84,10 +84,10 @@ describe('KeyboardFocusManager', function() {
 		manager = new KeyboardFocusManager(component, 'button');
 		manager.start();
 
-		dom.triggerEvent(component.refs.el0, 'keydown', {
+		dom.triggerEvent(component.refs['el-0'], 'keydown', {
 			keyCode: 40
 		});
-		assert.strictEqual(component.refs.el1, document.activeElement);
+		assert.strictEqual(component.refs['el-1'], document.activeElement);
 	});
 
 	it('should not change focus when the right/down arrow keys are pressed on last element', function() {
@@ -96,12 +96,12 @@ describe('KeyboardFocusManager', function() {
 		manager.start();
 
 		const prevActiveElement = document.activeElement;
-		dom.triggerEvent(component.refs.el2, 'keydown', {
+		dom.triggerEvent(component.refs['el-2'], 'keydown', {
 			keyCode: 39
 		});
 		assert.strictEqual(prevActiveElement, document.activeElement);
 
-		dom.triggerEvent(component.refs.el2, 'keydown', {
+		dom.triggerEvent(component.refs['el-2'], 'keydown', {
 			keyCode: 40
 		});
 		assert.strictEqual(prevActiveElement, document.activeElement);
@@ -113,7 +113,7 @@ describe('KeyboardFocusManager', function() {
 		manager.start();
 
 		const prevActiveElement = document.activeElement;
-		dom.triggerEvent(component.refs.el0, 'keydown', {
+		dom.triggerEvent(component.refs['el-0'], 'keydown', {
 			keyCode: 10
 		});
 		assert.strictEqual(prevActiveElement, document.activeElement);
@@ -168,18 +168,18 @@ describe('KeyboardFocusManager', function() {
 		manager = new KeyboardFocusManager(component, 'li');
 		manager.start();
 
-		dom.triggerEvent(component.refs.el0, 'keydown', {
+		dom.triggerEvent(component.refs['el-0'], 'keydown', {
 			keyCode: 40
 		});
-		assert.notStrictEqual(component.refs.el1, document.activeElement);
+		assert.notStrictEqual(component.refs['el-1'], document.activeElement);
 	});
 
 	it('should change focus accordingly when key is pressed on any element when no selector is given', function() {
 		class TestComponentNoSelector extends Component {
 			render() {
 				IncrementalDOM.elementOpen('div');
-				IncrementalDOM.elementVoid('button', null, null, 'ref', 'el0');
-				IncrementalDOM.elementVoid('li', null, null, 'ref', 'el1', 'tabindex', '0');
+				IncrementalDOM.elementVoid('button', null, null, 'ref', 'el-0');
+				IncrementalDOM.elementVoid('li', null, null, 'ref', 'el-1', 'tabindex', '0');
 				IncrementalDOM.elementClose('div');
 			}
 		}
@@ -189,19 +189,19 @@ describe('KeyboardFocusManager', function() {
 		manager = new KeyboardFocusManager(component);
 		manager.start();
 
-		dom.triggerEvent(component.refs.el0, 'keydown', {
+		dom.triggerEvent(component.refs['el-0'], 'keydown', {
 			keyCode: 40
 		});
-		assert.strictEqual(component.refs.el1, document.activeElement);
+		assert.strictEqual(component.refs['el-1'], document.activeElement);
 	});
 
 	it('should skip elements with "data-unfocusable" set to true when focusing', function() {
 		class TestComponentUnfocusable extends Component {
 			render() {
 				IncrementalDOM.elementOpen('div');
-				IncrementalDOM.elementVoid('button', null, null, 'ref', 'el0');
-				IncrementalDOM.elementVoid('button', null, null, 'ref', 'el1', 'data-unfocusable', 'true');
-				IncrementalDOM.elementVoid('button', null, null, 'ref', 'el2');
+				IncrementalDOM.elementVoid('button', null, null, 'ref', 'el-0');
+				IncrementalDOM.elementVoid('button', null, null, 'ref', 'el-1', 'data-unfocusable', 'true');
+				IncrementalDOM.elementVoid('button', null, null, 'ref', 'el-2');
 				IncrementalDOM.elementClose('div');
 			}
 		}
@@ -211,20 +211,20 @@ describe('KeyboardFocusManager', function() {
 		manager = new KeyboardFocusManager(component, 'button');
 		manager.start();
 
-		dom.triggerEvent(component.refs.el0, 'keydown', {
+		dom.triggerEvent(component.refs['el-0'], 'keydown', {
 			keyCode: 39
 		});
-		assert.strictEqual(component.refs.el2, document.activeElement);
+		assert.strictEqual(component.refs['el-2'], document.activeElement);
 	});
 
 	it('should not change focus when key is pressed before starting the manager', function() {
 		component = new TestComponent();
 		manager = new KeyboardFocusManager(component, 'button');
 
-		dom.triggerEvent(component.refs.el0, 'keydown', {
+		dom.triggerEvent(component.refs['el-0'], 'keydown', {
 			keyCode: 40
 		});
-		assert.notStrictEqual(component.refs.el1, document.activeElement);
+		assert.notStrictEqual(component.refs['el-1'], document.activeElement);
 	});
 
 	it('should not change focus when key is pressed after stopping the manager', function() {
@@ -233,10 +233,10 @@ describe('KeyboardFocusManager', function() {
 		manager.start();
 		manager.stop();
 
-		dom.triggerEvent(component.refs.el0, 'keydown', {
+		dom.triggerEvent(component.refs['el-0'], 'keydown', {
 			keyCode: 40
 		});
-		assert.notStrictEqual(component.refs.el1, document.activeElement);
+		assert.notStrictEqual(component.refs['el-1'], document.activeElement);
 	});
 
 	it('should focus next elements correctly even if "start" is called more than once', function() {
@@ -245,10 +245,10 @@ describe('KeyboardFocusManager', function() {
 		manager.start();
 		manager.start();
 
-		dom.triggerEvent(component.refs.el1, 'keydown', {
+		dom.triggerEvent(component.refs['el-1'], 'keydown', {
 			keyCode: 37
 		});
-		assert.strictEqual(component.refs.el0, document.activeElement);
+		assert.strictEqual(component.refs['el-0'], document.activeElement);
 	});
 
 	describe('setCircularLength', function() {
@@ -258,10 +258,10 @@ describe('KeyboardFocusManager', function() {
 				.setCircularLength(3)
 				.start();
 
-			dom.triggerEvent(component.refs.el0, 'keydown', {
+			dom.triggerEvent(component.refs['el-0'], 'keydown', {
 				keyCode: 37
 			});
-			assert.strictEqual(component.refs.el2, document.activeElement);
+			assert.strictEqual(component.refs['el-2'], document.activeElement);
 		});
 
 		it('should focus last element when the up arrow key is pressed on first element', function() {
@@ -270,10 +270,10 @@ describe('KeyboardFocusManager', function() {
 				.setCircularLength(3)
 				.start();
 
-			dom.triggerEvent(component.refs.el0, 'keydown', {
+			dom.triggerEvent(component.refs['el-0'], 'keydown', {
 				keyCode: 38
 			});
-			assert.strictEqual(component.refs.el2, document.activeElement);
+			assert.strictEqual(component.refs['el-2'], document.activeElement);
 		});
 
 		it('should focus first element when the right arrow key is pressed on last element', function() {
@@ -282,10 +282,10 @@ describe('KeyboardFocusManager', function() {
 				.setCircularLength(3)
 				.start();
 
-			dom.triggerEvent(component.refs.el2, 'keydown', {
+			dom.triggerEvent(component.refs['el-2'], 'keydown', {
 				keyCode: 39
 			});
-			assert.strictEqual(component.refs.el0, document.activeElement);
+			assert.strictEqual(component.refs['el-0'], document.activeElement);
 		});
 
 		it('should focus first element when the down arrow key is pressed on last element', function() {
@@ -294,10 +294,10 @@ describe('KeyboardFocusManager', function() {
 				.setCircularLength(3)
 				.start();
 
-			dom.triggerEvent(component.refs.el2, 'keydown', {
+			dom.triggerEvent(component.refs['el-2'], 'keydown', {
 				keyCode: 40
 			});
-			assert.strictEqual(component.refs.el0, document.activeElement);
+			assert.strictEqual(component.refs['el-0'], document.activeElement);
 		});
 
 		it('should focus next element when right/down arrow key is pressed on non last element', function() {
@@ -306,15 +306,15 @@ describe('KeyboardFocusManager', function() {
 				.setCircularLength(3)
 				.start();
 
-			dom.triggerEvent(component.refs.el0, 'keydown', {
+			dom.triggerEvent(component.refs['el-0'], 'keydown', {
 				keyCode: 39
 			});
-			assert.strictEqual(component.refs.el1, document.activeElement);
+			assert.strictEqual(component.refs['el-1'], document.activeElement);
 
-			dom.triggerEvent(component.refs.el1, 'keydown', {
+			dom.triggerEvent(component.refs['el-1'], 'keydown', {
 				keyCode: 40
 			});
-			assert.strictEqual(component.refs.el2, document.activeElement);
+			assert.strictEqual(component.refs['el-2'], document.activeElement);
 		});
 
 		it('should focus previous element when left/up arrow key is pressed on non first element', function() {
@@ -323,15 +323,15 @@ describe('KeyboardFocusManager', function() {
 				.setCircularLength(3)
 				.start();
 
-			dom.triggerEvent(component.refs.el2, 'keydown', {
+			dom.triggerEvent(component.refs['el-2'], 'keydown', {
 				keyCode: 37
 			});
-			assert.strictEqual(component.refs.el1, document.activeElement);
+			assert.strictEqual(component.refs['el-1'], document.activeElement);
 
-			dom.triggerEvent(component.refs.el1, 'keydown', {
+			dom.triggerEvent(component.refs['el-1'], 'keydown', {
 				keyCode: 38
 			});
-			assert.strictEqual(component.refs.el0, document.activeElement);
+			assert.strictEqual(component.refs['el-0'], document.activeElement);
 		});
 	});
 
@@ -339,25 +339,25 @@ describe('KeyboardFocusManager', function() {
 		it('should focus the element returned by the custom focus handler', function() {
 			component = new TestComponent();
 			manager = new KeyboardFocusManager(component, 'button')
-				.setFocusHandler(() => component.refs.el2)
+				.setFocusHandler(() => component.refs['el-2'])
 				.start();
 
-			dom.triggerEvent(component.refs.el0, 'keydown', {
+			dom.triggerEvent(component.refs['el-0'], 'keydown', {
 				keyCode: 10
 			});
-			assert.strictEqual(component.refs.el2, document.activeElement);
+			assert.strictEqual(component.refs['el-2'], document.activeElement);
 		});
 
 		it('should focus the element with the ref returned by the custom focus handler', function() {
 			component = new TestComponent();
 			manager = new KeyboardFocusManager(component, 'button')
-				.setFocusHandler(() => 'el2')
+				.setFocusHandler(() => 'el-2')
 				.start();
 
-			dom.triggerEvent(component.refs.el0, 'keydown', {
+			dom.triggerEvent(component.refs['el-0'], 'keydown', {
 				keyCode: 10
 			});
-			assert.strictEqual(component.refs.el2, document.activeElement);
+			assert.strictEqual(component.refs['el-2'], document.activeElement);
 		});
 
 		it('should not focus on any element if the custom focus handler returns nothing', function() {
@@ -367,7 +367,7 @@ describe('KeyboardFocusManager', function() {
 				.start();
 
 			var prevActiveElement = document.activeElement;
-			dom.triggerEvent(component.refs.el0, 'keydown', {
+			dom.triggerEvent(component.refs['el-0'], 'keydown', {
 				keyCode: 39
 			});
 			assert.strictEqual(prevActiveElement, document.activeElement);
@@ -379,10 +379,10 @@ describe('KeyboardFocusManager', function() {
 				.setFocusHandler(() => true)
 				.start();
 
-			dom.triggerEvent(component.refs.el0, 'keydown', {
+			dom.triggerEvent(component.refs['el-0'], 'keydown', {
 				keyCode: 39
 			});
-			assert.strictEqual(component.refs.el1, document.activeElement);
+			assert.strictEqual(component.refs['el-1'], document.activeElement);
 		});
 	});
 });
