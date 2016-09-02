@@ -77,7 +77,7 @@ class KeyboardFocusManager extends Disposable {
 	}
 
 	/**
-	 * Handles a `keyup` event. Decides if a new element should be focused
+	 * Handles a `keydown` event. Decides if a new element should be focused
 	 * according to the key that was pressed.
 	 * @param {!Event} event
 	 * @protected
@@ -190,7 +190,7 @@ class KeyboardFocusManager extends Disposable {
 	start() {
 		if (!this.handle_) {
 			this.handle_ = this.component_.delegate(
-				'keyup',
+				'keydown',
 				this.selector_,
 				this.handleKey_
 			);

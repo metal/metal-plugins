@@ -34,7 +34,7 @@ describe('KeyboardFocusManager', function() {
 		manager = new KeyboardFocusManager(component, 'button');
 		manager.start();
 
-		dom.triggerEvent(component.refs.el1, 'keyup', {
+		dom.triggerEvent(component.refs.el1, 'keydown', {
 			keyCode: 37
 		});
 		assert.strictEqual(component.refs.el0, document.activeElement);
@@ -45,7 +45,7 @@ describe('KeyboardFocusManager', function() {
 		manager = new KeyboardFocusManager(component, 'button');
 		manager.start();
 
-		dom.triggerEvent(component.refs.el1, 'keyup', {
+		dom.triggerEvent(component.refs.el1, 'keydown', {
 			keyCode: 38
 		});
 		assert.strictEqual(component.refs.el0, document.activeElement);
@@ -57,12 +57,12 @@ describe('KeyboardFocusManager', function() {
 		manager.start();
 
 		const prevActiveElement = document.activeElement;
-		dom.triggerEvent(component.refs.el0, 'keyup', {
+		dom.triggerEvent(component.refs.el0, 'keydown', {
 			keyCode: 37
 		});
 		assert.strictEqual(prevActiveElement, document.activeElement);
 
-		dom.triggerEvent(component.refs.el0, 'keyup', {
+		dom.triggerEvent(component.refs.el0, 'keydown', {
 			keyCode: 38
 		});
 		assert.strictEqual(prevActiveElement, document.activeElement);
@@ -73,7 +73,7 @@ describe('KeyboardFocusManager', function() {
 		manager = new KeyboardFocusManager(component, 'button');
 		manager.start();
 
-		dom.triggerEvent(component.refs.el0, 'keyup', {
+		dom.triggerEvent(component.refs.el0, 'keydown', {
 			keyCode: 39
 		});
 		assert.strictEqual(component.refs.el1, document.activeElement);
@@ -84,7 +84,7 @@ describe('KeyboardFocusManager', function() {
 		manager = new KeyboardFocusManager(component, 'button');
 		manager.start();
 
-		dom.triggerEvent(component.refs.el0, 'keyup', {
+		dom.triggerEvent(component.refs.el0, 'keydown', {
 			keyCode: 40
 		});
 		assert.strictEqual(component.refs.el1, document.activeElement);
@@ -96,12 +96,12 @@ describe('KeyboardFocusManager', function() {
 		manager.start();
 
 		const prevActiveElement = document.activeElement;
-		dom.triggerEvent(component.refs.el2, 'keyup', {
+		dom.triggerEvent(component.refs.el2, 'keydown', {
 			keyCode: 39
 		});
 		assert.strictEqual(prevActiveElement, document.activeElement);
 
-		dom.triggerEvent(component.refs.el2, 'keyup', {
+		dom.triggerEvent(component.refs.el2, 'keydown', {
 			keyCode: 40
 		});
 		assert.strictEqual(prevActiveElement, document.activeElement);
@@ -113,7 +113,7 @@ describe('KeyboardFocusManager', function() {
 		manager.start();
 
 		const prevActiveElement = document.activeElement;
-		dom.triggerEvent(component.refs.el0, 'keyup', {
+		dom.triggerEvent(component.refs.el0, 'keydown', {
 			keyCode: 10
 		});
 		assert.strictEqual(prevActiveElement, document.activeElement);
@@ -135,7 +135,7 @@ describe('KeyboardFocusManager', function() {
 		manager.start();
 
 		const prevActiveElement = document.activeElement;
-		dom.triggerEvent(component.element.childNodes[0], 'keyup', {
+		dom.triggerEvent(component.element.childNodes[0], 'keydown', {
 			keyCode: 40
 		});
 		assert.strictEqual(prevActiveElement, document.activeElement);
@@ -157,7 +157,7 @@ describe('KeyboardFocusManager', function() {
 		manager.start();
 
 		const prevActiveElement = document.activeElement;
-		dom.triggerEvent(component.refs.button0, 'keyup', {
+		dom.triggerEvent(component.refs.button0, 'keydown', {
 			keyCode: 40
 		});
 		assert.strictEqual(prevActiveElement, document.activeElement);
@@ -168,7 +168,7 @@ describe('KeyboardFocusManager', function() {
 		manager = new KeyboardFocusManager(component, 'li');
 		manager.start();
 
-		dom.triggerEvent(component.refs.el0, 'keyup', {
+		dom.triggerEvent(component.refs.el0, 'keydown', {
 			keyCode: 40
 		});
 		assert.notStrictEqual(component.refs.el1, document.activeElement);
@@ -189,7 +189,7 @@ describe('KeyboardFocusManager', function() {
 		manager = new KeyboardFocusManager(component);
 		manager.start();
 
-		dom.triggerEvent(component.refs.el0, 'keyup', {
+		dom.triggerEvent(component.refs.el0, 'keydown', {
 			keyCode: 40
 		});
 		assert.strictEqual(component.refs.el1, document.activeElement);
@@ -211,7 +211,7 @@ describe('KeyboardFocusManager', function() {
 		manager = new KeyboardFocusManager(component, 'button');
 		manager.start();
 
-		dom.triggerEvent(component.refs.el0, 'keyup', {
+		dom.triggerEvent(component.refs.el0, 'keydown', {
 			keyCode: 39
 		});
 		assert.strictEqual(component.refs.el2, document.activeElement);
@@ -221,7 +221,7 @@ describe('KeyboardFocusManager', function() {
 		component = new TestComponent();
 		manager = new KeyboardFocusManager(component, 'button');
 
-		dom.triggerEvent(component.refs.el0, 'keyup', {
+		dom.triggerEvent(component.refs.el0, 'keydown', {
 			keyCode: 40
 		});
 		assert.notStrictEqual(component.refs.el1, document.activeElement);
@@ -233,7 +233,7 @@ describe('KeyboardFocusManager', function() {
 		manager.start();
 		manager.stop();
 
-		dom.triggerEvent(component.refs.el0, 'keyup', {
+		dom.triggerEvent(component.refs.el0, 'keydown', {
 			keyCode: 40
 		});
 		assert.notStrictEqual(component.refs.el1, document.activeElement);
@@ -245,7 +245,7 @@ describe('KeyboardFocusManager', function() {
 		manager.start();
 		manager.start();
 
-		dom.triggerEvent(component.refs.el1, 'keyup', {
+		dom.triggerEvent(component.refs.el1, 'keydown', {
 			keyCode: 37
 		});
 		assert.strictEqual(component.refs.el0, document.activeElement);
@@ -258,7 +258,7 @@ describe('KeyboardFocusManager', function() {
 				.setCircularLength(3)
 				.start();
 
-			dom.triggerEvent(component.refs.el0, 'keyup', {
+			dom.triggerEvent(component.refs.el0, 'keydown', {
 				keyCode: 37
 			});
 			assert.strictEqual(component.refs.el2, document.activeElement);
@@ -270,7 +270,7 @@ describe('KeyboardFocusManager', function() {
 				.setCircularLength(3)
 				.start();
 
-			dom.triggerEvent(component.refs.el0, 'keyup', {
+			dom.triggerEvent(component.refs.el0, 'keydown', {
 				keyCode: 38
 			});
 			assert.strictEqual(component.refs.el2, document.activeElement);
@@ -282,7 +282,7 @@ describe('KeyboardFocusManager', function() {
 				.setCircularLength(3)
 				.start();
 
-			dom.triggerEvent(component.refs.el2, 'keyup', {
+			dom.triggerEvent(component.refs.el2, 'keydown', {
 				keyCode: 39
 			});
 			assert.strictEqual(component.refs.el0, document.activeElement);
@@ -294,7 +294,7 @@ describe('KeyboardFocusManager', function() {
 				.setCircularLength(3)
 				.start();
 
-			dom.triggerEvent(component.refs.el2, 'keyup', {
+			dom.triggerEvent(component.refs.el2, 'keydown', {
 				keyCode: 40
 			});
 			assert.strictEqual(component.refs.el0, document.activeElement);
@@ -306,12 +306,12 @@ describe('KeyboardFocusManager', function() {
 				.setCircularLength(3)
 				.start();
 
-			dom.triggerEvent(component.refs.el0, 'keyup', {
+			dom.triggerEvent(component.refs.el0, 'keydown', {
 				keyCode: 39
 			});
 			assert.strictEqual(component.refs.el1, document.activeElement);
 
-			dom.triggerEvent(component.refs.el1, 'keyup', {
+			dom.triggerEvent(component.refs.el1, 'keydown', {
 				keyCode: 40
 			});
 			assert.strictEqual(component.refs.el2, document.activeElement);
@@ -323,12 +323,12 @@ describe('KeyboardFocusManager', function() {
 				.setCircularLength(3)
 				.start();
 
-			dom.triggerEvent(component.refs.el2, 'keyup', {
+			dom.triggerEvent(component.refs.el2, 'keydown', {
 				keyCode: 37
 			});
 			assert.strictEqual(component.refs.el1, document.activeElement);
 
-			dom.triggerEvent(component.refs.el1, 'keyup', {
+			dom.triggerEvent(component.refs.el1, 'keydown', {
 				keyCode: 38
 			});
 			assert.strictEqual(component.refs.el0, document.activeElement);
@@ -342,7 +342,7 @@ describe('KeyboardFocusManager', function() {
 				.setFocusHandler(() => component.refs.el2)
 				.start();
 
-			dom.triggerEvent(component.refs.el0, 'keyup', {
+			dom.triggerEvent(component.refs.el0, 'keydown', {
 				keyCode: 10
 			});
 			assert.strictEqual(component.refs.el2, document.activeElement);
@@ -354,7 +354,7 @@ describe('KeyboardFocusManager', function() {
 				.setFocusHandler(() => 'el2')
 				.start();
 
-			dom.triggerEvent(component.refs.el0, 'keyup', {
+			dom.triggerEvent(component.refs.el0, 'keydown', {
 				keyCode: 10
 			});
 			assert.strictEqual(component.refs.el2, document.activeElement);
@@ -367,7 +367,7 @@ describe('KeyboardFocusManager', function() {
 				.start();
 
 			var prevActiveElement = document.activeElement;
-			dom.triggerEvent(component.refs.el0, 'keyup', {
+			dom.triggerEvent(component.refs.el0, 'keydown', {
 				keyCode: 39
 			});
 			assert.strictEqual(prevActiveElement, document.activeElement);
@@ -379,7 +379,7 @@ describe('KeyboardFocusManager', function() {
 				.setFocusHandler(() => true)
 				.start();
 
-			dom.triggerEvent(component.refs.el0, 'keyup', {
+			dom.triggerEvent(component.refs.el0, 'keydown', {
 				keyCode: 39
 			});
 			assert.strictEqual(component.refs.el1, document.activeElement);
