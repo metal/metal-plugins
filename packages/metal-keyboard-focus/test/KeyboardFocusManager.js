@@ -195,6 +195,28 @@ describe('KeyboardFocusManager', function() {
 		assert.strictEqual(component.refs.el1, document.activeElement);
 	});
 
+	it('should skip elements with "data-unfocusable" set to true when focusing', function() {
+		class TestComponentUnfocusable extends Component {
+			render() {
+				IncrementalDOM.elementOpen('div');
+				IncrementalDOM.elementVoid('button', null, null, 'ref', 'el0');
+				IncrementalDOM.elementVoid('button', null, null, 'ref', 'el1', 'data-unfocusable', 'true');
+				IncrementalDOM.elementVoid('button', null, null, 'ref', 'el2');
+				IncrementalDOM.elementClose('div');
+			}
+		}
+		TestComponentUnfocusable.RENDERER = IncrementalDomRenderer;
+
+		component = new TestComponentUnfocusable();
+		manager = new KeyboardFocusManager(component, 'button');
+		manager.start();
+
+		dom.triggerEvent(component.refs.el0, 'keyup', {
+			keyCode: 39
+		});
+		assert.strictEqual(component.refs.el2, document.activeElement);
+	});
+
 	it('should not change focus when key is pressed before starting the manager', function() {
 		component = new TestComponent();
 		manager = new KeyboardFocusManager(component, 'button');

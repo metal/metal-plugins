@@ -59,6 +59,23 @@ class KeyboardFocusManager extends Disposable {
 	}
 
 	/**
+	 * Gets the next focusable element, that is, the next element that doesn't
+	 * have the `data-unfocusable` attribute set to `true`.
+	 * @param {number} position
+	 * @param {number} increment
+	 * @return {Element}
+	 * @protected
+	 */
+	getNextFocusable_(position, increment) {
+		let element;
+		do {
+			position += increment;
+			element = this.component_.refs[this.buildRef_(position)];
+		} while (element && element.getAttribute('data-unfocusable') === 'true');
+		return element;
+	}
+
+	/**
 	 * Handles a `keyup` event. Decides if a new element should be focused
 	 * according to the key that was pressed.
 	 * @param {!Event} event
@@ -96,11 +113,11 @@ class KeyboardFocusManager extends Disposable {
 			case 37:
 			case 38:
 				// Left/up arrow keys will focus the previous element.
-				return this.buildRef_(position - 1);
+				return this.getNextFocusable_(position, -1);
 			case 39:
 			case 40:
 				// Right/down arrow keys will focus the next element.
-				return this.buildRef_(position + 1);
+				return this.getNextFocusable_(position, 1);
 		}
 	}
 
