@@ -1,6 +1,7 @@
 'use strict';
 
-import { core, Disposable } from 'metal';
+import core from 'metal';
+import EventEmitter from 'metal-events';
 
 /**
  * Listens to keyboard events and uses them to move focus between different
@@ -13,7 +14,7 @@ import { core, Disposable } from 'metal';
  * It's possible to fully customize this behavior by passing a function to
  * `setFocusHandler`. For more details check this function's docs.
  */
-class KeyboardFocusManager extends Disposable {
+class KeyboardFocusManager extends EventEmitter {
 	/**
 	 * Constructor for `KeyboardFocusManager`.
 	 * @param {!Component} component
@@ -53,17 +54,19 @@ class KeyboardFocusManager extends Disposable {
 	 * @param {string} prefix
 	 * @param {number} position
 	 * @param {number} increment
-	 * @return {Element}
+	 * @return {string}
 	 * @protected
 	 */
 	getNextFocusable_(prefix, position, increment) {
 		const initialPosition = position;
 		let element;
+		let ref;
 		do {
 			position = this.increment_(position, increment);
-			element = this.component_.refs[this.buildRef_(prefix, position)];
+			ref = this.buildRef_(prefix, position);
+			element = this.component_.refs[ref];
 		} while (this.isFocusable_(element) && position !== initialPosition);
-		return element;
+		return element ? ref : null;
 	}
 
 	/**
@@ -77,11 +80,17 @@ class KeyboardFocusManager extends Disposable {
 		if (!this.focusHandler_ || element === true) {
 			element = this.handleKeyDefault_(event);
 		}
+
+		const originalValue = element;
 		if (!core.isElement(element)) {
 			element = this.component_.refs[element];
 		}
 		if (element) {
 			element.focus();
+			this.emit(KeyboardFocusManager.EVENT_FOCUSED, {
+				element,
+				ref: core.isString(originalValue) ? originalValue : null
+			});
 		}
 	}
 
@@ -204,6 +213,10 @@ class KeyboardFocusManager extends Disposable {
 	}
 }
 
+// Event emitted when a selected element was focused via the keyboard.
+KeyboardFocusManager.EVENT_FOCUSED = 'focused';
+
+// The regex used to extract the position from an element's ref.
 KeyboardFocusManager.REF_REGEX = /.+-(\d+)$/;
 
 export default KeyboardFocusManager;

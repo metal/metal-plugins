@@ -251,6 +251,22 @@ describe('KeyboardFocusManager', function() {
 		assert.strictEqual(component.refs['el-0'], document.activeElement);
 	});
 
+	it('should emit event when element is focused', function() {
+		component = new TestComponent();
+		manager = new KeyboardFocusManager(component, 'button');
+		manager.start();
+
+		const listener = sinon.stub();
+		manager.on(KeyboardFocusManager.EVENT_FOCUSED, listener);
+		dom.triggerEvent(component.refs['el-0'], 'keydown', {
+			keyCode: 39
+		});
+		assert.strictEqual(1, listener.callCount);
+		assert.ok(listener.args[0][0]);
+		assert.strictEqual('el-1', listener.args[0][0].ref);
+		assert.strictEqual(component.refs['el-1'], listener.args[0][0].element);
+	});
+
 	describe('setCircularLength', function() {
 		it('should focus last element when the left arrow key is pressed on first element', function() {
 			component = new TestComponent();
@@ -348,6 +364,22 @@ describe('KeyboardFocusManager', function() {
 			assert.strictEqual(component.refs['el-2'], document.activeElement);
 		});
 
+		it('should emit event for element focused due to the custom focus handler', function() {
+			component = new TestComponent();
+			manager = new KeyboardFocusManager(component, 'button')
+				.setFocusHandler(() => component.refs['el-2'])
+				.start();
+
+			const listener = sinon.stub();
+			manager.on(KeyboardFocusManager.EVENT_FOCUSED, listener);
+			dom.triggerEvent(component.refs['el-0'], 'keydown', {
+				keyCode: 10
+			});
+			assert.strictEqual(1, listener.callCount);
+			assert.ok(!listener.args[0][0].ref);
+			assert.strictEqual(component.refs['el-2'], listener.args[0][0].element);
+		});
+
 		it('should focus the element with the ref returned by the custom focus handler', function() {
 			component = new TestComponent();
 			manager = new KeyboardFocusManager(component, 'button')
@@ -358,6 +390,22 @@ describe('KeyboardFocusManager', function() {
 				keyCode: 10
 			});
 			assert.strictEqual(component.refs['el-2'], document.activeElement);
+		});
+
+		it('should emit event for element focused due to the custom focus handler via ref', function() {
+			component = new TestComponent();
+			manager = new KeyboardFocusManager(component, 'button')
+				.setFocusHandler(() => 'el-2')
+				.start();
+
+			const listener = sinon.stub();
+			manager.on(KeyboardFocusManager.EVENT_FOCUSED, listener);
+			dom.triggerEvent(component.refs['el-0'], 'keydown', {
+				keyCode: 10
+			});
+			assert.strictEqual(1, listener.callCount);
+			assert.strictEqual('el-2', listener.args[0][0].ref);
+			assert.strictEqual(component.refs['el-2'], listener.args[0][0].element);
 		});
 
 		it('should not focus on any element if the custom focus handler returns nothing', function() {
