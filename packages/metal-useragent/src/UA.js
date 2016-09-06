@@ -28,6 +28,36 @@ class UA {
 	}
 
 	/**
+	 * Gets the native platform string from navigator if it exists. If
+	 * navigator or navigator.platform string is missing, returns an empty
+	 * string.
+	 * @return {string}
+	 * @private
+	 * @static
+	 */
+	static getNativePlatform() {
+		var navigator = UA.globals.window.navigator;
+		if (navigator) {
+			var platform = navigator.platform;
+			if (platform) {
+				return platform;
+			}
+		}
+		return '';
+	}
+
+	/**
+	 * Whether the platform contains the given string, ignoring case.
+	 * @param {string} str
+	 * @return {boolean}
+	 * @private
+	 * @static
+	*/
+	static matchPlatform(str) {
+		return UA.platform.indexOf(str) !== -1;
+	}
+
+	/**
 	 * Whether the user agent contains the given string, ignoring case.
 	 * @param {string} str
 	 * @return {boolean}
@@ -43,13 +73,34 @@ class UA {
 	 * @param {string} userAgent The user agent string.
 	 * @static
 	 */
-	static testUserAgent(userAgent) {
+	static testUserAgent(userAgent, platform) {
 		/**
 		 * Holds the user agent value extracted from browser native user agent.
 		 * @type {string}
 		 * @static
 		 */
 		UA.userAgent = userAgent;
+
+		/**
+		 * Holds the platform value extracted from browser native platform.
+		 * @type {string}
+		 * @static
+		 */
+		UA.platform = platform;
+
+		/**
+		 * Whether the user's OS is Mac.
+		 * @type {boolean}
+		 * @static
+		 */
+		UA.isMac = UA.matchPlatform('Mac');
+
+		/**
+		 * Whether the user's OS is Win.
+		 * @type {boolean}
+		 * @static
+		 */
+		UA.isWin = UA.matchPlatform('Win');
 
 		/**
 		 * Whether the user's browser is Opera.
@@ -111,6 +162,6 @@ UA.globals = {
 	window: window
 };
 
-UA.testUserAgent(UA.getNativeUserAgent());
+UA.testUserAgent(UA.getNativeUserAgent(), UA.getNativePlatform());
 
 export default UA;

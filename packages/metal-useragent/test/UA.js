@@ -14,7 +14,7 @@ describe('UA', function() {
 		UA.globals.window = {
 			navigator: null
 		};
-		UA.testUserAgent(UA.getNativeUserAgent());
+		UA.testUserAgent(UA.getNativeUserAgent(), UA.getNativePlatform());
 		assert.notOk(UA.isChrome);
 		assert.notOk(UA.isEdge);
 		assert.notOk(UA.isFirefox);
@@ -30,7 +30,7 @@ describe('UA', function() {
 				userAgent: null
 			}
 		};
-		UA.testUserAgent(UA.getNativeUserAgent());
+		UA.testUserAgent(UA.getNativeUserAgent(), UA.getNativePlatform());
 		assert.notOk(UA.isChrome);
 		assert.notOk(UA.isEdge);
 		assert.notOk(UA.isFirefox);
@@ -107,13 +107,37 @@ describe('UA', function() {
 			testAgents.SAFARI_MAC,
 			testAgents.SAFARI_WINDOWS], ['isSafari']);
 	});
+
+	describe('Platform', function() {
+		it('should not detect platform when navigator is not present', function() {
+			UA.globals.window = {
+				navigator: null,
+				platform: null
+			};
+			UA.testUserAgent(UA.getNativeUserAgent(), UA.getNativePlatform());
+			assert.notOk(UA.isMac);
+			assert.notOk(UA.isWin);
+		});
+
+		it('should detect Mac', function() {
+			UA.testUserAgent('', 'MacIntel');
+			assert.ok(UA.isMac);
+			assert.notOk(UA.isWin);
+		});
+
+		it('should detect Windows', function() {
+			UA.testUserAgent('', 'Windows');
+			assert.notOk(UA.isMac);
+			assert.ok(UA.isWin);
+		});
+	});
 });
 
 // Helpers ---------------------------------------------------------------------
 
 function simulatesAndCheckEachUserAgentDetected(simulateUserAgents, detectedUserAgents) {
 	simulateUserAgents.forEach((simulateUserAgent) => {
-		UA.testUserAgent(simulateUserAgent);
+		UA.testUserAgent(simulateUserAgent, '');
 		checkEachUserAgentDetected(simulateUserAgent, detectedUserAgents);
 	});
 }
