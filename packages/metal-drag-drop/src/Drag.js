@@ -226,9 +226,9 @@ class Drag extends State {
 	 * @protected
 	 */
 	constrain_(region) {
-		this.constrainToAxis_(region);
 		this.constrainToSteps_(region);
 		this.constrainToRegion_(region);
+		this.constrainToAxis_(region);
 	}
 
 	/**

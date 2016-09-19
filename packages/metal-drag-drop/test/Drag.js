@@ -1015,6 +1015,29 @@ describe('Drag', function() {
 
 			assert.strictEqual(0, listener.callCount);
 		});
+
+		it('should not try to change fixed axis due to region constrain', function() {
+			drag = new Drag({
+				axis: 'x',
+				constrain: {
+					bottom: 10,
+					left: 0,
+					right: 100,
+					top: 0
+				},
+				sources: item
+			});
+
+			var listener = sinon.stub();
+			drag.once(Drag.Events.DRAG, listener);
+
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 30, 30);
+
+			assert.strictEqual(1, listener.callCount);
+			assert.strictEqual(30, listener.args[0][0].x);
+			assert.strictEqual(20, listener.args[0][0].y);
+		});
 	});
 
 	describe('Steps', function() {
