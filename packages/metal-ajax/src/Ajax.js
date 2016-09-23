@@ -1,6 +1,6 @@
 'use strict';
 
-import { core } from 'metal';
+import { isDef, isDefAndNotNull } from 'metal';
 import Uri from 'metal-uri';
 import { CancellablePromise as Promise } from 'metal-promise';
 
@@ -90,9 +90,9 @@ class Ajax {
 			});
 		}
 
-		request.send(core.isDef(body) ? body : null);
+		request.send(isDef(body) ? body : null);
 
-		if (core.isDefAndNotNull(opt_timeout)) {
+		if (isDefAndNotNull(opt_timeout)) {
 			var timeout = setTimeout(function() {
 				promise.cancel('Request timeout');
 			}, opt_timeout);
