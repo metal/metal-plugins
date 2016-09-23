@@ -1,6 +1,6 @@
 'use strict';
 
-import { core, string } from 'metal';
+import { isDef, string } from 'metal';
 import parse from './parse';
 import { MultiMap } from 'metal-structs';
 
@@ -51,7 +51,7 @@ class Uri {
 	 */
 	addParameterValue(name, value) {
 		this.ensureQueryInitialized_();
-		if (core.isDef(value)) {
+		if (isDef(value)) {
 			value = String(value);
 		}
 		this.query.add(name, value);
@@ -83,7 +83,7 @@ class Uri {
 		if (search) {
 			search.substring(1).split('&').forEach((param) => {
 				var [key, value] = param.split('=');
-				if (core.isDef(value)) {
+				if (isDef(value)) {
 					value = Uri.urlDecode(value);
 				}
 				this.addParameterValue(key, value);
@@ -216,7 +216,7 @@ class Uri {
 		this.getParameterNames().forEach((name) => {
 			this.getParameterValues(name).forEach((value) => {
 				querystring += name;
-				if (core.isDef(value)) {
+				if (isDef(value)) {
 					querystring += '=' + encodeURIComponent(value);
 				}
 				querystring += '&';

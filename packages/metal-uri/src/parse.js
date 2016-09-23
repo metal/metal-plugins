@@ -1,6 +1,6 @@
 'use strict';
 
-import { core } from 'metal';
+import { isFunction } from 'metal';
 import parseFromAnchor from './parseFromAnchor';
 
 /**
@@ -9,7 +9,7 @@ import parseFromAnchor from './parseFromAnchor';
  * @param {*=} opt_uri Optional string URI to parse
  */
 function parse(opt_uri) {
-	if (core.isFunction(URL) && URL.length) {
+	if (isFunction(URL) && URL.length) {
 		return new URL(opt_uri);
 	} else {
 		return parseFromAnchor(opt_uri);
