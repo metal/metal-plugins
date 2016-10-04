@@ -26,4 +26,8 @@ describe('StorageMechanism', function() {
 	it('should size throws unimplemented exception', function() {
 		assert.throws(() => new StorageMechanism().size(), Error);
 	});
+
+	it('should assume mechanism is supported by default', function() {
+		assert.ok(StorageMechanism.isSupported());
+	});
 });
