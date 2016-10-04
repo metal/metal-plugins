@@ -39,6 +39,13 @@ class LocalStorageMechanism extends StorageMechanism {
 	/**
 	 * @inheritDoc
 	 */
+	static isSupported() {
+		return typeof window !== 'undefined';
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	remove(key) {
 		this.storage().removeItem(key);
 	}
@@ -58,7 +65,7 @@ class LocalStorageMechanism extends StorageMechanism {
 	}
 }
 
-if (typeof window !== 'undefined') {
+if (LocalStorageMechanism.isSupported()) {
 	LocalStorageMechanism.globals = {
 		localStorage: window.localStorage
 	};
