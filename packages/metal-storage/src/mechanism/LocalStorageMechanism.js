@@ -58,8 +58,10 @@ class LocalStorageMechanism extends StorageMechanism {
 	}
 }
 
-LocalStorageMechanism.globals = {
-	localStorage: window.localStorage
-};
+if (typeof window !== 'undefined') {
+	LocalStorageMechanism.globals = {
+		localStorage: window.localStorage
+	};
+}
 
 export default LocalStorageMechanism;
