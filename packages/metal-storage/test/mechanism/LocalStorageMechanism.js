@@ -3,6 +3,10 @@
 import LocalStorageMechanism from '../../src/mechanism/LocalStorageMechanism';
 
 describe('LocalStorageMechanism', function() {
+	if (!LocalStorageMechanism.isSupported()) {
+		return;
+	}
+
 	beforeEach(function() {
 		var storage = new LocalStorageMechanism();
 		storage.clear();

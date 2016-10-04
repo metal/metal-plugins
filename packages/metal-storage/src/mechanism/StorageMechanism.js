@@ -34,6 +34,14 @@ class StorageMechanism {
 	}
 
 	/**
+	 * Checks if this mechanism is supported in the current environment.
+	 * Subclasses should override this when necessary.
+	 */
+	static isSupported() {
+		return true;
+	}
+
+	/**
 	 * Returns the list of keys stored in the Storage object.
 	 * @param {!Array<string>} keys
 	 */
