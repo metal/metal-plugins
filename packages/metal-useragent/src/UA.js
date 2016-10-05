@@ -73,7 +73,7 @@ class UA {
 	 * @param {string} userAgent The user agent string.
 	 * @static
 	 */
-	static testUserAgent(userAgent, platform) {
+	static testUserAgent(userAgent = '', platform = '') {
 		/**
 		 * Holds the user agent value extracted from browser native user agent.
 		 * @type {string}
