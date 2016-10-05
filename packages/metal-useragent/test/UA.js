@@ -10,6 +10,20 @@ describe('UA', function() {
 		UA.globals.window = window;
 	});
 
+	it('should not throw error if testUserAgent is called without params', function() {
+		UA.globals.window = {
+			navigator: null
+		};
+		UA.testUserAgent();
+		assert.notOk(UA.isChrome);
+		assert.notOk(UA.isEdge);
+		assert.notOk(UA.isFirefox);
+		assert.notOk(UA.isIe);
+		assert.notOk(UA.isIeOrEdge);
+		assert.notOk(UA.isOpera);
+		assert.notOk(UA.isSafari);
+	});
+
 	it('should not detect user agent when navigator is not present', function() {
 		UA.globals.window = {
 			navigator: null
