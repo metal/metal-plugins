@@ -21,8 +21,8 @@ describe('getChildrenMap', function() {
 
 			const obj = getChildrenMap(arr);
 
-			assert.strictEqual(obj.get('foo'), arr[0]);
-			assert.strictEqual(obj.get('bar'), arr[1]);
+			expect(obj.get('foo')).toBe(arr[0]);
+			expect(obj.get('bar')).toBe(arr[1]);
 		}
 	);
 
@@ -44,8 +44,8 @@ describe('getChildrenMap', function() {
 
 			const obj = getChildrenMap(arr);
 
-			assert.strictEqual(obj.get(2), arr[0]);
-			assert.strictEqual(obj.get(1), arr[1]);
+			expect(obj.get(2)).toBe(arr[0]);
+			expect(obj.get(1)).toBe(arr[1]);
 		}
 	);
 });
@@ -70,11 +70,11 @@ describe('mergeChildrenMap', function() {
 
 			let mergedMap = mergeChildrenMap(newMap, oldMap);
 
-			assert.strictEqual(mergedMap.get(2), 'two');
+			expect(mergedMap.get(2)).toBe('two');
 
 			mergedMap = mergeChildrenMap(oldMap, newMap);
 
-			assert.strictEqual(mergedMap.get(2), 'twotwo');
+			expect(mergedMap.get(2)).toBe('twotwo');
 		}
 	);
 
@@ -83,7 +83,7 @@ describe('mergeChildrenMap', function() {
 		() => {
 			const obj = mergeChildrenMap();
 
-			assert(obj instanceof Map);
+			expect(obj instanceof Map);
 		}
 	);
 });
