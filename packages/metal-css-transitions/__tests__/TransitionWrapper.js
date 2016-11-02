@@ -19,7 +19,7 @@ describe('TransitionWrapper', function() {
 		() => {
 			component = new TransitionWrapper();
 
-			assert(component);
+			expect(component);
 		}
 	);
 
@@ -37,7 +37,7 @@ describe('TransitionWrapper', function() {
 
 			component = new App();
 
-			assert.strictEqual('wrapper', component.element.className);
+			expect(component.element.className).toBe('wrapper');
 		}
 	);
 
@@ -56,7 +56,7 @@ describe('TransitionWrapper', function() {
 
 			component = new App();
 
-			assert(component.element.querySelector('.child'));
+			expect(component.element.querySelector('.child'));
 		}
 	);
 
@@ -76,24 +76,27 @@ describe('TransitionWrapper', function() {
 
 			component = new App();
 
-			assert(component.element.querySelector('.child1'));
-			assert(component.element.querySelector('.child2'));
+			expect(component.element.querySelector('.child1'));
+			expect(component.element.querySelector('.child2'));
 		}
 	);
 
 	it(
 		'should call setState when new children are supplied',
 		(done) => {
+			const spy = jest.fn();
+
 			component = new TransitionWrapper();
 
-			const setStateSpy = sinon.spy(component, 'setState');
+			component.setState = spy;
 
-			assert.isFalse(setStateSpy.called);
+			expect(spy).not.toBeCalled();
 			component.props.children = [{}];
 
 			setTimeout(
 				() => {
-					assert.isTrue(setStateSpy.called);
+					expect(spy).toBeCalled();
+
 					done()
 				},
 				100
@@ -104,16 +107,20 @@ describe('TransitionWrapper', function() {
 	it(
 		'should call syncChildren with empty args',
 		(done) => {
+			const spy = jest.fn();
+
 			component = new TransitionWrapper();
 
-			const setStateSpy = sinon.spy(component, 'setState');
+			component.setState = spy;
 
-			assert.isFalse(setStateSpy.called);
+			expect(spy).not.toBeCalled();
+
 			component.props.children = [];
 
 			setTimeout(
 				() => {
-					assert.isTrue(setStateSpy.called);
+					expect(spy).toBeCalled();
+
 					done()
 				},
 				100
@@ -126,11 +133,11 @@ describe('TransitionWrapper', function() {
 		() => {
 			component = new TransitionWrapper();
 
-			const stubFn = sinon.stub();
+			const spy = jest.fn();
 			const KEY = 1;
 
 			component.components[KEY] = {
-				enter: stubFn
+				enter: spy
 			};
 
 			const children = [
@@ -141,11 +148,11 @@ describe('TransitionWrapper', function() {
 				}
 			];
 
-			assert.isFalse(stubFn.called);
+			expect(spy).not.toBeCalled();
 
 			component.handleChildrenEnter_(children, new Map())
 
-			assert.isTrue(stubFn.called);
+			expect(spy).toBeCalled();
 
 			delete component.components[KEY];
 		}
@@ -156,11 +163,11 @@ describe('TransitionWrapper', function() {
 		() => {
 			component = new TransitionWrapper();
 
-			const stubFn = sinon.stub();
+			const spy = jest.fn();
 			const KEY = 1;
 
 			component.components[KEY] = {
-				leave: stubFn
+				leave: spy
 			};
 
 			const children = [
@@ -171,11 +178,11 @@ describe('TransitionWrapper', function() {
 				}
 			];
 
-			assert.isFalse(stubFn.called);
+			expect(spy).not.toBeCalled();
 
 			component.handleChildrenLeave_(children, new Map())
 
-			assert.isTrue(stubFn.called);
+			expect(spy).toBeCalled();
 
 			delete component.components[KEY];
 		}
@@ -191,7 +198,7 @@ describe('TransitionWrapper', function() {
 
 			component.finishLeave_(KEY);
 
-			assert.isFalse(component.state.childrenMap_.has(KEY));
+			expect(component.state.childrenMap_.has(KEY)).toBeFalsy();
 		}
 	);
 
@@ -219,8 +226,8 @@ describe('TransitionWrapper', function() {
 
 			let children = component.element.querySelectorAll('.child');
 
-			assert.strictEqual(children[0].innerHTML, '1');
-			assert.strictEqual(children[1].innerHTML, '2');
+			expect(children[0].innerHTML).toBe('1');
+			expect(children[1].innerHTML).toBe('2');
 
 			component.props.children = [
 				<div class="child" key={3}>3</div>,
@@ -232,9 +239,9 @@ describe('TransitionWrapper', function() {
 				() => {
 					children = component.element.querySelectorAll('.child');
 
-					assert.strictEqual(children[0].innerHTML, '3');
-					assert.strictEqual(children[1].innerHTML, '1');
-					assert.strictEqual(children[2].innerHTML, '2');
+					expect(children[0].innerHTML).toBe('3');
+					expect(children[1].innerHTML).toBe('1');
+					expect(children[2].innerHTML).toBe('2');
 
 					done();
 				},
@@ -267,8 +274,8 @@ describe('TransitionWrapper', function() {
 
 			let children = component.element.querySelectorAll('.child');
 
-			assert.strictEqual(children[0].innerHTML, '1');
-			assert.strictEqual(children[1].innerHTML, '2');
+			expect(children[0].innerHTML).toBe('1');
+			expect(children[1].innerHTML).toBe('2');
 
 			component.props.children = [
 				<div class="child" key="3">3</div>,
@@ -280,9 +287,9 @@ describe('TransitionWrapper', function() {
 				() => {
 					children = component.element.querySelectorAll('.child');
 
-					assert.strictEqual(children[0].innerHTML, '3');
-					assert.strictEqual(children[1].innerHTML, '1');
-					assert.strictEqual(children[2].innerHTML, '2');
+					expect(children[0].innerHTML).toBe('3');
+					expect(children[1].innerHTML).toBe('1');
+					expect(children[2].innerHTML).toBe('2');
 
 					done();
 				},

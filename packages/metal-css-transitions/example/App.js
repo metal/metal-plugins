@@ -25,7 +25,7 @@ class App extends Component {
 	render() {
 		return (
 			<span>
-				<button data-onclick={this.onClick_}>ClickMe</button>
+				<button onClick={this.onClick_}>ClickMe</button>
 
 				<Transition name="test">
 					{
@@ -41,4 +41,4 @@ App.STATE = {
 	index: Config.value(1)
 };
 
-export default App;
+window.ExampleApp = App;

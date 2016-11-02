@@ -19,7 +19,7 @@ describe('TransitionChild', function() {
 		() => {
 			const component = new TransitionChild();
 
-			assert(component);
+			expect(component);
 		}
 	);
 
@@ -27,13 +27,13 @@ describe('TransitionChild', function() {
 		const component = new TransitionChild();
 		const node = document.createElement('div');
 
-		assert.strictEqual('', node.className);
+		expect(node.className).toBe('');
 		component.delayActive_('test', node);
-		assert.strictEqual('', node.className);
+		expect(node.className).toBe('');
 
 		setTimeout(
 			() => {
-				assert.strictEqual('test', node.className);
+				expect(node.className).toBe('test');
 
 				done();
 			},
@@ -63,15 +63,15 @@ describe('TransitionChild', function() {
 
 		transitionChild.transition_(TRANS_TYPE, null, DELAY);
 
-		assert.strictEqual(`${TRANS_NAME}-${TRANS_TYPE}`, appElem.className);
+		expect(appElem.className).toBe(`${TRANS_NAME}-${TRANS_TYPE}`);
 
 		setTimeout(
 			() => {
-				assert.strictEqual(`${TRANS_NAME}-${TRANS_TYPE} ${TRANS_NAME}-${TRANS_TYPE}-active`, appElem.className);
+				expect(appElem.className).toBe(`${TRANS_NAME}-${TRANS_TYPE} ${TRANS_NAME}-${TRANS_TYPE}-active`);
 
 				setTimeout(
 					() => {
-						assert.strictEqual('', appElem.className);
+						expect(appElem.className).toBe('');
 
 						done();
 					},
@@ -84,7 +84,7 @@ describe('TransitionChild', function() {
 
 	it('should execute callbackFn', function(done) {
 		const DELAY = 100;
-		const stubFn = sinon.stub();
+		const stubFn = jest.fn();
 
 		class App extends Component {
 			render() {
@@ -101,11 +101,11 @@ describe('TransitionChild', function() {
 
 		transitionChild.transition_(null, stubFn, DELAY);
 
-		assert.isFalse(stubFn.called);
+		expect(stubFn).not.toBeCalled();
 
 		setTimeout(
 			() => {
-				assert.isTrue(stubFn.called);
+				expect(stubFn).toBeCalled();
 
 				done();
 			},
@@ -114,32 +114,37 @@ describe('TransitionChild', function() {
 	});
 
 	it('should call transition_ with appear', function() {
+		const spy = jest.fn();
 		const component = new TransitionChild();
 
-		const transitionFn = sinon.stub(component, 'transition_');
+		component.transition_ = spy;
 
-		assert.isFalse(transitionFn.called);
+		expect(spy).not.toBeCalled();
 		component.appear();
-		assert.isTrue(transitionFn.calledWith('appear'));
+		expect(spy).toBeCalledWith('appear');
 	});
 
 	it('should call transition_ with enter', function() {
+		const spy = jest.fn();
 		const component = new TransitionChild();
 
-		const transitionFn = sinon.stub(component, 'transition_');
+		component.transition_ = spy;
 
-		assert.isFalse(transitionFn.called);
+		expect(spy).not.toBeCalled();
 		component.enter();
-		assert.isTrue(transitionFn.calledWith('enter'));
+		expect(spy).toBeCalledWith('enter');
 	});
 
 	it('should call transition_ with leave', function() {
+		const spy = jest.fn();
+		const callback = jest.fn();
+
 		const component = new TransitionChild();
 
-		const transitionFn = sinon.stub(component, 'transition_');
+		component.transition_ = spy;
 
-		assert.isFalse(transitionFn.called);
-		component.leave();
-		assert.isTrue(transitionFn.calledWith('leave'));
+		expect(spy).not.toBeCalled();
+		component.leave(callback);
+		expect(spy).toBeCalledWith('leave', callback);
 	});
 });
