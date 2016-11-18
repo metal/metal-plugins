@@ -64,6 +64,9 @@ class TransitionChild extends Component {
 	 */
 	transition_(type, finishCallback) {
 		const node = this.element;
+		if (!node) {
+			return;
+		}
 
 		const className = `${this.props.name}-${type}`;
 		const activeClassName = `${className}-active`;
