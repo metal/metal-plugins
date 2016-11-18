@@ -4,7 +4,7 @@ Metal component used to apply css transitions
 
 ## Implementation
 
-Check out [App.js](example/App.js) & [app.css](demos/app.css) for an example of implementation.
+Check out [App.js](demo/App.js) & [app.css](demo/app.css) for an example of implementation.
 
 ## Setup
 
@@ -23,4 +23,4 @@ can find it [here](https://nodejs.org).
   npm run build
   ```
 
-4. Open the demo at demos/index.html on your browser.
+4. Open the demo at demo/index.html on your browser.

@@ -16,9 +16,9 @@
     "test"
   ],
   "scripts": {
-    "build": "browserify ./example/App.js -o ./demos/App.js -t [ babelify --presets [ metal-jsx es2015 ] ]",
-    "compile": "babel -d lib/ src/",
-    "prepublish": "npm run compile",
+    "build": "babel -d lib/ src/",
+    "build:demo": "browserify ./demo/App.js -o ./demo/App-build.js -t [ babelify --presets [ metal-jsx es2015 ] ]",
+    "prepublish": "npm run build",
     "test": "jest"
   },
   "keywords": [
