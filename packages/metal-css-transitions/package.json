@@ -33,7 +33,7 @@
   "dependencies": {
     "metal-anim": "^2.0.0",
     "metal-dom": "^2.5.3",
-    "metal-jsx": "^2.5.4"
+    "metal-jsx": "^2.5.9"
   },
   "devDependencies": {
     "babel-cli": "^6.11.4",
