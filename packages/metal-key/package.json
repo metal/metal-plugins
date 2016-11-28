@@ -1,6 +1,6 @@
 {
   "name": "metal-key",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Adds a custom event that helps listen to key events in a cleaner way",
   "license": "BSD",
   "repository": "metal/metal-key",
