@@ -365,12 +365,11 @@ describe('connect', function() {
 
 			component = new MainComponent();
 			var child = component.components.connect;
-			var renderer = child.getRenderer();
-			sinon.spy(renderer, 'renderIncDom');
+			sinon.spy(child, 'render');
 
 			component.props.bar = 'bar2';
 			component.once('stateSynced', function() {
-				assert.strictEqual(0, renderer.renderIncDom.callCount);
+				assert.strictEqual(0, child.render.callCount);
 				done();
 			});
 		});
@@ -380,12 +379,11 @@ describe('connect', function() {
 
 			component = new MainComponent();
 			var child = component.components.connect;
-			var renderer = child.getRenderer();
-			sinon.spy(renderer, 'renderIncDom');
+			sinon.spy(child, 'render');
 
 			component.props.foo = 'foo2';
 			component.once('stateSynced', function() {
-				assert.strictEqual(1, renderer.renderIncDom.callCount);
+				assert.strictEqual(1, child.render.callCount);
 				done();
 			});
 		});
@@ -395,12 +393,11 @@ describe('connect', function() {
 
 			component = new MainComponent();
 			var child = component.components.connect;
-			var renderer = child.getRenderer();
-			sinon.spy(renderer, 'renderIncDom');
+			sinon.spy(child, 'render');
 
 			component.props.bar = 'bar2';
 			component.once('stateSynced', function() {
-				assert.strictEqual(1, renderer.renderIncDom.callCount);
+				assert.strictEqual(1, child.render.callCount);
 				done();
 			});
 		});

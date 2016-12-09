@@ -10,7 +10,7 @@ describe('Provider', function() {
 
 	beforeEach(function() {
 		ChildComponent = createTestComponentClass();
-		ChildComponent.RENDERER.prototype.renderIncDom = function() {
+		ChildComponent.RENDERER.renderIncDom = function() {
 			IncrementalDOM.elementOpen('child');
 			IncrementalDOM.text('Child');
 			IncrementalDOM.elementClose('child');
@@ -25,7 +25,7 @@ describe('Provider', function() {
 
 	it('should render a single child received', function() {
 		var TestComponent = createTestComponentClass();
-		TestComponent.RENDERER.prototype.renderIncDom = function() {
+		TestComponent.RENDERER.renderIncDom = function() {
 			IncrementalDOM.elementOpen(Provider, null, null, 'ref', 'provider');
 			IncrementalDOM.elementVoid(ChildComponent, null, null, 'ref', 'child');
 			IncrementalDOM.elementClose(Provider);
@@ -47,7 +47,7 @@ describe('Provider', function() {
 
 	it('should render multiple children received and wrap with a span', function() {
 		var TestComponent = createTestComponentClass();
-		TestComponent.RENDERER.prototype.renderIncDom = function() {
+		TestComponent.RENDERER.renderIncDom = function() {
 			IncrementalDOM.elementOpen(Provider, null, null, 'ref', 'provider');
 			IncrementalDOM.elementVoid(ChildComponent, null, null, 'ref', 'child');
 			IncrementalDOM.elementVoid(ChildComponent, null, null, 'ref', 'child2');
@@ -71,7 +71,7 @@ describe('Provider', function() {
 	it('should pass store object down to children as context', function() {
 		var store = {};
 		var TestComponent = createTestComponentClass();
-		TestComponent.RENDERER.prototype.renderIncDom = function() {
+		TestComponent.RENDERER.renderIncDom = function() {
 			IncrementalDOM.elementOpen(Provider, null, null, 'ref', 'provider', 'store', store);
 			IncrementalDOM.elementVoid(ChildComponent, null, null, 'ref', 'child');
 			IncrementalDOM.elementClose(Provider);
@@ -93,8 +93,8 @@ describe('Provider', function() {
 	}
 
 	function createIncrementalDomRenderer() {
-		class TestRenderer extends IncrementalDomRenderer {
+		class TestRenderer extends IncrementalDomRenderer.constructor {
 		}
-		return TestRenderer;
+		return new TestRenderer();
 	}
 });
