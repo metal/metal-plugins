@@ -458,6 +458,31 @@ describe('connect', () => {
 				done();
 			});
 		});
+
+		it('should call mapDispatchToProps when it depends on ownProps and they have changed', done => {
+			let callCount = 0;
+
+			const mapDispatchStub = (state, ownProps) => {
+				callCount++;
+				return state;
+			};
+
+			TestComponent = connect(
+				sinon.stub().returnsArg(0),
+				mapDispatchStub
+			)(OriginalComponent);
+
+			component = new MainComponent({
+				store: buildStoreStub()
+			});
+
+			assert.strictEqual(1, callCount);
+			component.props.foo = 'bar';
+			component.once('rendered', () => {
+				assert.strictEqual(2, callCount);
+				done();
+			});
+		});
 	});
 });
 
