@@ -205,7 +205,9 @@ describe('connect', function() {
 				bar: 'bar'
 			});
 
-			var TestComponent = connect(({ foo }) => ({ foo }))(OriginalComponent);
+			var TestComponent = connect(({foo}) => ({
+				foo
+			}))(OriginalComponent);
 			component = new TestComponent({
 				store
 			});
@@ -315,7 +317,9 @@ describe('connect', function() {
 			function foo(val) {
 				return val;
 			}
-			var TestComponent = connect(null, {foo})(OriginalComponent);
+			var TestComponent = connect(null, {
+				foo
+			})(OriginalComponent);
 			component = new TestComponent({
 				store: buildStoreStub()
 			});
@@ -389,7 +393,9 @@ describe('connect', function() {
 		});
 
 		it('should update inner component when non pure component\'s prop values don\'t change', function(done) {
-			TestComponent = connect(null, null, null, { pure: false })(OriginalComponent);
+			TestComponent = connect(null, null, null, {
+				pure: false
+			})(OriginalComponent);
 
 			component = new MainComponent();
 			var child = component.components.connect;
@@ -403,7 +409,9 @@ describe('connect', function() {
 		});
 
 		it('should always pass the newest state to mapStoreStateToProps', function(done) {
-			var mapStub = sinon.stub().returns({bar: 'baz'});
+			var mapStub = sinon.stub().returns({
+				bar: 'baz'
+			});
 			var storeStub = buildStoreStub();
 			storeStub.getState.returns(1)
 				.onFirstCall().returns(0);
@@ -425,6 +433,28 @@ describe('connect', function() {
 			component.once('rendered', function() {
 				assert.strictEqual(3, mapStub.callCount);
 				assert.strictEqual(mapStub.thirdCall.args[0], 1);
+				done();
+			});
+		});
+
+		it('should not call mapStateToProps when it does not depend on ownProps and only props change', function(done) {
+			let callCount = 0;
+
+			const store = buildStoreStub();
+			const mapStub = state => {
+				callCount++;
+				return state;
+			};
+
+			TestComponent = connect(mapStub)(OriginalComponent);
+			component = new MainComponent({
+				store
+			});
+
+			assert.strictEqual(1, callCount);
+			component.props.foo = 'bar';
+			component.once('rendered', () => {
+				assert.strictEqual(1, callCount);
 				done();
 			});
 		});

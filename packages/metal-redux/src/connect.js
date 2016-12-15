@@ -4,7 +4,9 @@ import { core, object } from 'metal';
 import JSXComponent from 'metal-jsx';
 
 const defaultMapStateToProps = () => ({});
-const defaultMapDispatchToProps = dispatch => ({ dispatch });
+const defaultMapDispatchToProps = dispatch => ({
+	dispatch
+});
 const defaultMergeProps = (stateProps, dispatchProps, parentProps) => {
 	return object.mixin({}, stateProps, dispatchProps, parentProps);
 };
@@ -31,14 +33,15 @@ const wrapActionCreators = actionCreators => {
  *     the default behavior won't pass any store state data to the component.
  * @param {Object.<string, function>|function(!function())=} mapDispatchToProps
  *     An optional function or object that maps action creators to the store's
- *     `dispatch` function. If it is a function, it receives the store's `dispatch`
- *     function and returns an object with props data that should be used by the
- *     component. If it is an object, each value is assumed to be an action creator,
- *     which will automaitcally be wrapped by the `dispatch` function so that they
- *     can be invoked directly. If this param isn't given, the default behavior will
- *     pass the `dispatch` function itself to the props object.
+ *     `dispatch` function. If it is a function, it receives the store's
+ *     `dispatch` function, the component's props, and returns an object with
+ *     props data that should be used by the component. If it is an object,
+ *     each value is assumed to be an action creator, which will automatically
+ *     be wrapped by the `dispatch` function so that they can be invoked
+ *     directly. If this param isn't given, the default behavior will be pass
+ *     the `dispatch` function itself to the props object.
  * @param {function(!Object, !Object, !Object)=} An optional function that
- *     recevies all three original props objects (the one built from store
+ *     receives all three original props objects (the one built from store
  *     state, the one build from the dispatch function and the one from the
  *     parent), and merges them. By default a simple merge is done.
  * @param {Object=} options An optional options object. Available options are:
@@ -51,17 +54,20 @@ const wrapActionCreators = actionCreators => {
  *     wraps it, adding to it the helper behaviors provided by this module.
  */
 function connect(mapStoreStateToProps, mapDispatchToProps, mergeProps, options = {}) {
-	var shouldSubscribe = !!mapStoreStateToProps;
+	const shouldSubscribe = !!mapStoreStateToProps;
 	mapStoreStateToProps = mapStoreStateToProps || defaultMapStateToProps;
 	mergeProps = mergeProps || defaultMergeProps;
-	var { pure = true } = options;
+	const {pure = true} = options;
 
-	var mapDispatchIsFunc = core.isFunction(mapDispatchToProps);
+	const mapDispatchIsFunc = core.isFunction(mapDispatchToProps);
 	if (!mapDispatchIsFunc && core.isObject(mapDispatchToProps)) {
 		mapDispatchToProps = wrapActionCreators(mapDispatchToProps);
 	} else if (!mapDispatchIsFunc) {
 		mapDispatchToProps = defaultMapDispatchToProps;
 	}
+
+	const mapStateDependsOnProps = mapStoreStateToProps.length !== 1;
+	const mapDispatchDependsOnProps = mapDispatchToProps.length !== 1;
 
 	return function(WrappedComponent) {
 		class Connect extends JSXComponent {
@@ -87,15 +93,17 @@ function connect(mapStoreStateToProps, mapDispatchToProps, mergeProps, options =
 			/**
 			 * Returns the full props data that should be passed to the wrapped
 			 * component.
-			 * @param {!Object}
+			 * @return {!object}
 			 * @protected
 			 */
 			getChildProps_() {
+				this.storeProps_ = this.getStoreProps_(this.state.storeState);
+
 				return object.mixin(
 					mergeProps(
-						this.props,
-						this.getStoreProps_(this.state.storeState),
-						mapDispatchToProps(this.getStore().dispatch)
+						this.storeProps_,
+						this.getDispatchProps_(),
+						this.props
 					),
 					{
 						ref: 'child'
@@ -104,11 +112,28 @@ function connect(mapStoreStateToProps, mapDispatchToProps, mergeProps, options =
 			}
 
 			/**
+			 * Returns the wrapped dispatch props that should be passed to the
+			 * wrapped component.
+			 * @return {!object}
+			 * @protected
+			 */
+			getDispatchProps_() {
+				if (!this.wasRendered ||
+					(mapDispatchDependsOnProps && this.hasOwnPropsChanged_)) {
+					this.dispatchProps_ = mapDispatchToProps(
+						this.getStore().dispatch,
+						this.props
+					);
+				}
+				return this.dispatchProps_;
+			}
+
+			/**
 			 * Gets the redux store currently being used by this component.
 			 * @return {!Object}
 			 */
 			getStore() {
-				var store = this.props.store || this.context.store;
+				const store = this.props.store || this.context.store;
 				if (!store) {
 					throw new Error(
 						'Could not find "store" either in "context" or "props". Either ' +
@@ -122,15 +147,18 @@ function connect(mapStoreStateToProps, mapDispatchToProps, mergeProps, options =
 			/**
 			 * Returns the props data built from the store state, that should be
 			 * passed to the wrapped component.
-			 * @param {!Object}
+			 * @param {bool} storeState
+			 * @return {!object}
 			 * @protected
 			 */
 			getStoreProps_(storeState) {
-				this.storeProps_ = mapStoreStateToProps(
-					storeState,
-					this.props
-				);
-				return this.storeProps_;
+				let {storeProps_} = this;
+				if (!this.wasRendered ||
+					storeState !== this.state.storeState ||
+					(mapStateDependsOnProps && this.hasOwnPropsChanged_)) {
+					storeProps_ = mapStoreStateToProps(storeState, this.props);
+				}
+				return storeProps_;
 			}
 
 			/**
@@ -139,12 +167,16 @@ function connect(mapStoreStateToProps, mapDispatchToProps, mergeProps, options =
 			 * @protected
 			 */
 			handleStoreChange_() {
-				var storeState = this.getStore().getState();
-				var prevStoreProps = this.storeProps_;
-				var storeProps = this.getStoreProps_(storeState);
-				if (!object.shallowEqual(prevStoreProps, storeProps)) {
+				const storeState = this.getStore().getState();
+
+				const {storeProps_} = this;
+				const newStoreProps = this.getStoreProps_(storeState);
+
+				if (newStoreProps && !object.shallowEqual(storeProps_, newStoreProps)) {
 					this.hasStorePropsChanged_ = true;
+					this.storeProps_ = newStoreProps;
 				}
+
 				this.state.storeState = storeState;
 			}
 
