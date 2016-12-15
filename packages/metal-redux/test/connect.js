@@ -5,11 +5,11 @@ import connect from '../src/connect';
 import JSXComponent from 'metal-jsx';
 import Provider from '../src/Provider';
 
-describe('connect', function() {
-	var OriginalComponent;
-	var component;
+describe('connect', () => {
+	let OriginalComponent;
+	let component;
 
-	beforeEach(function() {
+	beforeEach(() => {
 		class TestComponent extends JSXComponent {
 			render() {
 				return <div>{this.props.foo}</div>;
@@ -18,61 +18,61 @@ describe('connect', function() {
 		OriginalComponent = TestComponent;
 	});
 
-	afterEach(function() {
+	afterEach(() => {
 		if (component) {
 			component.dispose();
 		}
 	});
 
-	it('should return another component constructor when "connect" is called', function() {
-		var TestComponent = connect()(OriginalComponent);
+	it('should return another component constructor when "connect" is called', () => {
+		const TestComponent = connect()(OriginalComponent);
 		assert.notStrictEqual(OriginalComponent, TestComponent);
 	});
 
-	it('should render the received component', function() {
-		var TestComponent = connect()(OriginalComponent);
+	it('should render the received component', () => {
+		const TestComponent = connect()(OriginalComponent);
 		component = new TestComponent({
 			store: buildStoreStub()
 		});
 
-		var names = Object.keys(component.components);
+		const names = Object.keys(component.components);
 		assert.strictEqual(1, names.length);
 
-		var child = component.components[names[0]];
+		const child = component.components[names[0]];
 		assert.ok(child instanceof OriginalComponent);
 		assert.strictEqual(component.element, child.element);
 	});
 
-	it('should pass any props data to the inner component', function() {
-		var TestComponent = connect()(OriginalComponent);
+	it('should pass any props data to the inner component', () => {
+		const TestComponent = connect()(OriginalComponent);
 		component = new TestComponent({
 			foo: 'foo',
 			store: buildStoreStub()
 		});
 
-		var names = Object.keys(component.components);
-		var child = component.components[names[0]];
+		const names = Object.keys(component.components);
+		const child = component.components[names[0]];
 		assert.strictEqual('foo', child.props.foo);
 	});
 
-	describe('store', function() {
-		it('should return the store being used', function() {
-			var store = buildStoreStub();
-			var TestComponent = connect()(OriginalComponent);
+	describe('store', () => {
+		it('should return the store being used', () => {
+			const store = buildStoreStub();
+			const TestComponent = connect()(OriginalComponent);
 			component = new TestComponent({
 				store
 			});
 			assert.strictEqual(store, component.getStore());
 		});
 
-		it('should throw error if no store is passed to wrapped component', function() {
-			var TestComponent = connect()(OriginalComponent);
+		it('should throw error if no store is passed to wrapped component', () => {
+			const TestComponent = connect()(OriginalComponent);
 			assert.throws(() => component = new TestComponent());
 		});
 
-		it('should use store from Provider parent when there is one', function() {
-			var store = buildStoreStub();
-			var TestComponent = connect()(OriginalComponent);
+		it('should use store from Provider parent when there is one', () => {
+			const store = buildStoreStub();
+			const TestComponent = connect()(OriginalComponent);
 			class MainComponent extends JSXComponent {
 				render() {
 					return <Provider store={store}>
@@ -82,42 +82,42 @@ describe('connect', function() {
 			}
 
 			component = new MainComponent();
-			var child = component.components.connect;
+			const child = component.components.connect;
 			assert.strictEqual(store, child.getStore());
 		});
 
-		it('should not subscribe to given store by default', function() {
-			var store = buildStoreStub();
-			var TestComponent = connect()(OriginalComponent);
+		it('should not subscribe to given store by default', () => {
+			const store = buildStoreStub();
+			const TestComponent = connect()(OriginalComponent);
 			component = new TestComponent({
 				store
 			});
 			assert.strictEqual(0, store.subscribe.callCount);
 		});
 
-		it('should not throw error when detaching and no "mapStoreStateToProps" was given', function() {
-			var TestComponent = connect()(OriginalComponent);
+		it('should not throw error when detaching and no "mapStoreStateToProps" was given', () => {
+			const TestComponent = connect()(OriginalComponent);
 			component = new TestComponent({
 				store: buildStoreStub()
 			});
 			assert.doesNotThrow(() => component.detach());
 		});
 
-		it('should subscribe to given store if "mapStoreStateToProps" is given', function() {
-			var store = buildStoreStub();
-			var TestComponent = connect(sinon.stub())(OriginalComponent);
+		it('should subscribe to given store if "mapStoreStateToProps" is given', () => {
+			const store = buildStoreStub();
+			const TestComponent = connect(sinon.stub())(OriginalComponent);
 			component = new TestComponent({
 				store
 			});
 			assert.strictEqual(1, store.subscribe.callCount);
 		});
 
-		it('should unsubscribe to given store when detached if "mapStoreStateToProps"', function() {
-			var unsubscribe = sinon.stub();
-			var store = buildStoreStub();
+		it('should unsubscribe to given store when detached if "mapStoreStateToProps"', () => {
+			const unsubscribe = sinon.stub();
+			const store = buildStoreStub();
 			store.subscribe.returns(unsubscribe);
 
-			var TestComponent = connect(sinon.stub())(OriginalComponent);
+			const TestComponent = connect(sinon.stub())(OriginalComponent);
 			component = new TestComponent({
 				store
 			});
@@ -128,25 +128,25 @@ describe('connect', function() {
 		});
 	});
 
-	describe('mapStoreStateToProps', function() {
-		it('should not pass anything from store state to inner component by default', function() {
-			var store = buildStoreStub();
+	describe('mapStoreStateToProps', () => {
+		it('should not pass anything from store state to inner component by default', () => {
+			const store = buildStoreStub();
 			store.getState.returns({
 				foo: 'foo'
 			});
 
-			var TestComponent = connect()(OriginalComponent);
+			const TestComponent = connect()(OriginalComponent);
 			component = new TestComponent({
 				store
 			});
 
-			var names = Object.keys(component.components);
-			var child = component.components[names[0]];
+			const names = Object.keys(component.components);
+			const child = component.components[names[0]];
 			assert.ok(!child.props.foo);
 		});
 
-		it('should pass data specified by "mapStoreStateToProps" to inner component', function() {
-			var store = buildStoreStub();
+		it('should pass data specified by "mapStoreStateToProps" to inner component', () => {
+			const store = buildStoreStub();
 			store.getState.returns({
 				foo: 'foo',
 				bar: 'bar'
@@ -158,30 +158,30 @@ describe('connect', function() {
 				};
 			}
 
-			var TestComponent = connect(mapStoreStateToProps)(OriginalComponent);
+			const TestComponent = connect(mapStoreStateToProps)(OriginalComponent);
 			component = new TestComponent({
 				store
 			});
 
-			var names = Object.keys(component.components);
-			var child = component.components[names[0]];
+			const names = Object.keys(component.components);
+			const child = component.components[names[0]];
 			assert.strictEqual('foo', child.props.foo);
 			assert.ok(!child.props.bar);
 		});
 
-		it('should update inner component when the store state it uses changes', function(done) {
-			var store = buildStoreStub();
+		it('should update inner component when the store state it uses changes', done => {
+			const store = buildStoreStub();
 			store.getState.returns({
 				foo: 'foo'
 			});
 
-			var TestComponent = connect(state => state)(OriginalComponent);
+			const TestComponent = connect(state => state)(OriginalComponent);
 			component = new TestComponent({
 				store
 			});
 
-			var names = Object.keys(component.components);
-			var child = component.components[names[0]];
+			const names = Object.keys(component.components);
+			const child = component.components[names[0]];
 			assert.strictEqual('foo', child.props.foo);
 			assert.strictEqual('foo', child.element.textContent);
 
@@ -191,34 +191,34 @@ describe('connect', function() {
 			});
 			store.subscribe.args[0][0]();
 
-			component.once('rendered', function() {
+			component.once('rendered', () => {
 				assert.strictEqual('bar', child.props.foo);
 				assert.strictEqual('bar', child.element.textContent);
 				done();
 			});
 		});
 
-		it('should not update inner component when the store state it doesn\'t use changes', function(done) {
-			var store = buildStoreStub();
+		it('should not update inner component when the store state it doesn\'t use changes', done => {
+			const store = buildStoreStub();
 			store.getState.returns({
 				foo: 'foo',
 				bar: 'bar'
 			});
 
-			var TestComponent = connect(({foo}) => ({
+			const TestComponent = connect(({foo}) => ({
 				foo
 			}))(OriginalComponent);
 			component = new TestComponent({
 				store
 			});
 
-			var names = Object.keys(component.components);
-			var child = component.components[names[0]];
+			const names = Object.keys(component.components);
+			const child = component.components[names[0]];
 			assert.strictEqual('foo', child.props.foo);
 			assert.strictEqual('foo', child.element.textContent);
 			assert.strictEqual(1, store.subscribe.callCount);
 
-			var listener = sinon.stub();
+			const listener = sinon.stub();
 			component.on('rendered', listener);
 
 			store.getState.returns({
@@ -227,25 +227,25 @@ describe('connect', function() {
 			});
 			store.subscribe.args[0][0]();
 
-			async.nextTick(function() {
+			async.nextTick(() => {
 				assert.strictEqual(0, listener.callCount);
 				done();
 			});
 		});
 
-		it('should subscribe parent components to store before child components', function() {
-			var store = buildStoreStub();
+		it('should subscribe parent components to store before child components', () => {
+			const store = buildStoreStub();
 			store.getState.returns({
 				foo: 'foo'
 			});
 
-			var ChildComponent = connect(state => state)(OriginalComponent);
+			const ChildComponent = connect(state => state)(OriginalComponent);
 			class ParentComponent extends JSXComponent {
 				render() {
 					return <ChildComponent store={this.props.store} />
 				}
 			}
-			var TestComponent = connect(state => state)(ParentComponent);
+			const TestComponent = connect(state => state)(ParentComponent);
 
 			component = new TestComponent({
 				store
@@ -259,13 +259,13 @@ describe('connect', function() {
 			assert.strictEqual(store.getState(), component.state.storeState);
 		});
 
-		it('should receive store state and component props in "mapStoreStateToProps"', function() {
-			var store = buildStoreStub();
-			var storeState = {};
+		it('should receive store state and component props in "mapStoreStateToProps"', () => {
+			const store = buildStoreStub();
+			const storeState = {};
 			store.getState.returns(storeState);
 
-			var mapDispatchToProps = sinon.stub();
-			var TestComponent = connect(mapDispatchToProps)(OriginalComponent);
+			const mapDispatchToProps = sinon.stub();
+			const TestComponent = connect(mapDispatchToProps)(OriginalComponent);
 			component = new TestComponent({
 				store,
 				foo: 'foo'
@@ -277,33 +277,33 @@ describe('connect', function() {
 		});
 	});
 
-	describe('mapDispatchToProps', function() {
-		it('should pass dispatch function from store to inner component by default', function() {
-			var store = buildStoreStub();
-			var TestComponent = connect()(OriginalComponent);
+	describe('mapDispatchToProps', () => {
+		it('should pass dispatch function from store to inner component by default', () => {
+			const store = buildStoreStub();
+			const TestComponent = connect()(OriginalComponent);
 			component = new TestComponent({
 				store
 			});
 
-			var names = Object.keys(component.components);
-			var child = component.components[names[0]];
+			const names = Object.keys(component.components);
+			const child = component.components[names[0]];
 			assert.strictEqual(store.dispatch, child.props.dispatch);
 		});
 
-		it('should pass data specified by "mapDispatchToProps" instead of dispatch function to inner component', function() {
+		it('should pass data specified by "mapDispatchToProps" instead of dispatch function to inner component', () => {
 			function mapDispatchToProps(dispatch) {
 				return {
 					foo: () => dispatch('foo')
 				};
 			}
-			var TestComponent = connect(null, mapDispatchToProps)(OriginalComponent);
+			const TestComponent = connect(null, mapDispatchToProps)(OriginalComponent);
 			component = new TestComponent({
 				store: buildStoreStub()
 			});
 
-			var store = component.getStore();
-			var names = Object.keys(component.components);
-			var child = component.components[names[0]];
+			const store = component.getStore();
+			const names = Object.keys(component.components);
+			const child = component.components[names[0]];
 			assert.ok(!child.props.dispatch);
 			assert.ok(child.props.foo);
 			assert.strictEqual(0, store.dispatch.callCount);
@@ -313,20 +313,20 @@ describe('connect', function() {
 			assert.strictEqual('foo', store.dispatch.args[0][0]);
 		});
 
-		it('should wrap an object of action creators with the store\'s dispatch function', function() {
+		it('should wrap an object of action creators with the store\'s dispatch function', () => {
 			function foo(val) {
 				return val;
 			}
-			var TestComponent = connect(null, {
+			const TestComponent = connect(null, {
 				foo
 			})(OriginalComponent);
 			component = new TestComponent({
 				store: buildStoreStub()
 			});
 
-			var store = component.getStore();
-			var names = Object.keys(component.components);
-			var child = component.components[names[0]];
+			const store = component.getStore();
+			const names = Object.keys(component.components);
+			const child = component.components[names[0]];
 			assert.ok(!child.props.dispatch);
 			assert.ok(child.props.foo);
 			assert.strictEqual(0, store.dispatch.callCount);
@@ -336,11 +336,11 @@ describe('connect', function() {
 		});
 	});
 
-	describe('pure', function() {
-		var MainComponent;
-		var TestComponent;
+	describe('pure', () => {
+		let MainComponent;
+		let TestComponent;
 
-		beforeEach(function() {
+		beforeEach(() => {
 			class MainTempComponent extends JSXComponent {
 				render() {
 					return <TestComponent
@@ -364,11 +364,11 @@ describe('connect', function() {
 			};
 		});
 
-		it('should not update inner component when pure component\'s prop values don\'t change', function(done) {
+		it('should not update inner component when pure component\'s prop values don\'t change', done => {
 			TestComponent = connect()(OriginalComponent);
 
 			component = new MainComponent();
-			var child = component.components.connect;
+			const child = component.components.connect;
 			sinon.spy(child, 'render');
 
 			component.props.bar = 'bar2';
@@ -378,11 +378,11 @@ describe('connect', function() {
 			});
 		});
 
-		it('should update inner component when pure component\'s prop values change', function(done) {
+		it('should update inner component when pure component\'s prop values change', done => {
 			TestComponent = connect()(OriginalComponent);
 
 			component = new MainComponent();
-			var child = component.components.connect;
+			const child = component.components.connect;
 			sinon.spy(child, 'render');
 
 			component.props.foo = 'foo2';
@@ -392,13 +392,13 @@ describe('connect', function() {
 			});
 		});
 
-		it('should update inner component when non pure component\'s prop values don\'t change', function(done) {
+		it('should update inner component when non pure component\'s prop values don\'t change', done => {
 			TestComponent = connect(null, null, null, {
 				pure: false
 			})(OriginalComponent);
 
 			component = new MainComponent();
-			var child = component.components.connect;
+			const child = component.components.connect;
 			sinon.spy(child, 'render');
 
 			component.props.bar = 'bar2';
@@ -408,11 +408,11 @@ describe('connect', function() {
 			});
 		});
 
-		it('should always pass the newest state to mapStoreStateToProps', function(done) {
-			var mapStub = sinon.stub().returns({
+		it('should always pass the newest state to mapStoreStateToProps', done => {
+			const mapStub = sinon.stub().returns({
 				bar: 'baz'
 			});
-			var storeStub = buildStoreStub();
+			const storeStub = buildStoreStub();
 			storeStub.getState.returns(1)
 				.onFirstCall().returns(0);
 
@@ -422,7 +422,7 @@ describe('connect', function() {
 					store: storeStub
 				}
 			);
-			var emitChange = storeStub.subscribe.firstCall.args[0];
+			const emitChange = storeStub.subscribe.firstCall.args[0];
 			emitChange();
 
 			assert.strictEqual(2, mapStub.callCount);
@@ -430,14 +430,14 @@ describe('connect', function() {
 			assert.strictEqual(mapStub.secondCall.args[0], 1);
 
 			component.props.foo = 'bar';
-			component.once('rendered', function() {
+			component.once('rendered', () => {
 				assert.strictEqual(3, mapStub.callCount);
 				assert.strictEqual(mapStub.thirdCall.args[0], 1);
 				done();
 			});
 		});
 
-		it('should not call mapStateToProps when it does not depend on ownProps and only props change', function(done) {
+		it('should not call mapStateToProps when it does not depend on ownProps and only props change', done => {
 			let callCount = 0;
 
 			const store = buildStoreStub();
@@ -462,10 +462,9 @@ describe('connect', function() {
 });
 
 function buildStoreStub() {
-	var store = {
+	return {
 		dispatch: sinon.stub(),
 		getState: sinon.stub().returns({}),
 		subscribe: sinon.stub().returns(sinon.stub())
 	};
-	return store;
 }

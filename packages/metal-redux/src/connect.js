@@ -93,7 +93,7 @@ function connect(mapStoreStateToProps, mapDispatchToProps, mergeProps, options =
 			/**
 			 * Returns the full props data that should be passed to the wrapped
 			 * component.
-			 * @return {!object}
+			 * @return {!Object}
 			 * @protected
 			 */
 			getChildProps_() {
@@ -118,7 +118,7 @@ function connect(mapStoreStateToProps, mapDispatchToProps, mergeProps, options =
 			 * @protected
 			 */
 			getDispatchProps_() {
-				if (!this.wasRendered ||
+				if (!this.dispatchProps_ ||
 					(mapDispatchDependsOnProps && this.hasOwnPropsChanged_)) {
 					this.dispatchProps_ = mapDispatchToProps(
 						this.getStore().dispatch,
@@ -145,15 +145,15 @@ function connect(mapStoreStateToProps, mapDispatchToProps, mergeProps, options =
 			}
 
 			/**
-			 * Returns the props data built from the store state, that should be
+			 * Returns the props data built from the store state that should be
 			 * passed to the wrapped component.
-			 * @param {bool} storeState
+			 * @param {!object} storeState
 			 * @return {!object}
 			 * @protected
 			 */
 			getStoreProps_(storeState) {
 				let {storeProps_} = this;
-				if (!this.wasRendered ||
+				if (!storeProps_ ||
 					storeState !== this.state.storeState ||
 					(mapStateDependsOnProps && this.hasOwnPropsChanged_)) {
 					storeProps_ = mapStoreStateToProps(storeState, this.props);
@@ -213,7 +213,7 @@ function connect(mapStoreStateToProps, mapDispatchToProps, mergeProps, options =
 			}
 
 			/**
-			 * Checks if the component should be rerendered. If the component is
+			 * Checks if the component should be re-rendered. If the component is
 			 * "pure" then it shouldn't be updated if its data hasn't changed.
 			 * @return {boolean}
 			 */
