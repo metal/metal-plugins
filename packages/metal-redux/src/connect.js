@@ -161,6 +161,14 @@ function connect(mapStoreStateToProps, mapDispatchToProps, mergeProps, options =
 			}
 
 			/**
+			 * Returns the instance of the child component that connect is wrapping
+			 * @return {!object}
+			 */
+			getWrappedInstance() {
+				return this.refs.child;
+			}
+
+			/**
 			 * Handles a store state change. Make sure to only update the wrapped
 			 * component if at least one of its props data changed.
 			 * @protected

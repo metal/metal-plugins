@@ -508,6 +508,16 @@ describe('connect', () => {
 			});
 		});
 	});
+
+	describe('getWrappedInstance', () => {
+		it('should return the child componnet', () => {
+			const TestComponent = connect(sinon.stub())(OriginalComponent);
+			component = new TestComponent({
+				store: buildStoreStub()
+			});
+			assert.instanceOf(component.getWrappedInstance(), OriginalComponent);
+		})
+	})
 });
 
 function buildStoreStub() {
