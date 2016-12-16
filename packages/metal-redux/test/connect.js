@@ -484,6 +484,30 @@ describe('connect', () => {
 			});
 		});
 	});
+
+	describe('mergeProps', () => {
+		it('should be passed the processed props in the correct order', done => {
+			const TestComponent = connect(
+				() => ({
+					mapProp: true
+				}),
+				() => ({
+					dispatchProp: true
+				}),
+				(ownProps, stateProps, dispatchProps) => {
+					assert.propertyVal(ownProps, 'ownProp', true);
+					assert.propertyVal(stateProps, 'mapProp', true);
+					assert.propertyVal(dispatchProps, 'dispatchProp', true);
+					done();
+				}
+			)(OriginalComponent);
+
+			component = new TestComponent({
+				store: buildStoreStub(),
+				ownProp: true
+			});
+		});
+	});
 });
 
 function buildStoreStub() {

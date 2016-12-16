@@ -7,9 +7,7 @@ const defaultMapStateToProps = () => ({});
 const defaultMapDispatchToProps = dispatch => ({
 	dispatch
 });
-const defaultMergeProps = (stateProps, dispatchProps, parentProps) => {
-	return object.mixin({}, stateProps, dispatchProps, parentProps);
-};
+const defaultMergeProps = (...props) => object.mixin({}, ...props);
 const wrapActionCreators = actionCreators => {
 	return dispatch => Object.keys(actionCreators).reduce(
 		(props, key) => {
@@ -40,10 +38,11 @@ const wrapActionCreators = actionCreators => {
  *     be wrapped by the `dispatch` function so that they can be invoked
  *     directly. If this param isn't given, the default behavior will be pass
  *     the `dispatch` function itself to the props object.
- * @param {function(!Object, !Object, !Object)=} An optional function that
- *     receives all three original props objects (the one built from store
- *     state, the one build from the dispatch function and the one from the
- *     parent), and merges them. By default a simple merge is done.
+ * @param {function(!Object, !Object, !Object)=} mergeProps
+ *		 An optional function that receives all three original props objects (the
+ *		 parent's original props, the one built from store state, and the one
+ *		 build from the dispatch function), and merges them. By default a simple
+ *		 merge is done.
  * @param {Object=} options An optional options object. Available options are:
  *       - {boolean} pure: Flag indicating if the component is a "pure"
  *         component. That means that it only depends on the specified store
@@ -101,9 +100,9 @@ function connect(mapStoreStateToProps, mapDispatchToProps, mergeProps, options =
 
 				return object.mixin(
 					mergeProps(
+						this.props,
 						this.storeProps_,
-						this.getDispatchProps_(),
-						this.props
+						this.getDispatchProps_()
 					),
 					{
 						ref: 'child'
