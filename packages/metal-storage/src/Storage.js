@@ -13,7 +13,7 @@ class Storage {
 	 */
 	constructor(mechanism) {
 		assertMechanismDefAndNotNull(mechanism);
-		assertMechanismIntanceOf(mechanism);
+		assertMechanismInstanceOf(mechanism);
 
 		/**
 		 * The mechanism used to persist key-value pairs.
@@ -112,7 +112,7 @@ function assertMechanismDefAndNotNull(mechanism) {
 	}
 }
 
-function assertMechanismIntanceOf(mechanism) {
+function assertMechanismInstanceOf(mechanism) {
 	if (!(mechanism instanceof StorageMechanism)) {
 		throw Error('Storage mechanism must me an implementation of StorageMechanism');
 	}
