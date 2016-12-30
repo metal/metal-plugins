@@ -1,7 +1,5 @@
 'use strict';
 
-import { globals } from 'metal';
-
 /**
  * Metal.js browser user agent detection. It's extremely recommended the usage
  * of feature checking over browser user agent sniffing. Unfortunately, in some
@@ -160,7 +158,9 @@ class UA {
  * @type {object}
  * @static
  */
-UA.globals = globals;
+UA.globals = {
+	window: window
+};
 
 UA.testUserAgent(UA.getNativeUserAgent(), UA.getNativePlatform());
 
