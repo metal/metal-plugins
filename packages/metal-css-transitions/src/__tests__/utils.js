@@ -1,6 +1,6 @@
 'use strict';
 
-import { getChildrenMap, mergeChildrenMap } from '../src/utils';
+import { getChildrenMap, mergeChildrenMap } from '../utils';
 
 describe('getChildrenMap', function() {
 	it(

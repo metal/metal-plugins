@@ -1,7 +1,7 @@
 'use strict';
 import Component from 'metal-jsx';
 
-import TransitionWrapper from '../src/TransitionWrapper';
+import TransitionWrapper from '../TransitionWrapper';
 
 describe('TransitionWrapper', function() {
 	let component;
