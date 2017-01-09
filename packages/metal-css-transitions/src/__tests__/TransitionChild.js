@@ -3,7 +3,7 @@ import Component from 'metal-jsx';
 
 import TransitionChild, { DELAY_TIME } from '../TransitionChild';
 
-describe('TransitionChild', function() {
+describe('TransitionChild', () => {
 	let component;
 
 	afterEach(
@@ -14,16 +14,13 @@ describe('TransitionChild', function() {
 		}
 	);
 
-	it(
-		'renders',
-		() => {
-			const component = new TransitionChild();
+	it('renders', () => {
+		const component = new TransitionChild();
 
-			expect(component);
-		}
-	);
+		expect(component);
+	});
 
-	it('should delay before adding a class', function(done) {
+	it('should delay before adding a class', done => {
 		const component = new TransitionChild();
 		const node = document.createElement('div');
 
@@ -41,7 +38,7 @@ describe('TransitionChild', function() {
 		);
 	});
 
-	it('should add and remove classnames', function(done) {
+	it('should add and remove classnames', done => {
 		const DELAY = 100;
 		const TRANS_NAME = 'test';
 		const TRANS_TYPE = 'appear';
@@ -52,7 +49,7 @@ describe('TransitionChild', function() {
 					<TransitionChild name={TRANS_NAME} ref="transitionChild">
 						<div></div>
 					</TransitionChild>
-					);
+				);
 			}
 		}
 
@@ -82,7 +79,7 @@ describe('TransitionChild', function() {
 		);
 	});
 
-	it('should execute callbackFn', function(done) {
+	it('should execute callbackFn', done => {
 		const DELAY = 100;
 		const stubFn = jest.fn();
 
@@ -92,7 +89,7 @@ describe('TransitionChild', function() {
 					<TransitionChild name="test" ref="transitionChild">
 						<div></div>
 					</TransitionChild>
-					);
+				);
 			}
 		}
 
@@ -113,7 +110,7 @@ describe('TransitionChild', function() {
 		);
 	});
 
-	it('should call transition_ with appear', function() {
+	it('should call transition_ with appear', () => {
 		const spy = jest.fn();
 		const component = new TransitionChild();
 
@@ -124,7 +121,7 @@ describe('TransitionChild', function() {
 		expect(spy).toBeCalledWith('appear');
 	});
 
-	it('should call transition_ with enter', function() {
+	it('should call transition_ with enter', () => {
 		const spy = jest.fn();
 		const component = new TransitionChild();
 
@@ -135,7 +132,7 @@ describe('TransitionChild', function() {
 		expect(spy).toBeCalledWith('enter');
 	});
 
-	it('should call transition_ with leave', function() {
+	it('should call transition_ with leave', () => {
 		const spy = jest.fn();
 		const callback = jest.fn();
 

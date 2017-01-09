@@ -129,16 +129,16 @@ class TransitionWrapper extends Component {
 		return (
 			<span>
 				{!!children.length &&
-			children.map(
-				child => (
-				<TransitionChild name={this.props.name} ref={child.props.key}>
-								{child}
-							</TransitionChild>
-				)
-			)
-			}
+						children.map(
+							child => (
+								<TransitionChild name={this.props.name} ref={child.props.key}>
+									{child}
+								</TransitionChild>
+							)
+						)
+				}
 			</span>
-			);
+		);
 	}
 }
 
