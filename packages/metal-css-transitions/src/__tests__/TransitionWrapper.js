@@ -2,6 +2,7 @@
 import Component from 'metal-jsx';
 
 import TransitionWrapper from '../TransitionWrapper';
+import TransitionChild from '../TransitionChild';
 
 describe('TransitionWrapper', function() {
 	let component;
@@ -264,5 +265,41 @@ describe('TransitionWrapper', function() {
 			},
 			100
 		);
+	});
+
+	it('should not call enter immediately after appear', () => {
+		jest.useFakeTimers();
+
+		const originalEnter = TransitionChild.prototype.enter;
+		const enterSpy = jest.fn(function() {
+			return originalEnter.apply(this, arguments);
+		});
+
+		const originalAppear = TransitionChild.prototype.appear;
+		const appearSpy = jest.fn(function() {
+			return originalAppear.apply(this, arguments);
+		});
+
+		TransitionChild.prototype.enter = enterSpy;
+		TransitionChild.prototype.appear = appearSpy;
+
+		class TestComponent extends Component {
+			render() {
+				return (
+					<TransitionWrapper>
+						<div class="test-child"></div>
+					</TransitionWrapper>
+				);
+			}
+		}
+
+		component = new TestComponent();
+
+		jest.runAllTimers();
+
+		expect(appearSpy).toBeCalled();
+		expect(enterSpy).not.toBeCalled();
+
+		jest.useRealTimers();
 	});
 });

@@ -25,6 +25,8 @@ class TransitionWrapper extends Component {
 	attached() {
 		this.props.children.forEach(
 			child => {
+				this._justAppeared = true;
+
 				if (child && child.props) {
 					const {key} = child.props;
 
@@ -50,12 +52,18 @@ class TransitionWrapper extends Component {
 	}
 
 	/**
-	 * Executes the `enter` method on each new entering child.
+	 * Executes the `enter` method on each new entering child. However, these calls
+	 * will be skipped if this is the first transition since `appear` was called.
 	 * @param {!Array} newChildren Children elements that are entering.
 	 * @param {!Object} prevKeyMap Map of children who are already present.
 	 * @protected
 	 */
 	handleChildrenEnter_(newChildren, prevKeyMap) {
+		if (this._justAppeared) {
+			this._justAppeared = false;
+			return;
+		}
+
 		newChildren.forEach(
 			child => {
 				if (child && child.props) {
