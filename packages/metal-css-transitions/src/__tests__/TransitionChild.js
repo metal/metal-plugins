@@ -1,7 +1,7 @@
 'use strict';
 import Component from 'metal-jsx';
 
-import TransitionChild, { DELAY_TIME } from '../src/TransitionChild';
+import TransitionChild, { DELAY_TIME } from '../TransitionChild';
 
 describe('TransitionChild', function() {
 	let component;
