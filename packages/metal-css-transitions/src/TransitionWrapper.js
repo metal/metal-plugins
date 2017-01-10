@@ -23,10 +23,12 @@ class TransitionWrapper extends Component {
 	 * Executes the `appear` method on each child.
 	 */
 	attached() {
+		if (this.props.children.length) {
+			this._justAppeared = true;
+		}
+
 		this.props.children.forEach(
 			child => {
-				this._justAppeared = true;
-
 				if (child && child.props) {
 					const {key} = child.props;
 
