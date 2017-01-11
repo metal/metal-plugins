@@ -1,4 +1,5 @@
 # metal-css-transitions
+[![Build Status](https://travis-ci.org/bryceosterhaus/metal-css-transitions.svg?branch=master)](https://travis-ci.org/bryceosterhaus/metal-css-transitions)
 
 Metal component used to apply css transitions
 
