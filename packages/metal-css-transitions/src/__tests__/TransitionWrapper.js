@@ -85,7 +85,7 @@ describe('TransitionWrapper', function() {
 			() => {
 				expect(spy).toBeCalled();
 
-				done()
+				done();
 			},
 			100
 		);
@@ -106,7 +106,7 @@ describe('TransitionWrapper', function() {
 			() => {
 				expect(spy).toBeCalled();
 
-				done()
+				done();
 			},
 			100
 		);
@@ -132,7 +132,7 @@ describe('TransitionWrapper', function() {
 
 		expect(spy).not.toBeCalled();
 
-		component.handleChildrenEnter_(children, new Map())
+		component.handleChildrenEnter_(children, new Map());
 
 		expect(spy).toBeCalled();
 
