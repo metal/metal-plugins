@@ -17,6 +17,8 @@
   ],
   "scripts": {
     "build": "babel -d lib/ src/",
+    "format": "eslint . --ignore-pattern node_modules --ignore-pattern lib --fix",
+    "lint": "eslint . --ignore-pattern node_modules --ignore-pattern lib",
     "prepublish": "npm run build",
     "test": "jest"
   },
@@ -40,6 +42,8 @@
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-jest": "^16.0.0",
     "babel-preset-metal-jsx": "0.0.3",
+    "eslint": "^3.13.1",
+    "eslint-plugin-react": "^6.9.0",
     "jest-cli": "^16.0.2"
   }
 }
