@@ -1,6 +1,5 @@
-install:
-  - npm install -g npm@'>=3.0.0'
-  - npm install
+before_install: if [[ `npm -v` != 3* ]]; then npm i -g npm@3; fi
+install: npm install
 language: node_js
 node_js:
   - '4'
