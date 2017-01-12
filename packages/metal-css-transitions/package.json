@@ -17,7 +17,6 @@
   ],
   "scripts": {
     "build": "babel -d lib/ src/",
-    "build:demo": "browserify ./demo/App.js -o ./demo/App-build.js -t [ babelify --presets [ metal-jsx es2015 ] ]",
     "prepublish": "npm run build",
     "test": "jest"
   },
@@ -41,8 +40,6 @@
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-jest": "^16.0.0",
     "babel-preset-metal-jsx": "0.0.3",
-    "babelify": "^7.3.0",
-    "browserify": "^13.1.1",
     "jest-cli": "^16.0.2"
   }
 }
