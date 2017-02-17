@@ -192,7 +192,7 @@ describe('Ajax', function() {
 					assert.ok(reason instanceof Error);
 					done();
 				});
-			this.requests[0].abort();
+			this.requests[0].error();
 		});
 
 	});
