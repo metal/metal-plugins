@@ -3,7 +3,7 @@
   "description": "Metal component used to apply css transitions",
   "version": "2.3.4",
   "license": "BSD",
-  "repository": "https://github.com/metal/metal-css-transisions.git",,
+  "repository": "https://github.com/metal/metal-css-transisions.git",
   "engines": {
     "node": ">=0.12.0",
     "npm": ">=3.0.0"
