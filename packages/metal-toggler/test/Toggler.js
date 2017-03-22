@@ -24,12 +24,12 @@ describe('Toggler', function() {
 			});
 
 			dom.triggerEvent(toggler.header, 'click');
-			assert.ok(!dom.hasClass(toggler.content, Toggler.CSS_COLLAPSED));
-			assert.ok(dom.hasClass(toggler.content, Toggler.CSS_EXPANDED));
+			assert.ok(!dom.hasClass(toggler.content, toggler.collapsedClasses));
+			assert.ok(dom.hasClass(toggler.content, toggler.expandedClasses));
 
 			dom.triggerEvent(toggler.header, 'click');
-			assert.ok(dom.hasClass(toggler.content, Toggler.CSS_COLLAPSED));
-			assert.ok(!dom.hasClass(toggler.content, Toggler.CSS_EXPANDED));
+			assert.ok(dom.hasClass(toggler.content, toggler.collapsedClasses));
+			assert.ok(!dom.hasClass(toggler.content, toggler.expandedClasses));
 		});
 
 		it('should expand/collapse content when ENTER key is pressed on header', function() {
@@ -41,14 +41,14 @@ describe('Toggler', function() {
 			dom.triggerEvent(toggler.header, 'keydown', {
 				keyCode: 13
 			});
-			assert.ok(!dom.hasClass(toggler.content, Toggler.CSS_COLLAPSED));
-			assert.ok(dom.hasClass(toggler.content, Toggler.CSS_EXPANDED));
+			assert.ok(!dom.hasClass(toggler.content, toggler.collapsedClasses));
+			assert.ok(dom.hasClass(toggler.content, toggler.expandedClasses));
 
 			dom.triggerEvent(toggler.header, 'keydown', {
 				keyCode: 13
 			});
-			assert.ok(dom.hasClass(toggler.content, Toggler.CSS_COLLAPSED));
-			assert.ok(!dom.hasClass(toggler.content, Toggler.CSS_EXPANDED));
+			assert.ok(dom.hasClass(toggler.content, toggler.collapsedClasses));
+			assert.ok(!dom.hasClass(toggler.content, toggler.expandedClasses));
 		});
 
 		it('should expand/collapse content when SPACE key is pressed on header', function() {
@@ -60,14 +60,14 @@ describe('Toggler', function() {
 			dom.triggerEvent(toggler.header, 'keydown', {
 				keyCode: 32
 			});
-			assert.ok(!dom.hasClass(toggler.content, Toggler.CSS_COLLAPSED));
-			assert.ok(dom.hasClass(toggler.content, Toggler.CSS_EXPANDED));
+			assert.ok(!dom.hasClass(toggler.content, toggler.collapsedClasses));
+			assert.ok(dom.hasClass(toggler.content, toggler.expandedClasses));
 
 			dom.triggerEvent(toggler.header, 'keydown', {
 				keyCode: 32
 			});
-			assert.ok(dom.hasClass(toggler.content, Toggler.CSS_COLLAPSED));
-			assert.ok(!dom.hasClass(toggler.content, Toggler.CSS_EXPANDED));
+			assert.ok(dom.hasClass(toggler.content, toggler.collapsedClasses));
+			assert.ok(!dom.hasClass(toggler.content, toggler.expandedClasses));
 		});
 
 		it('should not expand/collapse content when any other key is pressed on header', function() {
@@ -79,8 +79,8 @@ describe('Toggler', function() {
 			dom.triggerEvent(toggler.header, 'keydown', {
 				keyCode: 10
 			});
-			assert.ok(dom.hasClass(toggler.content, Toggler.CSS_COLLAPSED));
-			assert.ok(!dom.hasClass(toggler.content, Toggler.CSS_EXPANDED));
+			assert.ok(dom.hasClass(toggler.content, toggler.collapsedClasses));
+			assert.ok(!dom.hasClass(toggler.content, toggler.expandedClasses));
 		});
 
 		it('should add css classes to header when content is expanded/collapsed', function() {
@@ -90,12 +90,12 @@ describe('Toggler', function() {
 			});
 
 			dom.triggerEvent(toggler.header, 'click');
-			assert.ok(!dom.hasClass(toggler.header, Toggler.CSS_HEADER_COLLAPSED));
-			assert.ok(dom.hasClass(toggler.header, Toggler.CSS_HEADER_EXPANDED));
+			assert.ok(!dom.hasClass(toggler.header, toggler.headerCollapsedClasses));
+			assert.ok(dom.hasClass(toggler.header, toggler.headerExpandedClasses));
 
 			dom.triggerEvent(toggler.header, 'click');
-			assert.ok(dom.hasClass(toggler.header, Toggler.CSS_HEADER_COLLAPSED));
-			assert.ok(!dom.hasClass(toggler.header, Toggler.CSS_HEADER_EXPANDED));
+			assert.ok(dom.hasClass(toggler.header, toggler.headerCollapsedClasses));
+			assert.ok(!dom.hasClass(toggler.header, toggler.headerExpandedClasses));
 		});
 
 		it('should not throw error if no header is given', function() {
@@ -125,16 +125,16 @@ describe('Toggler', function() {
 			var content2 = dom.toElement('#togglerContent2');
 
 			dom.triggerEvent(toggler1, 'click');
-			assert.ok(!dom.hasClass(content1, Toggler.CSS_COLLAPSED));
-			assert.ok(dom.hasClass(content1, Toggler.CSS_EXPANDED));
-			assert.ok(dom.hasClass(content2, Toggler.CSS_COLLAPSED));
-			assert.ok(!dom.hasClass(content2, Toggler.CSS_EXPANDED));
+			assert.ok(!dom.hasClass(content1, toggler.collapsedClasses));
+			assert.ok(dom.hasClass(content1, toggler.expandedClasses));
+			assert.ok(dom.hasClass(content2, toggler.collapsedClasses));
+			assert.ok(!dom.hasClass(content2, toggler.expandedClasses));
 
 			dom.triggerEvent(toggler2, 'click');
-			assert.ok(!dom.hasClass(content1, Toggler.CSS_COLLAPSED));
-			assert.ok(dom.hasClass(content1, Toggler.CSS_EXPANDED));
-			assert.ok(!dom.hasClass(content2, Toggler.CSS_COLLAPSED));
-			assert.ok(dom.hasClass(content2, Toggler.CSS_EXPANDED));
+			assert.ok(!dom.hasClass(content1, toggler.collapsedClasses));
+			assert.ok(dom.hasClass(content1, toggler.expandedClasses));
+			assert.ok(!dom.hasClass(content2, toggler.collapsedClasses));
+			assert.ok(dom.hasClass(content2, toggler.expandedClasses));
 		});
 
 		it('should use the header\'s next matched sibling as its content', function() {
@@ -149,8 +149,8 @@ describe('Toggler', function() {
 			});
 
 			dom.triggerEvent(dom.toElement('.toggler-btn'), 'click');
-			assert.ok(!dom.hasClass(dom.toElement('#togglerContent1'), Toggler.CSS_COLLAPSED));
-			assert.ok(dom.hasClass(dom.toElement('#togglerContent1'), Toggler.CSS_EXPANDED));
+			assert.ok(!dom.hasClass(dom.toElement('#togglerContent1'), toggler.collapsedClasses));
+			assert.ok(dom.hasClass(dom.toElement('#togglerContent1'), toggler.expandedClasses));
 		});
 
 		it('should use the header\'s first matched child if no sibling matches content selector', function() {
@@ -162,8 +162,8 @@ describe('Toggler', function() {
 			});
 
 			dom.triggerEvent(dom.toElement('.toggler-btn'), 'click');
-			assert.ok(!dom.hasClass(dom.toElement('.toggler-content'), Toggler.CSS_COLLAPSED));
-			assert.ok(dom.hasClass(dom.toElement('.toggler-content'), Toggler.CSS_EXPANDED));
+			assert.ok(!dom.hasClass(dom.toElement('.toggler-content'), toggler.collapsedClasses));
+			assert.ok(dom.hasClass(dom.toElement('.toggler-content'), toggler.expandedClasses));
 		});
 
 		it('should use any matched element if no matching header sibling or child is found', function() {
@@ -176,8 +176,8 @@ describe('Toggler', function() {
 			});
 
 			dom.triggerEvent(dom.toElement('.toggler-btn'), 'click');
-			assert.ok(!dom.hasClass(dom.toElement('.toggler-content'), Toggler.CSS_COLLAPSED));
-			assert.ok(dom.hasClass(dom.toElement('.toggler-content'), Toggler.CSS_EXPANDED));
+			assert.ok(!dom.hasClass(dom.toElement('.toggler-content'), toggler.collapsedClasses));
+			assert.ok(dom.hasClass(dom.toElement('.toggler-content'), toggler.expandedClasses));
 		});
 
 		describe('Container', function() {
@@ -200,12 +200,12 @@ describe('Toggler', function() {
 				});
 
 				dom.triggerEvent(dom.toElement('.toggler-btn'), 'click');
-				assert.ok(dom.hasClass(dom.toElement('.toggler-content'), Toggler.CSS_COLLAPSED));
-				assert.ok(!dom.hasClass(dom.toElement('.toggler-content'), Toggler.CSS_EXPANDED));
+				assert.ok(dom.hasClass(dom.toElement('.toggler-content'), toggler.collapsedClasses));
+				assert.ok(!dom.hasClass(dom.toElement('.toggler-content'), toggler.expandedClasses));
 
 				dom.triggerEvent(dom.toElement('.container .toggler-btn'), 'click');
-				assert.ok(!dom.hasClass(dom.toElement('.container .toggler-content'), Toggler.CSS_COLLAPSED));
-				assert.ok(dom.hasClass(dom.toElement('.container .toggler-content'), Toggler.CSS_EXPANDED));
+				assert.ok(!dom.hasClass(dom.toElement('.container .toggler-content'), toggler.collapsedClasses));
+				assert.ok(dom.hasClass(dom.toElement('.container .toggler-content'), toggler.expandedClasses));
 			});
 
 			it('should only work for header elements that are inside container given as element', function() {
@@ -216,12 +216,12 @@ describe('Toggler', function() {
 				});
 
 				dom.triggerEvent(dom.toElement('.toggler-btn'), 'click');
-				assert.ok(dom.hasClass(dom.toElement('.toggler-content'), Toggler.CSS_COLLAPSED));
-				assert.ok(!dom.hasClass(dom.toElement('.toggler-content'), Toggler.CSS_EXPANDED));
+				assert.ok(dom.hasClass(dom.toElement('.toggler-content'), toggler.collapsedClasses));
+				assert.ok(!dom.hasClass(dom.toElement('.toggler-content'), toggler.expandedClasses));
 
 				dom.triggerEvent(dom.toElement('.container .toggler-btn'), 'click');
-				assert.ok(!dom.hasClass(dom.toElement('.container .toggler-content'), Toggler.CSS_COLLAPSED));
-				assert.ok(dom.hasClass(dom.toElement('.container .toggler-content'), Toggler.CSS_EXPANDED));
+				assert.ok(!dom.hasClass(dom.toElement('.container .toggler-content'), toggler.collapsedClasses));
+				assert.ok(dom.hasClass(dom.toElement('.container .toggler-content'), toggler.expandedClasses));
 			});
 		});
 	});
