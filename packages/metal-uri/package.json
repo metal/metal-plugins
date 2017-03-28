@@ -25,12 +25,17 @@
   ],
   "dependencies": {
     "metal": "^2.0.0",
-    "metal-structs": "^1.0.0"
+    "metal-structs": "^1.0.0",
+    "path-browserify": "0.0.0",
+    "url": "^0.11.0"
   },
   "devDependencies": {
     "babel-cli": "^6.4.5",
     "babel-preset-metal": "^4.0.0",
     "gulp": "^3.8.11",
     "gulp-metal": "^1.0.0"
+  },
+  "react-native": {
+    "path": "path-browserify"
   }
 }

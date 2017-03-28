@@ -1,9 +1,9 @@
 'use strict';
 
 import assert from 'assert';
+import path from 'path';
 import Uri from '../../src/Uri';
 import url from 'url';
-import path from 'path';
 
 Uri.setParseFn(function(urlStr) {
 	var parsed = url.parse(urlStr);
