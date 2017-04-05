@@ -17,14 +17,26 @@ export function getChildrenMap(children) {
 	children.forEach(
 		child => {
 			if (child && child.props) {
-				let {key} = child.props;
+				let {
+					props: {key},
+					tag
+				} = child;
 
-				if (!key) {
-					while (keys.indexOf(COUNTER) !== -1) {
+				if (!key && tag) {
+					if (typeof tag !== 'string') {
+						if (typeof tag === 'function') {
+							tag = tag.name;
+						}
+						else {
+							tag = 'metal';
+						}
+					}
+
+					while (keys.indexOf(`${tag}-${COUNTER}`) !== -1) {
 						COUNTER += 1;
 					}
 
-					key = COUNTER;
+					key = `${tag}-${COUNTER}`;
 
 					keys.push(key);
 
