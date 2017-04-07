@@ -8,19 +8,20 @@ describe('getChildrenMap', () => {
 			{
 				props: {
 					key: 'foo'
-				}
+				},
+				tag: 'div'
 			},
 			{
 				props: {
 					key: 'bar'
-				}
+				},
+				tag: 'div'
 			}
 		];
 
 		const obj = getChildrenMap(arr);
 
-		expect(obj.get('foo')).toBe(arr[0]);
-		expect(obj.get('bar')).toBe(arr[1]);
+		expect(obj).toMatchSnapshot();
 	});
 
 	it('should create a keyed object based on props.key when keys are numbers', () => {
@@ -28,19 +29,41 @@ describe('getChildrenMap', () => {
 			{
 				props: {
 					key: 2
-				}
+				},
+				tag: 'div'
 			},
 			{
 				props: {
 					key: 1
-				}
+				},
+				tag: 'div'
 			}
 		];
 
 		const obj = getChildrenMap(arr);
 
-		expect(obj.get(2)).toBe(arr[0]);
-		expect(obj.get(1)).toBe(arr[1]);
+		expect(obj).toMatchSnapshot();
+	});
+
+	it('should create a keyed object with the key being the tag name + the count if no key was originally provided', () => {
+		const arr = [
+			{
+				props: {},
+				tag: 'div'
+			},
+			{
+				props: {},
+				tag: 'div'
+			},
+			{
+				props: {},
+				tag: 'span'
+			}
+		];
+
+		const obj = getChildrenMap(arr);
+
+		expect(obj).toMatchSnapshot();
 	});
 });
 
