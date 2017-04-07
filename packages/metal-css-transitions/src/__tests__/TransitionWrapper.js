@@ -1,5 +1,5 @@
 'use strict';
-import Component from 'metal-jsx';
+import Component, {Config} from 'metal-jsx';
 
 import TransitionWrapper from '../TransitionWrapper';
 import TransitionChild from '../TransitionChild';
@@ -301,5 +301,83 @@ describe('TransitionWrapper', function() {
 		expect(enterSpy).not.toBeCalled();
 
 		jest.useRealTimers();
+	});
+
+	it('should call leave when show changes from true to false', done => {
+		const originalLeave = TransitionChild.prototype.leave;
+
+		const leaveSpy = jest.fn(function() {
+			return originalLeave.apply(this, arguments);
+		});
+
+		TransitionChild.prototype.leave = leaveSpy;
+
+		class App extends Component {
+			render() {
+				return (
+					<TransitionWrapper ref="transitionWrapper" name="test">
+						{this.state.show_ &&
+							<div class="test-child">2</div>
+						}
+					</TransitionWrapper>
+				);
+			}
+		}
+
+		App.STATE = {
+			show_: Config.bool().value(true)
+		};
+
+		component = new App(); 
+
+		component.state.show_ = false;
+
+		setTimeout(
+			() => {
+				expect(leaveSpy).toBeCalled();
+				
+				done();
+			},
+			100
+		);
+	});
+
+	it('should call enter when show changes from false to true', done => {
+		const originalEnter = TransitionChild.prototype.enter;
+
+		const enterSpy = jest.fn(function() {
+			return originalEnter.apply(this, arguments);
+		});
+
+		TransitionChild.prototype.enter = enterSpy;
+
+		class App extends Component {
+			render() {
+				return (
+					<TransitionWrapper ref="transitionWrapper" name="test">
+						{this.state.show_ &&
+							<div class="test-child">2</div>
+						}
+					</TransitionWrapper>
+				);
+			}
+		}
+
+		App.STATE = {
+			show_: Config.bool().value(false)
+		};
+
+		component = new App(); 
+
+		component.state.show_ = true;
+
+		setTimeout(
+			() => {
+				expect(enterSpy).toBeCalled();
+				
+				done();
+			},
+			100
+		);
 	});
 });
