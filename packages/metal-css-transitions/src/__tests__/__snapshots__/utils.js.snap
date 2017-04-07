@@ -1,0 +1,77 @@
+exports[`getChildrenMap should create a keyed object based on props.key 1`] = `
+Array [
+  Array [
+    "foo",
+    Object {
+      "props": Object {
+        "key": "foo",
+      },
+      "tag": "div",
+    },
+  ],
+  Array [
+    "bar",
+    Object {
+      "props": Object {
+        "key": "bar",
+      },
+      "tag": "div",
+    },
+  ],
+]
+`;
+
+exports[`getChildrenMap should create a keyed object based on props.key when keys are numbers 1`] = `
+Array [
+  Array [
+    2,
+    Object {
+      "props": Object {
+        "key": 2,
+      },
+      "tag": "div",
+    },
+  ],
+  Array [
+    1,
+    Object {
+      "props": Object {
+        "key": 1,
+      },
+      "tag": "div",
+    },
+  ],
+]
+`;
+
+exports[`getChildrenMap should create a keyed object with the key being the tag name + the count if no key was originally provided 1`] = `
+Array [
+  Array [
+    "div-1",
+    Object {
+      "props": Object {
+        "key": "div-1",
+      },
+      "tag": "div",
+    },
+  ],
+  Array [
+    "div-2",
+    Object {
+      "props": Object {
+        "key": "div-2",
+      },
+      "tag": "div",
+    },
+  ],
+  Array [
+    "span-2",
+    Object {
+      "props": Object {
+        "key": "span-2",
+      },
+      "tag": "span",
+    },
+  ],
+]
+`;
