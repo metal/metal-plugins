@@ -45,7 +45,7 @@ describe('getChildrenMap', () => {
 		expect(obj).toMatchSnapshot();
 	});
 
-	it('should create a keyed object with the key being the tag name + the count if no key was originally provided', () => {
+	it('should create a keyed object even if tag is all sorts of types', () => {
 		const arr = [
 			{
 				props: {},
@@ -53,11 +53,14 @@ describe('getChildrenMap', () => {
 			},
 			{
 				props: {},
-				tag: 'div'
+				tag: function testTest() {}
 			},
 			{
 				props: {},
-				tag: 'span'
+				tag: {foo: 'bar'}
+			},
+			{
+				props: {}
 			}
 		];
 
