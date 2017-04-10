@@ -1,5 +1,9 @@
 'use strict';
 
+import {isFunction, isString} from 'metal';
+
+const NAMESPACE = '__METAL_CSS_TRANSISIONS__';
+
 /**
  * Processes an array of components, creating an object with keys and values.
  * If the component does not already have a key, it will be given a unique key.
@@ -22,14 +26,12 @@ export function getChildrenMap(children) {
 					tag
 				} = child;
 
-				if (!key && tag) {
-					if (typeof tag !== 'string') {
-						if (typeof tag === 'function') {
-							tag = tag.name;
-						}
-						else {
-							tag = 'metal';
-						}
+				if (!key) {
+					if (!tag) {
+						tag = NAMESPACE;
+					}
+					else if (!isString(tag)) {
+						tag = isFunction(tag) ? tag.name : NAMESPACE;
 					}
 
 					while (keys.indexOf(`${tag}-${COUNTER}`) !== -1) {

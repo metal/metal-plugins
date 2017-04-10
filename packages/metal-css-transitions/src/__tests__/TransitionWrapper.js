@@ -303,14 +303,12 @@ describe('TransitionWrapper', function() {
 		jest.useRealTimers();
 	});
 
-	it('should call leave when show changes from true to false', done => {
+	it.only('should call leave when show changes from true to false', done => {
+		jest.useFakeTimers();
+
 		const originalLeave = TransitionChild.prototype.leave;
 
-		const leaveSpy = jest.fn(function() {
-			return originalLeave.apply(this, arguments);
-		});
-
-		TransitionChild.prototype.leave = leaveSpy;
+		TransitionChild.prototype.leave = jest.fn();
 
 		class App extends Component {
 			render() {
@@ -328,28 +326,27 @@ describe('TransitionWrapper', function() {
 			show_: Config.bool().value(true)
 		};
 
-		component = new App(); 
+		component = new App();
 
-		component.state.show_ = false;
+		component.setState({show_: false}, () => {
+			jest.runAllTimers();
 
-		setTimeout(
-			() => {
-				expect(leaveSpy).toBeCalled();
-				
-				done();
-			},
-			100
-		);
+			expect(TransitionChild.prototype.leave).toHaveBeenCalled();
+
+			TransitionChild.prototype.leave = originalLeave;
+
+			jest.useRealTimers();
+
+			done();
+		});
 	});
 
 	it('should call enter when show changes from false to true', done => {
+		jest.useFakeTimers();
+
 		const originalEnter = TransitionChild.prototype.enter;
 
-		const enterSpy = jest.fn(function() {
-			return originalEnter.apply(this, arguments);
-		});
-
-		TransitionChild.prototype.enter = enterSpy;
+		TransitionChild.prototype.enter = jest.fn();
 
 		class App extends Component {
 			render() {
@@ -367,17 +364,18 @@ describe('TransitionWrapper', function() {
 			show_: Config.bool().value(false)
 		};
 
-		component = new App(); 
+		component = new App();
 
-		component.state.show_ = true;
+		component.setState({show_: true}, () => {
+			jest.runAllTimers();
 
-		setTimeout(
-			() => {
-				expect(enterSpy).toBeCalled();
-				
-				done();
-			},
-			100
-		);
+			expect(TransitionChild.prototype.enter).toHaveBeenCalled();
+
+			TransitionChild.prototype.enter = originalEnter;
+
+			jest.useRealTimers();
+
+			done();
+		});
 	});
 });
