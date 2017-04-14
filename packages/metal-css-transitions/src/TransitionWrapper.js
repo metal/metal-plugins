@@ -1,9 +1,9 @@
 'use strict';
 
-import Component, { Config } from 'metal-jsx';
+import Component, {Config} from 'metal-jsx';
 
 import TransitionChild from './TransitionChild';
-import { getChildrenMap, mergeChildrenMap } from './utils';
+import {getChildrenMap, mergeChildrenMap} from './utils';
 
 /**
  * TransitionWrapper component
@@ -27,17 +27,15 @@ class TransitionWrapper extends Component {
 			this._justAppeared = true;
 		}
 
-		this.props.children.forEach(
-			child => {
-				if (child && child.props) {
-					const {key} = child.props;
+		this.props.children.forEach(child => {
+			if (child && child.props) {
+				const {key} = child.props;
 
-					if (key && this.components[key]) {
-						this.components[key].appear();
-					}
+				if (key && this.components[key]) {
+					this.components[key].appear();
 				}
 			}
-		);
+		});
 	}
 
 	/**
@@ -66,17 +64,15 @@ class TransitionWrapper extends Component {
 			return;
 		}
 
-		newChildren.forEach(
-			child => {
-				if (child && child.props) {
-					const {key} = child.props;
+		newChildren.forEach(child => {
+			if (child && child.props) {
+				const {key} = child.props;
 
-					if (key && !prevKeyMap.has(key) && this.components[key]) {
-						this.components[key].enter();
-					}
+				if (key && !prevKeyMap.has(key) && this.components[key]) {
+					this.components[key].enter();
 				}
 			}
-		);
+		});
 	}
 
 	/**
@@ -86,17 +82,15 @@ class TransitionWrapper extends Component {
 	 * @protected
 	 */
 	handleChildrenLeave_(prevChildren, newKeyMap) {
-		prevChildren.forEach(
-			child => {
-				if (child && child.props) {
-					const {key} = child.props;
+		prevChildren.forEach(child => {
+			if (child && child.props) {
+				const {key} = child.props;
 
-					if (key && !newKeyMap.has(key) && this.components[key]) {
-						this.components[key].leave(this.finishLeave_.bind(this, key));
-					}
+				if (key && !newKeyMap.has(key) && this.components[key]) {
+					this.components[key].leave(this.finishLeave_.bind(this, key));
 				}
 			}
-		);
+		});
 	}
 
 	/**
@@ -128,25 +122,20 @@ class TransitionWrapper extends Component {
 
 		const {childrenMap_} = this.state;
 
-		childrenMap_.forEach(
-			child => {
-				if (child) {
-					children.push(child);
-				}
+		childrenMap_.forEach(child => {
+			if (child) {
+				children.push(child);
 			}
-		);
+		});
 
 		return (
 			<span>
 				{!!children.length &&
-					children.map(
-						child => (
-							<TransitionChild name={this.props.name} ref={child.props.key}>
-								{child}
-							</TransitionChild>
-						)
-					)
-				}
+					children.map(child => (
+						<TransitionChild name={this.props.name} ref={child.props.key}>
+							{child}
+						</TransitionChild>
+					))}
 			</span>
 		);
 	}
