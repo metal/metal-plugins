@@ -15,40 +15,34 @@ export function getChildrenMap(children) {
 	const retMap = new Map();
 
 	const keys = children.map(
-		child => child.props ? child.props.key : undefined
+		child => (child.props ? child.props.key : undefined)
 	);
 
-	children.forEach(
-		child => {
-			if (child && child.props) {
-				let {
-					props: {key},
-					tag
-				} = child;
+	children.forEach(child => {
+		if (child && child.props) {
+			let {props: {key}, tag} = child;
 
-				if (!key) {
-					if (!tag) {
-						tag = NAMESPACE;
-					}
-					else if (!isString(tag)) {
-						tag = isFunction(tag) ? tag.name : NAMESPACE;
-					}
-
-					while (keys.indexOf(`${tag}-${COUNTER}`) !== -1) {
-						COUNTER += 1;
-					}
-
-					key = `${tag}-${COUNTER}`;
-
-					keys.push(key);
-
-					child.props.key = key;
+			if (!key) {
+				if (!tag) {
+					tag = NAMESPACE;
+				} else if (!isString(tag)) {
+					tag = isFunction(tag) ? tag.name : NAMESPACE;
 				}
 
-				retMap.set(key, child);
+				while (keys.indexOf(`${tag}-${COUNTER}`) !== -1) {
+					COUNTER += 1;
+				}
+
+				key = `${tag}-${COUNTER}`;
+
+				keys.push(key);
+
+				child.props.key = key;
 			}
+
+			retMap.set(key, child);
 		}
-	);
+	});
 
 	return retMap;
 }
@@ -73,19 +67,17 @@ export function mergeChildrenMap(nextMap = map, prevMap = map) {
 
 	let pendingKeys = [];
 
-	prevMap.forEach(
-		(value, prevKey) => {
-			if (nextMap.has(prevKey)) {
-				if (pendingKeys.length) {
-					nextKeysPending[prevKey] = pendingKeys;
+	prevMap.forEach((value, prevKey) => {
+		if (nextMap.has(prevKey)) {
+			if (pendingKeys.length) {
+				nextKeysPending[prevKey] = pendingKeys;
 
-					pendingKeys = [];
-				}
-			} else {
-				pendingKeys.push(prevKey);
+				pendingKeys = [];
 			}
+		} else {
+			pendingKeys.push(prevKey);
 		}
-	);
+	});
 
 	const mergedMap = new Map();
 
@@ -93,19 +85,20 @@ export function mergeChildrenMap(nextMap = map, prevMap = map) {
 		mergedMap.set(pendingKeys[i], getValueForKey(pendingKeys[i]));
 	}
 
-	nextMap.forEach(
-		(value, nextKey) => {
-			if (nextKeysPending.hasOwnProperty(nextKey)) {
-				for (let i = 0; i < nextKeysPending[nextKey].length; i++) {
-					const pendingNextKey = nextKeysPending[nextKey][i];
+	nextMap.forEach((value, nextKey) => {
+		if (nextKeysPending.hasOwnProperty(nextKey)) {
+			for (let i = 0; i < nextKeysPending[nextKey].length; i++) {
+				const pendingNextKey = nextKeysPending[nextKey][i];
 
-					mergedMap.set(nextKeysPending[nextKey][i], getValueForKey(pendingNextKey));
-				}
+				mergedMap.set(
+					nextKeysPending[nextKey][i],
+					getValueForKey(pendingNextKey)
+				);
 			}
-
-			mergedMap.set(nextKey, getValueForKey(nextKey));
 		}
-	);
+
+		mergedMap.set(nextKey, getValueForKey(nextKey));
+	});
 
 	return mergedMap;
 }

@@ -2,7 +2,7 @@
 
 import Anim from 'metal-anim';
 import dom from 'metal-dom';
-import Component, { Config } from 'metal-jsx';
+import Component, {Config} from 'metal-jsx';
 
 export const DELAY_TIME = 10;
 
@@ -31,14 +31,11 @@ class TransitionChild extends Component {
 	 * @protected
 	 */
 	delayActive_(className, node) {
-		setTimeout(
-			() => {
-				node.classList.add(className);
+		setTimeout(() => {
+			node.classList.add(className);
 
-				Anim.emulateTransitionEnd(node);
-			},
-			DELAY_TIME
-		);
+			Anim.emulateTransitionEnd(node);
+		}, DELAY_TIME);
 	}
 
 	/**
