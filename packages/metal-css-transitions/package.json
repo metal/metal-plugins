@@ -19,7 +19,9 @@
     "build": "babel -d lib/ src/",
     "format": "eslint . --ignore-pattern node_modules --ignore-pattern lib --fix",
     "lint": "eslint . --ignore-pattern node_modules --ignore-pattern lib",
+    "precommit": "npm run format",
     "prepublish": "npm run build",
+    "prepush": "npm test",
     "test": "jest"
   },
   "author": "Bryce Osterhaus <bryceosterhaus@gmail.com>",
@@ -46,6 +48,7 @@
     "eslint": "^3.13.1",
     "eslint-plugin-prettier": "^2.0.1",
     "eslint-plugin-react": "^6.9.0",
+    "husky": "^0.13.3",
     "jest-cli": "^16.0.2",
     "prettier": "^1.1.0"
   }
