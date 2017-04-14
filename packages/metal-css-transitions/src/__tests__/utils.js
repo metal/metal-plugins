@@ -1,6 +1,6 @@
 'use strict';
 
-import { getChildrenMap, mergeChildrenMap } from '../utils';
+import {getChildrenMap, mergeChildrenMap} from '../utils';
 
 describe('getChildrenMap', () => {
 	it('should create a keyed object based on props.key', () => {
@@ -72,19 +72,9 @@ describe('getChildrenMap', () => {
 
 describe('mergeChildrenMap', () => {
 	it('should merge objects', () => {
-		const newMap = new Map(
-			[
-				[1, 'one'],
-				[2, 'two']
-			]
-		);
+		const newMap = new Map([[1, 'one'], [2, 'two']]);
 
-		const oldMap = new Map(
-			[
-				[2, 'twotwo'],
-				[3, 'three']
-			]
-		);
+		const oldMap = new Map([[2, 'twotwo'], [3, 'three']]);
 
 		let mergedMap = mergeChildrenMap(newMap, oldMap);
 

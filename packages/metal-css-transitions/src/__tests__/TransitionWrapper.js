@@ -7,13 +7,11 @@ import TransitionChild from '../TransitionChild';
 describe('TransitionWrapper', function() {
 	let component;
 
-	afterEach(
-		() => {
-			if (component) {
-				component.dispose();
-			}
+	afterEach(() => {
+		if (component) {
+			component.dispose();
 		}
-	);
+	});
 
 	it('renders', () => {
 		component = new TransitionWrapper();
@@ -24,18 +22,14 @@ describe('TransitionWrapper', function() {
 	it('renders without children', () => {
 		class App extends Component {
 			render() {
-				return (
-					<TransitionWrapper elementClasses="wrapper">
-					</TransitionWrapper>
-				);
+				return <TransitionWrapper elementClasses="wrapper" />;
 			}
 		}
 
 		component = new App();
 
 		expect(component.element.className).toBe('wrapper');
-	}
-	);
+	});
 
 	it('renders with one child', () => {
 		class App extends Component {
@@ -81,14 +75,11 @@ describe('TransitionWrapper', function() {
 		expect(spy).not.toBeCalled();
 		component.props.children = [{}];
 
-		setTimeout(
-			() => {
-				expect(spy).toBeCalled();
+		setTimeout(() => {
+			expect(spy).toBeCalled();
 
-				done();
-			},
-			100
-		);
+			done();
+		}, 100);
 	});
 
 	it('should call syncChildren with empty args', done => {
@@ -102,14 +93,11 @@ describe('TransitionWrapper', function() {
 
 		component.props.children = [];
 
-		setTimeout(
-			() => {
-				expect(spy).toBeCalled();
+		setTimeout(() => {
+			expect(spy).toBeCalled();
 
-				done();
-			},
-			100
-		);
+			done();
+		}, 100);
 	});
 
 	it('should process entering children and call .enter()', () => {
@@ -188,14 +176,12 @@ describe('TransitionWrapper', function() {
 			}
 		}
 
-		component = new App(
-			{
-				children: [
-					<div class="child" key={1}>1</div>,
-					<div class="child" key={2}>2</div>
-				]
-			}
-		);
+		component = new App({
+			children: [
+				<div class="child" key={1}>1</div>,
+				<div class="child" key={2}>2</div>
+			]
+		});
 
 		let children = component.element.querySelectorAll('.child');
 
@@ -208,18 +194,15 @@ describe('TransitionWrapper', function() {
 			<div class="child" key={2}>2</div>
 		];
 
-		setTimeout(
-			() => {
-				children = component.element.querySelectorAll('.child');
+		setTimeout(() => {
+			children = component.element.querySelectorAll('.child');
 
-				expect(children[0].innerHTML).toBe('3');
-				expect(children[1].innerHTML).toBe('1');
-				expect(children[2].innerHTML).toBe('2');
+			expect(children[0].innerHTML).toBe('3');
+			expect(children[1].innerHTML).toBe('1');
+			expect(children[2].innerHTML).toBe('2');
 
-				done();
-			},
-			100
-		);
+			done();
+		}, 100);
 	});
 
 	it('should render children in the order they are given when keys are strings', done => {
@@ -233,14 +216,12 @@ describe('TransitionWrapper', function() {
 			}
 		}
 
-		component = new App(
-			{
-				children: [
-					<div class="child" key="1">1</div>,
-					<div class="child" key="2">2</div>
-				]
-			}
-		);
+		component = new App({
+			children: [
+				<div class="child" key="1">1</div>,
+				<div class="child" key="2">2</div>
+			]
+		});
 
 		let children = component.element.querySelectorAll('.child');
 
@@ -253,18 +234,15 @@ describe('TransitionWrapper', function() {
 			<div class="child" key="2">2</div>
 		];
 
-		setTimeout(
-			() => {
-				children = component.element.querySelectorAll('.child');
+		setTimeout(() => {
+			children = component.element.querySelectorAll('.child');
 
-				expect(children[0].innerHTML).toBe('3');
-				expect(children[1].innerHTML).toBe('1');
-				expect(children[2].innerHTML).toBe('2');
+			expect(children[0].innerHTML).toBe('3');
+			expect(children[1].innerHTML).toBe('1');
+			expect(children[2].innerHTML).toBe('2');
 
-				done();
-			},
-			100
-		);
+			done();
+		}, 100);
 	});
 
 	it('should not call enter immediately after appear', () => {
@@ -287,7 +265,7 @@ describe('TransitionWrapper', function() {
 			render() {
 				return (
 					<TransitionWrapper>
-						<div class="test-child"></div>
+						<div class="test-child" />
 					</TransitionWrapper>
 				);
 			}
@@ -314,9 +292,7 @@ describe('TransitionWrapper', function() {
 			render() {
 				return (
 					<TransitionWrapper ref="transitionWrapper" name="test">
-						{this.state.show_ &&
-							<div class="test-child">2</div>
-						}
+						{this.state.show_ && <div class="test-child">2</div>}
 					</TransitionWrapper>
 				);
 			}
@@ -352,9 +328,7 @@ describe('TransitionWrapper', function() {
 			render() {
 				return (
 					<TransitionWrapper ref="transitionWrapper" name="test">
-						{this.state.show_ &&
-							<div class="test-child">2</div>
-						}
+						{this.state.show_ && <div class="test-child">2</div>}
 					</TransitionWrapper>
 				);
 			}

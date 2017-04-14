@@ -1,18 +1,16 @@
 'use strict';
 import Component from 'metal-jsx';
 
-import TransitionChild, { DELAY_TIME } from '../TransitionChild';
+import TransitionChild, {DELAY_TIME} from '../TransitionChild';
 
 describe('TransitionChild', () => {
 	let component;
 
-	afterEach(
-		() => {
-			if (component) {
-				component.dispose();
-			}
+	afterEach(() => {
+		if (component) {
+			component.dispose();
 		}
-	);
+	});
 
 	it('renders', () => {
 		const component = new TransitionChild();
@@ -28,14 +26,11 @@ describe('TransitionChild', () => {
 		component.delayActive_('test', node);
 		expect(node.className).toBe('');
 
-		setTimeout(
-			() => {
-				expect(node.className).toBe('test');
+		setTimeout(() => {
+			expect(node.className).toBe('test');
 
-				done();
-			},
-			DELAY_TIME
-		);
+			done();
+		}, DELAY_TIME);
 	});
 
 	it('should add and remove classnames', done => {
@@ -47,7 +42,7 @@ describe('TransitionChild', () => {
 			render() {
 				return (
 					<TransitionChild name={TRANS_NAME} ref="transitionChild">
-						<div></div>
+						<div />
 					</TransitionChild>
 				);
 			}
@@ -62,21 +57,17 @@ describe('TransitionChild', () => {
 
 		expect(appElem.className).toBe(`${TRANS_NAME}-${TRANS_TYPE}`);
 
-		setTimeout(
-			() => {
-				expect(appElem.className).toBe(`${TRANS_NAME}-${TRANS_TYPE} ${TRANS_NAME}-${TRANS_TYPE}-active`);
+		setTimeout(() => {
+			expect(appElem.className).toBe(
+				`${TRANS_NAME}-${TRANS_TYPE} ${TRANS_NAME}-${TRANS_TYPE}-active`
+			);
 
-				setTimeout(
-					() => {
-						expect(appElem.className).toBe('');
+			setTimeout(() => {
+				expect(appElem.className).toBe('');
 
-						done();
-					},
-					DELAY
-				);
-			},
-			DELAY_TIME
-		);
+				done();
+			}, DELAY);
+		}, DELAY_TIME);
 	});
 
 	it('should execute callbackFn', done => {
@@ -87,7 +78,7 @@ describe('TransitionChild', () => {
 			render() {
 				return (
 					<TransitionChild name="test" ref="transitionChild">
-						<div></div>
+						<div />
 					</TransitionChild>
 				);
 			}
@@ -100,14 +91,11 @@ describe('TransitionChild', () => {
 
 		expect(stubFn).not.toBeCalled();
 
-		setTimeout(
-			() => {
-				expect(stubFn).toBeCalled();
+		setTimeout(() => {
+			expect(stubFn).toBeCalled();
 
-				done();
-			},
-			DELAY
-		);
+			done();
+		}, DELAY);
 	});
 
 	it('should call transition_ with appear', () => {
