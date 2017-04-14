@@ -2,23 +2,31 @@
 	"env": {
 		"browser": true,
 		"es6": true,
+		"jest": true,
 		"node": true
 	},
 	"globals": {
-		"iDOMHelpers": true,
-		"IncrementalDOM": true
+		"chrome": true
 	},
 	"parserOptions": {
-		"ecmaVersion": 6,
+		"ecmaVersion": 7,
 		"sourceType": "module",
 		"ecmaFeatures": {
-				"jsx": true
+			"jsx": true,
+			"experimentalObjectRestSpread": true
 		}
 	},
-	"plugins": [
-		"react"
-	],
+	"plugins": ["prettier", "react"],
 	"rules": {
+		"prettier/prettier": [
+			"error",
+			{
+				"bracketSpacing": false,
+				"singleQuote": true,
+				"trailingComma": "none",
+				"useTabs": true
+			}
+		],
 		"semi": 1,
 		"no-bitwise": 0,
 		"curly": 2,
@@ -28,16 +36,14 @@
 		"wrap-iife": [2, "any"],
 		"max-depth": 0,
 		"no-multi-str": 0,
-		"new-cap": 2,
 		"no-caller": 2,
 		"quotes": [
 			1,
 			"single",
-			{ "allowTemplateLiterals": true }
+			{"allowTemplateLiterals": true}
 		],
-		"react/jsx-uses-vars": [2],
-		"strict": 0,
 		"no-undef": 2,
-		"no-unused-vars": 2
+		"no-unused-vars": 2,
+		"react/jsx-uses-vars": [2]
 	}
 }
