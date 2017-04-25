@@ -40,7 +40,8 @@ class LocalStorageMechanism extends StorageMechanism {
 	 * @inheritDoc
 	 */
 	static isSupported() {
-		return typeof window !== 'undefined';
+		return typeof window !== 'undefined' &&
+			typeof window.localStorage !== 'undefined';
 	}
 
 	/**
