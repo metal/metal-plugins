@@ -2,7 +2,7 @@
 
 var Uri = require('./lib/Uri').default;
 
-if (typeof document === 'undefined') {
+if (typeof URL === 'undefined' && typeof require !== 'undefined') {
 	// If there is no "document", then this should be running in NodeJS or in ReactNative env and
 	// in this case we should use the "url" NPM module as the parse function.
 	// In ReactNative env "path" will be replaced with "path-browserify".
