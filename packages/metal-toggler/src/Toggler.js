@@ -30,6 +30,30 @@ class Toggler extends State {
 	}
 
 	/**
+	* Manually collapse the content's visibility.
+	* @param {!Element} header
+	*/
+	collapse(header = this.header) {
+		var content = this.getContentElement_(header);
+		dom.removeClasses(content, this.expandedClasses);
+		dom.addClasses(content, this.collapsedClasses);
+		dom.removeClasses(header, this.headerExpandedClasses);
+		dom.addClasses(header, this.headerCollapsedClasses);
+	}
+
+	/**
+	* Manually expand the content's visibility.
+	* @param {!Element} header
+	*/
+	expand(header = this.header) {
+		var content = this.getContentElement_(header);
+		dom.addClasses(content, this.expandedClasses);
+		dom.removeClasses(content, this.collapsedClasses);
+		dom.addClasses(header, this.headerExpandedClasses);
+		dom.removeClasses(header, this.headerCollapsedClasses);
+	}
+
+	/**
 	 * Gets the content to be toggled by the given header element.
 	 * @param {!Element} header
 	 * @protected
@@ -96,18 +120,13 @@ class Toggler extends State {
 
 	/**
 	 * Toggles the content's visibility.
+	 * @param {!Element} header
 	 */
-	toggle(header) {
-		var content = this.getContentElement_(header);
-		dom.toggleClasses(content, this.expandedClasses);
-		dom.toggleClasses(content, this.collapsedClasses);
-
-		if (dom.hasClass(content, this.expandedClasses)) {
-			dom.addClasses(header, this.headerExpandedClasses);
-			dom.removeClasses(header, this.headerCollapsedClasses);
+	toggle(header = this.header) {
+		if (dom.hasClass(header, this.headerExpandedClasses)) {
+			this.collapse(header);
 		} else {
-			dom.removeClasses(header, this.headerExpandedClasses);
-			dom.addClasses(header, this.headerCollapsedClasses);
+			this.expand(header);
 		}
 	}
 }
@@ -116,6 +135,14 @@ class Toggler extends State {
  * State configuration.
  */
 Toggler.STATE = {
+	/**
+	 * The CSS classes added to the content when it's collapsed.
+	 */
+	collapsedClasses: {
+		validator: core.isString,
+		value: 'toggler-collapsed'
+	},
+
 	/**
 	 * The element where the header/content selectors will be looked for.
 	 * @type {string|!Element}
@@ -135,28 +162,19 @@ Toggler.STATE = {
 	},
 
 	/**
-	 * The element that should be trigger toggling.
-	 * @type {string|!Element}
-	 */
-	header: {
-		validator: value => core.isString(value) || core.isElement(value)
-	},
-
-	/**
-	 * The CSS classes added to the content when it's collapsed.
-	 */
-	collapsedClasses: {
-		validator: core.isString,
-		value: 'toggler-collapsed'
-	},
-
-
-	/**
 	 * The CSS classes added to the content when it's expanded.
 	 */
 	expandedClasses: {
 		validator: core.isString,
 		value: 'toggler-expanded'
+	},
+
+	/**
+	 * The element that should be trigger toggling.
+	 * @type {string|!Element}
+	 */
+	header: {
+		validator: value => core.isString(value) || core.isElement(value)
 	},
 
 	/**
