@@ -460,7 +460,8 @@ class Uri {
  * @default http:
  * @static
  */
-Uri.DEFAULT_PROTOCOL = (typeof window !== 'undefined' && window.location) ?
+Uri.DEFAULT_PROTOCOL = (typeof require === 'undefined') &&
+	(typeof window !== 'undefined') ?
 	window.location.protocol : 'http:';
 
 /**
