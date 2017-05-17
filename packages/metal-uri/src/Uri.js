@@ -460,7 +460,8 @@ class Uri {
  * @default http:
  * @static
  */
-Uri.DEFAULT_PROTOCOL = 'http:';
+Uri.DEFAULT_PROTOCOL = (typeof window !== 'undefined' && window.location) ?
+	window.location.protocol : 'http:';
 
 /**
  * Hostname placeholder. Relevant to internal usage only.
