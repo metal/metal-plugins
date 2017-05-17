@@ -15,5 +15,11 @@ if (typeof URL !== 'undefined') {
 			assert.strictEqual('http:', uri.protocol);
 			assert.strictEqual('?a=1', uri.search);
 		});
+
+		it('should throw a TypeError exception on invalid URLs', function() {
+			assert.throws(function() {
+				parseFromAnchor('http://localhost:99999');
+			}, TypeError)
+		});
 	});
 }
