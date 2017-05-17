@@ -10,7 +10,16 @@ import parseFromAnchor from './parseFromAnchor';
  */
 function parse(opt_uri) {
 	if (isFunction(URL) && URL.length) {
-		return new URL(opt_uri);
+		const url = new URL(opt_uri);
+
+		// Safari Browsers will cap port to the max 16-bit unsigned integer (65535) instead
+		// of throwing a TypeError as per spec. It will still keep the port number in the
+		// href attribute, so we can use this mismatch to raise the expected exception.
+		if (url.port && url.href.indexOf(url.port) === -1) {
+			throw new TypeError(`${opt_uri} is not a valid URL`);
+		}
+
+		return url;
 	} else {
 		return parseFromAnchor(opt_uri);
 	}
