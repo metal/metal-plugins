@@ -461,7 +461,10 @@ class Uri {
  * @static
  */
 const shouldInheritProtocol = () =>
-	(typeof require === 'undefined' && typeof window !== 'undefined');
+	(typeof window !== 'undefined' &&
+		window.location &&
+		window.location.protocol &&
+		window.location.protocol !== 'about:');
 
 Uri.DEFAULT_PROTOCOL = shouldInheritProtocol() ? window.location.protocol : 'http:';
 
