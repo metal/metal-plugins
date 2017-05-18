@@ -1,6 +1,6 @@
 {
   "name": "metal-uri",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "Class for parsing and formatting URIs.",
   "license": "BSD",
   "repository": "metal/metal-uri",
