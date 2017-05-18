@@ -68,9 +68,11 @@ class Toggler extends State {
 			return content;
 		}
 
-		content = header.querySelector(this.content);
-		if (content) {
-			return content;
+		if (core.isElement(header)){
+			content = header.querySelector(this.content);
+			if (content) {
+				return content;
+			}
 		}
 
 		return this.container.querySelector(this.content);
