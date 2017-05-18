@@ -460,9 +460,10 @@ class Uri {
  * @default http:
  * @static
  */
-Uri.DEFAULT_PROTOCOL = (typeof require === 'undefined') &&
-	(typeof window !== 'undefined') ?
-	window.location.protocol : 'http:';
+const shouldInheritProtocol = () =>
+	(typeof require === 'undefined' && typeof window !== 'undefined');
+
+Uri.DEFAULT_PROTOCOL = shouldInheritProtocol() ? window.location.protocol : 'http:';
 
 /**
  * Hostname placeholder. Relevant to internal usage only.
