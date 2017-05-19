@@ -31,10 +31,13 @@ class Toggler extends State {
 
 	/**
 	* Manually collapse the content's visibility.
-	* @param {!Element} header
+	* @param {string|!Element} header
 	*/
 	collapse(header = this.header) {
-		var content = this.getContentElement_(header);
+		let content = this.getContentElement_(header);
+		if (!core.isElement(header)) {
+			header = this.getHeaderElements_(header);
+		}
 		dom.removeClasses(content, this.expandedClasses);
 		dom.addClasses(content, this.collapsedClasses);
 		dom.removeClasses(header, this.headerExpandedClasses);
@@ -43,10 +46,13 @@ class Toggler extends State {
 
 	/**
 	* Manually expand the content's visibility.
-	* @param {!Element} header
+	* @param {string|!Element} header
 	*/
 	expand(header = this.header) {
-		var content = this.getContentElement_(header);
+		let content = this.getContentElement_(header);
+		if (!core.isElement(header)) {
+			header = this.getHeaderElements_(header);
+		}
 		dom.addClasses(content, this.expandedClasses);
 		dom.removeClasses(content, this.collapsedClasses);
 		dom.addClasses(header, this.headerExpandedClasses);
@@ -56,6 +62,7 @@ class Toggler extends State {
 	/**
 	 * Gets the content to be toggled by the given header element.
 	 * @param {!Element} header
+	 * @returns {!Element}
 	 * @protected
 	 */
 	getContentElement_(header) {
@@ -68,14 +75,24 @@ class Toggler extends State {
 			return content;
 		}
 
-		if (core.isElement(header)){
+		if (core.isElement(header)) {
 			content = header.querySelector(this.content);
 			if (content) {
 				return content;
 			}
 		}
 
-		return this.container.querySelector(this.content);
+		return this.container.querySelectorAll(this.content);
+	}
+
+	/**
+	 * Gets the header elements by giving a selector.
+	 * @param {string} header
+	 * @returns {!Nodelist}
+	 * @protected
+	 */
+	getHeaderElements_(header) {
+		return this.container.querySelectorAll(header);
 	}
 
 	/**
@@ -97,6 +114,19 @@ class Toggler extends State {
 			this.toggle(event.delegateTarget || event.currentTarget);
 			event.preventDefault();
 		}
+	}
+
+	/**
+	 * Checks if there is any expanded header in the component context.
+	 * @param {string|!Element} event
+	 * @param {boolean}
+	 * @protected
+	 */
+	hasExpanded_(header) {
+		if (core.isElement(header)) {
+			return dom.hasClass(header, this.headerExpandedClasses);
+		}
+		return !!this.container.querySelectorAll(`.${this.headerExpandedClasses}`).length;
 	}
 
 	/**
@@ -122,10 +152,10 @@ class Toggler extends State {
 
 	/**
 	 * Toggles the content's visibility.
-	 * @param {!Element} header
+	 * @param {string|!Element} header
 	 */
 	toggle(header = this.header) {
-		if (dom.hasClass(header, this.headerExpandedClasses)) {
+		if (this.hasExpanded_(header)) {
 			this.collapse(header);
 		} else {
 			this.expand(header);

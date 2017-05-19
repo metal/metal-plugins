@@ -106,7 +106,7 @@ describe('Toggler', function() {
 			});
 		});
 
-		it('should expand/collapse content by calling the publish method', function() {
+		it('should expand/collapse content by calling the public method', function() {
 			toggler = new Toggler({
 				content: dom.toElement('.toggler-content'),
 				header: dom.toElement('.toggler-btn')
@@ -204,6 +204,35 @@ describe('Toggler', function() {
 			toggler.collapse(toggler2);
 			assert.ok(dom.hasClass(content2, toggler.collapsedClasses));
 			assert.ok(!dom.hasClass(content2, toggler.expandedClasses));
+		});
+
+		it('should toggle all elements by calling the public methods without arguments', function() {
+			dom.enterDocument('<button id="toggler1" class="toggler-btn"></button>');
+			dom.enterDocument('<div id="togglerContent1" class="toggler-content toggler-collapsed"></div>');
+			dom.enterDocument('<button id="toggler2" class="toggler-btn"></button>');
+			dom.enterDocument('<div id="togglerContent2" class="toggler-content toggler-collapsed"></div>');
+
+			toggler = new Toggler({
+				content: '.toggler-content',
+				header: '.toggler-btn'
+			});
+
+			var toggler1 = dom.toElement('#toggler1');
+			var toggler2 = dom.toElement('#toggler2');
+			var content1 = dom.toElement('#togglerContent1');
+			var content2 = dom.toElement('#togglerContent2');
+
+			toggler.toggle();
+			assert.ok(dom.hasClass(content1, toggler.expandedClasses));
+			assert.ok(dom.hasClass(content2, toggler.expandedClasses));
+			assert.ok(dom.hasClass(toggler1, toggler.headerExpandedClasses));
+			assert.ok(dom.hasClass(toggler2, toggler.headerExpandedClasses));
+
+			toggler.toggle();
+			assert.ok(dom.hasClass(content1, toggler.collapsedClasses));
+			assert.ok(dom.hasClass(content2, toggler.collapsedClasses));
+			assert.ok(dom.hasClass(toggler1, toggler.headerCollapsedClasses));
+			assert.ok(dom.hasClass(toggler2, toggler.headerCollapsedClasses));
 		});
 
 		it('should use the header\'s next matched sibling as its content', function() {
