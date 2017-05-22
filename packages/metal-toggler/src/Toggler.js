@@ -33,30 +33,26 @@ class Toggler extends State {
 	* Manually collapse the content's visibility.
 	* @param {string|!Element} header
 	*/
-	collapse(header = this.header) {
-		let content = this.getContentElement_(header);
-		if (!core.isElement(header)) {
-			header = this.getHeaderElements_(header);
-		}
+	collapse(header) {
+		let headerElements = this.getHeaderElements_(header);
+		let content = this.getContentElement_(headerElements);
 		dom.removeClasses(content, this.expandedClasses);
 		dom.addClasses(content, this.collapsedClasses);
-		dom.removeClasses(header, this.headerExpandedClasses);
-		dom.addClasses(header, this.headerCollapsedClasses);
+		dom.removeClasses(headerElements, this.headerExpandedClasses);
+		dom.addClasses(headerElements, this.headerCollapsedClasses);
 	}
 
 	/**
 	* Manually expand the content's visibility.
 	* @param {string|!Element} header
 	*/
-	expand(header = this.header) {
-		let content = this.getContentElement_(header);
-		if (!core.isElement(header)) {
-			header = this.getHeaderElements_(header);
-		}
+	expand(header) {
+		let headerElements = this.getHeaderElements_(header);
+		let content = this.getContentElement_(headerElements);
 		dom.addClasses(content, this.expandedClasses);
 		dom.removeClasses(content, this.collapsedClasses);
-		dom.addClasses(header, this.headerExpandedClasses);
-		dom.removeClasses(header, this.headerCollapsedClasses);
+		dom.addClasses(headerElements, this.headerExpandedClasses);
+		dom.removeClasses(headerElements, this.headerCollapsedClasses);
 	}
 
 	/**
@@ -91,7 +87,10 @@ class Toggler extends State {
 	 * @returns {!Nodelist}
 	 * @protected
 	 */
-	getHeaderElements_(header) {
+	getHeaderElements_(header = this.header) {
+		if (core.isElement(header) || core.isElement(header[0])) {
+			return header;
+		}
 		return this.container.querySelectorAll(header);
 	}
 
@@ -154,11 +153,12 @@ class Toggler extends State {
 	 * Toggles the content's visibility.
 	 * @param {string|!Element} header
 	 */
-	toggle(header = this.header) {
-		if (this.hasExpanded_(header)) {
-			this.collapse(header);
+	toggle(header) {
+		let headerElements = this.getHeaderElements_(header);
+		if (this.hasExpanded_(headerElements)) {
+			this.collapse(headerElements);
 		} else {
-			this.expand(header);
+			this.expand(headerElements);
 		}
 	}
 }
