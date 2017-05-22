@@ -460,13 +460,13 @@ class Uri {
  * @default http:
  * @static
  */
-const shouldInheritProtocol = () =>
+const isSecure = () =>
 	(typeof window !== 'undefined' &&
 		window.location &&
 		window.location.protocol &&
-		window.location.protocol !== 'about:');
+		window.location.protocol.indexOf('https') === 0);
 
-Uri.DEFAULT_PROTOCOL = shouldInheritProtocol() ? window.location.protocol : 'http:';
+Uri.DEFAULT_PROTOCOL = isSecure() ? 'https:' : 'http:';
 
 /**
  * Hostname placeholder. Relevant to internal usage only.
