@@ -43,7 +43,7 @@ describe('Ajax', function() {
 
 		it('should send request without passing url or method', function(done) {
 			Ajax.request().then(function(xhrResponse) {
-				assert.strictEqual('', xhrResponse.url);
+				assert.strictEqual('/', xhrResponse.url);
 				assert.strictEqual('GET', xhrResponse.method);
 				done();
 			});
