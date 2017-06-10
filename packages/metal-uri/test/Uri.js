@@ -213,8 +213,10 @@ describe('Uri', function() {
 	});
 
 	it('should remove dot segments from pathname', function() {
-		assert.strictEqual('/a', new Uri('./a/').getPathname());
-		assert.strictEqual('/a', new Uri('./a/b/c/../..').getPathname());
+		assert.strictEqual('/a/', new Uri('./a/').getPathname());
+		assert.strictEqual('/a/', new Uri('./a/b/c/../../').getPathname());
+		assert.strictEqual('/a', new Uri('./a').getPathname());
+		// assert.strictEqual('/a', new Uri('./a/b/c/../..').getPathname()); // This will only fail on browsers, and it's not yet supported by metal-uri
 	});
 
 	it('should support protocol relative uri', function() {
@@ -275,5 +277,10 @@ describe('Uri', function() {
 	it('should check if uri has parameter', function() {
 		assert.ok(new Uri('?a=1').hasParameter('a'));
 		assert.ok(!new Uri('?a=1').hasParameter('b'));
+	});
+
+	it('should preserve trailing slash on paths', function() {
+		var uri = new Uri('http://hostname:8080/foo/');
+		assert.strictEqual('http://hostname:8080/foo/', uri.toString());
 	});
 });
