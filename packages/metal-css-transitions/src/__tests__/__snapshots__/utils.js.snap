@@ -1,87 +1,65 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
 exports[`getChildrenMap should create a keyed object based on props.key 1`] = `
-Array [
-  Array [
-    "foo",
-    Object {
-      "props": Object {
-        "key": "foo",
-      },
-      "tag": "div",
+Map {
+  "foo" => Object {
+    "props": Object {
+      "key": "foo",
     },
-  ],
-  Array [
-    "bar",
-    Object {
-      "props": Object {
-        "key": "bar",
-      },
-      "tag": "div",
+    "tag": "div",
+  },
+  "bar" => Object {
+    "props": Object {
+      "key": "bar",
     },
-  ],
-]
+    "tag": "div",
+  },
+}
 `;
 
 exports[`getChildrenMap should create a keyed object based on props.key when keys are numbers 1`] = `
-Array [
-  Array [
-    2,
-    Object {
-      "props": Object {
-        "key": 2,
-      },
-      "tag": "div",
+Map {
+  2 => Object {
+    "props": Object {
+      "key": 2,
     },
-  ],
-  Array [
-    1,
-    Object {
-      "props": Object {
-        "key": 1,
-      },
-      "tag": "div",
+    "tag": "div",
+  },
+  1 => Object {
+    "props": Object {
+      "key": 1,
     },
-  ],
-]
+    "tag": "div",
+  },
+}
 `;
 
 exports[`getChildrenMap should create a keyed object even if tag is all sorts of types 1`] = `
-Array [
-  Array [
-    "div-1",
-    Object {
-      "props": Object {
-        "key": "div-1",
-      },
-      "tag": "div",
+Map {
+  "div-1" => Object {
+    "props": Object {
+      "key": "div-1",
     },
-  ],
-  Array [
-    "testTest-1",
-    Object {
-      "props": Object {
-        "key": "testTest-1",
-      },
-      "tag": [Function],
+    "tag": "div",
+  },
+  "testTest-1" => Object {
+    "props": Object {
+      "key": "testTest-1",
     },
-  ],
-  Array [
-    "__METAL_CSS_TRANSISIONS__-1",
-    Object {
-      "props": Object {
-        "key": "__METAL_CSS_TRANSISIONS__-1",
-      },
-      "tag": Object {
-        "foo": "bar",
-      },
+    "tag": [Function],
+  },
+  "__METAL_CSS_TRANSISIONS__-1" => Object {
+    "props": Object {
+      "key": "__METAL_CSS_TRANSISIONS__-1",
     },
-  ],
-  Array [
-    "__METAL_CSS_TRANSISIONS__-2",
-    Object {
-      "props": Object {
-        "key": "__METAL_CSS_TRANSISIONS__-2",
-      },
+    "tag": Object {
+      "foo": "bar",
     },
-  ],
-]
+  },
+  "__METAL_CSS_TRANSISIONS__-2" => Object {
+    "props": Object {
+      "key": "__METAL_CSS_TRANSISIONS__-2",
+    },
+  },
+}
 `;

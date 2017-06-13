@@ -281,7 +281,7 @@ describe('TransitionWrapper', function() {
 		jest.useRealTimers();
 	});
 
-	it.only('should call leave when show changes from true to false', done => {
+	it('should call leave when show changes from true to false', done => {
 		jest.useFakeTimers();
 
 		const originalLeave = TransitionChild.prototype.leave;
