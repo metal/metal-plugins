@@ -28,7 +28,7 @@ describe('TransitionWrapper', function() {
 
 		component = new App();
 
-		expect(component.element.className).toBe('wrapper');
+		expect(component).toMatchSnapshot();
 	});
 
 	it('renders with one child', () => {
@@ -44,7 +44,7 @@ describe('TransitionWrapper', function() {
 
 		component = new App();
 
-		expect(component.element.querySelector('.child'));
+		expect(component).toMatchSnapshot();
 	});
 
 	it('renders with multiple children', () => {
@@ -61,11 +61,10 @@ describe('TransitionWrapper', function() {
 
 		component = new App();
 
-		expect(component.element.querySelector('.child1'));
-		expect(component.element.querySelector('.child2'));
+		expect(component).toMatchSnapshot();
 	});
 
-	it('should call setState when new children are supplied', done => {
+	it('should call setState when new children are supplied', () => {
 		const spy = jest.fn();
 
 		component = new TransitionWrapper();
@@ -75,14 +74,12 @@ describe('TransitionWrapper', function() {
 		expect(spy).not.toBeCalled();
 		component.props.children = [{}];
 
-		setTimeout(() => {
-			expect(spy).toBeCalled();
+		jest.runAllTimers();
 
-			done();
-		}, 100);
+		expect(spy).toBeCalled();
 	});
 
-	it('should call syncChildren with empty args', done => {
+	it('should call syncChildren with empty args', () => {
 		const spy = jest.fn();
 
 		component = new TransitionWrapper();
@@ -93,11 +90,9 @@ describe('TransitionWrapper', function() {
 
 		component.props.children = [];
 
-		setTimeout(() => {
-			expect(spy).toBeCalled();
+		jest.runAllTimers();
 
-			done();
-		}, 100);
+		expect(spy).toBeCalled();
 	});
 
 	it('should process entering children and call .enter()', () => {
@@ -106,7 +101,7 @@ describe('TransitionWrapper', function() {
 		const spy = jest.fn();
 		const KEY = 1;
 
-		component.components[KEY] = {
+		component.refs[KEY] = {
 			enter: spy
 		};
 
@@ -123,17 +118,15 @@ describe('TransitionWrapper', function() {
 		component.handleChildrenEnter_(children, new Map());
 
 		expect(spy).toBeCalled();
-
-		delete component.components[KEY];
 	});
 
 	it('should process exiting children and call .leave()', () => {
 		component = new TransitionWrapper();
 
-		const spy = jest.fn();
+		const spy = jest.fn(callback => callback());
 		const KEY = 1;
 
-		component.components[KEY] = {
+		component.refs[KEY] = {
 			leave: spy
 		};
 
@@ -150,8 +143,6 @@ describe('TransitionWrapper', function() {
 		component.handleChildrenLeave_(children, new Map());
 
 		expect(spy).toBeCalled();
-
-		delete component.components[KEY];
 	});
 
 	it('should remove key from childrenMap_ state', () => {
@@ -165,7 +156,7 @@ describe('TransitionWrapper', function() {
 		expect(component.state.childrenMap_.has(KEY)).toBeFalsy();
 	});
 
-	it('should render children in the order they are given when keys are numbers', done => {
+	it('should render children in the order they are given when keys are numbers', () => {
 		class App extends Component {
 			render() {
 				return (
@@ -176,17 +167,16 @@ describe('TransitionWrapper', function() {
 			}
 		}
 
-		component = new App({
-			children: [
-				<div class="child" key={1}>1</div>,
-				<div class="child" key={2}>2</div>
-			]
-		});
+		component = new App();
 
-		let children = component.element.querySelectorAll('.child');
+		component.props.children = [
+			<div class="child" key="1">1</div>,
+			<div class="child" key="2">2</div>
+		];
 
-		expect(children[0].innerHTML).toBe('1');
-		expect(children[1].innerHTML).toBe('2');
+		jest.runAllTimers();
+
+		expect(component).toMatchSnapshot();
 
 		component.props.children = [
 			<div class="child" key={3}>3</div>,
@@ -194,18 +184,12 @@ describe('TransitionWrapper', function() {
 			<div class="child" key={2}>2</div>
 		];
 
-		setTimeout(() => {
-			children = component.element.querySelectorAll('.child');
+		jest.runAllTimers();
 
-			expect(children[0].innerHTML).toBe('3');
-			expect(children[1].innerHTML).toBe('1');
-			expect(children[2].innerHTML).toBe('2');
-
-			done();
-		}, 100);
+		expect(component).toMatchSnapshot();
 	});
 
-	it('should render children in the order they are given when keys are strings', done => {
+	it('should render children in the order they are given when keys are strings', () => {
 		class App extends Component {
 			render() {
 				return (
@@ -216,17 +200,16 @@ describe('TransitionWrapper', function() {
 			}
 		}
 
-		component = new App({
-			children: [
-				<div class="child" key="1">1</div>,
-				<div class="child" key="2">2</div>
-			]
-		});
+		component = new App();
 
-		let children = component.element.querySelectorAll('.child');
+		component.props.children = [
+			<div class="child" key="1">1</div>,
+			<div class="child" key="2">2</div>
+		];
 
-		expect(children[0].innerHTML).toBe('1');
-		expect(children[1].innerHTML).toBe('2');
+		jest.runAllTimers();
+
+		expect(component).toMatchSnapshot();
 
 		component.props.children = [
 			<div class="child" key="3">3</div>,
@@ -234,20 +217,12 @@ describe('TransitionWrapper', function() {
 			<div class="child" key="2">2</div>
 		];
 
-		setTimeout(() => {
-			children = component.element.querySelectorAll('.child');
+		jest.runAllTimers();
 
-			expect(children[0].innerHTML).toBe('3');
-			expect(children[1].innerHTML).toBe('1');
-			expect(children[2].innerHTML).toBe('2');
-
-			done();
-		}, 100);
+		expect(component).toMatchSnapshot();
 	});
 
 	it('should not call enter immediately after appear', () => {
-		jest.useFakeTimers();
-
 		const originalEnter = TransitionChild.prototype.enter;
 		const enterSpy = jest.fn(function() {
 			return originalEnter.apply(this, arguments);
@@ -277,22 +252,19 @@ describe('TransitionWrapper', function() {
 
 		expect(appearSpy).toBeCalled();
 		expect(enterSpy).not.toBeCalled();
-
-		jest.useRealTimers();
 	});
 
-	it('should call leave when show changes from true to false', done => {
-		jest.useFakeTimers();
-
+	it('should call leave when show changes from true to false', () => {
 		const originalLeave = TransitionChild.prototype.leave;
 
-		TransitionChild.prototype.leave = jest.fn();
+		TransitionChild.prototype.leave = jest.fn(callback => callback());
 
 		class App extends Component {
 			render() {
 				return (
 					<TransitionWrapper ref="transitionWrapper" name="test">
-						{this.state.show_ && <div class="test-child">2</div>}
+						{this.state.show_ &&
+							<div class="test-child" ref="testChild">2</div>}
 					</TransitionWrapper>
 				);
 			}
@@ -304,22 +276,18 @@ describe('TransitionWrapper', function() {
 
 		component = new App();
 
-		component.setState({show_: false}, () => {
-			jest.runAllTimers();
+		jest.runAllTimers();
 
-			expect(TransitionChild.prototype.leave).toHaveBeenCalled();
+		component.state.show_ = false;
 
-			TransitionChild.prototype.leave = originalLeave;
+		jest.runAllTimers();
 
-			jest.useRealTimers();
+		expect(TransitionChild.prototype.leave).toHaveBeenCalled();
 
-			done();
-		});
+		TransitionChild.prototype.leave = originalLeave;
 	});
 
-	it('should call enter when show changes from false to true', done => {
-		jest.useFakeTimers();
-
+	it('should call enter when show changes from false to true', () => {
 		const originalEnter = TransitionChild.prototype.enter;
 
 		TransitionChild.prototype.enter = jest.fn();
@@ -340,16 +308,14 @@ describe('TransitionWrapper', function() {
 
 		component = new App();
 
-		component.setState({show_: true}, () => {
-			jest.runAllTimers();
+		jest.runAllTimers();
 
-			expect(TransitionChild.prototype.enter).toHaveBeenCalled();
+		component.state.show_ = true;
 
-			TransitionChild.prototype.enter = originalEnter;
+		jest.runAllTimers();
 
-			jest.useRealTimers();
+		expect(TransitionChild.prototype.enter).toHaveBeenCalled();
 
-			done();
-		});
+		TransitionChild.prototype.enter = originalEnter;
 	});
 });

@@ -31,8 +31,8 @@ class TransitionWrapper extends Component {
 			if (child && child.props) {
 				const {key} = child.props;
 
-				if (key && this.components[key]) {
-					this.components[key].appear();
+				if (key && this.refs[key]) {
+					this.refs[key].appear();
 				}
 			}
 		});
@@ -68,8 +68,8 @@ class TransitionWrapper extends Component {
 			if (child && child.props) {
 				const {key} = child.props;
 
-				if (key && !prevKeyMap.has(key) && this.components[key]) {
-					this.components[key].enter();
+				if (key && !prevKeyMap.has(key) && this.refs[key]) {
+					this.refs[key].enter();
 				}
 			}
 		});
@@ -86,8 +86,8 @@ class TransitionWrapper extends Component {
 			if (child && child.props) {
 				const {key} = child.props;
 
-				if (key && !newKeyMap.has(key) && this.components[key]) {
-					this.components[key].leave(this.finishLeave_.bind(this, key));
+				if (key && !newKeyMap.has(key) && this.refs[key]) {
+					this.refs[key].leave(this.finishLeave_.bind(this, key));
 				}
 			}
 		});
