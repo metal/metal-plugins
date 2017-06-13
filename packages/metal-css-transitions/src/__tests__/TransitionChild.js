@@ -33,8 +33,9 @@ describe('TransitionChild', () => {
 		}, DELAY_TIME);
 	});
 
-	it('should add and remove classnames', done => {
-		const DELAY = 100;
+	it('should add and remove classnames', () => {
+		jest.useFakeTimers();
+
 		const TRANS_NAME = 'test';
 		const TRANS_TYPE = 'appear';
 
@@ -53,21 +54,21 @@ describe('TransitionChild', () => {
 
 		const transitionChild = app.components.transitionChild;
 
-		transitionChild.transition_(TRANS_TYPE, null, DELAY);
+		transitionChild.transition_(TRANS_TYPE, null, 100);
 
 		expect(appElem.className).toBe(`${TRANS_NAME}-${TRANS_TYPE}`);
 
-		setTimeout(() => {
-			expect(appElem.className).toBe(
-				`${TRANS_NAME}-${TRANS_TYPE} ${TRANS_NAME}-${TRANS_TYPE}-active`
-			);
+		jest.runOnlyPendingTimers();
 
-			setTimeout(() => {
-				expect(appElem.className).toBe('');
+		expect(appElem.className).toBe(
+			`${TRANS_NAME}-${TRANS_TYPE} ${TRANS_NAME}-${TRANS_TYPE}-active`
+		);
 
-				done();
-			}, DELAY);
-		}, DELAY_TIME);
+		jest.runOnlyPendingTimers();
+
+		expect(appElem.className).toBe('');
+
+		jest.useRealTimers();
 	});
 
 	it('should execute callbackFn', done => {
