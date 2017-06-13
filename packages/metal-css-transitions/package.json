@@ -5,7 +5,7 @@
   "license": "BSD",
   "repository": "https://github.com/metal/metal-css-transisions.git",
   "engines": {
-    "node": ">=0.12.0",
+    "node": ">=6.0.0",
     "npm": ">=3.0.0"
   },
   "main": "lib/TransitionWrapper.js",
@@ -17,8 +17,9 @@
   ],
   "scripts": {
     "build": "babel -d lib/ src/",
-    "format": "eslint . --ignore-pattern node_modules --ignore-pattern lib --fix",
-    "lint": "eslint . --ignore-pattern node_modules --ignore-pattern lib",
+    "build:benchmark": "browserify ./benchmark/index.js -o ./benchmark/build/index.js -t [ babelify --presets [ metal-jsx es2015 ] ]",
+    "format": "eslint . --ignore-pattern node_modules --ignore-pattern lib --ignore-pattern benchmark --fix",
+    "lint": "eslint . --ignore-pattern node_modules --ignore-pattern lib --ignore-pattern benchmark",
     "precommit": "npm run format",
     "prepublish": "npm run build",
     "prepush": "npm test",
@@ -28,6 +29,14 @@
   "keywords": [
     "metal"
   ],
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.js"
+    ],
+    "roots": [
+      "<rootDir>/src/"
+    ]
+  },
   "babel": {
     "presets": [
       "metal-jsx",
@@ -45,11 +54,13 @@
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-jest": "^16.0.0",
     "babel-preset-metal-jsx": "0.0.3",
+    "babelify": "^7.3.0",
+    "browserify": "^14.4.0",
     "eslint": "^3.13.1",
     "eslint-plugin-prettier": "^2.0.1",
     "eslint-plugin-react": "^6.9.0",
     "husky": "^0.13.3",
-    "jest-cli": "^16.0.2",
+    "jest": "^20.0.4",
     "prettier": "^1.1.0"
   }
 }
