@@ -35,7 +35,11 @@
     ],
     "roots": [
       "<rootDir>/src/"
-    ]
+    ],
+    "snapshotSerializers": [
+      "metal-jest-serializer"
+    ],
+    "timers": "fake"
   },
   "babel": {
     "presets": [
@@ -61,6 +65,7 @@
     "eslint-plugin-react": "^6.9.0",
     "husky": "^0.13.3",
     "jest": "^20.0.4",
+    "metal-jest-serializer": "^1.0.1",
     "prettier": "^1.1.0"
   }
 }
