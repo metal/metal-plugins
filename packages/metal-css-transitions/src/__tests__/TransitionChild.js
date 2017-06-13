@@ -1,7 +1,7 @@
 'use strict';
 import Component from 'metal-jsx';
 
-import TransitionChild, {DELAY_TIME} from '../TransitionChild';
+import TransitionChild from '../TransitionChild';
 
 describe('TransitionChild', () => {
 	let component;
@@ -15,27 +15,25 @@ describe('TransitionChild', () => {
 	it('renders', () => {
 		const component = new TransitionChild();
 
-		expect(component);
+		expect(component).toMatchSnapshot;
 	});
 
-	it('should delay before adding a class', done => {
+	it('should delay before adding a class', () => {
 		const component = new TransitionChild();
 		const node = document.createElement('div');
 
 		expect(node.className).toBe('');
+
 		component.delayActive_('test', node);
+
 		expect(node.className).toBe('');
 
-		setTimeout(() => {
-			expect(node.className).toBe('test');
+		jest.runAllTimers();
 
-			done();
-		}, DELAY_TIME);
+		expect(node.className).toBe('test');
 	});
 
 	it('should add and remove classnames', () => {
-		jest.useFakeTimers();
-
 		const TRANS_NAME = 'test';
 		const TRANS_TYPE = 'appear';
 
@@ -67,11 +65,9 @@ describe('TransitionChild', () => {
 		jest.runOnlyPendingTimers();
 
 		expect(appElem.className).toBe('');
-
-		jest.useRealTimers();
 	});
 
-	it('should execute callbackFn', done => {
+	it('should execute callbackFn', () => {
 		const DELAY = 100;
 		const stubFn = jest.fn();
 
@@ -92,11 +88,9 @@ describe('TransitionChild', () => {
 
 		expect(stubFn).not.toBeCalled();
 
-		setTimeout(() => {
-			expect(stubFn).toBeCalled();
+		jest.runAllTimers();
 
-			done();
-		}, DELAY);
+		expect(stubFn).toBeCalled();
 	});
 
 	it('should call transition_ with appear', () => {
