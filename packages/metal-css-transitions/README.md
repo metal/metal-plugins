@@ -1,5 +1,7 @@
 # metal-css-transitions
 [![Build Status](https://travis-ci.org/metal/metal-css-transitions.svg?branch=master)](https://travis-ci.org/metal/metal-css-transitions)
+[![npm](https://img.shields.io/npm/dm/metal-css-transitions.svg)](https://www.npmjs.com/package/metal-css-transitions)
+[![npm](https://img.shields.io/npm/v/metal-css-transitions.svg)](https://www.npmjs.com/package/metal-css-transitions)
 
 Metal component used to apply css transitions
 
