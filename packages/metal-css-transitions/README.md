@@ -5,25 +5,40 @@
 
 Metal component used to apply css transitions
 
-[Demo](http://metal.github.io/metal-css-transitions/)
+## [Demo](http://metal.github.io/metal-css-transitions/)
 
-## Implementation
+## Usage
 
-Check out gh-pages [branch](/tree/gh-pages) for an example of implementation.
+```js
+import TransitionWrapper from 'metal-css-transitions';
 
-## Setup
+<TransitionWrapper name="some-animation">
+  <div>1</div>
+  <div>2</div>
+</TransitionWrapper>
+```
 
-1. Install NodeJS >= v0.12.0 and NPM >= v3.0.0, if you don't have it yet. You
-can find it [here](https://nodejs.org).
+```scss
+.some-animation-appear {
+  opacity: 0;
+}
 
-2. Install local dependencies:
+.some-animation-appear.some-animation-appear-active {
+  transition: opacity 1000ms;
+  opacity: 1;
+}
+```
 
-  ```
-  npm install
-  ```
+| Prop | Type | Description | Default |
+| -------- | ---- | ----------- | ------- |
+| **name** | string | Name of css transition. | `''` |
 
-3. Build the code:
+#### Transitions
 
-  ```
-  npm run build
-  ```
+| Type | Example CSS | When? |
+| ---- | ---- | ---- |
+| appear | `.foo-appear {} .foo-appear-active {}` | When <TransitionWrapper /> is attached |
+| enter | `.foo-enter {} .foo-enter-active {}` | When new child component is attached. |
+| leave | `.foo-leave {} .foo-leave-active {}` | When child is about to detach. |
+
+All transitions respect the duration specified in the css.
