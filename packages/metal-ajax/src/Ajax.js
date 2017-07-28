@@ -53,6 +53,7 @@ class Ajax {
 		method = method || 'GET';
 
 		var request = new XMLHttpRequest();
+		var previousReadyState = 0;
 
 		var promise = new Promise(function(resolve, reject) {
 			request.onload = function() {
@@ -62,8 +63,18 @@ class Ajax {
 				}
 				resolve(request);
 			};
+			request.onreadystatechange = function() {
+				if (previousReadyState && previousReadyState < 3 && 4 === request.readyState) {
+					request.terminatedPrematurely = true;
+				}
+				previousReadyState = request.readyState;
+			};
 			request.onerror = function() {
-				var error = new Error('Request error');
+				var message = 'Request error';
+				if (request.terminatedPrematurely) {
+					message = 'Request terminated prematurely';
+				} 
+				var error = new Error(message);
 				error.request = request;
 				reject(error);
 			};
