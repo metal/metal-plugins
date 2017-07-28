@@ -1,5 +1,7 @@
 # metal-uri
 
+[![Build Status](https://travis-ci.org/metal/metal-uri.svg?branch=master)](https://travis-ci.org/metal/metal-uri)
+
 Class for parsing and formatting URIs.
 
 ## Setup
