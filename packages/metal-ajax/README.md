@@ -1,5 +1,7 @@
 # metal-ajax
 
+[![Build Status](https://travis-ci.org/metal/metal-ajax.svg?branch=master)](https://travis-ci.org/metal/metal-ajax)
+
 Metal.js utility to perform Ajax requests
 
 ## Setup
