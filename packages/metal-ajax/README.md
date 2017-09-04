@@ -21,9 +21,4 @@ Metal.js utility to perform Ajax requests
   ```
   npm install
   ```
-
-4. Build the code:
-
-  ```
-  gulp build
-  ```
+  
