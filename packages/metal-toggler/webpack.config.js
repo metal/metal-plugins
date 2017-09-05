@@ -1,7 +1,11 @@
 const webpack = require('webpack');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
-	entry: './src/Toggler.js',
+	entry: {
+		'Toggler.js': './src/Toggler.js',
+		'toggler.css': './src/toggler.scss'
+	},
 	module: {
 		rules: [
 			{
@@ -18,20 +22,20 @@ module.exports = {
 			},
 			{
 		    test: /\.scss$/,
-		    use: [
-		      { loader: 'style-loader'}, 
-		      { loader: 'css-loader' }, 
-		      { loader: 'sass-loader' }
-		    ]
+		    use: ExtractTextPlugin.extract({
+		    	fallback: 'style-loader', 
+		    	use: ['css-loader', 'sass-loader']
+		    }), 
 		  }
 		]
 	},
 	output: {
 		library: 'metal',
 		libraryTarget: 'this',
-		filename: './build/globals/toggler.js'
+		filename: './build/globals/[name]'
 	},
 	plugins: [
+		new ExtractTextPlugin('./build/globals/toggler.css'),
 		new webpack.optimize.ModuleConcatenationPlugin()
 	]
 };

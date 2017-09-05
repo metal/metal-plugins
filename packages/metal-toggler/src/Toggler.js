@@ -1,6 +1,5 @@
 'use strict';
 
-import './toggler.scss';
 import core from 'metal';
 import dom from 'metal-dom';
 import { EventHandler } from 'metal-events';

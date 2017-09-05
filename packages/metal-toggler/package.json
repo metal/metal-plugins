@@ -26,6 +26,7 @@
   ],
   "dependencies": {
     "bootstrap": "^3.3.6",
+    "extract-text-webpack-plugin": "^3.0.0",
     "metal": "^2.0.0",
     "metal-dom": "^2.0.0",
     "metal-events": "^2.0.0",
