@@ -3,7 +3,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
 	entry: {
-		'Toggler.js': './src/Toggler.js',
+		'toggler.js': './src/Toggler.js',
 		'toggler.css': './src/toggler.scss'
 	},
 	module: {
