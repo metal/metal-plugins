@@ -21,5 +21,5 @@ Metal's toggler component
 4. Build the code:
 
   ```
-  gulp build
+  npm run build
   ```
