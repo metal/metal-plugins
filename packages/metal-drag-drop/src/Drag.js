@@ -875,4 +875,5 @@ Drag.Placeholder = {
 	CLONE: 'clone'
 };
 
+export { Drag };
 export default Drag;

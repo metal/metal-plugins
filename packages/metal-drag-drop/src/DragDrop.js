@@ -227,4 +227,5 @@ DragDrop.Events = {
 	TARGET_LEAVE: 'targetLeave'
 };
 
+export { DragDrop, Drag };
 export default DragDrop;

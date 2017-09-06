@@ -160,4 +160,5 @@ DragAutoScroll.STATE = {
 	}
 };
 
+export { DragAutoScroll }; 
 export default DragAutoScroll;

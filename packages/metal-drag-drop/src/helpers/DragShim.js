@@ -81,4 +81,5 @@ class DragShim {
  */
 DragShim.docShim_ = null;
 
+export { DragShim }; 
 export default DragShim;

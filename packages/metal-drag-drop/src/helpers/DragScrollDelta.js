@@ -94,4 +94,5 @@ class DragScrollDelta extends EventEmitter {
 	}
 }
 
+export { DragScrollDelta };
 export default DragScrollDelta;
