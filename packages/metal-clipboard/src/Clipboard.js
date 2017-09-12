@@ -286,4 +286,5 @@ ClipboardAction.STATE = {
 	}
 };
 
+export { Clipboard };
 export default Clipboard;
