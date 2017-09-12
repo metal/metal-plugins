@@ -151,4 +151,5 @@ Affix.STATE = {
 	}
 };
 
+export { Affix };
 export default Affix;
