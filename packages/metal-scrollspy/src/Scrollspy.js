@@ -287,4 +287,5 @@ Scrollspy.STATE = {
 	}
 };
 
+export { Scrollspy };
 export default Scrollspy;
