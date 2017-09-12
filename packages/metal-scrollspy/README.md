@@ -21,7 +21,7 @@ Metal's scrollspy component
 4. Build the code:
 
   ```
-  gulp build
+  npm run build
   ```
 
 5. Open the demo at demos/index.html on your browser.
