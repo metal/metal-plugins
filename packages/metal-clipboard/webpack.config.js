@@ -10,8 +10,7 @@ module.exports = {
 				loader: 'babel-loader',
 				options: {
 					compact: false,
-					presets: ['babel-preset-es2015'],
-					plugins: ['babel-plugin-transform-node-env-inline']
+					presets: ['babel-preset-es2015']
 				}
 			}
 		}]
