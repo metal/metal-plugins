@@ -283,4 +283,14 @@ describe('Uri', function() {
 		var uri = new Uri('http://hostname:8080/foo/');
 		assert.strictEqual('http://hostname:8080/foo/', uri.toString());
 	});
+
+	it('should return information if default protocol was added to the uri', function() {
+		var uri = new Uri('hostname:8080/foo/');
+		assert.strictEqual('http://hostname:8080/foo/', uri.toString());
+		assert.strictEqual(true, uri.isUsingDefaultProtocol());
+
+		uri = new Uri('https://hostname:8080/foo/');
+		assert.strictEqual('https://hostname:8080/foo/', uri.toString());
+		assert.strictEqual(false, uri.isUsingDefaultProtocol());
+	});
 });

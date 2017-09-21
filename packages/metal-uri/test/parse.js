@@ -1,6 +1,7 @@
 'use strict';
 
 import parse from '../src/parse';
+import { isSafari, isSafariVersion } from './uaHelper';
 
 if (typeof URL !== 'undefined') {
 	// Skips the tests for this file on node environment.
@@ -15,7 +16,10 @@ if (typeof URL !== 'undefined') {
 			assert.strictEqual('?a=1', uri.search);
 		});
 
-		it('should throw a TypeError exception on invalid URLs', function() {
+		it('should throw a TypeError exception if the port number exceeds 65535', function() {
+			// exclude this test scenario prior to Safari 10.1
+			if (isSafari() && !isSafariVersion('10.1')) return;
+
 			assert.throws(function() {
 				parse('http://localhost:99999');
 			}, TypeError)

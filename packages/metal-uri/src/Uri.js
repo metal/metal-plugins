@@ -240,6 +240,15 @@ class Uri {
 	}
 
 	/**
+	 * Returns true if the default protocol (scheme) was added to the original Uri.
+	 * @return {boolean} True if a protocol (scheme) was added to the Url, false
+	 *   otherwise
+	 */
+	isUsingDefaultProtocol() {
+		return this.usingDefaultProtocol_;
+	}
+
+	/**
 	 * Makes this URL unique by adding a random param to it. Useful for avoiding
 	 * cache.
 	 */
@@ -249,8 +258,8 @@ class Uri {
 	}
 
 	/**
-	 * Maybe adds protocol and a hostname placeholder on a parial URI if needed.
-	 * Relevent for compatibility with <code>URL</code> native object.
+	 * Maybe adds protocol and a hostname placeholder on a partial URI if needed.
+	 * Relevant for compatibility with <code>URL</code> native object.
 	 * @param {string=} opt_uri
 	 * @return {string} URI with protocol and hostname placeholder.
 	 */
@@ -260,6 +269,8 @@ class Uri {
 			opt_uri.indexOf('javascript:') !== 0) { // jshint ignore:line
 
 			url = Uri.DEFAULT_PROTOCOL;
+			this.usingDefaultProtocol_ = true;
+
 			if (opt_uri[0] !== '/' || opt_uri[1] !== '/') {
 				url += '//';
 			}
@@ -282,6 +293,8 @@ class Uri {
 				default:
 					url += opt_uri;
 			}
+		} else {
+			this.usingDefaultProtocol_ = false;
 		}
 		return url;
 	}
