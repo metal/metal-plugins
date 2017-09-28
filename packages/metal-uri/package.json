@@ -9,6 +9,7 @@
     "npm": ">=3.0.0"
   },
   "main": "node.js",
+  "module": "lib/Uri.js",
   "jsnext:main": "src/Uri.js",
   "files": [
     "lib",
