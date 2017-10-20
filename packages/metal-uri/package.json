@@ -1,6 +1,6 @@
 {
   "name": "metal-uri",
-  "version": "2.4.0",
+  "version": "3.0.0",
   "description": "Class for parsing and formatting URIs.",
   "license": "BSD",
   "repository": "metal/metal-uri",
@@ -8,7 +8,7 @@
     "node": ">=0.12.0",
     "npm": ">=3.0.0"
   },
-  "main": "node.js",
+  "main": "lib/Uri.js",
   "module": "lib/Uri.js",
   "jsnext:main": "src/Uri.js",
   "files": [
@@ -28,13 +28,23 @@
     "metal": "^2.0.0",
     "metal-structs": "^1.0.0",
     "path-browserify": "0.0.0",
-    "url": "^0.11.0"
+    "resolve-pathname": "^2.2.0",
+    "url-parse": "^1.1.9"
   },
   "devDependencies": {
     "babel-cli": "^6.4.5",
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
     "babel-preset-metal": "^4.0.0",
+    "babelify": "^7.3.0",
+    "browserify": "^14.4.0",
     "gulp": "^3.8.11",
-    "gulp-metal": "^2.0.0"
+    "gulp-metal": "^2.0.0",
+    "karma": "^1.1.0",
+    "karma-browserify": "^5.0.5",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^1.0.1",
+    "karma-mocha": "^1.3.0"
   },
   "react-native": {
     "path": "path-browserify"

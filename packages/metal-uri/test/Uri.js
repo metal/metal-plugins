@@ -265,15 +265,6 @@ describe('Uri', function() {
 		assert.strictEqual(uri.toString(), uri2.toString());
 	});
 
-	it('should change the function used for parsing urls', function() {
-		var fn = Uri.getParseFn();
-		Uri.setParseFn(function(url) {
-			return url.toLowerCase();
-		});
-		assert.strictEqual('foo', Uri.parse('Foo'));
-		Uri.setParseFn(fn);
-	});
-
 	it('should check if uri has parameter', function() {
 		assert.ok(new Uri('?a=1').hasParameter('a'));
 		assert.ok(!new Uri('?a=1').hasParameter('b'));

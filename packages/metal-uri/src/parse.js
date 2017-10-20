@@ -1,32 +1,27 @@
 'use strict';
 
-import { isFunction } from 'metal';
-import parseFromAnchor from './parseFromAnchor';
+import URLParse from 'url-parse';
+
+const MAX_PORT = 65535;
 
 /**
- * Parses the given uri string into an object. The URL function will be used
- * when present, otherwise we'll fall back to the anchor node element.
+ * Parses the given uri string into an object.
  * @param {*=} opt_uri Optional string URI to parse
  */
 function parse(opt_uri) {
-	if (isFunction(URL) && URL.length) {
-		let url;
-		try {
-			url = new URL(opt_uri);
-		} catch (e) {
-			throw new TypeError(`${opt_uri} is not a valid URL`);
-		}
+	const url = new URLParse(opt_uri);
+	url.search = url.query;
+	validatePort(url.port);
+	return url;
+}
 
-		// Safari Browsers will cap port to the max 16-bit unsigned integer (65535) instead
-		// of throwing a TypeError as per spec. It will still keep the port number in the
-		// href attribute, so we can use this mismatch to raise the expected exception.
-		if (url.port && url.href.indexOf(url.port) === -1) {
-			throw new TypeError(`${opt_uri} is not a valid URL`);
-		}
-
-		return url;
-	} else {
-		return parseFromAnchor(opt_uri);
+/**
+ * Validates port number and throws `TypeError` if it exceeds `65535`.
+ * @param {!number} port Port number from parsed url
+ */
+function validatePort(port) {
+	if (port && port > MAX_PORT) {
+		throw TypeError('Port number can\'t exceed 65535');
 	}
 }
 
