@@ -1,6 +1,6 @@
 {
   "name": "metal-ajax",
-  "version": "2.1.1",
+  "version": "3.0.0",
   "description": "Metal.js utility to perform Ajax requests",
   "license": "BSD",
   "repository": "metal/metal-ajax",
@@ -26,13 +26,18 @@
   "dependencies": {
     "metal": "^2.0.0",
     "metal-promise": "^2.0.0",
-    "metal-uri": "^2.0.0"
+    "metal-uri": "^3.0.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.4.5",
-    "babel-preset-metal": "^4.0.0",
-    "gulp": "^3.8.11",
-    "gulp-metal": "^2.0.0",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-metal": "^4.1.0",
+    "babelify": "^7.3.0",
+    "browserify": "^14.5.0",
+    "gulp": "^3.9.1",
+    "gulp-metal": "^2.2.2",
+    "karma": "^1.7.1",
+    "karma-browserify": "^5.1.1",
     "metal-structs": "^1.0.0"
   }
 }
