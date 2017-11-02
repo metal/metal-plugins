@@ -25,7 +25,7 @@
   ],
   "dependencies": {
     "metal": "^2.0.0",
-    "metal-promise": "^2.0.0",
+    "metal-promise": "^3.0.3",
     "metal-uri": "^3.0.0"
   },
   "devDependencies": {
@@ -38,6 +38,7 @@
     "gulp-metal": "^2.2.2",
     "karma": "^1.7.1",
     "karma-browserify": "^5.1.1",
-    "metal-structs": "^1.0.0"
+    "metal-structs": "^1.0.0",
+    "metal-useragent": "^2.1.3"
   }
 }

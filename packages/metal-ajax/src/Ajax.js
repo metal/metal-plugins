@@ -2,7 +2,7 @@
 
 import { isDef, isDefAndNotNull } from 'metal';
 import Uri from 'metal-uri';
-import { CancellablePromise as Promise } from 'metal-promise';
+import { ProgressPromise as Promise } from 'metal-promise';
 
 class Ajax {
 
@@ -55,13 +55,18 @@ class Ajax {
 		var request = new XMLHttpRequest();
 		var previousReadyState = 0;
 
-		var promise = new Promise(function(resolve, reject) {
+		var promise = new Promise(function(resolve, reject, progress) {
 			request.onload = function() {
 				if (request.aborted) {
 					request.onerror();
 					return;
 				}
 				resolve(request);
+			};
+			request.onprogress = function(progressEvent) {
+				if (progressEvent.lengthComputable) {
+					progress(progressEvent.loaded / progressEvent.total);
+				}
 			};
 			request.onreadystatechange = function() {
 				if (previousReadyState && previousReadyState < 3 && 4 === request.readyState) {
@@ -73,7 +78,7 @@ class Ajax {
 				var message = 'Request error';
 				if (request.terminatedPrematurely) {
 					message = 'Request terminated prematurely';
-				} 
+				}
 				var error = new Error(message);
 				error.request = request;
 				reject(error);

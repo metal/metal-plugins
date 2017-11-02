@@ -1,6 +1,7 @@
 'use strict';
 
 import Ajax from '../src/Ajax';
+import UA from 'metal-useragent';
 import { MultiMap } from 'metal-structs';
 
 describe('Ajax', function() {
@@ -193,6 +194,35 @@ describe('Ajax', function() {
 					done();
 				});
 			this.requests[0].error();
+		});
+
+	});
+
+	describe('Progress', function() {
+		before(function() {
+			if (UA.isSafari && UA.matchUserAgent('Version/9')) {
+				this.skip();
+			}
+		});
+
+		it('should track progress of ajax request', function(done) {
+			this.timeout(30000);
+
+			const listener = sinon.stub();
+
+			Ajax.request('/base/test/data/data.json', 'get')
+				.progress(listener)
+				.then(function(xhrResponse) {
+					assert.equal(xhrResponse.status, 200);
+					assert.isTrue(listener.callCount > 0);
+
+					for (let i = 0; i < listener.callCount; i++) {
+						const progress = listener.getCall(i).args[0];
+
+						assert.isTrue(progress > 0 && progress < 1);
+					}
+					done();
+				});
 		});
 
 	});

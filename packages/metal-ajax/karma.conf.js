@@ -2,6 +2,14 @@
 
 module.exports = function(config) {
 	config.set({
+		customHeaders: [
+			{
+				match: 'test/data/data.json',
+				name: 'Content-Length',
+				value: 315186
+			}
+		],
+
 		frameworks: ['browserify', 'chai', 'mocha', 'sinon'],
 
 		files: [
@@ -9,6 +17,12 @@ module.exports = function(config) {
 				pattern: 'test/**/*.js',
 				watched: false,
 				included: true,
+				served: true
+			},
+			{
+				pattern: 'test/data/data.json',
+				watched: false,
+				included: false,
 				served: true
 			}
 		],
