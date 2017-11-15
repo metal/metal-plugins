@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Demo: DragDrop</title>
+
+	<link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+
+	<script src="../build/globals/dragDrop.js"></script>
+	<style>
+		body {
+			height: 2000px;
+		}
+
+		.box {
+			background-color: red;
+			left: 20px;
+			height: 200px;
+			position: absolute;
+			top: 70px;
+			width: 200px;
+		}
+
+		.box.blue {
+			background-color: blue;
+			left: 20px;
+			top: 600px;
+		}
+
+		.handle {
+			background-color: black;
+			float: right;
+			height: 40px;
+			width: 40px;
+		}
+
+		.scroll {
+			height: 1000px;
+			max-height: 500px;
+			overflow-y: scroll;
+			width: 400px;
+			position: relative;
+			border: 1px solid black;
+		}
+
+		.targetOver {
+			outline: 3px solid black;
+		}
+
+		.target {
+			background-color: #00ffff;
+			height: 200px;
+			margin-bottom: 20px;
+			width: 200px;
+		}
+
+		.target.inner {
+			background-color: yellow;
+			height: 100px;
+			left: 50px;
+			position: relative;
+			top: 50px;
+			width: 100px;
+		}
+	</style>
+</head>
+<body>
+	<h1>DragDrop</h1>
+	<div class="target">
+		<div class="target inner"></div>
+	</div>
+	<div class="scroll">
+		<div class="box"><div class="handle" tabindex="0"></div></div>
+		<div class="box blue"><div class="handle" tabindex="0"></div></div>
+	</div>
+	<script type="text/javascript">
+		var dragDrop = new metal.DragDrop({
+			// Overwrites default value 'body'
+			// cloneContainer: null,
+			dragPlaceholder: metal.Drag.Placeholder.CLONE,
+			handles: '.handle',
+			sources: '.box',
+			targets: '.target'
+		});
+		dragDrop.on(metal.DragDrop.Events.END, function(data, event) {
+			event.preventDefault();
+			console.log('Hit target:', data.target);
+		});
+	</script>
+</body>
+</html>

@@ -18,14 +18,14 @@ class DragShim {
 	 * @static
 	 */
 	static attachDocListeners(useShim, listeners) {
-		var element = document;
+		let element = document;
 		if (useShim) {
 			element = DragShim.getDocShim();
 			element.style.display = 'block';
 		}
-		var eventTypes = Object.keys(listeners);
+		let eventTypes = Object.keys(listeners);
 		return eventTypes.map(function(type) {
-			var isTouch = type.substr(0, 5) === 'touch';
+			let isTouch = type.substr(0, 5) === 'touch';
 			return dom.on(isTouch ? document : element, type, listeners[type]);
 		});
 	}
@@ -81,5 +81,5 @@ class DragShim {
  */
 DragShim.docShim_ = null;
 
-export { DragShim }; 
+export {DragShim};
 export default DragShim;

@@ -1,5 +1,7 @@
 # metal-drag-drop
 
+[![Build Status](https://travis-ci.org/metal/metal-drag-drop.svg?branch=master)](https://travis-ci.org/metal/metal-drag-drop)
+
 Metal's drag and drop component.
 
 ## Setup

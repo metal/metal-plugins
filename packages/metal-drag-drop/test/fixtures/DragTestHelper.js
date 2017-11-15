@@ -14,7 +14,7 @@ class DragTestHelper {
 	 */
 	static triggerKeyEvent(target, keyCode) {
 		dom.triggerEvent(target, 'keydown', {
-			keyCode: keyCode
+			keyCode: keyCode,
 		});
 	}
 
@@ -31,20 +31,20 @@ class DragTestHelper {
 	 * @static
 	 */
 	static triggerMouseEvent(target, eventType, x, y, button) {
-		var data = {
+		let data = {
 			button: button ? button : 0,
 			clientX: x,
-			clientY: y
+			clientY: y,
 		};
 		if ('ontouchstart' in window) {
-			var eventTypesMap = {
+			let eventTypesMap = {
 				mousedown: 'touchstart',
 				mousemove: 'touchmove',
-				mouseup: 'touchend'
+				mouseup: 'touchend',
 			};
 			eventType = eventTypesMap[eventType];
 			data = {
-				targetTouches: [data]
+				targetTouches: [data],
 			};
 		}
 		if (target === document) {

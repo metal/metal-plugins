@@ -1,0 +1,16 @@
+language: node_js
+node_js:
+- '8'
+sudo: false
+addons:
+  sauce_connect:
+    username: metal-dragdrop
+    no_ssl_bump_domains: all
+  jwt:
+    secure: ncNwK6V0DMX1h/EBH+ntgxFlUYD028yp8N+OZdeA7qzam+IAkhg4iaeVstzUvoeMTfMMlsXBnDDKyDh9ajh3MXiB6N+QY3gN3YvC6TEL+gyaBsZDJ1HvkQ8lbzRV+zQyVMKu/wW0oNtHuNmcVWJrrD/NJbx/saxQ7Z+lV5kKM+GDvLyleSRYsJRcX05n7nLuK11TV+T51p3GQTrVX/tvu7Ao0lGsKigtybucB0kB0fFq+27qQvfEpvW8GdRdizYHTnCjvD4oO8zDB16xNZ/oOZZCa1y1Tp5X/OygWsEogwvHHSK/PaKGGQuZA5ING2Mxd6OqqZ7h9tm1/TTbRyjMOGDaklNSGF9N47lcapXlnuau8JX2BaXOibR7I/HS49GjefOB0uEw3OPx2cAwtGR1qLof3hWLEXUcBhJbUb12lTuo1XYlnJSOg30J/4kkQpfyexUJaNqgBkLrMNiUDSKaJa1ikUSYi/sh6TD9qh5LXrAnSUuKeFg2steoybqk0y2YFGLyTLigZoeSSgDKh/aGuK2aMGjzzzlpwcQD3UUzUzhZeRHJSBymtj6zp5q3jvWGQVOZmdl1qlUFp+5NxSpw3tkoPGASWXIQqh2i9XBfkiaIuD4aUICBr1aWNTJWjJ8aX7EpcDaBsOw50gHL7KUEdj3mACjRXnUIrp/Q4GGIW6k=
+before_install:
+- npm install
+script:
+- npm run checkFormat
+- npm run lint
+- npm run test:saucelabs

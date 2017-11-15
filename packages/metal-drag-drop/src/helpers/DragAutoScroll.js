@@ -12,8 +12,8 @@ class DragAutoScroll extends State {
 	/**
 	 * @inheritDoc
 	 */
-	constructor(opt_config) {
-		super(opt_config);
+	constructor(config) {
+		super(config);
 
 		/**
 		 * The handler for the current call to `setTimeout`.
@@ -39,8 +39,8 @@ class DragAutoScroll extends State {
 	 */
 	getRegionWithoutScroll_(scrollContainer) {
 		if (core.isDocument(scrollContainer)) {
-			var height = window.innerHeight;
-			var width = window.innerWidth;
+			let height = window.innerHeight;
+			let width = window.innerWidth;
 			return Position.makeRegion(height, height, 0, width, 0, width);
 		} else {
 			return Position.getRegion(scrollContainer);
@@ -85,23 +85,31 @@ class DragAutoScroll extends State {
 	 * @protected
 	 */
 	scrollInternal_(scrollContainers, mouseX, mouseY) {
-		for (var i = 0; i < scrollContainers.length; i++) {
-			var scrollRegion = this.getRegionWithoutScroll_(scrollContainers[i]);
+		for (let i = 0; i < scrollContainers.length; i++) {
+			let scrollRegion = this.getRegionWithoutScroll_(scrollContainers[i]); // eslint-disable-line
 			if (!Position.pointInsideRegion(mouseX, mouseY, scrollRegion)) {
 				continue;
 			}
 
-			var deltaX = 0;
-			var deltaY = 0;
-			var scrollTop = Position.getScrollTop(scrollContainers[i]);
-			var scrollLeft = Position.getScrollLeft(scrollContainers[i]);
-			if (scrollLeft > 0 && Math.abs(mouseX - scrollRegion.left) <= this.maxDistance) {
+			let deltaX = 0;
+			let deltaY = 0;
+			let scrollTop = Position.getScrollTop(scrollContainers[i]);
+			let scrollLeft = Position.getScrollLeft(scrollContainers[i]);
+			if (
+				scrollLeft > 0 &&
+				Math.abs(mouseX - scrollRegion.left) <= this.maxDistance
+			) {
 				deltaX -= this.speed;
+				// eslint-disable-next-line
 			} else if (Math.abs(mouseX - scrollRegion.right) <= this.maxDistance) {
 				deltaX += this.speed;
 			}
-			if (scrollTop > 0 && Math.abs(mouseY - scrollRegion.top) <= this.maxDistance) {
+			if (
+				scrollTop > 0 &&
+				Math.abs(mouseY - scrollRegion.top) <= this.maxDistance
+			) {
 				deltaY -= this.speed;
+				// eslint-disable-next-line
 			} else if (Math.abs(mouseY - scrollRegion.bottom) <= this.maxDistance) {
 				deltaY += this.speed;
 			}
@@ -135,7 +143,7 @@ DragAutoScroll.STATE = {
 	 */
 	delay: {
 		validator: core.isNumber,
-		value: 50
+		value: 50,
 	},
 
 	/**
@@ -146,7 +154,7 @@ DragAutoScroll.STATE = {
 	 */
 	maxDistance: {
 		validator: core.isNumber,
-		value: 20
+		value: 20,
 	},
 
 	/**
@@ -156,9 +164,9 @@ DragAutoScroll.STATE = {
 	 */
 	speed: {
 		validator: core.isNumber,
-		value: 20
-	}
+		value: 20,
+	},
 };
 
-export { DragAutoScroll }; 
+export {DragAutoScroll};
 export default DragAutoScroll;

@@ -1,7 +1,7 @@
 'use strict';
 
 import dom from 'metal-dom';
-import { EventEmitter, EventHandler } from 'metal-events';
+import {EventEmitter, EventHandler} from 'metal-events';
 import Position from 'metal-position';
 
 /**
@@ -46,16 +46,16 @@ class DragScrollDelta extends EventEmitter {
 	 * @protected
 	 */
 	handleScroll_(index, event) {
-		var newPosition = {
+		let newPosition = {
 			scrollLeft: Position.getScrollLeft(event.currentTarget),
-			scrollTop: Position.getScrollTop(event.currentTarget)
+			scrollTop: Position.getScrollTop(event.currentTarget),
 		};
-		var position = this.scrollPositions_[index];
+		let position = this.scrollPositions_[index];
 		this.scrollPositions_[index] = newPosition;
 
 		this.emit('scrollDelta', {
 			deltaX: newPosition.scrollLeft - position.scrollLeft,
-			deltaY: newPosition.scrollTop - position.scrollTop
+			deltaY: newPosition.scrollTop - position.scrollTop,
 		});
 	}
 
@@ -72,15 +72,21 @@ class DragScrollDelta extends EventEmitter {
 			return;
 		}
 
-		for (var i = 0; i < scrollContainers.length; i++) {
+		for (let i = 0; i < scrollContainers.length; i++) {
 			if (dom.contains(scrollContainers[i], dragNode)) {
 				this.scrollPositions_.push({
 					scrollLeft: Position.getScrollLeft(scrollContainers[i]),
-					scrollTop: Position.getScrollTop(scrollContainers[i])
+					scrollTop: Position.getScrollTop(scrollContainers[i]),
 				});
 
-				var index = this.scrollPositions_.length - 1;
-				this.handler_.add(dom.on(scrollContainers[i], 'scroll', this.handleScroll_.bind(this, index)));
+				let index = this.scrollPositions_.length - 1;
+				this.handler_.add(
+					dom.on(
+						scrollContainers[i],
+						'scroll',
+						this.handleScroll_.bind(this, index)
+					)
+				);
 			}
 		}
 	}
@@ -94,5 +100,5 @@ class DragScrollDelta extends EventEmitter {
 	}
 }
 
-export { DragScrollDelta };
+export {DragScrollDelta};
 export default DragScrollDelta;

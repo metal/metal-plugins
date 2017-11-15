@@ -1,22 +1,26 @@
 'use strict';
 
 import dom from 'metal-dom';
+import Drag from '../src/Drag';
 import DragDrop from '../src/DragDrop';
 import DragShim from '../src/helpers/DragShim';
 import DragTestHelper from './fixtures/DragTestHelper';
 
 describe('DragDrop', function() {
-	var dragDrop;
-	var item;
-	var target;
-	var target2;
+	let dragDrop;
+	let item;
+	let target;
+	let target2;
 
 	beforeEach(function() {
-		var html = '<div class="item" style="height:50px;width:50px;"></div><div class="target"></div>';
-		dom.append(document.body, html);
+		let parent = document.createElement('div');
+		dom.addClasses(parent, 'parent');
+		let html =
+			'<div class="item" style="height:50px;width:50px;"></div><div class="target"></div>';
+		dom.append(parent, html);
 
-		item = document.querySelector('.item');
-		target = document.querySelector('.target');
+		item = parent.querySelector('.item');
+		target = parent.querySelector('.target');
 		target.style.position = 'absolute';
 		target.style.top = '10px';
 		target.style.left = '20px';
@@ -25,7 +29,8 @@ describe('DragDrop', function() {
 
 		target2 = target.cloneNode(true);
 		target2.style.left = '250px';
-		dom.append(document.body, target2);
+		dom.append(parent, target2);
+		dom.append(document.body, parent);
 
 		DragShim.reset();
 	});
@@ -38,7 +43,7 @@ describe('DragDrop', function() {
 	it('should add "targetOver" class when dragged element is on top of target', function() {
 		dragDrop = new DragDrop({
 			sources: item,
-			targets: target
+			targets: target,
 		});
 		assert.ok(!dom.hasClass(target, 'targetOver'));
 
@@ -56,7 +61,7 @@ describe('DragDrop', function() {
 		dragDrop = new DragDrop({
 			sources: item,
 			targetOverClass: 'myOverClass',
-			targets: target
+			targets: target,
 		});
 		assert.ok(!dom.hasClass(target, 'myOverClass'));
 
@@ -73,7 +78,7 @@ describe('DragDrop', function() {
 	it('should not add target class to target if mouse is not moved over it', function() {
 		dragDrop = new DragDrop({
 			sources: item,
-			targets: target
+			targets: target,
 		});
 
 		DragTestHelper.triggerMouseEvent(item, 'mousedown', 0, 0);
@@ -84,7 +89,7 @@ describe('DragDrop', function() {
 	it('should add "targetOver" class on correct target when there are multiple', function() {
 		dragDrop = new DragDrop({
 			sources: item,
-			targets: '.target'
+			targets: '.target',
 		});
 
 		DragTestHelper.triggerMouseEvent(item, 'mousedown', 0, 0);
@@ -98,14 +103,14 @@ describe('DragDrop', function() {
 	});
 
 	it('should ignore targets that match selector but are outside the given "container"', function() {
-		var parent = document.createElement('div');
+		let parent = document.createElement('div');
 		dom.replace(target, parent);
 		dom.append(parent, target);
 
 		dragDrop = new DragDrop({
 			container: parent,
 			sources: item,
-			targets: '.target'
+			targets: '.target',
 		});
 
 		DragTestHelper.triggerMouseEvent(item, 'mousedown', 0, 0);
@@ -119,18 +124,18 @@ describe('DragDrop', function() {
 	});
 
 	it('should update elements that match "targets" selector when "container" is changed', function() {
-		var parent = document.createElement('div');
+		let parent = document.createElement('div');
 		dom.replace(target, parent);
 		dom.append(parent, target);
 
-		var parent2 = document.createElement('div');
+		let parent2 = document.createElement('div');
 		dom.replace(target2, parent2);
 		dom.append(parent2, target2);
 
 		dragDrop = new DragDrop({
 			container: parent,
 			sources: item,
-			targets: '.target'
+			targets: '.target',
 		});
 		assert.deepEqual([target], dragDrop.targets);
 
@@ -142,7 +147,7 @@ describe('DragDrop', function() {
 		dragDrop = new DragDrop({
 			container: parent,
 			sources: item,
-			targets: target
+			targets: target,
 		});
 		assert.deepEqual([target], dragDrop.targets);
 
@@ -153,10 +158,10 @@ describe('DragDrop', function() {
 	it('should trigger "targetEnter" event when mouse enters target', function() {
 		dragDrop = new DragDrop({
 			sources: item,
-			targets: '.target'
+			targets: '.target',
 		});
 
-		var listener = sinon.stub();
+		let listener = sinon.stub();
 		dragDrop.on(DragDrop.Events.TARGET_ENTER, listener);
 
 		DragTestHelper.triggerMouseEvent(item, 'mousedown', 0, 0);
@@ -172,16 +177,15 @@ describe('DragDrop', function() {
 
 		DragTestHelper.triggerMouseEvent(document, 'mousemove', 5, 10);
 		assert.strictEqual(2, listener.callCount);
-
 	});
 
 	it('should trigger "targetLeave" event when mouse leaves target', function() {
 		dragDrop = new DragDrop({
 			sources: item,
-			targets: '.target'
+			targets: '.target',
 		});
 
-		var listener = sinon.stub();
+		let listener = sinon.stub();
 		dragDrop.on(DragDrop.Events.TARGET_LEAVE, listener);
 
 		DragTestHelper.triggerMouseEvent(item, 'mousedown', 0, 0);
@@ -203,10 +207,10 @@ describe('DragDrop', function() {
 		dragDrop = new DragDrop({
 			keyboardSpeed: 100,
 			sources: item,
-			targets: '.target'
+			targets: '.target',
 		});
 
-		var listener = sinon.stub();
+		let listener = sinon.stub();
 		dragDrop.on(DragDrop.Events.TARGET_ENTER, listener);
 
 		DragTestHelper.triggerKeyEvent(item, 13);
@@ -227,10 +231,10 @@ describe('DragDrop', function() {
 		dragDrop = new DragDrop({
 			keyboardSpeed: 100,
 			sources: item,
-			targets: '.target'
+			targets: '.target',
 		});
 
-		var listener = sinon.stub();
+		let listener = sinon.stub();
 		dragDrop.on(DragDrop.Events.TARGET_LEAVE, listener);
 
 		DragTestHelper.triggerKeyEvent(item, 13);
@@ -248,11 +252,11 @@ describe('DragDrop', function() {
 	it('should add targets dynamically', function() {
 		dragDrop = new DragDrop({
 			sources: item,
-			targets: '.target'
+			targets: '.target',
 		});
 		assert.strictEqual(2, dragDrop.targets.length);
 
-		var newTarget = target.cloneNode(true);
+		let newTarget = target.cloneNode(true);
 		newTarget.style.top = '250px';
 		dom.enterDocument(newTarget);
 		assert.strictEqual(2, dragDrop.targets.length);
@@ -268,7 +272,7 @@ describe('DragDrop', function() {
 	it('should remove targets dynamically', function() {
 		dragDrop = new DragDrop({
 			sources: item,
-			targets: '.target'
+			targets: '.target',
 		});
 		assert.strictEqual(2, dragDrop.targets.length);
 
@@ -281,8 +285,8 @@ describe('DragDrop', function() {
 	});
 
 	describe('Multiple Targets', function() {
-		var nestedTarget;
-		var intersectTarget;
+		let nestedTarget;
+		let intersectTarget;
 
 		beforeEach(function() {
 			nestedTarget = target.cloneNode(true);
@@ -301,40 +305,46 @@ describe('DragDrop', function() {
 		it('should indicate all active targets in the "targetEnter" event', function() {
 			dragDrop = new DragDrop({
 				sources: item,
-				targets: '.target'
+				targets: '.target',
 			});
 
-			var listener = sinon.stub();
+			let listener = sinon.stub();
 			dragDrop.on(DragDrop.Events.TARGET_ENTER, listener);
 
 			DragTestHelper.triggerMouseEvent(item, 'mousedown', 0, 0);
 			DragTestHelper.triggerMouseEvent(document, 'mousemove', 160, 60);
 			assert.strictEqual(1, listener.callCount);
 			assert.strictEqual(target, listener.args[0][0].target);
-			assert.deepEqual([target, intersectTarget], listener.args[0][0].allActiveTargets);
+			assert.deepEqual(
+				[target, intersectTarget],
+				listener.args[0][0].allActiveTargets
+			);
 		});
 
 		it('should consider nested target as the main active target', function() {
 			dragDrop = new DragDrop({
 				sources: item,
-				targets: '.target'
+				targets: '.target',
 			});
 
-			var listener = sinon.stub();
+			let listener = sinon.stub();
 			dragDrop.on(DragDrop.Events.TARGET_ENTER, listener);
 
 			DragTestHelper.triggerMouseEvent(item, 'mousedown', 0, 0);
 			DragTestHelper.triggerMouseEvent(document, 'mousemove', 80, 80);
 			assert.strictEqual(1, listener.callCount);
 			assert.strictEqual(nestedTarget, listener.args[0][0].target);
-			assert.deepEqual([nestedTarget, target], listener.args[0][0].allActiveTargets);
+			assert.deepEqual(
+				[nestedTarget, target],
+				listener.args[0][0].allActiveTargets
+			);
 		});
 
 		it('should set "aria-dropeffect" attribute on targets during drag', function() {
 			dragDrop = new DragDrop({
 				ariaDropEffect: 'move',
 				sources: item,
-				targets: '.target'
+				targets: '.target',
 			});
 			assert.ok(!target.getAttribute('aria-dropeffect'));
 			assert.ok(!target2.getAttribute('aria-dropeffect'));
@@ -350,6 +360,32 @@ describe('DragDrop', function() {
 			DragTestHelper.triggerMouseEvent(document, 'mouseup');
 			assert.ok(!target.getAttribute('aria-dropeffect'));
 			assert.ok(!target2.getAttribute('aria-dropeffect'));
+		});
+	});
+
+	describe('Clone Container', function() {
+		it('should add "targetOver" class when dragged element is on top of target', function() {
+			const parent = document.querySelector('.parent');
+
+			parent.style.position = 'relative';
+			parent.style.left = '20px';
+			parent.style.top = '40px';
+
+			dragDrop = new DragDrop({
+				dragPlaceholder: Drag.Placeholder.CLONE,
+				sources: item,
+				targets: target,
+			});
+			assert.ok(!dom.hasClass(target, 'targetOver'));
+
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 0, 0);
+			assert.ok(!dom.hasClass(target, 'targetOver'));
+
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 60, 90);
+			assert.ok(dom.hasClass(target, 'targetOver'));
+
+			DragTestHelper.triggerMouseEvent(document, 'mouseup');
+			assert.ok(!dom.hasClass(target, 'targetOver'));
 		});
 	});
 });

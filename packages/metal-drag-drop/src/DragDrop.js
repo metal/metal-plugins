@@ -1,6 +1,6 @@
 'use strict';
 
-import { array, core, object } from 'metal';
+import {array, core, object} from 'metal';
 import dom from 'metal-dom';
 import Drag from './Drag';
 import Position from 'metal-position';
@@ -15,8 +15,8 @@ class DragDrop extends Drag {
 	/**
 	 * @inheritDoc
 	 */
-	constructor(opt_config) {
-		super(opt_config);
+	constructor(config) {
+		super(config);
 
 		/**
 		 * The currently active targets, that is, the ones that the dragged source is over.
@@ -42,7 +42,7 @@ class DragDrop extends Drag {
 	 * @override
 	 */
 	buildEventObject_() {
-		var obj = super.buildEventObject_();
+		let obj = super.buildEventObject_();
 		obj.target = this.activeTargets_[0];
 		obj.allActiveTargets = this.activeTargets_;
 		return obj;
@@ -66,21 +66,27 @@ class DragDrop extends Drag {
 	 * @protected
 	 */
 	findAllActiveTargets_() {
-		var activeTargets = [];
-		var mainRegion;
-		var sourceRegion = this.getSourceRegion_();
-		var targets = this.targets;
-		targets.forEach(function(target, index) {
-			var region = Position.getRegion(target);
-			if (targets[index] !== this.activeDragPlaceholder_ && Position.intersectRegion(region, sourceRegion)) {
-				if (!mainRegion || Position.insideRegion(mainRegion, region)) {
-					activeTargets = [targets[index]].concat(activeTargets);
-					mainRegion = region;
-				} else {
-					activeTargets.push(targets[index]);
+		let activeTargets = [];
+		let mainRegion;
+		let sourceRegion = this.getSourceRegion_();
+		let targets = this.targets;
+		targets.forEach(
+			function(target, index) {
+				let region = Position.getRegion(target);
+				if (
+					targets[index] !== this.activeDragPlaceholder_ &&
+					Position.intersectRegion(region, sourceRegion)
+				) {
+					// eslint-disable-next-line
+					if (!mainRegion || Position.insideRegion(mainRegion, region)) {
+						activeTargets = [targets[index]].concat(activeTargets);
+						mainRegion = region;
+					} else {
+						activeTargets.push(targets[index]);
+					}
 				}
-			}
-		}.bind(this));
+			}.bind(this)
+		);
 		return activeTargets;
 	}
 
@@ -91,13 +97,13 @@ class DragDrop extends Drag {
 	 */
 	getSourceRegion_() {
 		if (core.isDefAndNotNull(this.mousePos_)) {
-			var x = this.mousePos_.x;
-			var y = this.mousePos_.y;
+			let x = this.mousePos_.x;
+			let y = this.mousePos_.y;
 			return Position.makeRegion(y, 0, x, x, y, 0);
 		} else {
 			// We need to remove the scroll data from the region, since the other regions we'll
 			// be comparing to won't take that information into account.
-			var region = object.mixin({}, this.sourceRegion_);
+			let region = object.mixin({}, this.sourceRegion_);
 			region.left -= document.body.scrollLeft;
 			region.right -= document.body.scrollLeft;
 			region.top -= document.body.scrollTop;
@@ -143,11 +149,12 @@ class DragDrop extends Drag {
 	/**
 	 * Overrides the original method from `Drag` to also set the "aria-dropeffect"
 	 * attribute, if set, for all targets.
-	 * @return {[type]} [description]
 	 */
 	startDragging_() {
 		if (this.ariaDropEffect) {
-			this.targets.forEach(target => target.setAttribute('aria-dropeffect', this.ariaDropEffect));
+			this.targets.forEach(target =>
+				target.setAttribute('aria-dropeffect', this.ariaDropEffect)
+			);
 		}
 		super.startDragging_();
 	}
@@ -162,17 +169,17 @@ class DragDrop extends Drag {
 	updatePosition(deltaX, deltaY) {
 		super.updatePosition(deltaX, deltaY);
 
-		var newTargets = this.findAllActiveTargets_();
+		let newTargets = this.findAllActiveTargets_();
 		if (newTargets[0] !== this.activeTargets_[0]) {
 			if (this.activeTargets_[0]) {
 				dom.removeClasses(this.activeTargets_[0], this.targetOverClass);
-				this.emit(DragDrop.Events.TARGET_LEAVE, this.buildEventObject_());
+				this.emit(DragDrop.Events.TARGET_LEAVE, this.buildEventObject_()); // eslint-disable-line
 			}
 
 			this.activeTargets_ = newTargets;
 			if (this.activeTargets_[0]) {
 				dom.addClasses(this.activeTargets_[0], this.targetOverClass);
-				this.emit(DragDrop.Events.TARGET_ENTER, this.buildEventObject_());
+				this.emit(DragDrop.Events.TARGET_ENTER, this.buildEventObject_()); // eslint-disable-line
 			}
 		}
 	}
@@ -190,7 +197,7 @@ DragDrop.STATE = {
 	 * @type {string}
 	 */
 	ariaDropEffect: {
-		validator: core.isString
+		validator: core.isString,
 	},
 
 	/**
@@ -201,7 +208,7 @@ DragDrop.STATE = {
 	 */
 	targetOverClass: {
 		validator: core.isString,
-		value: 'targetOver'
+		value: 'targetOver',
 	},
 
 	/**
@@ -211,8 +218,8 @@ DragDrop.STATE = {
 	 */
 	targets: {
 		setter: 'setterTargetsFn_',
-		validator: 'validateElementOrString_'
-	}
+		validator: 'validateElementOrString_',
+	},
 };
 
 /**
@@ -224,8 +231,8 @@ DragDrop.Events = {
 	DRAG: 'drag',
 	END: 'end',
 	TARGET_ENTER: 'targetEnter',
-	TARGET_LEAVE: 'targetLeave'
+	TARGET_LEAVE: 'targetLeave',
 };
 
-export { DragDrop, Drag };
+export {DragDrop, Drag};
 export default DragDrop;

@@ -1,11 +1,11 @@
 'use strict';
 
-import { core, object } from 'metal';
+import {core, object} from 'metal';
 import dom from 'metal-dom';
 import DragAutoScroll from './helpers/DragAutoScroll';
 import DragScrollDelta from './helpers/DragScrollDelta';
 import DragShim from './helpers/DragShim';
-import { EventHandler } from 'metal-events';
+import {EventHandler} from 'metal-events';
 import Position from 'metal-position';
 import State from 'metal-state';
 
@@ -18,8 +18,8 @@ class Drag extends State {
 	/**
 	 * @inheritDoc
 	 */
-	constructor(opt_config) {
-		super(opt_config);
+	constructor(config) {
+		super(config);
 
 		/**
 		 * The drag placeholder that is active at the moment.
@@ -116,18 +116,23 @@ class Drag extends State {
 	 * @protected
 	 */
 	attachSourceEvents_() {
-		var toAttach = {
+		let toAttach = {
 			keydown: this.handleSourceKeyDown_.bind(this),
 			mousedown: this.handleDragStartEvent_.bind(this),
-			touchstart: this.handleDragStartEvent_.bind(this)
+			touchstart: this.handleDragStartEvent_.bind(this),
 		};
-		var eventTypes = Object.keys(toAttach);
-		for (var i = 0; i < eventTypes.length; i++) {
-			var listenerFn = toAttach[eventTypes[i]];
+		let eventTypes = Object.keys(toAttach);
+		for (let i = 0; i < eventTypes.length; i++) {
+			let listenerFn = toAttach[eventTypes[i]];
 			if (core.isString(this.sources)) {
-				this.sourceHandler_.add(dom.delegate(this.container, eventTypes[i], this.sources, listenerFn));
+				this.sourceHandler_.add(
+					// eslint-disable-next-line
+					dom.delegate(this.container, eventTypes[i], this.sources, listenerFn)
+				);
 			} else {
-				this.sourceHandler_.add(dom.on(this.sources, eventTypes[i], listenerFn));
+				this.sourceHandler_.add(
+					dom.on(this.sources, eventTypes[i], listenerFn)
+				);
 			}
 		}
 	}
@@ -144,8 +149,27 @@ class Drag extends State {
 			relativeX: this.sourceRelativePos_.x,
 			relativeY: this.sourceRelativePos_.y,
 			x: this.sourceRegion_.left,
-			y: this.sourceRegion_.top
+			y: this.sourceRegion_.top,
 		};
+	}
+
+	/**
+	 * Calculates the end positions for the drag action when
+	 * `cloneContainer` is set.
+	 * @return {!Object}
+	 * @protected
+	 */
+	calculateEndPosition_() {
+		let endPos = this.sourceRelativePos_;
+
+		const {parentNode} = this.activeDragSource_;
+
+		if (parentNode !== this.cloneContainer) {
+			endPos.x = endPos.x - parentNode.offsetLeft;
+			endPos.y = endPos.y - parentNode.offsetTop;
+		}
+
+		return endPos;
 	}
 
 	/**
@@ -154,21 +178,43 @@ class Drag extends State {
 	 * @protected
 	 */
 	calculateInitialPosition_(event) {
-		this.sourceRegion_ = object.mixin({}, Position.getRegion(this.activeDragSource_, true));
-		this.sourceRelativePos_ = {
-			x: this.activeDragSource_.offsetLeft,
-			y: this.activeDragSource_.offsetTop
-		};
+		this.sourceRegion_ = object.mixin(
+			{},
+			Position.getRegion(this.activeDragSource_, true)
+		);
+		this.sourceRelativePos_ = this.calculateRelativePosition_();
 		if (core.isDef(event.clientX)) {
 			this.mousePos_ = {
 				x: event.clientX,
-				y: event.clientY
+				y: event.clientY,
 			};
 			this.mouseSourceDelta_ = {
 				x: this.sourceRegion_.left - this.mousePos_.x,
-				y: this.sourceRegion_.top - this.mousePos_.y
+				y: this.sourceRegion_.top - this.mousePos_.y,
 			};
 		}
+	}
+
+	/**
+	 * Calculates the relative position of the active drag
+	 * source.
+	 * @return {!Object}
+	 * @protected
+	 */
+	calculateRelativePosition_() {
+		let relativePos = {
+			x: this.activeDragSource_.offsetLeft,
+			y: this.activeDragSource_.offsetTop,
+		};
+
+		if (this.isPlaceholderClone_() && this.cloneContainer) {
+			relativePos = {
+				x: this.sourceRegion_.left,
+				y: this.sourceRegion_.top,
+			};
+		}
+
+		return relativePos;
 	}
 
 	/**
@@ -178,10 +224,12 @@ class Drag extends State {
 	 * @protected
 	 */
 	canStartDrag_(event) {
-		return !this.disabled &&
+		return (
+			!this.disabled &&
 			(!core.isDef(event.button) || event.button === 0) &&
 			!this.isDragging() &&
-			this.isWithinHandle_(event.target);
+			this.isWithinHandle_(event.target)
+		);
 	}
 
 	/**
@@ -192,7 +240,7 @@ class Drag extends State {
 		if (this.activeDragPlaceholder_) {
 			this.activeDragPlaceholder_.setAttribute('aria-grabbed', 'false');
 			dom.removeClasses(this.activeDragPlaceholder_, this.draggingClass);
-			if (this.dragPlaceholder === Drag.Placeholder.CLONE) {
+			if (this.isPlaceholderClone_()) {
 				dom.exitDocument(this.activeDragPlaceholder_);
 			}
 		}
@@ -212,11 +260,14 @@ class Drag extends State {
 	 * @protected
 	 */
 	cloneActiveDrag_() {
-		var placeholder = this.activeDragSource_.cloneNode(true);
+		let placeholder = this.activeDragSource_.cloneNode(true);
 		placeholder.style.position = 'absolute';
 		placeholder.style.left = this.sourceRelativePos_.x + 'px';
 		placeholder.style.top = this.sourceRelativePos_.y + 'px';
-		dom.append(this.activeDragSource_.parentNode, placeholder);
+		dom.append(
+			this.cloneContainer || this.activeDragSource_.parentNode,
+			placeholder
+		);
 		return placeholder;
 	}
 
@@ -252,14 +303,13 @@ class Drag extends State {
 	 * @protected
 	 */
 	constrainToRegion_(region) {
-		var constrain = this.constrain;
+		let constrain = this.constrain;
 		if (!constrain) {
 			return;
 		}
 
 		if (core.isFunction(constrain)) {
 			object.mixin(region, constrain(region));
-
 		} else {
 			if (core.isElement(constrain)) {
 				constrain = Position.getRegion(constrain, true);
@@ -285,8 +335,8 @@ class Drag extends State {
 	 * @protected
 	 */
 	constrainToSteps_(region) {
-		var deltaX = region.left - this.sourceRegion_.left;
-		var deltaY = region.top - this.sourceRegion_.top;
+		let deltaX = region.left - this.sourceRegion_.left;
+		let deltaY = region.top - this.sourceRegion_.top;
 		region.left -= deltaX % this.steps.x;
 		region.right = region.left + region.width;
 		region.top -= deltaY % this.steps.y;
@@ -298,8 +348,8 @@ class Drag extends State {
 	 * @protected
 	 */
 	createActiveDragPlaceholder_() {
-		var dragPlaceholder = this.dragPlaceholder;
-		if (dragPlaceholder === Drag.Placeholder.CLONE) {
+		let dragPlaceholder = this.dragPlaceholder;
+		if (this.isPlaceholderClone_()) {
 			this.activeDragPlaceholder_ = this.cloneActiveDrag_();
 		} else if (core.isElement(dragPlaceholder)) {
 			this.activeDragPlaceholder_ = dragPlaceholder;
@@ -325,6 +375,10 @@ class Drag extends State {
 	 * @protected
 	 */
 	defaultEndFn_() {
+		if (this.isPlaceholderClone_() && this.cloneContainer) {
+			this.sourceRelativePos_ = this.calculateEndPosition_();
+		}
+
 		this.moveToPosition_(this.activeDragSource_);
 	}
 
@@ -371,21 +425,31 @@ class Drag extends State {
 	 * @protected
 	 */
 	handleDragMoveEvent_(event) {
-		var position = event.targetTouches ? event.targetTouches[0] : event;
-		var distanceX = position.clientX - this.mousePos_.x;
-		var distanceY = position.clientY - this.mousePos_.y;
+		let position = event.targetTouches ? event.targetTouches[0] : event;
+		let distanceX = position.clientX - this.mousePos_.x;
+		let distanceY = position.clientY - this.mousePos_.y;
 		this.mousePos_.x = position.clientX;
 		this.mousePos_.y = position.clientY;
-		if (!this.isDragging() && !this.hasReachedMinimumDistance_(distanceX, distanceY)) {
+		if (
+			!this.isDragging() &&
+			!this.hasReachedMinimumDistance_(distanceX, distanceY)
+		) {
 			return;
 		}
 
 		if (!this.isDragging()) {
 			this.startDragging_(event);
-			this.dragScrollDelta_.start(this.activeDragPlaceholder_, this.scrollContainers);
+			this.dragScrollDelta_.start(
+				this.activeDragPlaceholder_,
+				this.scrollContainers
+			);
 		}
 		if (this.autoScroll) {
-			this.autoScroll.scroll(this.scrollContainers, this.mousePos_.x, this.mousePos_.y);
+			this.autoScroll.scroll(
+				this.scrollContainers,
+				this.mousePos_.x,
+				this.mousePos_.y
+			);
 		}
 		this.updatePositionFromMouse();
 	}
@@ -401,18 +465,21 @@ class Drag extends State {
 		this.activeDragSource_ = event.delegateTarget || event.currentTarget;
 
 		if (this.canStartDrag_(event)) {
-			this.calculateInitialPosition_(event.targetTouches ? event.targetTouches[0] : event);
+			this.calculateInitialPosition_(
+				event.targetTouches ? event.targetTouches[0] : event
+			);
 			event.preventDefault();
 			if (event.type === 'keydown') {
 				this.startDragging_(event);
 			} else {
+				// eslint-disable-next-line
 				this.dragHandler_.add.apply(
 					this.dragHandler_,
 					DragShim.attachDocListeners(this.useShim, {
 						mousemove: this.handleDragMoveEvent_.bind(this),
 						touchmove: this.handleDragMoveEvent_.bind(this),
 						mouseup: this.handleDragEndEvent_.bind(this),
-						touchend: this.handleDragEndEvent_.bind(this)
+						touchend: this.handleDragEndEvent_.bind(this),
 					})
 				);
 				this.distanceDragged_ = 0;
@@ -451,16 +518,22 @@ class Drag extends State {
 	 */
 	handleSourceKeyDown_(event) {
 		if (this.isDragging()) {
-			var currentTarget = event.delegateTarget || event.currentTarget;
+			let currentTarget = event.delegateTarget || event.currentTarget;
 			if (currentTarget !== this.activeDragSource_) {
 				return;
 			}
 			if (event.keyCode >= 37 && event.keyCode <= 40) {
 				// Arrow keys during drag move the source.
-				var deltaX = 0;
-				var deltaY = 0;
-				var speedX = this.keyboardSpeed >= this.steps.x ? this.keyboardSpeed : this.steps.x;
-				var speedY = this.keyboardSpeed >= this.steps.y ? this.keyboardSpeed : this.steps.y;
+				let deltaX = 0;
+				let deltaY = 0;
+				let speedX =
+					this.keyboardSpeed >= this.steps.x
+						? this.keyboardSpeed
+						: this.steps.x;
+				let speedY =
+					this.keyboardSpeed >= this.steps.y
+						? this.keyboardSpeed
+						: this.steps.y;
 				if (event.keyCode === 37) {
 					deltaX -= speedX;
 				} else if (event.keyCode === 38) {
@@ -472,7 +545,11 @@ class Drag extends State {
 				}
 				this.updatePositionFromDelta(deltaX, deltaY);
 				event.preventDefault();
-			} else if (event.keyCode === 13 || event.keyCode === 32 || event.keyCode === 27) {
+			} else if (
+				event.keyCode === 13 ||
+				event.keyCode === 32 ||
+				event.keyCode === 27
+			) {
 				// Enter, space or esc during drag will end it.
 				this.handleDragEndEvent_();
 			}
@@ -529,12 +606,26 @@ class Drag extends State {
 	}
 
 	/**
+	 * Returns true if current drag placeholder is a clone of the original drag
+	 * source.
+	 * @return {boolean}
+	 * @protected
+	 */
+	isPlaceholderClone_() {
+		return (
+			// eslint-disable-next-line
+			this.dragPlaceholder && this.dragPlaceholder === Drag.Placeholder.CLONE
+		);
+	}
+
+	/**
 	 * Checks if the given element is within a valid handle.
 	 * @param {!Element} element
 	 * @protected
+	 * @return {boolean}
 	 */
 	isWithinHandle_(element) {
-		var handles = this.handles;
+		let handles = this.handles;
 		if (!handles) {
 			return true;
 		} else if (core.isString(handles)) {
@@ -586,7 +677,7 @@ class Drag extends State {
 	 */
 	setterScrollContainersFn_(val) {
 		this.prevScrollContainersSelector_ = core.isString(val) ? val : null;
-		var elements = this.toElements_(val);
+		let elements = this.toElements_(val);
 		elements.push(document);
 		return elements;
 	}
@@ -602,7 +693,7 @@ class Drag extends State {
 		dom.addClasses(this.activeDragPlaceholder_, this.draggingClass);
 		this.activeDragPlaceholder_.setAttribute('aria-grabbed', 'true');
 		this.emit(Drag.Events.START, {
-			originalEvent: event
+			originalEvent: event,
 		});
 	}
 
@@ -614,7 +705,7 @@ class Drag extends State {
 	 */
 	toElements_(elementOrSelector) {
 		if (core.isString(elementOrSelector)) {
-			var matched = this.container.querySelectorAll(elementOrSelector);
+			let matched = this.container.querySelectorAll(elementOrSelector);
 			return Array.prototype.slice.call(matched, 0);
 		} else if (elementOrSelector) {
 			return [elementOrSelector];
@@ -629,8 +720,8 @@ class Drag extends State {
 	 */
 	updatePosition(newRegion) {
 		this.constrain_(newRegion);
-		var deltaX = newRegion.left - this.sourceRegion_.left;
-		var deltaY = newRegion.top - this.sourceRegion_.top;
+		let deltaX = newRegion.left - this.sourceRegion_.left;
+		let deltaY = newRegion.top - this.sourceRegion_.top;
 		if (deltaX !== 0 || deltaY !== 0) {
 			this.sourceRegion_ = newRegion;
 			this.sourceRelativePos_.x += deltaX;
@@ -646,7 +737,7 @@ class Drag extends State {
 	 * @param {number} deltaY
 	 */
 	updatePositionFromDelta(deltaX, deltaY) {
-		var newRegion = object.mixin({}, this.sourceRegion_);
+		let newRegion = object.mixin({}, this.sourceRegion_);
 		newRegion.left += deltaX;
 		newRegion.right += deltaX;
 		newRegion.top += deltaY;
@@ -658,11 +749,11 @@ class Drag extends State {
 	 * Updates the dragged element's position, according to the current mouse position.
 	 */
 	updatePositionFromMouse() {
-		var newRegion = {
+		let newRegion = {
 			height: this.sourceRegion_.height,
 			left: this.mousePos_.x + this.mouseSourceDelta_.x,
 			top: this.mousePos_.y + this.mouseSourceDelta_.y,
-			width: this.sourceRegion_.width
+			width: this.sourceRegion_.width,
 		};
 		newRegion.right = newRegion.left + newRegion.width;
 		newRegion.bottom = newRegion.top + newRegion.height;
@@ -677,6 +768,17 @@ class Drag extends State {
 	 */
 	validateElementOrString_(val) {
 		return core.isString(val) || core.isElement(val);
+	}
+
+	/**
+	 * Validates the given value, making sure that it's either an element,
+	 * string, or null.
+	 * @param {*} val
+	 * @return {boolean}
+	 * @protected
+	 */
+	validateCloneContainer_(val) {
+		return val === null || this.validateElementOrString_(val);
 	}
 
 	/**
@@ -707,7 +809,7 @@ Drag.STATE = {
 	autoScroll: {
 		setter: 'setterAutoScrollFn_',
 		value: false,
-		writeOnce: true
+		writeOnce: true,
 	},
 
 	/**
@@ -715,7 +817,18 @@ Drag.STATE = {
 	 * @type {string}
 	 */
 	axis: {
-		validator: core.isString
+		validator: core.isString,
+	},
+
+	/**
+	 * Container element for cloned drag placeholder. Only applies if
+	 * `dragPlaceholder` is set to `Drag.Placeholder.CLONE`.
+	 * @type {?Element|string}
+	 */
+	cloneContainer: {
+		setter: dom.toElement,
+		validator: 'validateCloneContainer_',
+		value: 'body',
 	},
 
 	/**
@@ -728,7 +841,7 @@ Drag.STATE = {
 	 */
 	constrain: {
 		setter: 'setterConstrainFn',
-		validator: 'validatorConstrainFn'
+		validator: 'validatorConstrainFn',
 	},
 
 	/**
@@ -741,7 +854,7 @@ Drag.STATE = {
 	container: {
 		setter: dom.toElement,
 		validator: 'validateElementOrString_',
-		value: document
+		value: document,
 	},
 
 	/**
@@ -752,7 +865,7 @@ Drag.STATE = {
 	 */
 	disabled: {
 		validator: core.isBoolean,
-		value: false
+		value: false,
 	},
 
 	/**
@@ -762,7 +875,7 @@ Drag.STATE = {
 	 */
 	draggingClass: {
 		validator: core.isString,
-		value: 'dragging'
+		value: 'dragging',
 	},
 
 	/**
@@ -773,7 +886,7 @@ Drag.STATE = {
 	 * @type {Element|?string}
 	 */
 	dragPlaceholder: {
-		validator: 'validateElementOrString_'
+		validator: 'validateElementOrString_',
 	},
 
 	/**
@@ -782,7 +895,7 @@ Drag.STATE = {
 	 * @type {Element|?string}
 	 */
 	handles: {
-		validator: 'validateElementOrString_'
+		validator: 'validateElementOrString_',
 	},
 
 	/**
@@ -792,7 +905,7 @@ Drag.STATE = {
 	 */
 	keyboardSpeed: {
 		validator: core.isNumber,
-		value: 10
+		value: 10,
 	},
 
 	/**
@@ -804,7 +917,7 @@ Drag.STATE = {
 	minimumDragDistance: {
 		validator: core.isNumber,
 		value: 5,
-		writeOnce: true
+		writeOnce: true,
 	},
 
 	/**
@@ -814,7 +927,7 @@ Drag.STATE = {
 	 */
 	scrollContainers: {
 		setter: 'setterScrollContainersFn_',
-		validator: 'validateElementOrString_'
+		validator: 'validateElementOrString_',
 	},
 
 	/**
@@ -823,7 +936,7 @@ Drag.STATE = {
 	 * @type {!Element|string}
 	 */
 	sources: {
-		validator: 'validateElementOrString_'
+		validator: 'validateElementOrString_',
 	},
 
 	/**
@@ -838,9 +951,9 @@ Drag.STATE = {
 		valueFn: () => {
 			return {
 				x: 1,
-				y: 1
+				y: 1,
 			};
-		}
+		},
 	},
 
 	/**
@@ -851,8 +964,8 @@ Drag.STATE = {
 	 * @default true
 	 */
 	useShim: {
-		value: true
-	}
+		value: true,
+	},
 };
 
 /**
@@ -863,7 +976,7 @@ Drag.STATE = {
 Drag.Events = {
 	DRAG: 'drag',
 	END: 'end',
-	START: 'start'
+	START: 'start',
 };
 
 /**
@@ -872,8 +985,8 @@ Drag.Events = {
  * @static
  */
 Drag.Placeholder = {
-	CLONE: 'clone'
+	CLONE: 'clone',
 };
 
-export { Drag };
+export {Drag};
 export default Drag;

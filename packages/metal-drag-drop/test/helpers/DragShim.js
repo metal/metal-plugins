@@ -17,15 +17,15 @@ describe('DragShim', function() {
 	});
 
 	it('should create new shim element if "reset" is called', function() {
-		var shim = DragShim.getDocShim();
+		let shim = DragShim.getDocShim();
 		DragShim.reset();
 		assert.notStrictEqual(shim, DragShim.getDocShim());
 	});
 
 	it('should attach mouse listeners to the shim element', function() {
-		var listener = sinon.stub();
+		let listener = sinon.stub();
 		DragShim.attachDocListeners(true, {
-			mousedown: listener
+			mousedown: listener,
 		});
 
 		dom.triggerEvent(document, 'mousedown');
@@ -36,9 +36,9 @@ describe('DragShim', function() {
 	});
 
 	it('should attach non mouse listeners to the document', function() {
-		var listener = sinon.stub();
+		let listener = sinon.stub();
 		DragShim.attachDocListeners(true, {
-			touchstart: listener
+			touchstart: listener,
 		});
 
 		dom.triggerEvent(document, 'touchstart');
@@ -46,9 +46,9 @@ describe('DragShim', function() {
 	});
 
 	it('should attach mouse listeners to the document if "useShim" is passed as false', function() {
-		var listener = sinon.stub();
+		let listener = sinon.stub();
 		DragShim.attachDocListeners(false, {
-			mousedown: listener
+			mousedown: listener,
 		});
 
 		dom.triggerEvent(document, 'mousedown');
@@ -56,17 +56,17 @@ describe('DragShim', function() {
 	});
 
 	it('should show document shim when attaching listeners to it', function() {
-		var shim = DragShim.getDocShim();
+		let shim = DragShim.getDocShim();
 		assert.strictEqual('none', shim.style.display);
 
 		DragShim.attachDocListeners(true, {
-			mousedown: sinon.stub()
+			mousedown: sinon.stub(),
 		});
 		assert.strictEqual('block', shim.style.display);
 	});
 
 	it('should hide document shim', function() {
-		var shim = DragShim.getDocShim();
+		let shim = DragShim.getDocShim();
 		DragShim.hideDocShim();
 		assert.strictEqual('none', shim.style.display);
 	});
