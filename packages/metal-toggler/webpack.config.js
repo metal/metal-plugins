@@ -15,7 +15,7 @@ module.exports = {
 					loader: 'babel-loader',
 					options: {
 						compact: false,
-						presets: ['babel-preset-es2015'],
+						presets: ['babel-preset-env'],
 						plugins: ['babel-plugin-transform-node-env-inline']
 					}
 				}
@@ -23,9 +23,9 @@ module.exports = {
 			{
 		    test: /\.scss$/,
 		    use: ExtractTextPlugin.extract({
-		    	fallback: 'style-loader', 
+		    	fallback: 'style-loader',
 		    	use: ['css-loader', 'sass-loader']
-		    }), 
+		    }),
 		  }
 		]
 	},

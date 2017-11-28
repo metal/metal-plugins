@@ -1,25 +1,20 @@
 # metal-toggler
 
-Metal's toggler component
+[![Build Status](https://travis-ci.org/metal/metal-toggler.svg?branch=master)](https://travis-ci.org/metal/metal-toggler)
 
 ## Setup
 
-1. Install NodeJS >= [v0.12.0](http://nodejs.org/dist/v0.12.0/), if you don't have it yet.
+1. Install a recent release of [NodeJS](https://nodejs.org/en/download/) if you
+don't have it yet.
 
-2. Install global dependencies:
+2. Install local dependencies:
 
-  ```
-  [sudo] npm install -g gulp
-  ```
+```
+npm install
+```
 
-3. Install local dependencies:
+3. Build the code:
 
-  ```
-  npm install
-  ```
-
-4. Build the code:
-
-  ```
-  npm run build
-  ```
+```
+npm run build
+```

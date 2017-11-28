@@ -2,7 +2,7 @@
 
 import core from 'metal';
 import dom from 'metal-dom';
-import { EventHandler } from 'metal-events';
+import {EventHandler} from 'metal-events';
 import State from 'metal-state';
 
 /**
@@ -12,8 +12,8 @@ class Toggler extends State {
 	/**
 	 * @inheritDoc
 	 */
-	constructor(opt_config) {
-		super(opt_config);
+	constructor(config) {
+		super(config);
 
 		this.headerEventHandler_ = new EventHandler();
 
@@ -30,35 +30,47 @@ class Toggler extends State {
 	}
 
 	/**
-	* Manually collapse the content's visibility.
-	* @param {string|!Element} header
-	*/
+	 * Manually collapse the content's visibility.
+	 * @param {string|!Element} header
+	 */
 	collapse(header) {
 		let headerElements = this.getHeaderElements_(header);
 		let content = this.getContentElement_(headerElements);
+
+		this.emit('headerToggled', {headerElements, content});
+		this.emit('headerCollapsed', {headerElements, content});
+
 		dom.removeClasses(content, this.expandedClasses);
 		dom.addClasses(content, this.collapsedClasses);
 		dom.removeClasses(headerElements, this.headerExpandedClasses);
 		dom.addClasses(headerElements, this.headerCollapsedClasses);
+		this.setAttribute_(content, 'aria-expanded', false);
+		this.setAttribute_(headerElements, 'aria-expanded', false);
 	}
 
 	/**
-	* Manually expand the content's visibility.
-	* @param {string|!Element} header
-	*/
+	 * Manually expand the content's visibility.
+	 * @param {string|!Element} header
+	 */
 	expand(header) {
 		let headerElements = this.getHeaderElements_(header);
 		let content = this.getContentElement_(headerElements);
+
+		this.emit('headerToggled', {headerElements, content});
+		this.emit('headerExpanded', {headerElements, content});
+
 		dom.addClasses(content, this.expandedClasses);
 		dom.removeClasses(content, this.collapsedClasses);
 		dom.addClasses(headerElements, this.headerExpandedClasses);
 		dom.removeClasses(headerElements, this.headerCollapsedClasses);
+		this.setAttribute_(content, 'aria-expanded', true);
+		this.setAttribute_(headerElements, 'aria-expanded', true);
 	}
 
 	/**
 	 * Gets the content to be toggled by the given header element.
 	 * @param {!Element} header
-	 * @returns {!Element}
+	 * @return {!Element}
 	 * @protected
 	 */
 	getContentElement_(header) {
@@ -66,7 +78,7 @@ class Toggler extends State {
 			return this.content;
 		}
 
-		var content = dom.next(header, this.content);
+		let content = dom.next(header, this.content);
 		if (content) {
 			return content;
 		}
@@ -84,7 +96,7 @@ class Toggler extends State {
 	/**
 	 * Gets the header elements by giving a selector.
 	 * @param {string} header
-	 * @returns {!Nodelist}
+	 * @return {!Nodelist}
 	 * @protected
 	 */
 	getHeaderElements_(header = this.header) {
@@ -117,15 +129,31 @@ class Toggler extends State {
 
 	/**
 	 * Checks if there is any expanded header in the component context.
-	 * @param {string|!Element} event
-	 * @param {boolean}
+	 * @param {string|!Element} header
+	 * @return {boolean}
 	 * @protected
 	 */
 	hasExpanded_(header) {
 		if (core.isElement(header)) {
 			return dom.hasClass(header, this.headerExpandedClasses);
 		}
-		return !!this.container.querySelectorAll(`.${this.headerExpandedClasses}`).length;
+		return !!this.container.querySelectorAll(
+			`.${this.headerExpandedClasses}`
+		).length;
+	}
+
+	/**
+	 * Sets attribute on one or more elements.
+	 * @param {!Element|NodeList} elements
+	 * @param {!string} name
+	 * @param {?string|boolean} value
+	 */
+	setAttribute_(elements, name, value) {
+		elements = elements instanceof NodeList ? elements : [elements];
+
+		for (let i = 0; i < elements.length; i++) {
+			elements[i].setAttribute(name, value);
+		}
 	}
 
 	/**
@@ -137,13 +165,27 @@ class Toggler extends State {
 		if (this.header) {
 			if (core.isString(this.header)) {
 				this.headerEventHandler_.add(
-					dom.delegate(this.container, 'click', this.header, this.handleClick_.bind(this)),
-					dom.delegate(this.container, 'keydown', this.header, this.handleKeydown_.bind(this))
+					dom.delegate(
+						this.container,
+						'click',
+						this.header,
+						this.handleClick_.bind(this)
+					),
+					dom.delegate(
+						this.container,
+						'keydown',
+						this.header,
+						this.handleKeydown_.bind(this)
+					)
 				);
 			} else {
 				this.headerEventHandler_.add(
 					dom.on(this.header, 'click', this.handleClick_.bind(this)),
-					dom.on(this.header, 'keydown', this.handleKeydown_.bind(this))
+					dom.on(
+						this.header,
+						'keydown',
+						this.handleKeydown_.bind(this)
+					)
 				);
 			}
 		}
@@ -172,7 +214,7 @@ Toggler.STATE = {
 	 */
 	collapsedClasses: {
 		validator: core.isString,
-		value: 'toggler-collapsed'
+		value: 'toggler-collapsed',
 	},
 
 	/**
@@ -182,7 +224,7 @@ Toggler.STATE = {
 	container: {
 		setter: dom.toElement,
 		validator: value => core.isString(value) || core.isElement(value),
-		value: document
+		valueFn: () => document,
 	},
 
 	/**
@@ -190,7 +232,7 @@ Toggler.STATE = {
 	 * @type {string|!Element}
 	 */
 	content: {
-		validator: value => core.isString(value) || core.isElement(value)
+		validator: value => core.isString(value) || core.isElement(value),
 	},
 
 	/**
@@ -198,7 +240,7 @@ Toggler.STATE = {
 	 */
 	expandedClasses: {
 		validator: core.isString,
-		value: 'toggler-expanded'
+		value: 'toggler-expanded',
 	},
 
 	/**
@@ -206,7 +248,7 @@ Toggler.STATE = {
 	 * @type {string|!Element}
 	 */
 	header: {
-		validator: value => core.isString(value) || core.isElement(value)
+		validator: value => core.isString(value) || core.isElement(value),
 	},
 
 	/**
@@ -214,7 +256,7 @@ Toggler.STATE = {
 	 */
 	headerCollapsedClasses: {
 		validator: core.isString,
-		value: 'toggler-header-collapsed'
+		value: 'toggler-header-collapsed',
 	},
 
 	/**
@@ -222,9 +264,9 @@ Toggler.STATE = {
 	 */
 	headerExpandedClasses: {
 		validator: core.isString,
-		value: 'toggler-header-expanded'
-	}
+		value: 'toggler-header-expanded',
+	},
 };
 
-export { Toggler };
+export {Toggler};
 export default Toggler;
