@@ -1,5 +1,8 @@
 # Change Log
 
+## [v3.0.0](https://github.com/metal/metal-toggler/tree/v3.0.0) (2017-11-29)
+[Full Changelog](https://github.com/metal/metal-toggler/compare/v2.3.0...v3.0.0)
+
 ## [v2.3.0](https://github.com/metal/metal-toggler/tree/v2.3.0) (2017-11-28)
 [Full Changelog](https://github.com/metal/metal-toggler/compare/2.2.0...v2.3.0)
 
