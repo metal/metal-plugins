@@ -9,12 +9,24 @@ don't have it yet.
 
 2. Install local dependencies:
 
-```
-npm install
-```
+  ```
+  npm install
+  ```
 
-3. Build the code:
+3. Run the tests:
 
-```
-npm run build
-```
+  ```
+  npm test
+  ```
+
+4. Build the code:
+
+  ```
+  npm run build
+  ```
+
+5. Open the demo at demos/index.html on your browser.
+
+## Contributing
+
+Check out the [contributing guidelines](https://github.com/metal/metal-toggler/blob/master/CONTRIBUTING.md) for more information.
