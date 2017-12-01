@@ -1,11 +1,13 @@
 'use strict';
 
-import { isDef, isDefAndNotNull } from 'metal';
+import {isDef, isDefAndNotNull} from 'metal';
 import Uri from 'metal-uri';
-import { ProgressPromise as Promise } from 'metal-promise';
+import {ProgressPromise as Promise} from 'metal-promise';
 
+/**
+ * Ajax class
+ */
 class Ajax {
-
 	/**
 	 * XmlHttpRequest's getAllResponseHeaders() method returns a string of
 	 * response headers according to the format described on the spec:
@@ -16,19 +18,19 @@ class Ajax {
 	 * @return {!Array.<Object<string, string>>}
 	 */
 	static parseResponseHeaders(allHeaders) {
-		var headers = [];
+		let headers = [];
 		if (!allHeaders) {
 			return headers;
 		}
-		var pairs = allHeaders.split('\u000d\u000a');
-		for (var i = 0; i < pairs.length; i++) {
-			var index = pairs[i].indexOf('\u003a\u0020');
+		let pairs = allHeaders.split('\u000d\u000a');
+		for (let i = 0; i < pairs.length; i++) {
+			let index = pairs[i].indexOf('\u003a\u0020');
 			if (index > 0) {
-				var name = pairs[i].substring(0, index);
-				var value = pairs[i].substring(index + 2);
+				let name = pairs[i].substring(0, index);
+				let value = pairs[i].substring(index + 2);
 				headers.push({
 					name: name,
-					value: value
+					value: value,
 				});
 			}
 		}
@@ -40,22 +42,31 @@ class Ajax {
 	 * @param {!string} url
 	 * @param {!string} method
 	 * @param {?string} body
-	 * @param {MultiMap=} opt_headers
-	 * @param {MultiMap=} opt_params
-	 * @param {number=} opt_timeout
-	 * @param {boolean=} opt_sync
-	 * @param {boolean=} opt_withCredentials
+	 * @param {MultiMap=} headers
+	 * @param {MultiMap=} params
+	 * @param {number=} timeout
+	 * @param {boolean=} sync
+	 * @param {boolean=} withCredentials
 	 * @return {Promise} Deferred ajax request.
 	 * @protected
 	 */
-	static request(url, method, body, opt_headers, opt_params, opt_timeout, opt_sync, opt_withCredentials) {
+	static request(
+		url,
+		method,
+		body,
+		headers,
+		params,
+		timeout,
+		sync,
+		withCredentials
+	) {
 		url = url || '';
 		method = method || 'GET';
 
-		var request = new XMLHttpRequest();
-		var previousReadyState = 0;
+		let request = new XMLHttpRequest();
+		let previousReadyState = 0;
 
-		var promise = new Promise(function(resolve, reject, progress) {
+		let promise = new Promise(function(resolve, reject, progress) {
 			request.onload = function() {
 				if (request.aborted) {
 					request.onerror();
@@ -69,58 +80,65 @@ class Ajax {
 				}
 			};
 			request.onreadystatechange = function() {
-				if (previousReadyState && previousReadyState < 3 && 4 === request.readyState) {
+				if (
+					previousReadyState &&
+					previousReadyState < 3 &&
+					4 === request.readyState
+				) {
 					request.terminatedPrematurely = true;
 				}
 				previousReadyState = request.readyState;
 			};
 			request.onerror = function() {
-				var message = 'Request error';
+				let message = 'Request error';
 				if (request.terminatedPrematurely) {
 					message = 'Request terminated prematurely';
 				}
-				var error = new Error(message);
+				let error = new Error(message);
 				error.request = request;
 				reject(error);
 			};
-		}).thenCatch(function(reason) {
-			request.abort();
-			throw reason;
-		}).thenAlways(function() {
-			clearTimeout(timeout);
-		});
+		})
+			.thenCatch(function(reason) {
+				request.abort();
+				throw reason;
+			})
+			.thenAlways(function() {
+				clearTimeout(reqTimeout);
+			});
 
 		url = new Uri(url);
 
-		if (opt_params) {
-			url.addParametersFromMultiMap(opt_params).toString();
+		if (params) {
+			url.addParametersFromMultiMap(params).toString();
 		}
 
 		url = url.toString();
 
-		request.open(method, url, !opt_sync);
+		request.open(method, url, !sync);
 
-		if (opt_withCredentials) {
+		if (withCredentials) {
 			request.withCredentials = true;
 		}
 
-		if (opt_headers) {
-			opt_headers.names().forEach(function(name) {
-				request.setRequestHeader(name, opt_headers.getAll(name).join(', '));
+		if (headers) {
+			headers.names().forEach(function(name) {
+				request.setRequestHeader(name, headers.getAll(name).join(', '));
 			});
 		}
 
 		request.send(isDef(body) ? body : null);
 
-		if (isDefAndNotNull(opt_timeout)) {
-			var timeout = setTimeout(function() {
+		let reqTimeout;
+
+		if (isDefAndNotNull(timeout)) {
+			reqTimeout = setTimeout(function() {
 				promise.cancel('Request timeout');
-			}, opt_timeout);
+			}, timeout);
 		}
 
 		return promise;
 	}
-
 }
 
 export default Ajax;

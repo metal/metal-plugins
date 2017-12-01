@@ -2,6 +2,8 @@
 
 module.exports = function(config) {
 	config.set({
+		browsers: ['Chrome'],
+
 		customHeaders: [
 			{
 				match: 'test/data/data.json',
@@ -10,7 +12,7 @@ module.exports = function(config) {
 			}
 		],
 
-		frameworks: ['browserify', 'chai', 'mocha', 'sinon'],
+		frameworks: ['mocha', 'chai', 'sinon'],
 
 		files: [
 			{
@@ -28,39 +30,33 @@ module.exports = function(config) {
 		],
 
 		plugins: [
-			'karma-browserify',
 			'karma-chai',
 			'karma-chrome-launcher',
 			'karma-mocha',
-			'karma-sinon'
+			'karma-sinon',
+			'karma-webpack'
 		],
 
 		preprocessors: {
-			'test/**/*.js': ['browserify']
+			'test/**/*.js': ['webpack']
 		},
 
-		browsers: ['Chrome'],
-
-		browserify: {
-			debug: true,
-			transform: [
-				[
-					'babelify',
-					{
-						presets: [
-							'env'
-						]
+		webpack: {
+			module: {
+				rules: [{
+					test: /\.js$/,
+					exclude: /(node_modules)/,
+					use: {
+						loader: 'babel-loader',
+						options: {
+							compact: false,
+							presets: ['env']
+						}
 					}
-				]
-			]
-		},
-
-		client: {
-			mocha: {
-				timeout: 4000
+				}]
 			}
 		},
 
-		autoWatch: true
+		singleRun: true
 	});
 };

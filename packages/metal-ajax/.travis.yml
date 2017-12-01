@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - '6'
+  - '8'
 sudo: false
 addons:
   sauce_connect:
@@ -9,7 +9,8 @@ addons:
   jwt:
     secure: GZGcOjAoB0lAoFVmDBO1aDk4MxCB4CTmtPks31RPI1LEemJD20RNunxA8XYBMKFot+Xxj4AA4/U0UwoMQlYaNQe4+JL50LF8TtCfSS0OkOC5gToLVOI8qLbNmyPw9Aep+KsihSCQH/dXaAshkHbPvjWEmrj8GzzIbcsCEWMuYBs0kidWHWR4nU6K8Xqd6YtuqHncsGcpJpjv6347068iqhWqA7rfwIcXVbYLofN/avO1mmdEUeWXgm0K/Za6ULrej0UBuCS48XQZDBjb2FnMbecXpPoW/ZmNgCAEtP+Ja9klUA/pimjg/Jv6s7GwlrsOnAJLkqkK+SawYUy5AeVPNnxyD7A8vH9qmT4FpVkE59igEMfwpG4MCCdDgcpkWdLY9F7hfuqkXonE4F3xAOk3PV6dojWPSL3Iik+1uRQB8vSW0gIvUyeaIoT+p9pef2UPGVFjbmQcEXNHUnqf52VCL++ITUUh5MHmk+pZux46YxbJmEvC5y5nb22g/00OLIo83lfGm1B7ntUhwV+Y14MLaXL8txULw6wvLqdAPMqaUTcVkpK5+uT5r/nyNzY4IzldxFHgpz/WWG03qVta9k8OUxjaMceLCz6+OZD38K+3C42MCv0J4JhqzCEcvcR/nfpZbbU7wA01pHFkn6UQ4FNw18bYw8PuFjrZPlMCEszldWU=
 before_install:
-  - npm install -g gulp
   - npm install
-  - gulp build
-script: gulp test:saucelabs
+script:
+- npm run checkFormat
+- npm run lint
+- npm run test:saucelabs
