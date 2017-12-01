@@ -6,10 +6,11 @@ const MAX_PORT = 65535;
 
 /**
  * Parses the given uri string into an object.
- * @param {*=} opt_uri Optional string URI to parse
+ * @param {*=} uri Optional string URI to parse
+ * @return {Object}
  */
-function parse(opt_uri) {
-	const url = new URLParse(opt_uri);
+function parse(uri) {
+	const url = new URLParse(uri);
 	url.search = url.query;
 	validatePort(url.port);
 	return url;
@@ -21,7 +22,7 @@ function parse(opt_uri) {
  */
 function validatePort(port) {
 	if (port && port > MAX_PORT) {
-		throw TypeError('Port number can\'t exceed 65535');
+		throw new TypeError('Port number can\'t exceed 65535');
 	}
 }
 

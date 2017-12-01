@@ -2,11 +2,13 @@
 
 import parse from './parse';
 import resolvePathname from 'resolve-pathname';
-import { MultiMap } from 'metal-structs';
-import { isDef, isNumber, string } from 'metal';
+import {MultiMap} from 'metal-structs';
+import {isDef, isNumber, string} from 'metal';
 
+/**
+ * Uri class
+ */
 class Uri {
-
 	/**
 	 * This class contains setters and getters for the parts of the URI.
 	 * The following figure displays an example URIs and their component parts.
@@ -19,16 +21,16 @@ class Uri {
 	 *          └──────┬───────┘
 	 *                host
 	 *
-	 * @param {*=} opt_uri Optional string URI to parse
+	 * @param {*=} uri Optional string URI to parse
+	 * @param {boolean} addProtocol
 	 * @constructor
 	 */
-	constructor(opt_uri = '', opt_addProtocol = true) {
-		this.addProtocol_ = opt_addProtocol;
+	constructor(uri = '', addProtocol = true) {
+		this.addProtocol_ = addProtocol;
 
-		opt_uri = opt_addProtocol ?
-			this.maybeAddProtocolAndHostname_(opt_uri) : opt_uri;
+		uri = addProtocol ? this.maybeAddProtocolAndHostname_(uri) : uri;
 
-		this.url = parse(opt_uri);
+		this.url = parse(uri);
 		this.ensurePathname_();
 	}
 
@@ -37,11 +39,11 @@ class Uri {
 	 * @param {MultiMap} multimap The <code>MultiMap</code> containing the
 	 *   parameters.
 	 * @protected
-	 * @chainable
+	 * @return {this}
 	 */
 	addParametersFromMultiMap(multimap) {
-		multimap.names().forEach((name) => {
-			multimap.getAll(name).forEach((value) => {
+		multimap.names().forEach(name => {
+			multimap.getAll(name).forEach(value => {
 				this.addParameterValue(name, value);
 			});
 		});
@@ -50,9 +52,9 @@ class Uri {
 
 	/**
 	 * Adds the value of the named query parameters.
-	 * @param {string} key The parameter to set.
+	 * @param {string} name The parameter to set.
 	 * @param {*} value The new value. Will be explicitly casted to String.
-	 * @chainable
+	 * @return {this}
 	 */
 	addParameterValue(name, value) {
 		this.ensureQueryInitialized_();
@@ -65,12 +67,12 @@ class Uri {
 
 	/**
 	 * Adds the values of the named query parameter.
-	 * @param {string} key The parameter to set.
-	 * @param {*} value The new value.
-	 * @chainable
+	 * @param {string} name The parameter to set.
+	 * @param {!Array} values The new value.
+	 * @return {this}
 	 */
 	addParameterValues(name, values) {
-		values.forEach((value) => this.addParameterValue(name, value));
+		values.forEach(value => this.addParameterValue(name, value));
 		return this;
 	}
 
@@ -94,15 +96,18 @@ class Uri {
 			return;
 		}
 		this.query = new MultiMap();
-		var search = this.url.query;
+		let search = this.url.query;
 		if (search) {
-			search.substring(1).split('&').forEach((param) => {
-				var [key, value] = param.split('=');
-				if (isDef(value)) {
-					value = Uri.urlDecode(value);
-				}
-				this.addParameterValue(key, value);
-			});
+			search
+				.substring(1)
+				.split('&')
+				.forEach(param => {
+					let [key, value] = param.split('=');
+					if (isDef(value)) {
+						value = Uri.urlDecode(value);
+					}
+					this.addParameterValue(key, value);
+				});
 		}
 	}
 
@@ -119,9 +124,9 @@ class Uri {
 	 * @return {string}
 	 */
 	getHost() {
-		var host = this.getHostname();
+		let host = this.getHostname();
 		if (host) {
-			var port = this.getPort();
+			let port = this.getPort();
 			if (port && port !== '80') {
 				host += ':' + port;
 			}
@@ -134,7 +139,7 @@ class Uri {
 	 * @return {string}
 	 */
 	getHostname() {
-		var hostname = this.url.hostname;
+		let hostname = this.url.hostname;
 		if (hostname === Uri.HOSTNAME_PLACEHOLDER) {
 			return '';
 		}
@@ -146,7 +151,7 @@ class Uri {
 	 * @return {string}
 	 */
 	getOrigin() {
-		var host = this.getHost();
+		let host = this.getHost();
 		if (host) {
 			return this.getProtocol() + '//' + host;
 		}
@@ -156,7 +161,7 @@ class Uri {
 	/**
 	 * Returns the first value for a given parameter or undefined if the given
 	 * parameter name does not appear in the query string.
-	 * @param {string} paramName Unescaped parameter name.
+	 * @param {string} name Unescaped parameter name.
 	 * @return {string|undefined} The first value for a given parameter or
 	 *   undefined if the given parameter name does not appear in the query
 	 *   string.
@@ -193,7 +198,7 @@ class Uri {
 	 * @return {string}
 	 */
 	getPathname() {
-		let { pathname } = this.url;
+		let {pathname} = this.url;
 
 		if (pathname && pathname.indexOf('.') > -1) {
 			pathname = resolvePathname(pathname);
@@ -224,10 +229,10 @@ class Uri {
 	 * @return {string}
 	 */
 	getSearch() {
-		var search = '';
-		var querystring = '';
-		this.getParameterNames().forEach((name) => {
-			this.getParameterValues(name).forEach((value) => {
+		let search = '';
+		let querystring = '';
+		this.getParameterNames().forEach(name => {
+			this.getParameterValues(name).forEach(value => {
 				querystring += name;
 				if (isDef(value)) {
 					querystring += '=' + encodeURIComponent(value);
@@ -264,6 +269,7 @@ class Uri {
 	/**
 	 * Makes this URL unique by adding a random param to it. Useful for avoiding
 	 * cache.
+	 * @return {this}
 	 */
 	makeUnique() {
 		this.setParameterValue(Uri.RANDOM_PARAM, string.getRandomString());
@@ -273,38 +279,38 @@ class Uri {
 	/**
 	 * Maybe adds protocol and a hostname placeholder on a partial URI if needed.
 	 * Relevant for compatibility with <code>URL</code> native object.
-	 * @param {string=} opt_uri
+	 * @param {string=} uri
 	 * @return {string} URI with protocol and hostname placeholder.
 	 */
-	maybeAddProtocolAndHostname_(opt_uri) {
-		var url = opt_uri;
-		if (opt_uri.indexOf('://') === -1 &&
-			opt_uri.indexOf('javascript:') !== 0) { // jshint ignore:line
+	maybeAddProtocolAndHostname_(uri) {
+		let url = uri;
+		if (uri.indexOf('://') === -1 && uri.indexOf('javascript:') !== 0) {
+			// jshint ignore:line
 
 			url = Uri.DEFAULT_PROTOCOL;
 			this.usingDefaultProtocol_ = true;
 
-			if (opt_uri[0] !== '/' || opt_uri[1] !== '/') {
+			if (uri[0] !== '/' || uri[1] !== '/') {
 				url += '//';
 			}
 
-			switch (opt_uri.charAt(0)) {
-				case '.':
-				case '?':
-				case '#':
+			switch (uri.charAt(0)) {
+			case '.':
+			case '?':
+			case '#':
+				url += Uri.HOSTNAME_PLACEHOLDER;
+				url += '/';
+				url += uri;
+				break;
+			case '':
+			case '/':
+				if (uri[1] !== '/') {
 					url += Uri.HOSTNAME_PLACEHOLDER;
-					url += '/';
-					url += opt_uri;
-					break;
-				case '':
-				case '/':
-					if (opt_uri[1] !== '/') {
-						url += Uri.HOSTNAME_PLACEHOLDER;
-					}
-					url += opt_uri;
-					break;
-				default:
-					url += opt_uri;
+				}
+				url += uri;
+				break;
+			default:
+				url += uri;
 			}
 		} else {
 			this.usingDefaultProtocol_ = false;
@@ -315,7 +321,7 @@ class Uri {
 	/**
 	 * Removes the named query parameter.
 	 * @param {string} name The parameter to remove.
-	 * @chainable
+	 * @return {this}
 	 */
 	removeParameter(name) {
 		this.ensureQueryInitialized_();
@@ -325,7 +331,7 @@ class Uri {
 
 	/**
 	 * Removes uniqueness parameter of the uri.
-	 * @chainable
+	 * @return {this}
 	 */
 	removeUnique() {
 		this.removeParameter(Uri.RANDOM_PARAM);
@@ -335,7 +341,7 @@ class Uri {
 	/**
 	 * Sets the hash.
 	 * @param {string} hash
-	 * @chainable
+	 * @return {this}
 	 */
 	setHash(hash) {
 		this.url.set('hash', hash);
@@ -345,7 +351,7 @@ class Uri {
 	/**
 	 * Sets the hostname.
 	 * @param {string} hostname
-	 * @chainable
+	 * @return {this}
 	 */
 	setHostname(hostname) {
 		this.url.set('hostname', hostname);
@@ -355,9 +361,9 @@ class Uri {
 	/**
 	 * Sets the value of the named query parameters, clearing previous values
 	 * for that key.
-	 * @param {string} key The parameter to set.
+	 * @param {string} name The parameter to set.
 	 * @param {*} value The new value.
-	 * @chainable
+	 * @return {this}
 	 */
 	setParameterValue(name, value) {
 		this.removeParameter(name);
@@ -368,20 +374,20 @@ class Uri {
 	/**
 	 * Sets the values of the named query parameters, clearing previous values
 	 * for that key.
-	 * @param {string} key The parameter to set.
-	 * @param {*} value The new value.
-	 * @chainable
+	 * @param {string} name The parameter to set.
+	 * @param {!Array} values The new value.
+	 * @return {this}
 	 */
 	setParameterValues(name, values) {
 		this.removeParameter(name);
-		values.forEach((value) => this.addParameterValue(name, value));
+		values.forEach(value => this.addParameterValue(name, value));
 		return this;
 	}
 
 	/**
 	 * Sets the pathname.
 	 * @param {string} pathname
-	 * @chainable
+	 * @return {this}
 	 */
 	setPathname(pathname) {
 		this.url.set('pathname', pathname);
@@ -391,7 +397,7 @@ class Uri {
 	/**
 	 * Sets the port number.
 	 * @param {*} port Port number.
-	 * @chainable
+	 * @return {this}
 	 */
 	setPort(port) {
 		this.url.set('port', port);
@@ -401,7 +407,7 @@ class Uri {
 	/**
 	 * Sets the protocol. If missing <code>http:</code> is used as default.
 	 * @param {string} protocol
-	 * @chainable
+	 * @return {this}
 	 */
 	setProtocol(protocol) {
 		if (protocol[protocol.length - 1] !== ':') {
@@ -420,8 +426,8 @@ class Uri {
 			return this.url.toString();
 		}
 
-		var href = '';
-		var host = this.getHost();
+		let href = '';
+		let host = this.getHost();
 		if (host) {
 			href += this.getProtocol() + '//';
 		}
@@ -432,7 +438,8 @@ class Uri {
 	/**
 	 * Joins the given paths.
 	 * @param {string} basePath
-	 * @param {...string} ...paths Any number of paths to be joined with the base url.
+	 * @param {...string} paths paths Any number of paths to be joined with the base url.
+	 * @return {string}
 	 * @static
 	 */
 	static joinPaths(basePath, ...paths) {
@@ -444,7 +451,10 @@ class Uri {
 			path = isNumber(path) ? path.toString() : path;
 			return path.charAt(0) === '/' ? path.substring(1) : path;
 		});
-		return [basePath].concat(paths).join('/').replace(/\/$/, '');
+		return [basePath]
+			.concat(paths)
+			.join('/')
+			.replace(/\/$/, '');
 	}
 
 	/**
@@ -456,20 +466,20 @@ class Uri {
 	static urlDecode(str) {
 		return decodeURIComponent(str.replace(/\+/g, ' '));
 	}
-
 }
 
 /**
  * Default protocol value.
  * @type {string}
  * @default http:
+ * @return {boolean}
  * @static
  */
 const isSecure = () =>
-	(typeof window !== 'undefined' &&
-		window.location &&
-		window.location.protocol &&
-		window.location.protocol.indexOf('https') === 0);
+	typeof window !== 'undefined' &&
+	window.location &&
+	window.location.protocol &&
+	window.location.protocol.indexOf('https') === 0;
 
 Uri.DEFAULT_PROTOCOL = isSecure() ? 'https:' : 'http:';
 

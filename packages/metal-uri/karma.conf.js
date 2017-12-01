@@ -2,7 +2,9 @@
 
 module.exports = function(config) {
 	config.set({
-		frameworks: ['browserify', 'mocha', 'chai'],
+		browsers: ['Chrome'],
+
+		frameworks: ['mocha', 'chai'],
 
 		files: [
 			{
@@ -14,38 +16,32 @@ module.exports = function(config) {
 		],
 
 		plugins: [
-			'karma-browserify',
 			'karma-chai',
 			'karma-chrome-launcher',
-			'karma-mocha'
+			'karma-mocha',
+			'karma-webpack'
 		],
 
 		preprocessors: {
-			'test/**/*.js': ['browserify']
+			'test/**/*.js': ['webpack']
 		},
 
-		browsers: ['Chrome'],
-
-		browserify: {
-			debug: true,
-			transform: [
-				[
-					'babelify',
-					{
-						presets: [
-							'env'
-						]
+		webpack: {
+			module: {
+				rules: [{
+					test: /\.js$/,
+					exclude: /(node_modules)/,
+					use: {
+						loader: 'babel-loader',
+						options: {
+							compact: false,
+							presets: ['env']
+						}
 					}
-				]
-			]
-		},
-
-		client: {
-			mocha: {
-				timeout: 4000
+				}]
 			}
 		},
 
-		autoWatch: true
+		singleRun: true
 	});
 };
