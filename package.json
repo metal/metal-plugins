@@ -2,5 +2,12 @@
 	"devDependencies": {
 		"babel-preset-env": "^1.6.1",
 		"lerna": "^2.5.1"
+	},
+	"scripts": {
+		"checkFormat": "lerna run checkFormat --concurrency 1 --stream",
+		"lerna": "lerna bootstrap -- --no-optional",
+		"lint": "lerna run lint --concurrency 1 --stream",
+		"test": "lerna run test --concurrency 1 --stream",
+		"test:saucelabs": "lerna run test:saucelabs --concurrency 1 --stream"
 	}
 }
