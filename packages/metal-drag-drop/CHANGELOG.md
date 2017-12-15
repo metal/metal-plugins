@@ -1,5 +1,20 @@
 # Change Log
 
+## [v3.0.1](https://github.com/metal/metal-drag-drop/tree/v3.0.1) (2017-12-15)
+[Full Changelog](https://github.com/metal/metal-drag-drop/compare/v3.0.0...v3.0.1)
+
+**Closed issues:**
+
+- Nested drag doesn't work as expected [\#20](https://github.com/metal/metal-drag-drop/issues/20)
+
+**Merged pull requests:**
+
+- Updates CHANGELOG for v3.0.0 [\#23](https://github.com/metal/metal-drag-drop/pull/23) ([Robert-Frampton](https://github.com/Robert-Frampton))
+- Moves code inside canStart\_ condition [\#22](https://github.com/metal/metal-drag-drop/pull/22) ([jbalsas](https://github.com/jbalsas))
+- Updates CHANGELOG for v3.0.0 [\#19](https://github.com/metal/metal-drag-drop/pull/19) ([jbalsas](https://github.com/jbalsas))
+- Add examples of common use cases to README.md [\#18](https://github.com/metal/metal-drag-drop/pull/18) ([Robert-Frampton](https://github.com/Robert-Frampton))
+- Normalize README.md, add CONTRIBUTING.md [\#16](https://github.com/metal/metal-drag-drop/pull/16) ([Robert-Frampton](https://github.com/Robert-Frampton))
+
 ## [v3.0.0](https://github.com/metal/metal-drag-drop/tree/v3.0.0) (2017-11-15)
 [Full Changelog](https://github.com/metal/metal-drag-drop/compare/v1.0.1...v3.0.0)
 
