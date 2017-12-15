@@ -10,6 +10,7 @@ describe('Drag', function() {
 	let drag;
 	let item;
 	let item2;
+	let item3;
 
 	beforeEach(function() {
 		let parent = document.createElement('div');
@@ -18,14 +19,21 @@ describe('Drag', function() {
 		parent.style.left = 0;
 		parent.style.top = 0;
 		let html =
-			'<div class="item" style="position:fixed;top:20px;left:20px;">' +
-			'<span class="handle"></span></div>';
+			'<div class="item" style="position:fixed;top:20px;left:20px;' +
+			'width:10px;height:10px;"><span class="handle"></span></div>';
 		dom.append(parent, html);
 		item = parent.querySelector('.item');
 		item2 = item.cloneNode(true);
+		item3 = item.cloneNode(true);
+		item3.setAttribute(
+			'style',
+			'position:relative;top:0px;left:0px;width:5px;height:5px'
+		);
 		dom.addClasses(item, 'item1');
 		dom.addClasses(item2, 'item2');
+		dom.addClasses(item3, 'item3');
 		dom.append(parent, item2);
+		dom.append(item2, item3);
 		dom.append(document.body, parent);
 	});
 
@@ -246,9 +254,7 @@ describe('Drag', function() {
 		assert.ok(!drag.getActiveDrag());
 	});
 
-	it('should handle changing the value of the "container" property', function(
-		done
-	) {
+	it('should handle changing the value of the "container" property', function(done) {
 		let parent = document.createElement('div');
 		dom.replace(item, parent);
 		dom.append(parent, item);
@@ -280,9 +286,7 @@ describe('Drag', function() {
 		});
 	});
 
-	it('should not stop dragging specified element source when container changes', function(
-		done
-	) {
+	it('should not stop dragging specified element source when container changes', function(done) {
 		let parent = document.createElement('div');
 		dom.replace(item, parent);
 		dom.append(parent, item);
@@ -445,7 +449,8 @@ describe('Drag', function() {
 			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 			assert.strictEqual(item, drag.getActiveDrag());
 
-			dom.on(document, 'mouseup');
+			DragTestHelper.triggerMouseEvent(document, 'mouseup');
+
 			DragTestHelper.triggerMouseEvent(
 				item2.querySelector('.handle'),
 				'mousedown',
@@ -454,6 +459,24 @@ describe('Drag', function() {
 			);
 			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 			assert.strictEqual(item2, drag.getActiveDrag());
+		});
+
+		it('should work with nested sources independently', function() {
+			drag = new Drag({
+				handles: '.handle',
+				sources: '.item',
+			});
+
+			DragTestHelper.triggerMouseEvent(
+				item3.querySelector('.handle'),
+				'mousedown',
+				20,
+				20
+			);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
+			assert.strictEqual(item3, drag.getActiveDrag());
+
+			DragTestHelper.triggerMouseEvent(document, 'mouseup');
 		});
 	});
 
@@ -630,9 +653,7 @@ describe('Drag', function() {
 			dom.append(document.querySelector('.scroll'), item);
 		});
 
-		it('should update position of dragged element when document is scrolled', function(
-			done
-		) {
+		it('should update position of dragged element when document is scrolled', function(done) {
 			document.body.style.height = '3000px';
 			document.body.style.width = '3000px';
 			document.body.style.overflow = 'scroll';
@@ -665,9 +686,7 @@ describe('Drag', function() {
 			window.scrollTo(0, 10);
 		});
 
-		it('should update position of dragged element when scroll container is scrolled', function(
-			done
-		) {
+		it('should update position of dragged element when scroll container is scrolled', function(done) {
 			let scrollNode = document.querySelector('.scroll');
 			drag = new Drag({
 				scrollContainers: scrollNode,
@@ -691,9 +710,7 @@ describe('Drag', function() {
 			scrollNode.scrollTop = 10;
 		});
 
-		it('should update position of dragged element on scroll without moving if "preventDefault" is Called', function(
-			done
-		) {
+		it('should update position of dragged element on scroll without moving if "preventDefault" is Called', function(done) {
 			let scrollNode = document.querySelector('.scroll');
 			drag = new Drag({
 				scrollContainers: scrollNode,
@@ -720,9 +737,7 @@ describe('Drag', function() {
 			scrollNode.scrollTop = 10;
 		});
 
-		it('should update position of dragged element on scroll from selector scroll container', function(
-			done
-		) {
+		it('should update position of dragged element on scroll from selector scroll container', function(done) {
 			let scrollNode = document.querySelector('.scroll');
 			drag = new Drag({
 				scrollContainers: '.scroll',
@@ -800,9 +815,7 @@ describe('Drag', function() {
 			assert.deepEqual([scroll3, document], drag.scrollContainers);
 		});
 
-		it('should auto scroll the document when dragging near boundaries', function(
-			done
-		) {
+		it('should auto scroll the document when dragging near boundaries', function(done) {
 			document.body.style.height = '3000px';
 			document.body.style.overflow = 'scroll';
 
@@ -831,9 +844,7 @@ describe('Drag', function() {
 			});
 		});
 
-		it('should auto scroll a container when dragging near boundaries', function(
-			done
-		) {
+		it('should auto scroll a container when dragging near boundaries', function(done) {
 			let scroll = document.querySelector('.scroll');
 			drag = new Drag({
 				autoScroll: true,
@@ -1021,9 +1032,7 @@ describe('Drag', function() {
 			assert.strictEqual(30, listener.args[2][0].y);
 		});
 
-		it('should keep constraining drag to element after scrolling', function(
-			done
-		) {
+		it('should keep constraining drag to element after scrolling', function(done) {
 			document.body.style.height = '3000px';
 
 			drag = new Drag({

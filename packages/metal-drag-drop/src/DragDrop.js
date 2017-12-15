@@ -53,7 +53,9 @@ class DragDrop extends Drag {
 	 */
 	cleanUpAfterDragging_() {
 		super.cleanUpAfterDragging_();
-		this.targets.forEach(target => target.removeAttribute('aria-dropeffect'));
+		this.targets.forEach(target =>
+			target.removeAttribute('aria-dropeffect')
+		);
 		if (this.activeTargets_.length) {
 			dom.removeClasses(this.activeTargets_[0], this.targetOverClass);
 		}
@@ -78,7 +80,10 @@ class DragDrop extends Drag {
 					Position.intersectRegion(region, sourceRegion)
 				) {
 					// eslint-disable-next-line
-					if (!mainRegion || Position.insideRegion(mainRegion, region)) {
+					if (
+						!mainRegion ||
+						Position.insideRegion(mainRegion, region)
+					) {
 						activeTargets = [targets[index]].concat(activeTargets);
 						mainRegion = region;
 					} else {
@@ -173,13 +178,19 @@ class DragDrop extends Drag {
 		if (newTargets[0] !== this.activeTargets_[0]) {
 			if (this.activeTargets_[0]) {
 				dom.removeClasses(this.activeTargets_[0], this.targetOverClass);
-				this.emit(DragDrop.Events.TARGET_LEAVE, this.buildEventObject_()); // eslint-disable-line
+				this.emit(
+					DragDrop.Events.TARGET_LEAVE,
+					this.buildEventObject_()
+				); // eslint-disable-line
 			}
 
 			this.activeTargets_ = newTargets;
 			if (this.activeTargets_[0]) {
 				dom.addClasses(this.activeTargets_[0], this.targetOverClass);
-				this.emit(DragDrop.Events.TARGET_ENTER, this.buildEventObject_()); // eslint-disable-line
+				this.emit(
+					DragDrop.Events.TARGET_ENTER,
+					this.buildEventObject_()
+				); // eslint-disable-line
 			}
 		}
 	}

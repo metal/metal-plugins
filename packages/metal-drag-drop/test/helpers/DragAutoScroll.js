@@ -42,9 +42,7 @@ describe('DragAutoScroll', function() {
 		document.body.style.overflow = '';
 	});
 
-	it('should not automatically scroll if mouse is not near boundaries of scroll element', function(
-		done
-	) {
+	it('should not automatically scroll if mouse is not near boundaries of scroll element', function(done) {
 		autoScroll = new DragAutoScroll();
 
 		setTimeout(function() {
@@ -55,9 +53,7 @@ describe('DragAutoScroll', function() {
 		autoScroll.scroll([document], 30, 30);
 	});
 
-	it('should automatically scroll when mouse is near boundaries of the document', function(
-		done
-	) {
+	it('should automatically scroll when mouse is near boundaries of the document', function(done) {
 		autoScroll = new DragAutoScroll();
 
 		dom.once(document, 'scroll', function() {
@@ -86,9 +82,7 @@ describe('DragAutoScroll', function() {
 		autoScroll.scroll([document], 30, window.innerHeight - 10);
 	});
 
-	it('should keep scrolling the document while the mouse is near the boundaries', function(
-		done
-	) {
+	it('should keep scrolling the document while the mouse is near the boundaries', function(done) {
 		autoScroll = new DragAutoScroll();
 
 		dom.once(document, 'scroll', function() {
@@ -108,9 +102,7 @@ describe('DragAutoScroll', function() {
 		autoScroll.scroll([document], 30, window.innerHeight - 10);
 	});
 
-	it('should stop scrolling the document until "stop" is called', function(
-		done
-	) {
+	it('should stop scrolling the document until "stop" is called', function(done) {
 		autoScroll = new DragAutoScroll();
 
 		dom.once(document, 'scroll', function() {
@@ -124,9 +116,7 @@ describe('DragAutoScroll', function() {
 		autoScroll.scroll([document], 30, window.innerHeight - 10);
 	});
 
-	it('should automatically scroll when mouse is near boundaries of the given element', function(
-		done
-	) {
+	it('should automatically scroll when mouse is near boundaries of the given element', function(done) {
 		let scrollElement = document.querySelector('.scroll');
 		autoScroll = new DragAutoScroll();
 
@@ -137,9 +127,7 @@ describe('DragAutoScroll', function() {
 		autoScroll.scroll([scrollElement], 10, 10);
 	});
 
-	it('should not automatically scroll when mouse is near one of the boundaries but outside element', function(
-		done
-	) {
+	it('should not automatically scroll when mouse is near one of the boundaries but outside element', function(done) {
 		let scrollElement = document.querySelector('.scroll');
 		autoScroll = new DragAutoScroll();
 
@@ -162,9 +150,7 @@ describe('DragAutoScroll', function() {
 		autoScroll.scroll([document], 30, window.innerHeight - 10);
 	});
 
-	it('should automatically scroll when at least close "maxDistance" pixels to boundaries', function(
-		done
-	) {
+	it('should automatically scroll when at least close "maxDistance" pixels to boundaries', function(done) {
 		autoScroll = new DragAutoScroll({
 			maxDistance: 50,
 		});
@@ -180,9 +166,7 @@ describe('DragAutoScroll', function() {
 		autoScroll.scroll([document], 30, window.innerHeight - 60);
 	});
 
-	it('should not automatically scroll before the ms defined by "delay"', function(
-		done
-	) {
+	it('should not automatically scroll before the ms defined by "delay"', function(done) {
 		autoScroll = new DragAutoScroll({
 			delay: 100,
 		});
@@ -194,9 +178,7 @@ describe('DragAutoScroll', function() {
 		autoScroll.scroll([document], 30, window.innerHeight - 10);
 	});
 
-	it('should not automatically scroll before the ms defined by "delay"', function(
-		done
-	) {
+	it('should not automatically scroll before the ms defined by "delay"', function(done) {
 		autoScroll = new DragAutoScroll({
 			delay: 100,
 		});

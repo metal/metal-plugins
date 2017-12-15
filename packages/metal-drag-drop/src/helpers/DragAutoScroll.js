@@ -86,7 +86,9 @@ class DragAutoScroll extends State {
 	 */
 	scrollInternal_(scrollContainers, mouseX, mouseY) {
 		for (let i = 0; i < scrollContainers.length; i++) {
-			let scrollRegion = this.getRegionWithoutScroll_(scrollContainers[i]); // eslint-disable-line
+			let scrollRegion = this.getRegionWithoutScroll_(
+				scrollContainers[i]
+			); // eslint-disable-line
 			if (!Position.pointInsideRegion(mouseX, mouseY, scrollRegion)) {
 				continue;
 			}
@@ -101,7 +103,9 @@ class DragAutoScroll extends State {
 			) {
 				deltaX -= this.speed;
 				// eslint-disable-next-line
-			} else if (Math.abs(mouseX - scrollRegion.right) <= this.maxDistance) {
+			} else if (
+				Math.abs(mouseX - scrollRegion.right) <= this.maxDistance
+			) {
 				deltaX += this.speed;
 			}
 			if (
@@ -110,7 +114,9 @@ class DragAutoScroll extends State {
 			) {
 				deltaY -= this.speed;
 				// eslint-disable-next-line
-			} else if (Math.abs(mouseY - scrollRegion.bottom) <= this.maxDistance) {
+			} else if (
+				Math.abs(mouseY - scrollRegion.bottom) <= this.maxDistance
+			) {
 				deltaY += this.speed;
 			}
 

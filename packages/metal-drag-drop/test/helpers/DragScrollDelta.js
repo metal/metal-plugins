@@ -42,9 +42,7 @@ describe('DragScrollDelta', function() {
 		document.body.style.overflow = '';
 	});
 
-	it('should emit "scrollDelta" event when the body is scrolled', function(
-		done
-	) {
+	it('should emit "scrollDelta" event when the body is scrolled', function(done) {
 		dragScrollDelta = new DragScrollDelta();
 		dragScrollDelta.start(document.querySelector('.dragNode'), [document]);
 
@@ -62,9 +60,7 @@ describe('DragScrollDelta', function() {
 		window.scrollTo(0, 10);
 	});
 
-	it('should emit "scrollDelta" event when a container is scrolled', function(
-		done
-	) {
+	it('should emit "scrollDelta" event when a container is scrolled', function(done) {
 		let scrollNode = document.querySelector('.scroll');
 		dragScrollDelta = new DragScrollDelta();
 		dragScrollDelta.start(document.querySelector('.dragNode'), [scrollNode]);
@@ -77,9 +73,7 @@ describe('DragScrollDelta', function() {
 		scrollNode.scrollTop = 10;
 	});
 
-	it('should not emit "scrollDelta" event if scrolled element does not contain drag node', function(
-		done
-	) {
+	it('should not emit "scrollDelta" event if scrolled element does not contain drag node', function(done) {
 		let scrollNode = document.querySelector('.scroll');
 		let anotherDragNode = document.querySelector('.dragNode').cloneNode(true);
 		dom.enterDocument(anotherDragNode);
@@ -96,9 +90,7 @@ describe('DragScrollDelta', function() {
 		scrollNode.scrollTop = 10;
 	});
 
-	it('should not emit "scrollDelta" event if drag node has "fixed" position', function(
-		done
-	) {
+	it('should not emit "scrollDelta" event if drag node has "fixed" position', function(done) {
 		let dragNode = document.querySelector('.dragNode');
 		dragNode.style.position = 'fixed';
 
@@ -131,9 +123,7 @@ describe('DragScrollDelta', function() {
 		scrollNode.scrollTop = 10;
 	});
 
-	it('should not emit "scrollDelta" event if "dispose" is called', function(
-		done
-	) {
+	it('should not emit "scrollDelta" event if "dispose" is called', function(done) {
 		let scrollNode = document.querySelector('.scroll');
 		dragScrollDelta = new DragScrollDelta();
 		dragScrollDelta.start(document.querySelector('.dragNode'), [scrollNode]);
