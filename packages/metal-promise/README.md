@@ -104,4 +104,4 @@ don't have it yet.
 
 ## Contributing
 
-Check out the [contributing guidelines](https://github.com/metal/metal-promise/blob/master/CONTRIBUTING.md) for more information.
+Check out the [contributing guidelines](https://github.com/metal/metal-plugins/blob/master/CONTRIBUTING.md) for more information.
