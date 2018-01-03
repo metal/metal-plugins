@@ -81,9 +81,13 @@ describe('Ajax', function() {
 	it('should prevent wrapped function from firing when AOP.prevent is returned by listener', function() {
 		const obj = new MyClass();
 
-		AOP.before(function() {
-			return AOP.prevent();
-		}, obj, 'add');
+		AOP.before(
+			function() {
+				return AOP.prevent();
+			},
+			obj,
+			'add'
+		);
 
 		obj.add(1, 2);
 
@@ -94,9 +98,13 @@ describe('Ajax', function() {
 		const obj = new MyClass();
 		const spy = sinon.spy();
 
-		AOP.before(function() {
-			return AOP.halt('new value');
-		}, obj, 'add');
+		AOP.before(
+			function() {
+				return AOP.halt('new value');
+			},
+			obj,
+			'add'
+		);
 		AOP.before(spy, obj, 'add');
 
 		const retVal = obj.add(1, 2);
@@ -110,9 +118,13 @@ describe('Ajax', function() {
 		const obj = new MyClass();
 		const spy = sinon.spy();
 
-		AOP.after(function() {
-			return AOP.halt('new value');
-		}, obj, 'add');
+		AOP.after(
+			function() {
+				return AOP.halt('new value');
+			},
+			obj,
+			'add'
+		);
 		AOP.after(spy, obj, 'add');
 
 		const retVal = obj.add(1, 2);
@@ -124,9 +136,13 @@ describe('Ajax', function() {
 	it('should modify return value when AOP.alterReturn is returned by `after` listener', function() {
 		const obj = new MyClass();
 
-		AOP.after(function() {
-			return AOP.alterReturn(AOP.currentRetVal + 1);
-		}, obj, 'add');
+		AOP.after(
+			function() {
+				return AOP.alterReturn(AOP.currentRetVal + 1);
+			},
+			obj,
+			'add'
+		);
 
 		const retVal = obj.add(1, 2);
 
@@ -137,21 +153,33 @@ describe('Ajax', function() {
 	it('should track changes made to return value with subsequent changes made by AOP.alterReturn', function() {
 		const obj = new MyClass();
 
-		AOP.after(function() {
-			assert.strictEqual(AOP.currentRetVal, 3);
+		AOP.after(
+			function() {
+				assert.strictEqual(AOP.currentRetVal, 3);
 
-			return AOP.alterReturn(22);
-		}, obj, 'add');
-		AOP.after(function() {
-			assert.strictEqual(AOP.currentRetVal, 22);
+				return AOP.alterReturn(22);
+			},
+			obj,
+			'add'
+		);
+		AOP.after(
+			function() {
+				assert.strictEqual(AOP.currentRetVal, 22);
 
-			return AOP.alterReturn('now a string');
-		}, obj, 'add');
-		AOP.after(function() {
-			assert.strictEqual(AOP.currentRetVal, 'now a string');
+				return AOP.alterReturn('now a string');
+			},
+			obj,
+			'add'
+		);
+		AOP.after(
+			function() {
+				assert.strictEqual(AOP.currentRetVal, 'now a string');
 
-			return AOP.alterReturn(AOP.currentRetVal + ':');
-		}, obj, 'add');
+				return AOP.alterReturn(AOP.currentRetVal + ':');
+			},
+			obj,
+			'add'
+		);
 
 		const retVal = obj.add(1, 2);
 
@@ -162,16 +190,24 @@ describe('Ajax', function() {
 	it('should track original return value when changes are made by AOP.alterReturn', function() {
 		const obj = new MyClass();
 
-		AOP.after(function() {
-			assert.strictEqual(AOP.currentRetVal, 3);
+		AOP.after(
+			function() {
+				assert.strictEqual(AOP.currentRetVal, 3);
 
-			return AOP.alterReturn(22);
-		}, obj, 'add');
-		AOP.after(function() {
-			assert.strictEqual(AOP.currentRetVal, 22);
+				return AOP.alterReturn(22);
+			},
+			obj,
+			'add'
+		);
+		AOP.after(
+			function() {
+				assert.strictEqual(AOP.currentRetVal, 22);
 
-			return AOP.alterReturn(AOP.originalRetVal);
-		}, obj, 'add');
+				return AOP.alterReturn(AOP.originalRetVal);
+			},
+			obj,
+			'add'
+		);
 
 		const retVal = obj.add(1, 2);
 
