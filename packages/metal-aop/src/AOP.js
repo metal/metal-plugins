@@ -137,6 +137,7 @@ class AOP extends EventEmitter {
 	 *
 	 * @param {any} value Return value passed to code that invoked the wrapped
 	 * function.
+	 * @return {Object}
 	 */
 	static alterReturn(value) {
 		return AOP.modify_(ALTER_RETURN, value);
@@ -161,6 +162,7 @@ class AOP extends EventEmitter {
 	 *
 	 * @param {any} value Return value passed to code that invoked the wrapped
 	 * function.
+	 * @return {Object}
 	 */
 	static halt(value) {
 		return AOP.modify_(HALT, value);
@@ -200,17 +202,19 @@ class AOP extends EventEmitter {
 	 * @param {!string} type The type of modification to be made
 	 * @param {any} value Return value passed to code that invoked the wrapped
 	 * function.
+	 * @return {Object}
 	 */
 	static modify_(type, value) {
 		return {
 			type,
-			value
+			value,
 		};
 	}
 
 	/**
 	 * Return a prevent object when you want to prevent the wrapped function
 	 * from executing, but want the remaining listeners to execute.
+	 * @return {Object}
 	 */
 	static prevent() {
 		return AOP.modify_(PREVENT);
