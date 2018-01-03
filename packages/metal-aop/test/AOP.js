@@ -90,7 +90,7 @@ describe('Ajax', function() {
 		assert.ok(addSpy.notCalled);
 	});
 
-	it('should prevent wrapped function and all further subscribers from firing when AOP.halt is returned by listener', function() {
+	it('should prevent wrapped function and all further before subscribers from firing when AOP.halt is returned by listener', function() {
 		const obj = new MyClass();
 		const spy = sinon.spy();
 
@@ -106,6 +106,21 @@ describe('Ajax', function() {
 		assert.strictEqual(retVal, 'new value');
 	});
 
+	it('should prevent all further after subscribers from firing when AOP.halt is returned by listener', function() {
+		const obj = new MyClass();
+		const spy = sinon.spy();
+
+		AOP.after(function() {
+			return AOP.halt('new value');
+		}, obj, 'add');
+		AOP.after(spy, obj, 'add');
+
+		const retVal = obj.add(1, 2);
+
+		assert.ok(spy.notCalled);
+		assert.strictEqual(retVal, 'new value');
+	});
+
 	it('should modify return value when AOP.alterReturn is returned by `after` listener', function() {
 		const obj = new MyClass();
 
@@ -117,6 +132,51 @@ describe('Ajax', function() {
 
 		assert.ok(addSpy.calledOnce);
 		assert.strictEqual(retVal, 4);
+	});
+
+	it('should track changes made to return value with subsequent changes made by AOP.alterReturn', function() {
+		const obj = new MyClass();
+
+		AOP.after(function() {
+			assert.strictEqual(AOP.currentRetVal, 3);
+
+			return AOP.alterReturn(22);
+		}, obj, 'add');
+		AOP.after(function() {
+			assert.strictEqual(AOP.currentRetVal, 22);
+
+			return AOP.alterReturn('now a string');
+		}, obj, 'add');
+		AOP.after(function() {
+			assert.strictEqual(AOP.currentRetVal, 'now a string');
+
+			return AOP.alterReturn(AOP.currentRetVal + ':');
+		}, obj, 'add');
+
+		const retVal = obj.add(1, 2);
+
+		assert.ok(addSpy.calledOnce);
+		assert.strictEqual(retVal, 'now a string:');
+	});
+
+	it('should track original return value when changes are made by AOP.alterReturn', function() {
+		const obj = new MyClass();
+
+		AOP.after(function() {
+			assert.strictEqual(AOP.currentRetVal, 3);
+
+			return AOP.alterReturn(22);
+		}, obj, 'add');
+		AOP.after(function() {
+			assert.strictEqual(AOP.currentRetVal, 22);
+
+			return AOP.alterReturn(AOP.originalRetVal);
+		}, obj, 'add');
+
+		const retVal = obj.add(1, 2);
+
+		assert.ok(addSpy.calledOnce);
+		assert.strictEqual(retVal, 3);
 	});
 });
 
