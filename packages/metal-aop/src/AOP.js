@@ -61,7 +61,7 @@ class AOP extends EventEmitter {
 	/**
 	 *
 	 * @param {any} args* Arguments are passed to the wrapping and wrapped functions.
- 	 * @return {any} Return value of wrapped function.
+	 * @return {any} Return value of wrapped function.
 	 */
 	exec(...args) {
 		let listenerRetVal;
