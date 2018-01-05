@@ -13,7 +13,10 @@ const PREVENT = 'prevent';
  */
 class AOP {
 	/**
-	 * @inheritdoc
+	 * Constructor for AOP class.
+	 * @param {!Object} obj The object containing the displaced function.
+	 * @param {!string} fnName The name of the displaced function.
+	 * @constructor
 	 */
 	constructor(obj, fnName) {
 		/**
