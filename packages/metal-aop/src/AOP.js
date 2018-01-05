@@ -1,12 +1,6 @@
 'use strict';
 
-import {EventEmitter} from 'metal-events';
-
-const AFTER = 'after';
-
 const ALTER_RETURN = 'alterReturn';
-
-const BEFORE = 'before';
 
 const HALT = 'halt';
 
@@ -17,18 +11,24 @@ const PREVENT = 'prevent';
 /**
  * AOP class
  */
-class AOP extends EventEmitter {
+class AOP {
 	/**
 	 * @inheritdoc
 	 */
 	constructor(obj, fnName) {
-		super();
+		/**
+		 * Array of listeners that will invoke after the displaced function.
+		 * @type {!Array}
+		 * @protected
+		 */
+		this.after_ = [];
 
 		/**
-		 * The current return value of the displaced method.
-		 * @type {any}
+		 * Array of listeners that will invoke before the displaced function.
+		 * @type {!Array}
+		 * @protected
 		 */
-		this.currentRetVal = null;
+		this.before_ = [];
 
 		/**
 		 * The name of the displaced function.
@@ -50,12 +50,28 @@ class AOP extends EventEmitter {
 		 * @protected
 		 */
 		this.obj_ = obj;
+	}
 
-		/**
-		 * The original return value of the displaced method.
-		 * @type {any}
-		 */
-		this.originalRetVal = null;
+	/**
+	 * Creates handle for detaching listener from displaced function.
+	 * @param {!Function} fn The listener
+	 * @param {!boolean} before Determines when listener fires
+	 */
+	createHandle(fn, before) {
+		return {
+			detach: this.detach_.bind(this, fn, before),
+		};
+	}
+
+	/**
+	 * Detaches listener from displaced function.
+	 * @param {!Function} fn The listener
+	 * @param {!boolean} before Determines when listener fires
+	 */
+	detach_(fn, before) {
+		const listenerArray = before ? this.before_ : this.after_;
+
+		listenerArray.splice(listenerArray.indexOf(fn), 1);
 	}
 
 	/**
@@ -68,10 +84,8 @@ class AOP extends EventEmitter {
 		let prevented = false;
 		let retVal;
 
-		const beforeListeners = this.listeners(BEFORE);
-
-		for (let i = 0; i < beforeListeners.length; i++) {
-			listenerRetVal = beforeListeners[i].apply(this.obj_, args);
+		for (let i = 0; i < this.before_.length; i++) {
+			listenerRetVal = this.before_[i].apply(this.obj_, args);
 
 			if (listenerRetVal && listenerRetVal.type) {
 				if (listenerRetVal.type === HALT) {
@@ -89,10 +103,8 @@ class AOP extends EventEmitter {
 		AOP.currentRetVal = retVal;
 		AOP.originalRetVal = retVal;
 
-		const afterListeners = this.listeners(AFTER);
-
-		for (let i = 0; i < afterListeners.length; i++) {
-			listenerRetVal = afterListeners[i].apply(this.obj_, args);
+		for (let i = 0; i < this.after_.length; i++) {
+			listenerRetVal = this.after_[i].apply(this.obj_, args);
 
 			if (listenerRetVal && listenerRetVal.type) {
 				if (listenerRetVal.type === HALT) {
@@ -116,7 +128,13 @@ class AOP extends EventEmitter {
 	 * @return {EventHandle} Can be used to remove the listener.
 	 */
 	register(fn, before) {
-		return this.addListener(before ? 'before' : 'after', fn);
+		if (before) {
+			this.before_.push(fn);
+		} else {
+			this.after_.push(fn);
+		}
+
+		return this.createHandle(fn, before);
 	}
 
 	/**

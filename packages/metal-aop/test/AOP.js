@@ -70,7 +70,7 @@ describe('Ajax', function() {
 		assert.ok(addSpy.calledOnce);
 		assert.ok(spy.calledOnce);
 
-		handle.removeListener();
+		handle.detach();
 
 		obj.add(1, 2);
 

@@ -29,9 +29,6 @@
   "keywords": [
     "metal"
   ],
-  "dependencies": {
-    "metal-events": "^2.15.0"
-  },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
