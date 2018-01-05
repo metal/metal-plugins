@@ -59,6 +59,7 @@ class AOP {
 	 * Creates handle for detaching listener from displaced function.
 	 * @param {!Function} fn The listener
 	 * @param {!boolean} before Determines when listener fires
+	 * @return {Object}
 	 */
 	createHandle(fn, before) {
 		return {

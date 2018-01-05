@@ -84,7 +84,7 @@ describe('Ajax', function() {
 		const spy2 = sinon.spy();
 
 		const handle1 = AOP.before(spy1, obj, 'add');
-		const handle2 = AOP.before(spy2, obj, 'add');
+		AOP.before(spy2, obj, 'add');
 
 		obj.add(1, 2);
 
