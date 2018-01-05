@@ -78,6 +78,29 @@ describe('Ajax', function() {
 		assert.ok(spy.calledOnce);
 	});
 
+	it('should only remove listeners that are detached', function() {
+		const obj = new MyClass();
+		const spy1 = sinon.spy();
+		const spy2 = sinon.spy();
+
+		const handle1 = AOP.before(spy1, obj, 'add');
+		const handle2 = AOP.before(spy2, obj, 'add');
+
+		obj.add(1, 2);
+
+		assert.ok(addSpy.calledOnce);
+		assert.ok(spy1.calledOnce);
+		assert.ok(spy2.calledOnce);
+
+		handle1.detach();
+
+		obj.add(1, 2);
+
+		assert.ok(addSpy.calledTwice);
+		assert.ok(spy1.calledOnce);
+		assert.ok(spy2.calledTwice);
+	});
+
 	it('should prevent wrapped function from firing when AOP.prevent is returned by listener', function() {
 		const obj = new MyClass();
 
