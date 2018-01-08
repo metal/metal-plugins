@@ -8,6 +8,6 @@
 		"lerna": "lerna bootstrap -- --no-optional",
 		"lint": "lerna run lint --concurrency 1 --stream",
 		"test": "lerna run test --concurrency 1 --stream",
-		"test:saucelabs": "lerna run test:saucelabs --concurrency 1 --stream"
+		"test:saucelabs": "lerna run test:saucelabs --concurrency 1 --stream --scope metal-ajax"
 	}
 }
