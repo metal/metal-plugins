@@ -1,17 +1,17 @@
 language: node_js
 node_js:
-  - '8'
+- '8'
 sudo: false
 addons:
   sauce_connect:
-    username: metal-ajax
+    username: metal-plugins
     no_ssl_bump_domains: all
   jwt:
-    secure: GZGcOjAoB0lAoFVmDBO1aDk4MxCB4CTmtPks31RPI1LEemJD20RNunxA8XYBMKFot+Xxj4AA4/U0UwoMQlYaNQe4+JL50LF8TtCfSS0OkOC5gToLVOI8qLbNmyPw9Aep+KsihSCQH/dXaAshkHbPvjWEmrj8GzzIbcsCEWMuYBs0kidWHWR4nU6K8Xqd6YtuqHncsGcpJpjv6347068iqhWqA7rfwIcXVbYLofN/avO1mmdEUeWXgm0K/Za6ULrej0UBuCS48XQZDBjb2FnMbecXpPoW/ZmNgCAEtP+Ja9klUA/pimjg/Jv6s7GwlrsOnAJLkqkK+SawYUy5AeVPNnxyD7A8vH9qmT4FpVkE59igEMfwpG4MCCdDgcpkWdLY9F7hfuqkXonE4F3xAOk3PV6dojWPSL3Iik+1uRQB8vSW0gIvUyeaIoT+p9pef2UPGVFjbmQcEXNHUnqf52VCL++ITUUh5MHmk+pZux46YxbJmEvC5y5nb22g/00OLIo83lfGm1B7ntUhwV+Y14MLaXL8txULw6wvLqdAPMqaUTcVkpK5+uT5r/nyNzY4IzldxFHgpz/WWG03qVta9k8OUxjaMceLCz6+OZD38K+3C42MCv0J4JhqzCEcvcR/nfpZbbU7wA01pHFkn6UQ4FNw18bYw8PuFjrZPlMCEszldWU=
+    secure: Jv23RPlpERrmm55cFsCl032KC3r/iaxtPgeV4jZ74U9z8kKSZmi8FjlYfS0R5znlajC/pjmOD/jTTj8biFBo7MPD8tHx3IaQw6XWpDGGFbBfYqVVryraEjYfhvOfAAwqy5lIn/p3N+AgFWw8c96sLBVsLfFR+uuIe2EwH7ewfFUGvxFU5kIt8bjBqvJzurG3nKpUfEkEzZ6z6h0sJR8Ax4skzp2qye1T7NulLXrbwuneib7Q7kCJ/WH6LZh9so/2pWgGXlZ4Jb+Ii3IhrfiEVMik4nO9YtGyv8E2gcjNCBQXzUnO435t9gjUzwsTQUvdYunloHSllJlT244mjHCWECwjU+PdWJTPG5grrFJwq3aGABUaZN/CMPoqNtzyyk/1Xe7F8C64qNIuTRApWTPvzfyRFD/kTRo+Vq4xGLfkgzzndpJUD18vZf4F3rAy29AQzU7+YynlCc0OmGwrIMCsTMWtEyd2XL9ZToBfexNFUqVJsh2EwbcshMOJoYPp3IfC/jfqDA6+f746uipbuKwVxFci3/WL+0CsiBfaxmZCphVi44p+Le8f94dvlkBCugkPWE/tGO+QFZZcqStLJg2qimB2qqU02LqFi1JtD5NRksBbHH295XFXkahZFkgMOvA8LHS/JJ8MI6ZfItzEwNsQEYMIHQz8uMmlvhiNumGZT+M=
 before_install:
-  - npm install
-  - npm run lerna
+- npm install
+- npm run lerna
 script:
-  - npm run checkFormat
-  - npm run lint
-  - npm run test:saucelabs
+- npm run checkFormat
+- npm run lint
+- npm run test:saucelabs
