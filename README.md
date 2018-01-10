@@ -33,3 +33,7 @@ metal-plugins is a collection of utilities that are often used in Metal.js proje
 ## Contributing
 
 Check out the [contributing guidelines](https://github.com/metal/metal-plugins/blob/master/CONTRIBUTING.md) for more information.
+
+## Big Thanks
+
+Cross-browser Testing Platform and Open Source <3 Provided by [Sauce Labs](https://saucelabs.com)
