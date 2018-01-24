@@ -11,6 +11,7 @@
 		"lint": "lerna run lint --concurrency 1 --stream",
 		"precommit": "lint-staged",
 		"test": "lerna run test --concurrency 1 --stream",
+		"test:jest": "lerna run test:jest --concurrency 1 --stream",
 		"test:saucelabs": "lerna run test:saucelabs --concurrency 1 --stream"
 	},
 	"lint-staged": {
