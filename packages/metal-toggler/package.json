@@ -3,7 +3,7 @@
   "version": "3.0.0",
   "description": "Metal's toggler component",
   "license": "BSD",
-  "repository": "metal/metal-toggler",
+  "repository": "https://github.com/metal/metal-plugins/tree/master/packages/metal-toggler",
   "engines": {
     "node": ">=0.12.0",
     "npm": ">=3.0.0"

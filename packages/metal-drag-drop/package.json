@@ -3,7 +3,7 @@
   "version": "3.0.1",
   "description": "Metal's drag and drop component.",
   "license": "BSD",
-  "repository": "metal/metal-drag-drop",
+  "repository": "https://github.com/metal/metal-plugins/tree/master/packages/metal-drag-drop",
   "engines": {
     "node": ">=0.12.0",
     "npm": ">=3.0.0"
