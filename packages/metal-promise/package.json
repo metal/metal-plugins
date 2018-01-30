@@ -3,7 +3,7 @@
   "version": "3.0.3",
   "description": "Promises polyfill from Google's Closure Library in ES6",
   "license": "BSD",
-  "repository": "metal/metal-promise",
+  "repository": "https://github.com/metal/metal-plugins/tree/master/packages/metal-promise",
   "engines": {
     "node": ">=0.12.0",
     "npm": ">=3.0.0"
