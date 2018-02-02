@@ -103,7 +103,7 @@ the promise is resolved.
 ### Fetching
 
 Data from an Ajax request can easily be passed to the `component`
-via the `fetch` and `fetchUrl` config properties.
+via the `fetch` and `fetchUrl` or `fetchFn` config properties.
 
 ```javascript
 Component.render(Router, {
@@ -114,9 +114,22 @@ Component.render(Router, {
 });
 ```
 
+
 This will fire off a request to `/some/api.json` when `/path` is navigated to,
 and pass the returned data directly to `MyComponent`. Note that the component
 will not be rendered until the request is complete.
+
+`fetchFn` can also be used for cases where the direct API isn't helpful. Any
+returned data in the promise will be pass directly to `MyComponent`.
+
+```javascript
+Component.render(Router, {
+  component: MyComponent,
+  fetch: true,
+  fetchFn: () => new Promise(resolve => resolve({title: 'Foo Bar'})),
+  path: '/path'
+});
+```
 
 Use the `fetchTimeout` property for setting a max amount of time
 for the request.
