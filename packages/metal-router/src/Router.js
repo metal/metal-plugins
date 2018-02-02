@@ -278,6 +278,13 @@ Router.STATE = {
 	},
 
 	/**
+	 * Function to call before navigating to a certain path.
+	 */
+	fetchFn: {
+		validator: val => core.isFunction(val),
+	},
+
+	/**
 	 * Url to be used when fetching data for this route. If nothing is given,
 	 * the current path will be used by default. Note that this is only relevant
 	 * if "fetch" is set to `true`.
@@ -461,7 +468,13 @@ class ComponentScreen extends RequestScreen {
 		let deferred = CancellablePromise.resolve();
 		let params;
 		if (this.router.fetch) {
-			deferred = deferred.then(() => super.load(this.getFetchUrl_(path)));
+			if (this.router.fetchFn) {
+				deferred = deferred.then(() => this.router.fetchFn(path));
+			} else {
+				deferred = deferred.then(() =>
+					super.load(this.getFetchUrl_(path))
+				);
+			}
 		} else {
 			params = this.router.extractParams(path);
 			deferred = deferred.then(() => this.router.data(path, params));

@@ -236,6 +236,23 @@ describe('Router', function() {
 			});
 	});
 
+	it('should run fetchFn callback and add to lastLoadedState', function(done) {
+		router = new Router({
+			path: '/path',
+			component: CustomComponent,
+			fetch: true,
+			fetchFn: () => {
+				return new Promise((resolve) => setTimeout(() => resolve({title: 'Foo Bar'}), 300));
+			},
+		});
+		Router.router()
+			.navigate('/path')
+			.then(() => {
+				assert.deepEqual({title: 'Foo Bar'}, router.lastLoadedState);
+				done();
+			});
+	});
+
 	it('should fetch data from url specified by "fetchUrl" function when "fetch" is true', function(done) {
 		let stub = sinon
 			.stub(RequestScreen.prototype, 'load')
