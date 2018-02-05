@@ -8,23 +8,29 @@ import './Image.soy.js';
 
 // Routing from JavaScript -----------------------------------------------------
 
-var Basic = {
+let Basic = {
 	run() {
 		Component.render(Router, {
 			element: '#main > div',
 			fetch: true,
 			fetchUrl: '/demos/data.json',
 			path: '/demos/basic',
-			component: Home
+			component: Home,
 		});
 
 		Component.render(Router, {
+			async: true,
 			element: '#main > div',
 			path: '/demos/basic/home-page',
-			component: Home,
+			component: () =>
+				new Promise(res => {
+					setTimeout(() => {
+						res(Home);
+					}, 1000);
+				}),
 			data: {
-				title: 'Home Page'
-			}
+				title: 'Home Page Delayed',
+			},
 		});
 
 		Component.render(Router, {
@@ -32,8 +38,8 @@ var Basic = {
 			path: '/demos/basic/about/:name(\\w+)?',
 			component: About,
 			data: {
-				title: 'About'
-			}
+				title: 'About',
+			},
 		});
 
 		Component.render(Router, {
@@ -41,14 +47,16 @@ var Basic = {
 			path: '/demos/basic/about-delayed',
 			component: About,
 			data: function() {
-				return new Promise((resolve) => setTimeout(() => resolve({ title: 'About Delayed' }), 2000));
-			}
+				return new Promise(resolve =>
+					setTimeout(() => resolve({title: 'About Delayed'}), 2000)
+				);
+			},
 		});
 
 		// Dispatch router to the current browser url ----------------------------------
 
 		Router.router().dispatch();
-	}
+	},
 };
 
 export default Basic;
