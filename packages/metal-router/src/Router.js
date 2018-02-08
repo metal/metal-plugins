@@ -232,6 +232,7 @@ Router.STATE = {
 		validator: core.isBoolean,
 		value: false,
 	},
+
 	/**
 	 * Handler to be called before a router is activated. Can be given as a
 	 * function reference directly, or as the name of a function to be called in
