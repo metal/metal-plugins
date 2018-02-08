@@ -1,6 +1,6 @@
 'use strict';
 
-var PositionTestHelper = {
+let PositionTestHelper = {
 	/**
 	 * Replaces the given test function with an empty one if this is running
 	 * on Safari Mobile.
@@ -8,13 +8,13 @@ var PositionTestHelper = {
 	 * @return {!function()}
 	 */
 	skipSafariMobile(testFn) {
-		var userAgent = window.navigator.userAgent;
+		let userAgent = window.navigator.userAgent;
 		if (userAgent.match(/iPad/i) || userAgent.match(/iPhone/i)) {
 			return function() {};
 		} else {
 			return testFn;
 		}
-	}
+	},
 };
 
 export default PositionTestHelper;

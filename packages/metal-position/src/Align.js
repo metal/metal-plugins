@@ -9,7 +9,6 @@ import Position from './Position';
  * parent is the body element.
  */
 class Align {
-
 	/**
 	 * Aligns the element with the best region around alignElement. The best
 	 * region is defined by clockwise rotation starting from the specified
@@ -26,22 +25,26 @@ class Align {
 	 * @static
 	 */
 	static align(element, alignElement, position, autoBestAlign = true) {
-		var bestRegion;
+		let bestRegion;
 
 		if (autoBestAlign) {
-			var suggestion = this.suggestAlignBestRegion(element, alignElement, position);
+			let suggestion = this.suggestAlignBestRegion(
+				element,
+				alignElement,
+				position
+			);
 			position = suggestion.position;
 			bestRegion = suggestion.region;
 		} else {
 			bestRegion = this.getAlignRegion(element, alignElement, position);
 		}
 
-		var computedStyle = window.getComputedStyle(element, null);
+		let computedStyle = window.getComputedStyle(element, null);
 		if (computedStyle.getPropertyValue('position') !== 'fixed') {
 			bestRegion.top += window.pageYOffset;
 			bestRegion.left += window.pageXOffset;
 
-			var offsetParent = element;
+			let offsetParent = element;
 			while ((offsetParent = offsetParent.offsetParent)) {
 				bestRegion.top -= Position.getOffsetTop(offsetParent);
 				bestRegion.left -= Position.getOffsetLeft(offsetParent);
@@ -66,7 +69,8 @@ class Align {
 	 * @static
 	 */
 	static getAlignBestRegion(element, alignElement, position) {
-		return Align.suggestAlignBestRegion(element, alignElement, position).region;
+		return Align.suggestAlignBestRegion(element, alignElement, position)
+			.region;
 	}
 
 	/**
@@ -81,44 +85,44 @@ class Align {
 	 * @static
 	 */
 	static getAlignRegion(element, alignElement, position) {
-		var r1 = Position.getRegion(alignElement);
-		var r2 = Position.getRegion(element);
-		var top = 0;
-		var left = 0;
+		let r1 = Position.getRegion(alignElement);
+		let r2 = Position.getRegion(element);
+		let top = 0;
+		let left = 0;
 
 		switch (position) {
-			case Align.TopCenter:
-				top = r1.top - r2.height;
-				left = r1.left + r1.width / 2 - r2.width / 2;
-				break;
-			case Align.RightCenter:
-				top = r1.top + r1.height / 2 - r2.height / 2;
-				left = r1.left + r1.width;
-				break;
-			case Align.BottomCenter:
-				top = r1.bottom;
-				left = r1.left + r1.width / 2 - r2.width / 2;
-				break;
-			case Align.LeftCenter:
-				top = r1.top + r1.height / 2 - r2.height / 2;
-				left = r1.left - r2.width;
-				break;
-			case Align.TopRight:
-				top = r1.top - r2.height;
-				left = r1.right - r2.width;
-				break;
-			case Align.BottomRight:
-				top = r1.bottom;
-				left = r1.right - r2.width;
-				break;
-			case Align.BottomLeft:
-				top = r1.bottom;
-				left = r1.left;
-				break;
-			case Align.TopLeft:
-				top = r1.top - r2.height;
-				left = r1.left;
-				break;
+		case Align.TopCenter:
+			top = r1.top - r2.height;
+			left = r1.left + r1.width / 2 - r2.width / 2;
+			break;
+		case Align.RightCenter:
+			top = r1.top + r1.height / 2 - r2.height / 2;
+			left = r1.left + r1.width;
+			break;
+		case Align.BottomCenter:
+			top = r1.bottom;
+			left = r1.left + r1.width / 2 - r2.width / 2;
+			break;
+		case Align.LeftCenter:
+			top = r1.top + r1.height / 2 - r2.height / 2;
+			left = r1.left - r2.width;
+			break;
+		case Align.TopRight:
+			top = r1.top - r2.height;
+			left = r1.right - r2.width;
+			break;
+		case Align.BottomRight:
+			top = r1.bottom;
+			left = r1.right - r2.width;
+			break;
+		case Align.BottomLeft:
+			top = r1.bottom;
+			left = r1.left;
+			break;
+		case Align.TopLeft:
+			top = r1.top - r2.height;
+			left = r1.left;
+			break;
 		}
 
 		return {
@@ -127,7 +131,7 @@ class Align {
 			left: left,
 			right: left + r2.width,
 			top: top,
-			width: r2.width
+			width: r2.width,
 		};
 	}
 
@@ -156,17 +160,24 @@ class Align {
 	 * @static
 	 */
 	static suggestAlignBestRegion(element, alignElement, position) {
-		var bestArea = 0;
-		var bestPosition = position;
-		var bestRegion = this.getAlignRegion(element, alignElement, bestPosition);
-		var tryPosition = bestPosition;
-		var tryRegion = bestRegion;
-		var viewportRegion = Position.getRegion(window);
+		let bestArea = 0;
+		let bestPosition = position;
+		let bestRegion = this.getAlignRegion(
+			element,
+			alignElement,
+			bestPosition
+		);
+		let tryPosition = bestPosition;
+		let tryRegion = bestRegion;
+		let viewportRegion = Position.getRegion(window);
 
-		for (var i = 0; i < 8;) {
+		for (let i = 0; i < 8; ) {
 			if (Position.intersectRegion(viewportRegion, tryRegion)) {
-				var visibleRegion = Position.intersection(viewportRegion, tryRegion);
-				var area = visibleRegion.width * visibleRegion.height;
+				let visibleRegion = Position.intersection(
+					viewportRegion,
+					tryRegion
+				);
+				let area = visibleRegion.width * visibleRegion.height;
 				if (area > bestArea) {
 					bestArea = area;
 					bestRegion = tryRegion;
@@ -176,13 +187,13 @@ class Align {
 					break;
 				}
 			}
-			tryPosition = (position + (++i)) % 8;
+			tryPosition = (position + ++i) % 8;
 			tryRegion = this.getAlignRegion(element, alignElement, tryPosition);
 		}
 
 		return {
 			position: bestPosition,
-			region: bestRegion
+			region: bestRegion,
 		};
 	}
 }
