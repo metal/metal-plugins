@@ -21,7 +21,7 @@ class Position {
 	 * Gets the client height or width of the specified node. Scroll height is
 	 * not included.
 	 * @param {Element|Document|Window=} node
-	 * @param {string} `Width` or `Height` property.
+	 * @param {string} prop `Width` or `Height` property.
 	 * @return {number}
 	 * @protected
 	 */
@@ -48,15 +48,15 @@ class Position {
 
 	/**
 	 * Gets the region of the element, document or window.
-	 * @param {Element|Document|Window=} opt_element Optional element to test.
+	 * @param {Element|Document|Window=} element Optional element to test.
 	 * @return {!DOMRect} The returned value is a simulated DOMRect object which
 	 *     is the union of the rectangles returned by getClientRects() for the
 	 *     element, i.e., the CSS border-boxes associated with the element.
 	 * @protected
 	 */
-	static getDocumentRegion_(opt_element) {
-		let height = this.getHeight(opt_element);
-		let width = this.getWidth(opt_element);
+	static getDocumentRegion_(element) {
+		let height = this.getHeight(element);
+		let width = this.getWidth(element);
 		return this.makeRegion(height, height, 0, width, 0, width);
 	}
 
@@ -73,16 +73,16 @@ class Position {
 	 * Gets the top offset position of the given node. This fixes the `offsetLeft` value of
 	 * nodes that were translated, which don't take that into account at all. That makes
 	 * the calculation more expensive though, so if you don't want that to be considered
-	 * either pass `opt_ignoreTransform` as true or call `offsetLeft` directly on the node.
+	 * either pass `ignoreTransform` as true or call `offsetLeft` directly on the node.
 	 * @param {!Element} node
-	 * @param {boolean=} opt_ignoreTransform When set to true will ignore transform css
+	 * @param {boolean=} ignoreTransform When set to true will ignore transform css
 	 *   when calculating the position. Defaults to false.
 	 * @return {number}
 	 */
-	static getOffsetLeft(node, opt_ignoreTransform) {
+	static getOffsetLeft(node, ignoreTransform) {
 		return (
 			node.offsetLeft +
-			(opt_ignoreTransform ? 0 : Position.getTranslation(node).left)
+			(ignoreTransform ? 0 : Position.getTranslation(node).left)
 		);
 	}
 
@@ -90,36 +90,36 @@ class Position {
 	 * Gets the top offset position of the given node. This fixes the `offsetTop` value of
 	 * nodes that were translated, which don't take that into account at all. That makes
 	 * the calculation more expensive though, so if you don't want that to be considered
-	 * either pass `opt_ignoreTransform` as true or call `offsetTop` directly on the node.
+	 * either pass `ignoreTransform` as true or call `offsetTop` directly on the node.
 	 * @param {!Element} node
-	 * @param {boolean=} opt_ignoreTransform When set to true will ignore transform css
+	 * @param {boolean=} ignoreTransform When set to true will ignore transform css
 	 *   when calculating the position. Defaults to false.
 	 * @return {number}
 	 */
-	static getOffsetTop(node, opt_ignoreTransform) {
+	static getOffsetTop(node, ignoreTransform) {
 		return (
 			node.offsetTop +
-			(opt_ignoreTransform ? 0 : Position.getTranslation(node).top)
+			(ignoreTransform ? 0 : Position.getTranslation(node).top)
 		);
 	}
 
 	/**
 	 * Gets the size of an element and its position relative to the viewport.
 	 * @param {!Document|Element|Window} node
-	 * @param {boolean=} opt_includeScroll Flag indicating if the document scroll
+	 * @param {boolean=} includeScroll Flag indicating if the document scroll
 	 *   position should be considered in the element's region coordinates. Defaults
 	 *   to false.
 	 * @return {!DOMRect} The returned value is a DOMRect object which is the
 	 *     union of the rectangles returned by getClientRects() for the element,
 	 *     i.e., the CSS border-boxes associated with the element.
 	 */
-	static getRegion(node, opt_includeScroll) {
+	static getRegion(node, includeScroll) {
 		if (core.isDocument(node) || core.isWindow(node)) {
 			return this.getDocumentRegion_(node);
 		}
 		return this.makeRegionFromBoundingRect_(
 			node.getBoundingClientRect(),
-			opt_includeScroll
+			includeScroll
 		);
 	}
 
@@ -157,7 +157,7 @@ class Position {
 	 * Gets the height or width of the specified node. Scroll height is
 	 * included.
 	 * @param {Element|Document|Window=} node
-	 * @param {string} `Width` or `Height` property.
+	 * @param {string} prop `Width` or `Height` property.
 	 * @return {number}
 	 * @protected
 	 */
@@ -331,18 +331,18 @@ class Position {
 
 	/**
 	 * Makes a region from a DOMRect result from `getBoundingClientRect`.
-	 * @param  {!DOMRect} The returned value is a DOMRect object which is the
+	 * @param  {!DOMRect} rect The returned value is a DOMRect object which is the
 	 *     union of the rectangles returned by getClientRects() for the element,
 	 *     i.e., the CSS border-boxes associated with the element.
-	 * @param {boolean=} opt_includeScroll Flag indicating if the document scroll
+	 * @param {boolean=} includeScroll Flag indicating if the document scroll
 	 *   position should be considered in the element's region coordinates. Defaults
 	 *   to false.
 	 * @return {DOMRect} Writable version of DOMRect.
 	 * @protected
 	 */
-	static makeRegionFromBoundingRect_(rect, opt_includeScroll) {
-		let deltaX = opt_includeScroll ? Position.getScrollLeft(document) : 0;
-		let deltaY = opt_includeScroll ? Position.getScrollTop(document) : 0;
+	static makeRegionFromBoundingRect_(rect, includeScroll) {
+		let deltaX = includeScroll ? Position.getScrollLeft(document) : 0;
+		let deltaY = includeScroll ? Position.getScrollTop(document) : 0;
 		return this.makeRegion(
 			rect.bottom + deltaY,
 			rect.height,

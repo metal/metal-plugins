@@ -16,7 +16,7 @@ class Align {
 	 * axis.
 	 * @param {!Element} element Element to be aligned.
 	 * @param {!Element} alignElement Element to align with.
-	 * @param {Align.Top|Align.Right|Align.Bottom|Align.Left} pos
+	 * @param {Align.Top|Align.Right|Align.Bottom|Align.Left} position
 	 *     The initial position to try. Options `Align.Top`, `Align.Right`,
 	 *     `Align.Bottom`, `Align.Left`.
 	 * @param {boolean} autoBestAlign Option to suggest or not the best region
@@ -62,7 +62,7 @@ class Align {
 	 * while `Align.suggestAlignBestRegion` also returns the chosen position.
 	 * @param {!Element} element Element to be aligned.
 	 * @param {!Element} alignElement Element to align with.
-	 * @param {Align.Top|Align.Right|Align.Bottom|Align.Left} pos
+	 * @param {Align.Top|Align.Right|Align.Bottom|Align.Left} position
 	 *     The initial position to try. Options `Align.Top`, `Align.Right`,
 	 *     `Align.Bottom`, `Align.Left`.
 	 * @return {DOMRect} Best region to align element.
@@ -78,7 +78,7 @@ class Align {
 	 * always aligned in the middle of alignElement axis.
 	 * @param {!Element} element Element to be aligned.
 	 * @param {!Element} alignElement Element to align with.
-	 * @param {Align.Top|Align.Right|Align.Bottom|Align.Left} pos
+	 * @param {Align.Top|Align.Right|Align.Bottom|Align.Left} position
 	 *     The position to align. Options `Align.Top`, `Align.Right`,
 	 *     `Align.Bottom`, `Align.Left`.
 	 * @return {DOMRect} Region to align element.
@@ -153,7 +153,7 @@ class Align {
 	 * axis.
 	 * @param {!Element} element Element to be aligned.
 	 * @param {!Element} alignElement Element to align with.
-	 * @param {Align.Top|Align.Right|Align.Bottom|Align.Left} pos
+	 * @param {Align.Top|Align.Right|Align.Bottom|Align.Left} position
 	 *     The initial position to try. Options `Align.Top`, `Align.Right`,
 	 *     `Align.Bottom`, `Align.Left`.
 	 * @return {{position: string, region: DOMRect}} Best region to align element.

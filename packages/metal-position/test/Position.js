@@ -448,8 +448,7 @@ describe('Position', function() {
 		});
 
 		it('should return offset position of given element with translate css', function() {
-			offsetElement.style['-webkit-transform'] =
-				'translate(-30px, -50px)';
+			offsetElement.style['-webkit-transform'] = 'translate(-30px, -50px)';
 			offsetElement.style['-ms-transform'] = 'translate(-30px, -50px)';
 			offsetElement.style.transform = 'translate(-30px, -50px)';
 			assert.strictEqual(50, Position.getOffsetTop(offsetElement));
@@ -459,8 +458,7 @@ describe('Position', function() {
 		it('should return offset position of given element with 3d translate css', function() {
 			offsetElement.style['-webkit-transform'] =
 				'translate3d(-30px, -50px, -10px)';
-			offsetElement.style['-ms-transform'] =
-				'translate3d(-30px, -50px, -10px)';
+			offsetElement.style['-ms-transform'] = 'translate3d(-30px, -50px, -10px)';
 			offsetElement.style.transform = 'translate3d(-30px, -50px, -10px)';
 			if (Position.getTransformMatrixValues(offsetElement)) {
 				// This test only makes sense on browsers that support 3d transforms.
@@ -470,21 +468,17 @@ describe('Position', function() {
 		});
 
 		it('should return offset position of given element ignoring translate css', function() {
-			offsetElement.style['-webkit-transform'] =
-				'translate(-30px, -50px)';
+			offsetElement.style['-webkit-transform'] = 'translate(-30px, -50px)';
 			offsetElement.style['-ms-transform'] = 'translate(-30px, -50px)';
 			offsetElement.style.transform = 'translate(-30px, -50px)';
 			assert.strictEqual(100, Position.getOffsetTop(offsetElement, true));
-			assert.strictEqual(
-				200,
-				Position.getOffsetLeft(offsetElement, true)
-			);
+			assert.strictEqual(200, Position.getOffsetLeft(offsetElement, true));
 		});
 	});
 });
 
-var nextScrollTick = function(fn, opt_el) {
-	var handler = dom.on(opt_el || document, 'scroll', function() {
+const nextScrollTick = function(fn, el) {
+	const handler = dom.on(el || document, 'scroll', function() {
 		fn();
 		handler.removeListener();
 	});
