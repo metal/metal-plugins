@@ -1,6 +1,6 @@
 'use strict';
 
-import {core, object} from 'metal';
+import {core, object, isServerSide} from 'metal';
 import dom from 'metal-dom';
 import DragAutoScroll from './helpers/DragAutoScroll';
 import DragScrollDelta from './helpers/DragScrollDelta';
@@ -20,6 +20,10 @@ class Drag extends State {
 	 */
 	constructor(config) {
 		super(config);
+
+		if (isServerSide()) {
+			return;
+		}
 
 		/**
 		 * The drag placeholder that is active at the moment.
@@ -866,7 +870,11 @@ Drag.STATE = {
 	container: {
 		setter: dom.toElement,
 		validator: 'validateElementOrString_',
-		value: document,
+		valueFn: function() {
+			if (!isServerSide()) {
+				return document;
+			}
+		},
 	},
 
 	/**
