@@ -1,6 +1,6 @@
 'use strict';
 
-import core from 'metal';
+import {core, isServerSide} from 'metal';
 import dom from 'metal-dom';
 import Position from 'metal-position';
 import State from 'metal-state';
@@ -14,6 +14,10 @@ class Scrollspy extends State {
 	 */
 	constructor(opt_config) {
 		super(opt_config);
+
+		if (isServerSide()) {
+			return;
+		}
 
 		/**
 		 * Holds the regions cache.
@@ -37,6 +41,10 @@ class Scrollspy extends State {
 	 * @inheritDoc
 	 */
 	disposeInternal() {
+		if (isServerSide()) {
+			return;
+		}
+
 		this.deactivateAll();
 		this.scrollHandle_.dispose();
 		super.disposeInternal();
@@ -255,7 +263,11 @@ Scrollspy.STATE = {
 	 */
 	scrollElement: {
 		setter: dom.toElement,
-		value: document
+		valueFn: function() {
+			if (!isServerSide()) {
+				return document;
+			}
+		}
 	},
 
 	/**
