@@ -1,5 +1,7 @@
 'use strict';
 
+import {isServerSide} from 'metal';
+
 /**
  * Metal.js browser user agent detection. It's extremely recommended the usage
  * of feature checking over browser user agent sniffing. Unfortunately, in some
@@ -17,7 +19,7 @@ class UA {
 	 * @static
 	 */
 	static getNativeUserAgent() {
-		var navigator = UA.globals.window.navigator;
+		var navigator = UA.globals.window && UA.globals.window.navigator;
 		if (navigator) {
 			var userAgent = navigator.userAgent;
 			if (userAgent) {
@@ -36,7 +38,7 @@ class UA {
 	 * @static
 	 */
 	static getNativePlatform() {
-		var navigator = UA.globals.window.navigator;
+		var navigator = UA.globals.window && UA.globals.window.navigator;
 		if (navigator) {
 			var platform = navigator.platform;
 			if (platform) {
@@ -158,9 +160,14 @@ class UA {
  * @type {object}
  * @static
  */
-UA.globals = {
-	window: window
-};
+Object.defineProperty(UA, 'globals', {
+  writable: true,
+  value: function() {
+    if (!isServerSide()) {
+			return window;
+		}
+  }
+});
 
 UA.testUserAgent(UA.getNativeUserAgent(), UA.getNativePlatform());
 
