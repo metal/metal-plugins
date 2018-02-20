@@ -1,5 +1,5 @@
 {
-  "name": "metal-events",
+  "name": "metal-aop",
   "version": "3.0.0",
   "description": "Metal.js utility for AOP.",
   "license": "BSD",
