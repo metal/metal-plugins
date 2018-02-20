@@ -1,6 +1,6 @@
 'use strict';
 
-import core from 'metal';
+import {core, isServerSide} from 'metal';
 import dom from 'metal-dom';
 import {EventHandler} from 'metal-events';
 import State from 'metal-state';
@@ -15,6 +15,10 @@ class Toggler extends State {
 	constructor(config) {
 		super(config);
 
+		if (isServerSide()) {
+			return;
+		}
+
 		this.headerEventHandler_ = new EventHandler();
 
 		this.on('headerChanged', this.syncHeader);
@@ -25,6 +29,10 @@ class Toggler extends State {
 	 * @inheritDoc
 	 */
 	disposeInternal() {
+		if (isServerSide()) {
+			return;
+		}
+
 		super.disposeInternal();
 		this.headerEventHandler_.removeAllListeners();
 	}
