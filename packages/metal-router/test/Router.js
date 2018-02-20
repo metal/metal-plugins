@@ -491,6 +491,27 @@ describe('Router', function() {
 			});
 	});
 
+	it('should render component asyncronously', function(done) {
+		router = new Router({
+			async: true,
+			path: '/path2',
+			component: () =>
+				new CancellablePromise(resolve => {
+					setTimeout(() => {
+						resolve(CustomComponent);
+					}, 200);
+				}),
+		});
+
+		Router.router()
+			.navigate('/path2')
+			.then(() => {
+				assert.ok(Router.getActiveComponent() instanceof CustomComponent);
+				assert.ok(Router.getActiveComponent().wasRendered);
+				done();
+			});
+	});
+
 	it('should render component with right element when routing to path', function(done) {
 		dom.append(document.body, '<div id="el"><div></div></div>');
 		let element = document.querySelector('#el > div');

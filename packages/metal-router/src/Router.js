@@ -223,6 +223,17 @@ Router.RENDERER = IncrementalDomRenderer;
  */
 Router.STATE = {
 	/**
+	 * Flag indicating if the component should be loaded via a request
+	 * to the server.
+	 * @type {boolean}
+	 * @default false
+	 */
+	async: {
+		validator: core.isBoolean,
+		value: false,
+	},
+
+	/**
 	 * Handler to be called before a router is activated. Can be given as a
 	 * function reference directly, or as the name of a function to be called in
 	 * the router's component instance.
@@ -466,6 +477,21 @@ class ComponentScreen extends RequestScreen {
 			params = this.router.extractParams(path);
 			deferred = deferred.then(() => this.router.data(path, params));
 		}
+
+		if (this.router.async) {
+			deferred = deferred.then(loadedState =>
+				this.router.component().then(component => {
+					this.router.component = component;
+
+					if (this.router.cacheable) {
+						this.router.async = false;
+					}
+
+					return loadedState;
+				})
+			);
+		}
+
 		return deferred.then(loadedState => {
 			this.router.lastPath = path;
 			this.router.lastRedirectPath = this.maybeFindRedirectPath();
