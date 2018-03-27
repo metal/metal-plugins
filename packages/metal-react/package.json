@@ -34,9 +34,7 @@
     "metal"
   ],
   "dependencies": {
-    "metal-jsx": "^2.0.0",
-    "react": "^15.1.0",
-    "react-dom": "^15.1.0"
+    "metal-jsx": "^2.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.9.0",
@@ -60,5 +58,9 @@
     "sinon": "^1.17.4",
     "watchify": "^3.7.0",
     "webpack": "^1.13.0"
+  },
+  "peerDependencies": {
+    "react": ">=15.0.0",
+    "react-dom": ">=15.1.0"
   }
 }
