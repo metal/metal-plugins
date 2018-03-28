@@ -1,0 +1,66 @@
+{
+  "name": "metal-react",
+  "version": "2.0.0",
+  "description": "A function that transforms React components into Metal.js components",
+  "license": "BSD",
+  "repository": "metal/metal-react",
+  "engines": {
+    "node": ">=0.12.0",
+    "npm": ">=3.0.0"
+  },
+  "main": "lib/bridge.js",
+  "jsnext:main": "src/bridge.js",
+  "files": [
+    "lib",
+    "src",
+    "test"
+  ],
+  "scripts": {
+    "build": "webpack",
+    "compile": "babel -d lib/ src/",
+    "prepublish": "npm run compile",
+    "test": "karma start --single-run",
+    "test:coverage": "karma start karma-coverage.conf.js --single-run",
+    "test:watch": "karma start",
+    "watch": "webpack --watch"
+  },
+  "babel": {
+    "presets": [
+      "metal",
+      "metal-jsx"
+    ]
+  },
+  "keywords": [
+    "metal"
+  ],
+  "dependencies": {
+    "metal-jsx": "^2.0.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.9.0",
+    "babel-loader": "^6.2.4",
+    "babel-preset-metal": "^4.0.1",
+    "babel-preset-metal-jsx": "0.0.2",
+    "babelify": "^7.3.0",
+    "browserify": "^13.0.1",
+    "browserify-istanbul": "^2.0.0",
+    "chai": "^3.5.0",
+    "isparta": "^4.0.0",
+    "karma": "^0.13.22",
+    "karma-browserify": "^5.0.5",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^1.0.1",
+    "karma-coverage": "^1.0.0",
+    "karma-mocha": "^1.0.1",
+    "karma-sinon": "^1.0.5",
+    "karma-source-map-support": "^1.1.0",
+    "mocha": "^2.5.3",
+    "sinon": "^1.17.4",
+    "watchify": "^3.7.0",
+    "webpack": "^1.13.0"
+  },
+  "peerDependencies": {
+    "react": ">=15.0.0",
+    "react-dom": ">=15.1.0"
+  }
+}

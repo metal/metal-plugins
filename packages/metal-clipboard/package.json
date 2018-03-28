@@ -1,0 +1,42 @@
+{
+  "name": "metal-clipboard",
+  "version": "2.0.0",
+  "description": "Metal's component for copying content to the clipboard",
+  "license": "BSD",
+  "repository": "metal/metal-clipboard",
+  "engines": {
+    "node": ">=0.12.0",
+    "npm": ">=3.0.0"
+  },
+  "jsnext:main": "src/Clipboard.js",
+  "main": "lib/Clipboard.js",
+  "files": [
+    "lib",
+    "src",
+    "test"
+  ],
+  "scripts": {
+    "build": "webpack",
+    "compile": "babel --presets metal -d lib/ src/",
+    "prepublish": "npm run compile",
+    "test": "gulp test"
+  },
+  "keywords": [
+    "clipboard",
+    "metal"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "metal": "^2.0.0",
+    "metal-state": "^2.0.0",
+    "metal-dom": "^2.0.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.4.5",
+    "babel-loader": "^7.1.2",
+    "babel-preset-metal": "^4.0.0",
+    "gulp": "^3.8.11",
+    "gulp-metal": "^1.0.0",
+    "webpack": "^3.5.5"
+  }
+}

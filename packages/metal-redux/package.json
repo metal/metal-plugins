@@ -1,0 +1,44 @@
+{
+  "name": "metal-redux",
+  "version": "2.0.1",
+  "description": "A set of helpers for building projects using Metal.js and Redux",
+  "license": "BSD",
+  "repository": "metal/metal-redux",
+  "engines": {
+    "node": ">=0.12.0",
+    "npm": ">=3.0.0"
+  },
+  "jsnext:main": "src/redux.js",
+  "main": "lib/redux.js",
+  "files": [
+    "lib",
+    "src",
+    "test"
+  ],
+  "scripts": {
+    "compile": "babel -d lib/ src/",
+    "prepublish": "npm run compile",
+    "test": "gulp test"
+  },
+  "babel": {
+    "presets": [
+      "metal",
+      "metal-jsx"
+    ]
+  },
+  "keywords": [
+    "metal"
+  ],
+  "dependencies": {
+    "metal-incremental-dom": "^2.0.0",
+    "metal-jsx": "^2.0.0",
+    "metal-state": "^2.0.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.4.5",
+    "babel-preset-metal": "^4.0.0",
+    "babel-preset-metal-jsx": "0.0.3",
+    "gulp": "^3.8.11",
+    "gulp-metal": "^1.0.0"
+  }
+}

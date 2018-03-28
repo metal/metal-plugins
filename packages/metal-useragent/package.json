@@ -1,0 +1,35 @@
+{
+  "name": "metal-useragent",
+  "version": "2.2.0",
+  "description": "Metal.js browser user agent detection.",
+  "license": "BSD",
+  "repository": "metal/metal-useragent",
+  "engines": {
+    "node": ">=0.12.0",
+    "npm": ">=3.0.0"
+  },
+  "jsnext:main": "src/UA.js",
+  "main": "lib/UA.js",
+  "files": [
+    "lib",
+    "src",
+    "test"
+  ],
+  "scripts": {
+    "compile": "babel --presets metal -d lib/ src/",
+    "prepublish": "npm run compile",
+    "test": "gulp test"
+  },
+  "keywords": [
+    "metal"
+  ],
+  "dependencies": {
+    "metal": "^2.0.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.4.5",
+    "babel-preset-metal": "^4.0.0",
+    "gulp": "^3.8.11",
+    "gulp-metal": "^1.0.0"
+  }
+}
