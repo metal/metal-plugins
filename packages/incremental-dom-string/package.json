@@ -15,10 +15,10 @@
   },
   "author": "Eduardo Lundgren <eduardolundgren@gmail.com>",
   "license": "BSD-3-Clause",
-  "main": "./dist/incremental-dom-string.js",
+  "main": "./lib/incremental-dom-string.js",
   "files": [
     "index.js",
-    "dist",
+    "lib",
     "src"
   ],
   "repository": {
