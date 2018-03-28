@@ -15,7 +15,7 @@ gulp.task('build', ['clean'], () =>
       babel({
         presets: [
           [
-            "es2015",
+            "env",
             {
               "modules": false
             }
@@ -45,7 +45,7 @@ gulp.task('lint', () =>
 gulp.task('test', () =>
   gulp.src('test/*.js')
   .pipe(mocha({
-    compilers: babelRegister({presets: ['es2015']}),
+    compilers: babelRegister({presets: ['env']}),
   })));
 
 gulp.task('test:watch', () =>
