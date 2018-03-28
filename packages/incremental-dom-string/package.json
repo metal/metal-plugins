@@ -24,7 +24,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/metal/incremental-dom-string.git"
+    "url": "https://github.com/metal/metal-plugins/tree/master/packages/incremental-dom-string.git"
   },
   "devDependencies": {
     "babel-cli": "^6.4.5",
