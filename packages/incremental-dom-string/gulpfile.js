@@ -15,7 +15,7 @@ gulp.task('build', ['clean'], () =>
       babel({
         presets: [
           [
-            "es2015",
+            "env",
             {
               "modules": false
             }
@@ -29,12 +29,12 @@ gulp.task('build', ['clean'], () =>
   })
   .pipe(source('incremental-dom-string.js'))
   .pipe(buffer())
-  .pipe(gulp.dest('dist')));
+  .pipe(gulp.dest('lib')));
 
 gulp.task('build:watch', () =>
   gulp.watch('src/*.js', ['build']));
 
-gulp.task('clean', () => del('dist'));
+gulp.task('clean', () => del('lib'));
 
 gulp.task('lint', () =>
   gulp.src(['src/*.js', 'test/*.js'])
@@ -45,7 +45,7 @@ gulp.task('lint', () =>
 gulp.task('test', () =>
   gulp.src('test/*.js')
   .pipe(mocha({
-    compilers: babelRegister({presets: ['es2015']}),
+    compilers: babelRegister({presets: ['env']}),
   })));
 
 gulp.task('test:watch', () =>

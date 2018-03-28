@@ -11,10 +11,10 @@
   },
   "author": "Eduardo Lundgren <eduardolundgren@gmail.com>",
   "license": "BSD-3-Clause",
-  "main": "./dist/incremental-dom-string.js",
+  "main": "./lib/incremental-dom-string.js",
   "files": [
     "index.js",
-    "dist",
+    "lib",
     "src"
   ],
   "repository": {
@@ -22,7 +22,7 @@
     "url": "https://github.com/metal/incremental-dom-string.git"
   },
   "devDependencies": {
-    "babel-preset-es2015": "^6.0.0",
+    "babel-preset-env": "^1.6.1",
     "babel-register": "^6.23.0",
     "chai": "^3.5.0",
     "eslint": "^3.13.1",
