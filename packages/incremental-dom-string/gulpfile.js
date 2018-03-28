@@ -28,12 +28,12 @@ gulp.task('build', ['clean'], () =>
   })
   .pipe(source('incremental-dom-string.js'))
   .pipe(buffer())
-  .pipe(gulp.dest('dist')));
+  .pipe(gulp.dest('lib')));
 
 gulp.task('build:watch', () =>
   gulp.watch('src/*.js', ['build']));
 
-gulp.task('clean', () => del('dist'));
+gulp.task('clean', () => del('lib'));
 
 gulp.task('test', () =>
   gulp.src('test/*.js')
