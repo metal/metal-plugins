@@ -38,7 +38,7 @@ describe('element creation', () => {
   it('when creating a single node with text', () => {
     const output = renderToString(() => {
       elementOpen('div');
-        text('Hello world');
+      text('Hello world');
       elementClose('div');
     });
     assert.strictEqual(output, '<div>Hello world</div>');
@@ -47,9 +47,9 @@ describe('element creation', () => {
   it('when creating a single node with a child node with text', () => {
     const output = renderToString(() => {
       elementOpen('div');
-        elementOpen('span');
-          text('Hello world 2');
-        elementClose('span');
+      elementOpen('span');
+      text('Hello world 2');
+      elementClose('span');
       elementClose('div');
     });
     assert.strictEqual(output, '<div><span>Hello world 2</span></div>');
@@ -58,21 +58,24 @@ describe('element creation', () => {
   it('when creating a single node with multiple child nodes with text', () => {
     const output = renderToString(() => {
       elementOpen('div');
-        elementOpen('p');
-          text('First child');
-        elementClose('p');
-        elementOpen('span');
-          text('Second child');
-        elementClose('span');
+      elementOpen('p');
+      text('First child');
+      elementClose('p');
+      elementOpen('span');
+      text('Second child');
+      elementClose('span');
       elementClose('div');
     });
-    assert.strictEqual(output, '<div><p>First child</p><span>Second child</span></div>');
+    assert.strictEqual(
+      output,
+      '<div><p>First child</p><span>Second child</span></div>'
+    );
   });
 
   it('when creating a single node with attributes', () => {
     const output = renderToString(() => {
       elementOpen('div', null, ['id', 'test-div']);
-        text('Test text');
+      text('Test text');
       elementClose('div');
     });
     assert.strictEqual(output, '<div id="test-div">Test text</div>');
@@ -80,19 +83,25 @@ describe('element creation', () => {
 
   it('when creating a single node with multiple static attributes', () => {
     const attrs = [
-      'id', 'test-id',
-      'name', 'test-name',
-      'data-a', 'test-data-a',
-      'data-b', 'test-data-b',
+      'id',
+      'test-id',
+      'name',
+      'test-name',
+      'data-a',
+      'test-data-a',
+      'data-b',
+      'test-data-b',
     ];
 
-    const expected = ['<div id="test-id" name="test-name"',
+    const expected = [
+      '<div id="test-id" name="test-name"',
       'data-a="test-data-a"',
-      'data-b="test-data-b">Some text</div>'].join(' ');
+      'data-b="test-data-b">Some text</div>',
+    ].join(' ');
 
     const output = renderToString(() => {
       elementOpen('div', null, attrs);
-        text('Some text');
+      text('Some text');
       elementClose('div');
     });
     assert.strictEqual(output, expected);
@@ -100,19 +109,25 @@ describe('element creation', () => {
 
   it('when creating a single node with multiple attributes', () => {
     const attrs = [
-      'id', 'test-id',
-      'name', 'test-name',
-      'data-a', 'test-data-a',
-      'data-b', 'test-data-b',
+      'id',
+      'test-id',
+      'name',
+      'test-name',
+      'data-a',
+      'test-data-a',
+      'data-b',
+      'test-data-b',
     ];
 
-    const expected = ['<div id="test-id" name="test-name"',
+    const expected = [
+      '<div id="test-id" name="test-name"',
       'data-a="test-data-a"',
-      'data-b="test-data-b">Some text</div>'].join(' ');
+      'data-b="test-data-b">Some text</div>',
+    ].join(' ');
 
     const output = renderToString(() => {
       elementOpen('div', null, null, ...attrs);
-        text('Some text');
+      text('Some text');
       elementClose('div');
     });
     assert.strictEqual(output, expected);
@@ -121,19 +136,21 @@ describe('element creation', () => {
   it('when creating a single node with several child nodes with attributes and text', () => {
     const output = renderToString(() => {
       elementOpen('div');
-        elementOpen('span', null, ['name', 'span-name', 'id', 'span-id']);
-          text('Foo');
-        elementClose('span');
-        elementOpen('button', null, ['name', 'button-name', 'id', 'button-id']);
-          text('Bar');
-        elementClose('button');
+      elementOpen('span', null, ['name', 'span-name', 'id', 'span-id']);
+      text('Foo');
+      elementClose('span');
+      elementOpen('button', null, ['name', 'button-name', 'id', 'button-id']);
+      text('Bar');
+      elementClose('button');
       elementClose('div');
     });
 
-    const expected = ['<div>',
+    const expected = [
+      '<div>',
       '<span name="span-name" id="span-id">Foo</span>',
       '<button name="button-name" id="button-id">Bar</button>',
-      '</div>'].join('');
+      '</div>',
+    ].join('');
 
     assert.strictEqual(output, expected);
   });
@@ -148,20 +165,31 @@ describe('element creation', () => {
 
   it('when creating a void node with various attributes', () => {
     const output = renderToString(() => {
-      elementVoid('div', null, ['id', 'test-id', 'name', 'test-name', 'data-test', 'test']);
+      elementVoid('div', null, [
+        'id',
+        'test-id',
+        'name',
+        'test-name',
+        'data-test',
+        'test',
+      ]);
     });
-    assert.strictEqual(output, '<div id="test-id" name="test-name" data-test="test"></div>');
+    assert.strictEqual(
+      output,
+      '<div id="test-id" name="test-name" data-test="test"></div>'
+    );
   });
 
   it('when patching a node', () => {
     const output = renderToString(() => {
       elementOpen('main', null, ['id', 'main-element', 'data-foo', 'bar']);
-        elementOpen('section');
-        elementClose('section');
+      elementOpen('section');
+      elementClose('section');
       elementClose('main');
     });
 
-    let expected = '<main id="main-element" data-foo="bar"><section></section></main>';
+    let expected =
+      '<main id="main-element" data-foo="bar"><section></section></main>';
 
     assert.strictEqual(output, expected);
 
@@ -170,13 +198,13 @@ describe('element creation', () => {
       elementOpen('ul', null, ['id', 'test-ul']);
       for (let i = 0; i < n; i++) {
         elementOpen('li', null, ['id', `test-li-${i}`]);
-          text(`List item ${i}`);
+        text(`List item ${i}`);
         elementClose('li');
       }
       elementClose('ul');
     }
 
-    const node = {innerHTML: ''};
+    const node = { innerHTML: '' };
 
     patch(node, () => {
       return createList(10);
@@ -194,7 +222,8 @@ describe('element creation', () => {
       '<li id="test-li-7">List item 7</li>',
       '<li id="test-li-8">List item 8</li>',
       '<li id="test-li-9">List item 9</li>',
-      '</ul>'].join('');
+      '</ul>',
+    ].join('');
 
     assert.strictEqual(node.innerHTML, expected);
 
@@ -209,7 +238,8 @@ describe('element creation', () => {
       '<li id="test-li-2">List item 2</li>',
       '<li id="test-li-3">List item 3</li>',
       '<li id="test-li-4">List item 4</li>',
-      '</ul>'].join('');
+      '</ul>',
+    ].join('');
 
     assert.strictEqual(node.innerHTML, expected);
   });
@@ -217,60 +247,68 @@ describe('element creation', () => {
   it('should flush the output', () => {
     const output1 = renderToString(() => {
       elementOpen('main', null, ['id', 'main-element', 'data-foo', 'bar']);
-        elementOpen('section');
-        elementClose('section');
+      elementOpen('section');
+      elementClose('section');
       elementClose('main');
     });
 
-    assert.strictEqual(output1, '<main id="main-element" data-foo="bar"><section></section></main>');
+    assert.strictEqual(
+      output1,
+      '<main id="main-element" data-foo="bar"><section></section></main>'
+    );
 
     const output2 = renderToString(() => {});
 
     assert.strictEqual(output2, '');
   });
 
-  it('should allow creating complex nodes', () => {
+  it('should allow creating complex nodes', () => {
     const output = renderToString(() => {
       elementOpen('main', null, ['id', 'main-el']);
-        elementOpen('div');
-          elementOpen('span');
-            text('hello');
-            elementOpen('p');
-              elementVoid('a', null, ['href', 'http:\/\/liferay.com']);
-            elementClose('p');
-          elementClose('span');
-        elementVoid('a', null, ['href', 'http:\/\/www.wedeploy.com']);
-        elementClose('div');
+      elementOpen('div');
+      elementOpen('span');
+      text('hello');
+      elementOpen('p');
+      elementVoid('a', null, ['href', 'http://liferay.com']);
+      elementClose('p');
+      elementClose('span');
+      elementVoid('a', null, ['href', 'http://www.wedeploy.com']);
+      elementClose('div');
       elementClose('main');
     });
 
-    const expected = ['<main id="main-el">',
+    const expected = [
+      '<main id="main-el">',
       '<div><span>hello<p><a href="http://liferay.com">',
       '</a></p></span><a href="http://www.wedeploy.com">',
-      '</a></div></main>'].join('');
+      '</a></div></main>',
+    ].join('');
 
     assert.strictEqual(output, expected);
   });
 
   describe('with patch', () => {
-    let el = {innerHTML: ''};
+    let el = { innerHTML: '' };
 
     beforeEach(() => {
       patch(el, () => {
-        elementVoid('div', 'key', [
-            'id', 'someId',
-            'class', 'someClass',
-            'data-custom', 'custom'
-        ],
-          'data-foo', 'Hello',
-          'data-bar', 'World')
+        elementVoid(
+          'div',
+          'key',
+          ['id', 'someId', 'class', 'someClass', 'data-custom', 'custom'],
+          'data-foo',
+          'Hello',
+          'data-bar',
+          'World'
+        );
       });
     });
 
     it('should render with the specificed tag', () => {
-      const expected = ['<div id="someId" ',
+      const expected = [
+        '<div id="someId" ',
         'class="someClass" data-custom="custom" ',
-        'data-foo="Hello" data-bar="World"></div>'
+        'data-foo="Hello" data-bar="World"></div>',
       ].join('');
 
       assert.strictEqual(el.innerHTML, expected);
@@ -311,8 +349,8 @@ describe('element creation', () => {
     });
 
     it('should capture currentElement inside patch', () => {
-       let current = {};
-       patch(current, () => elementVoid('div'));
+      let current = {};
+      patch(current, () => elementVoid('div'));
       assert.strictEqual(current, currentElement());
     });
   });
@@ -328,18 +366,18 @@ describe('element creation', () => {
     }
 
     it('should be present when specified', () => {
-      const node =  {innerHTML: ''};
+      const node = { innerHTML: '' };
 
-      patch(node, () => render({key: 'hello'}));
+      patch(node, () => render({ key: 'hello' }));
 
       const matchData = findAttribute(node, 'data-expanded');
       assert.strictEqual(matchData[1], 'hello');
     });
 
     it('should not be present when not specified', () => {
-      const node =  {innerHTML: ''};
+      const node = { innerHTML: '' };
 
-      patch(node, () => render({key: false}));
+      patch(node, () => render({ key: false }));
 
       const matchData = findAttribute(node, 'data-expanded', false);
       assert.ok(matchData === null);
@@ -347,10 +385,10 @@ describe('element creation', () => {
     });
 
     it('should update output when changed', () => {
-      const node =  {innerHTML: ''};
+      const node = { innerHTML: '' };
 
-      patch(node, () => render({key: 'foo'}));
-      patch(node, () => render({key: 'bar'}));
+      patch(node, () => render({ key: 'foo' }));
+      patch(node, () => render({ key: 'bar' }));
 
       const matchData = findAttribute(node, 'data-expanded');
       assert.strictEqual(matchData[1], 'bar');

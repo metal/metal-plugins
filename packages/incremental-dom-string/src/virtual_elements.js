@@ -1,10 +1,5 @@
 import {updateAttribute} from './attributes.js';
-import {
-  buffer,
-  currentElement,
-  currentParent,
-  patch,
-} from './core.js';
+import {buffer, currentElement, currentParent, patch} from './core.js';
 
 /**
  * Truncates an array, removing items up until length.
@@ -74,7 +69,7 @@ const elementClose = function(nameOrCtor) {
  * @return {void} Nothing.
  */
 const elementVoid = function(nameOrCtor, key, statics, var_args) {
-  elementOpen.apply(null, arguments);
+  elementOpen(...arguments);
   return elementClose(nameOrCtor);
 };
 
@@ -100,7 +95,7 @@ const elementOpen = function(nameOrCtor, key, statics, var_args) {
 
   if (statics) {
     for (let i = 0; i < statics.length; i += 2) {
-      const name = /** @type {string} */(statics[i]);
+      const name = /** @type {string} */ (statics[i]);
       const value = statics[i + 1];
       updateAttribute(buffer, name, value);
     }
@@ -126,7 +121,7 @@ const elementOpen = function(nameOrCtor, key, statics, var_args) {
  * @return {void} Nothing.
  */
 const elementOpenEnd = function() {
-  elementOpen.apply(null, argsBuilder);
+  elementOpen(...argsBuilder);
   truncateArray(argsBuilder, 0);
 };
 

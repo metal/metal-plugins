@@ -22,7 +22,4 @@ attributes[symbols.default] = function(el, name, value) {
   }
 };
 
-export {
-  attributes,
-  updateAttribute,
-};
+export {attributes, updateAttribute};

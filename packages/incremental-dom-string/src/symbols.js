@@ -4,6 +4,4 @@ const symbols = {
 };
 
 /** */
-export {
-  symbols,
-};
+export {symbols};
