@@ -1,9 +1,7 @@
 /** @const */
 const symbols = {
-  default: '__default',
+	default: '__default',
 };
 
 /** */
-export {
-  symbols,
-};
+export {symbols};

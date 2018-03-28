@@ -12,14 +12,14 @@ let currentParent = null;
  * @return {!Element}
  */
 const currentElement = function() {
-  return currentParent;
+	return currentParent;
 };
 
 /**
  * @return {Node} The Node that will be evaluated for the next instruction.
  */
 const currentPointer = function() {
-  return {};
+	return {};
 };
 
 /**
@@ -33,11 +33,11 @@ const currentPointer = function() {
  * @return {void} Nothing.
  */
 const patch = function(node, fn, data) {
-  currentParent = node;
-  fn(data);
-  currentParent.innerHTML = buffer.join('');
-  buffer = [];
-  return currentParent;
+	currentParent = node;
+	fn(data);
+	currentParent.innerHTML = buffer.join('');
+	buffer = [];
+	return currentParent;
 };
 
 const patchOuter = patch;
@@ -54,21 +54,21 @@ const patchInner = patch;
  * @return {void} Nothing.
  */
 const text = function(value, var_args) {
-  let formatted = value;
-  for (let i = 1; i < arguments.length; i += 1) {
-    const fn = arguments[i];
-    formatted = fn(formatted);
-  }
-  buffer.push(formatted);
+	let formatted = value;
+	for (let i = 1; i < arguments.length; i += 1) {
+		const fn = arguments[i];
+		formatted = fn(formatted);
+	}
+	buffer.push(formatted);
 };
 
 export {
-  buffer,
-  currentElement,
-  currentParent,
-  currentPointer,
-  patch,
-  patchInner,
-  patchOuter,
-  text,
+	buffer,
+	currentElement,
+	currentParent,
+	currentPointer,
+	patch,
+	patchInner,
+	patchOuter,
+	text,
 };

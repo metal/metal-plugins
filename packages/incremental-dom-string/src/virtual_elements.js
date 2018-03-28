@@ -1,10 +1,5 @@
 import {updateAttribute} from './attributes.js';
-import {
-  buffer,
-  currentElement,
-  currentParent,
-  patch,
-} from './core.js';
+import {buffer, currentElement, currentParent, patch} from './core.js';
 
 /**
  * Truncates an array, removing items up until length.
@@ -12,9 +7,9 @@ import {
  * @param {number} length The new length of the array.
  */
 const truncateArray = function(arr, length) {
-  while (arr.length > length) {
-    arr.pop();
-  }
+	while (arr.length > length) {
+		arr.pop();
+	}
 };
 
 /**
@@ -40,8 +35,8 @@ const argsBuilder = [];
  * @return {void} Nothing.
  */
 const attr = function(name, value) {
-  argsBuilder.push(name);
-  argsBuilder.push(value);
+	argsBuilder.push(name);
+	argsBuilder.push(value);
 };
 
 /**
@@ -51,11 +46,11 @@ const attr = function(name, value) {
  * @return {void} Nothing.
  */
 const elementClose = function(nameOrCtor) {
-  if (typeof nameOrCtor === 'function') {
-    new nameOrCtor();
-    return;
-  }
-  buffer.push(`</${nameOrCtor}>`);
+	if (typeof nameOrCtor === 'function') {
+		new nameOrCtor();
+		return;
+	}
+	buffer.push(`</${nameOrCtor}>`);
 };
 
 /**
@@ -74,8 +69,8 @@ const elementClose = function(nameOrCtor) {
  * @return {void} Nothing.
  */
 const elementVoid = function(nameOrCtor, key, statics, var_args) {
-  elementOpen.apply(null, arguments);
-  return elementClose(nameOrCtor);
+	elementOpen(...arguments);
+	return elementClose(nameOrCtor);
 };
 
 /**
@@ -91,33 +86,33 @@ const elementVoid = function(nameOrCtor, key, statics, var_args) {
  * @return {void} Nothing.
  */
 const elementOpen = function(nameOrCtor, key, statics, var_args) {
-  if (typeof nameOrCtor === 'function') {
-    new nameOrCtor();
-    return currentParent;
-  }
+	if (typeof nameOrCtor === 'function') {
+		new nameOrCtor();
+		return currentParent;
+	}
 
-  buffer.push(`<${nameOrCtor}`);
+	buffer.push(`<${nameOrCtor}`);
 
-  if (statics) {
-    for (let i = 0; i < statics.length; i += 2) {
-      const name = /** @type {string} */(statics[i]);
-      const value = statics[i + 1];
-      updateAttribute(buffer, name, value);
-    }
-  }
+	if (statics) {
+		for (let i = 0; i < statics.length; i += 2) {
+			const name = /** @type {string} */ (statics[i]);
+			const value = statics[i + 1];
+			updateAttribute(buffer, name, value);
+		}
+	}
 
-  let i = ATTRIBUTES_OFFSET;
-  let j = 0;
+	let i = ATTRIBUTES_OFFSET;
+	let j = 0;
 
-  for (; i < arguments.length; i += 2, j += 2) {
-    const name = arguments[i];
-    const value = arguments[i + 1];
-    updateAttribute(buffer, name, value);
-  }
+	for (; i < arguments.length; i += 2, j += 2) {
+		const name = arguments[i];
+		const value = arguments[i + 1];
+		updateAttribute(buffer, name, value);
+	}
 
-  buffer.push('>');
+	buffer.push('>');
 
-  return currentParent;
+	return currentParent;
 };
 
 /**
@@ -126,8 +121,8 @@ const elementOpen = function(nameOrCtor, key, statics, var_args) {
  * @return {void} Nothing.
  */
 const elementOpenEnd = function() {
-  elementOpen.apply(null, argsBuilder);
-  truncateArray(argsBuilder, 0);
+	elementOpen(...argsBuilder);
+	truncateArray(argsBuilder, 0);
 };
 
 /**
@@ -146,9 +141,9 @@ const elementOpenEnd = function() {
  * @return {void} Nothing.
  */
 const elementOpenStart = function(nameOrCtor, key, statics) {
-  argsBuilder[0] = nameOrCtor;
-  argsBuilder[1] = key;
-  argsBuilder[2] = statics;
+	argsBuilder[0] = nameOrCtor;
+	argsBuilder[1] = key;
+	argsBuilder[2] = statics;
 };
 
 /**
@@ -157,16 +152,16 @@ const elementOpenStart = function(nameOrCtor, key, statics) {
  * @return {string} The constructed DOM string.
  */
 const renderToString = function(fn) {
-  patch({}, fn);
-  return currentElement().innerHTML;
+	patch({}, fn);
+	return currentElement().innerHTML;
 };
 
 export {
-  attr,
-  elementClose,
-  elementOpen,
-  elementOpenEnd,
-  elementOpenStart,
-  elementVoid,
-  renderToString,
+	attr,
+	elementClose,
+	elementOpen,
+	elementOpenEnd,
+	elementOpenStart,
+	elementVoid,
+	renderToString,
 };
