@@ -2,7 +2,6 @@ const babel = require('rollup-plugin-babel');
 const babelRegister = require('babel-register');
 const buffer = require('vinyl-buffer');
 const del = require('del');
-const eslint = require('gulp-eslint');
 const gulp = require('gulp');
 const mocha = require('gulp-mocha');
 const rollup = require('rollup-stream');
@@ -35,12 +34,6 @@ gulp.task('build:watch', () =>
   gulp.watch('src/*.js', ['build']));
 
 gulp.task('clean', () => del('dist'));
-
-gulp.task('lint', () =>
-  gulp.src(['src/*.js', 'test/*.js'])
-    .pipe(eslint())
-    .pipe(eslint.format())
-    .pipe(eslint.failAfterError()));
 
 gulp.task('test', () =>
   gulp.src('test/*.js')
