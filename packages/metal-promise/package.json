@@ -16,7 +16,7 @@
     "test"
   ],
   "scripts": {
-    "compile": "babel --presets metal -d lib/ src/",
+    "compile": "babel -d lib/ src/",
     "prepublish": "npm run compile",
     "test": "jest",
     "test:jest": "npm run test"
