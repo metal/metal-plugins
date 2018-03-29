@@ -53,7 +53,7 @@ const patchInner = patch;
  *
  * @return {void} Nothing.
  */
-const text = function(value, var_args) {
+const text = function(value) {
 	let formatted = value;
 	for (let i = 1; i < arguments.length; i += 1) {
 		const fn = arguments[i];

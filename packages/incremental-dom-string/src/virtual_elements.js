@@ -42,12 +42,12 @@ const attr = function(name, value) {
 /**
  * Closes an open virtual Element.
  *
- * @param {string} The Element's tag.
+ * @param {string} nameOrCtor The Element's tag.
  * @return {void} Nothing.
  */
 const elementClose = function(nameOrCtor) {
 	if (typeof nameOrCtor === 'function') {
-		new nameOrCtor();
+		new nameOrCtor(); //eslint-disable-line
 		return;
 	}
 	buffer.push(`</${nameOrCtor}>`);
@@ -57,7 +57,7 @@ const elementClose = function(nameOrCtor) {
  * Declares a virtual Element at the current location in the document that has
  * no children.
  *
- * @param {string} The Element's tag or constructor.
+ * @param {string} nameOrCtor The Element's tag or constructor.
  * @param {?string=} key The key used to identify this element. This can be an
  *     empty string, but performance may be better if a unique value is used
  *     when iterating over an array of items.
@@ -68,7 +68,7 @@ const elementClose = function(nameOrCtor) {
  *     for the Element.
  * @return {void} Nothing.
  */
-const elementVoid = function(nameOrCtor, key, statics, var_args) {
+const elementVoid = function(nameOrCtor) {
 	elementOpen(...arguments);
 	return elementClose(nameOrCtor);
 };
@@ -85,9 +85,9 @@ const elementVoid = function(nameOrCtor, key, statics, var_args) {
  *     for the Element.
  * @return {void} Nothing.
  */
-const elementOpen = function(nameOrCtor, key, statics, var_args) {
+const elementOpen = function(nameOrCtor, key, statics) {
 	if (typeof nameOrCtor === 'function') {
-		new nameOrCtor();
+		new nameOrCtor(); //eslint-disable-line
 		return currentParent;
 	}
 
