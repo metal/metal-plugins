@@ -6,7 +6,6 @@
     "build": "gulp build",
     "checkFormat": "npm run prettier -- --list-different",
     "compile": "gulp build",
-    "coverage": "nyc --reporter=lcov --reporter=text npm test",
     "format": "npm run prettier -- --write",
     "lint": "eslint '{src,test}/**/*.js'",
     "prepublish": "gulp build",
