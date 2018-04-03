@@ -12,8 +12,8 @@ class Scrollspy extends State {
 	/**
 	 * @inheritDoc
 	 */
-	constructor(opt_config) {
-		super(opt_config);
+	constructor(optConfig) {
+		super(optConfig);
 
 		if (isServerSide()) {
 			return;
@@ -32,7 +32,11 @@ class Scrollspy extends State {
 		 * @type {!EventHandle}
 		 * @protected
 		 */
-		this.scrollHandle_ = dom.on(this.scrollElement, 'scroll', this.checkPosition.bind(this));
+		this.scrollHandle_ = dom.on(
+			this.scrollElement,
+			'scroll',
+			this.checkPosition.bind(this)
+		);
 
 		this.init();
 	}
@@ -66,15 +70,15 @@ class Scrollspy extends State {
 	 * Checks position of elements and activate the one in region.
 	 */
 	checkPosition() {
-		var scrollHeight = this.getScrollHeight_();
-		var scrollTop = Position.getScrollTop(this.scrollElement);
+		let scrollHeight = this.getScrollHeight_();
+		let scrollTop = Position.getScrollTop(this.scrollElement);
 
 		if (scrollHeight < scrollTop + this.offset) {
 			this.activate(this.regions.length - 1);
 			return;
 		}
 
-		var index = this.findBestRegionAt_();
+		let index = this.findBestRegionAt_();
 		if (index !== this.activeIndex) {
 			if (index === -1) {
 				this.deactivateAll();
@@ -96,7 +100,7 @@ class Scrollspy extends State {
 	 * Deactivates all elements.
 	 */
 	deactivateAll() {
-		for (var i = 0; i < this.regions.length; i++) {
+		for (let i = 0; i < this.regions.length; i++) {
 			this.deactivate(i);
 		}
 		this.activeIndex = -1;
@@ -107,13 +111,16 @@ class Scrollspy extends State {
 	 * @return {number} The index of best region found.
 	 */
 	findBestRegionAt_() {
-		var index = -1;
-		var origin = this.getCurrentPosition();
+		let index = -1;
+		let origin = this.getCurrentPosition();
 		if (this.regions.length > 0 && origin >= this.regions[0].top) {
-			for (var i = 0; i < this.regions.length; i++) {
-				var region = this.regions[i];
-				var lastRegion = i === this.regions.length - 1;
-				if ((origin >= region.top) && (lastRegion || (origin < this.regions[i + 1].top))) {
+			for (let i = 0; i < this.regions.length; i++) {
+				let region = this.regions[i];
+				let lastRegion = i === this.regions.length - 1;
+				if (
+					origin >= region.top &&
+					(lastRegion || origin < this.regions[i + 1].top)
+				) {
 					index = i;
 					break;
 				}
@@ -127,7 +134,7 @@ class Scrollspy extends State {
 	 * @return {number}
 	 */
 	getCurrentPosition() {
-		var scrollTop = Position.getScrollTop(this.scrollElement);
+		let scrollTop = Position.getScrollTop(this.scrollElement);
 		return scrollTop + this.offset + this.scrollElementRegion_.top;
 	}
 
@@ -146,7 +153,7 @@ class Scrollspy extends State {
 	 * @protected
 	 */
 	getScrollHeight_() {
-		var scrollHeight = Position.getHeight(this.scrollElement);
+		let scrollHeight = Position.getHeight(this.scrollElement);
 		scrollHeight += this.scrollElementRegion_.top;
 		scrollHeight -= Position.getClientHeight(this.scrollElement);
 		return scrollHeight;
@@ -175,7 +182,11 @@ class Scrollspy extends State {
 		this.refresh();
 
 		this.scrollHandle_.dispose();
-		this.scrollHandle_ = dom.on(event.newVal, 'scroll', this.checkPosition.bind(this));
+		this.scrollHandle_ = dom.on(
+			event.newVal,
+			'scroll',
+			this.checkPosition.bind(this)
+		);
 	}
 
 	/**
@@ -190,18 +201,18 @@ class Scrollspy extends State {
 		this.scrollHeight_ = this.getScrollHeight_();
 
 		this.regions = [];
-		var links = this.element.querySelectorAll(this.selector);
-		var scrollTop = Position.getScrollTop(this.scrollElement);
-		for (var i = 0; i < links.length; ++i) {
-			var link = links[i];
-			if (link.hash && (link.hash.length > 1)) {
-				var element = document.getElementById(link.hash.substring(1));
+		let links = this.element.querySelectorAll(this.selector);
+		let scrollTop = Position.getScrollTop(this.scrollElement);
+		for (let i = 0; i < links.length; ++i) {
+			let link = links[i];
+			if (link.hash && link.hash.length > 1) {
+				let element = document.getElementById(link.hash.substring(1));
 				if (element) {
-					var region = Position.getRegion(element);
+					let region = Position.getRegion(element);
 					this.regions.push({
 						link: link,
 						top: region.top + scrollTop,
-						bottom: region.bottom + scrollTop
+						bottom: region.bottom + scrollTop,
 					});
 				}
 			}
@@ -232,7 +243,7 @@ Scrollspy.STATE = {
 	 */
 	activeClass: {
 		validator: core.isString,
-		value: 'active'
+		value: 'active',
 	},
 
 	/**
@@ -241,7 +252,7 @@ Scrollspy.STATE = {
 	 */
 	activeIndex: {
 		validator: core.isNumber,
-		value: -1
+		value: -1,
 	},
 
 	/**
@@ -253,7 +264,7 @@ Scrollspy.STATE = {
 	 */
 	resolveElement: {
 		validator: core.isFunction,
-		value: core.identityFunction
+		value: core.identityFunction,
 	},
 
 	/**
@@ -267,7 +278,7 @@ Scrollspy.STATE = {
 			if (!isServerSide()) {
 				return document;
 			}
-		}
+		},
 	},
 
 	/**
@@ -277,7 +288,7 @@ Scrollspy.STATE = {
 	 */
 	offset: {
 		validator: core.isNumber,
-		value: 0
+		value: 0,
 	},
 
 	/**
@@ -285,7 +296,7 @@ Scrollspy.STATE = {
 	 * @type {Element}
 	 */
 	element: {
-		setter: dom.toElement
+		setter: dom.toElement,
 	},
 
 	/**
@@ -295,9 +306,9 @@ Scrollspy.STATE = {
 	 */
 	selector: {
 		validator: core.isString,
-		value: 'a'
-	}
+		value: 'a',
+	},
 };
 
-export { Scrollspy };
+export {Scrollspy};
 export default Scrollspy;
