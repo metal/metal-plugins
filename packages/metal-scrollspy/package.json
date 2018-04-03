@@ -2,45 +2,59 @@
   "name": "metal-scrollspy",
   "version": "2.1.0",
   "description": "Metal's scrollspy component",
+  "keywords": [
+    "metal"
+  ],
   "license": "BSD",
-  "repository": "metal/metal-scrollspy",
-  "engines": {
-    "node": ">=0.12.0",
-    "npm": ">=3.0.0"
-  },
-  "jsnext:main": "src/Scrollspy.js",
-  "main": "lib/Scrollspy.js",
   "files": [
     "lib",
     "src",
     "test"
   ],
+  "main": "lib/Scrollspy.js",
+  "jsnext:main": "src/Scrollspy.js",
+  "repository": "metal/metal-scrollspy",
   "scripts": {
     "build": "npm run soy && webpack",
-    "compile": "babel --presets metal -d lib/ src/",
+    "checkFormat": "npm run prettier -- --list-different",
+    "compile": "babel --presets env -d lib/ src/",
+    "format": "npm run prettier -- --write",
+    "lint": "eslint '{src,test}/*.js'",
     "prepublish": "npm run soy && npm run compile",
     "soy": "metalsoy --soyDeps node_modules/metal*/src/**/*.soy",
-    "test": "gulp test",
-    "watch": "gulp build:watch"
+    "test": "karma start",
+    "test:saucelabs": "karma start karma-saucelabs.conf.js",
+    "prettier": "prettier-eslint '{src,test}/*.js'"
   },
-  "keywords": [
-    "metal"
-  ],
   "dependencies": {
     "bootstrap": "^3.3.6",
-    "metal": "^2.0.0",
-    "metal-state": "^2.0.0",
-    "metal-dom": "^2.0.0",
-    "metal-position": "^2.0.0"
+    "metal": "^2.6.15",
+    "metal-dom": "^2.6.15",
+    "metal-position": "^2.1.1",
+    "metal-state": "^2.16.5"
   },
   "devDependencies": {
     "babel-cli": "^6.4.5",
+    "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
-    "babel-plugin-transform-node-env-inline": "^0.2.0",
-    "babel-preset-metal": "^4.0.0",
-    "gulp": "^3.8.11",
-    "gulp-metal": "^1.0.0",
-    "metal-tools-soy": "^4.2.6",
-    "webpack": "^3.5.5"
+    "babel-plugin-transform-node-env-inline": "^0.3.0",
+    "babel-preset-env": "^1.6.1",
+    "chai": "^4.1.2",
+    "eslint": "^4.11.0",
+    "eslint-config-liferay": "^2.0.16",
+    "karma": "^1.1.0",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-mocha": "^1.3.0",
+    "karma-sauce-launcher": "~1.1.0",
+    "karma-webpack": "^2.0.5",
+    "metal-tools-soy": "^6.0.0",
+    "mocha": "^4.0.1",
+    "prettier-eslint-cli": "^4.4.0",
+    "webpack": "^3.10.0"
+  },
+  "engines": {
+    "node": ">=0.12.0",
+    "npm": ">=3.0.0"
   }
 }
