@@ -4,6 +4,8 @@ module.exports = function(config) {
 	config.set({
 		browsers: ['Chrome'],
 
+		processKillTimeout: 5000,
+
 		frameworks: ['mocha', 'chai'],
 
 		files: [
