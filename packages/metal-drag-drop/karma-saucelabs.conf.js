@@ -10,61 +10,41 @@ module.exports = function(config) {
 	const launchers = {
 		sl_chrome: {
 			base: 'SauceLabs',
-			browserName: 'chrome'
-		},
-		sl_chrome_57: {
-			base: 'SauceLabs',
 			browserName: 'chrome',
-			version: '57'
-		},
-		sl_safari_9: {
-			base: 'SauceLabs',
-			browserName: 'safari',
-			version: '9'
 		},
 		sl_safari_10: {
 			base: 'SauceLabs',
 			browserName: 'safari',
-			version: '10'
-		},
-		sl_safari_11: {
-			base: 'SauceLabs',
-			browserName: 'safari',
-			version: '11'
+			platform: 'OS X 10.12',
+			version: '10',
 		},
 		sl_firefox: {
 			base: 'SauceLabs',
-			browserName: 'firefox'
+			browserName: 'firefox',
 		},
 		sl_firefox_53: {
 			base: 'SauceLabs',
 			browserName: 'firefox',
-			version: '53'
-		},
-		sl_ie_10: {
-			base: 'SauceLabs',
-			browserName: 'internet explorer',
-			platform: 'Windows 7',
-			version: '10'
+			version: '53',
 		},
 		sl_ie_11: {
 			base: 'SauceLabs',
 			browserName: 'internet explorer',
 			platform: 'Windows 8.1',
-			version: '11'
+			version: '11',
 		},
-		sl_edge_20: {
+		sl_edge_15: {
 			base: 'SauceLabs',
 			browserName: 'microsoftedge',
 			platform: 'Windows 10',
-			version: '13'
+			version: '15',
 		},
-		sl_android_4: {
+		sl_android_5: {
 			base: 'SauceLabs',
 			browserName: 'android',
 			platform: 'Linux',
-			version: '4.4'
-		}
+			version: '5.0',
+		},
 	};
 
 	let sauceLabsAccessKey = process.env.SAUCE_ACCESS_KEY;
@@ -108,7 +88,7 @@ module.exports = function(config) {
 			startConnect: false,
 			testName: 'metal-drag-drop tests',
 			tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER,
-			username: process.env.SAUCE_USERNAME
+			username: process.env.SAUCE_USERNAME,
 		}
 	});
 };
