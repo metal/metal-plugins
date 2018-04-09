@@ -43,7 +43,7 @@ module.exports = function(config) {
 			base: 'SauceLabs',
 			browserName: 'android',
 			platform: 'Linux',
-			version: '5.0',
+			version: '4.4',
 		},
 	};
 
