@@ -3,7 +3,7 @@
     "version": "1.0.1",
     "description": "A Metal.js set of common data structures.",
     "license": "BSD",
-    "repository": "metal/metal-structs",
+    "repository": "metal/metal-plugins/tree/master/packages/metal-structs",
     "engines": {
         "node": ">=0.12.0",
         "npm": ">=3.0.0"
