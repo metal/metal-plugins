@@ -41,6 +41,8 @@
     "chai": "^4.1.2",
     "eslint": "^4.11.0",
     "eslint-config-liferay": "^2.0.16",
+    "gulp": "^3.9.1",
+    "gulp-metal": "^2.2.2",
     "karma": "^1.1.0",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^2.2.0",
