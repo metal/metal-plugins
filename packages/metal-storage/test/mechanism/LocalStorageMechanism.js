@@ -48,7 +48,7 @@ describe('LocalStorageMechanism', function() {
 		let storage = new LocalStorageMechanism();
 		storage.set('key1', 'value1');
 		storage.set('key2', 'value2');
-		assert.deepEqual(['key1', 'key2'], storage.keys());
+		assert.sameMembers(['key1', 'key2'], storage.keys());
 	});
 
 	it('should remove a value from a key', function() {
