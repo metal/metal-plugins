@@ -26,7 +26,7 @@
         "metal"
     ],
     "dependencies": {
-        "metal": "^2.0.0"
+        "metal": "^2.16.5"
     },
     "devDependencies": {
         "babel-cli": "^6.26.0",
