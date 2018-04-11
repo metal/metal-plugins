@@ -71,6 +71,7 @@ module.exports = function(config) {
 			'karma-chrome-launcher',
 			'karma-mocha',
 			'karma-webpack',
+			'karma-sinon',
 			karmaSauceLauncher,
 		],
 
