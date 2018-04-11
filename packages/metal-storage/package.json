@@ -17,8 +17,12 @@
   ],
   "scripts": {
     "build": "gulp build",
+    "checkFormat": "npm run prettier -- --list-different",
     "compile": "babel --presets env -d lib/ src/",
+    "format": "npm run prettier -- --write",
+    "lint": "eslint '{src,test}/**/*.js'",
     "prepublish": "npm run compile",
+    "prettier": "prettier-eslint '{src,test}/**/*.js'",
     "test": "karma start",
     "test:saucelabs": "karma start karma-saucelabs.conf.js",
     "watch": "gulp build:watch"
@@ -31,11 +35,12 @@
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.1",
     "chai": "^4.1.2",
-    "gulp": "^3.9.1",
-    "gulp-metal": "^2.2.2",
+    "eslint": "^4.11.0",
+    "eslint-config-liferay": "^2.0.16",
     "karma": "^1.1.0",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^2.2.0",
@@ -43,6 +48,7 @@
     "karma-sauce-launcher": "^1.1.0",
     "karma-webpack": "^2.0.5",
     "mocha": "^4.0.1",
+    "prettier-eslint-cli": "^4.4.0",
     "webpack": "^3.5.5"
   }
 }

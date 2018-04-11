@@ -9,7 +9,7 @@ import StorageMechanism from './StorageMechanism';
  */
 class LocalStorageMechanism extends StorageMechanism {
 	/**
-	 * Returns reference for global local storage. by default
+	 * @return {Storage} the reference for global local storage. by default
 	 */
 	storage() {
 		return LocalStorageMechanism.globals.localStorage;
@@ -40,8 +40,10 @@ class LocalStorageMechanism extends StorageMechanism {
 	 * @inheritDoc
 	 */
 	static isSupported() {
-		return typeof window !== 'undefined' &&
-			typeof window.localStorage !== 'undefined';
+		return (
+			typeof window !== 'undefined' &&
+			typeof window.localStorage !== 'undefined'
+		);
 	}
 
 	/**
@@ -68,7 +70,7 @@ class LocalStorageMechanism extends StorageMechanism {
 
 if (LocalStorageMechanism.isSupported()) {
 	LocalStorageMechanism.globals = {
-		localStorage: window.localStorage
+		localStorage: window.localStorage,
 	};
 }
 
