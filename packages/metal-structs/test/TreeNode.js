@@ -146,7 +146,7 @@ describe('TreeNode', function() {
 		C.addChild(E);
 		C.addChild(F);
 		let path = [];
-		A.traverse((node) => path.push(node.getValue()));
+		A.traverse(node => path.push(node.getValue()));
 		assert.deepEqual(['A', 'B', 'D', 'C', 'E', 'F'], path);
 	});
 
@@ -163,7 +163,7 @@ describe('TreeNode', function() {
 		C.addChild(E);
 		C.addChild(F);
 		let path = [];
-		A.traverse(null, (node) => path.push(node.getValue()));
+		A.traverse(null, node => path.push(node.getValue()));
 		assert.deepEqual(['D', 'B', 'E', 'F', 'C', 'A'], path);
 	});
 });

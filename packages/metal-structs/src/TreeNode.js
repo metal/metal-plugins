@@ -1,14 +1,17 @@
 'use strict';
 
-import { array } from 'metal';
+import {array} from 'metal';
 
 /**
  * Generic tree node data structure with arbitrary number of child nodes.
  * @param {V} value Value.
- * @constructor
  */
 class TreeNode {
-
+	/**
+	 * Generic tree node data structure with arbitrary number of child nodes.
+	 * @constructor
+	 * @param {V} value Value.
+	 */
 	constructor(value) {
 		/**
 		 * The value.
@@ -169,7 +172,7 @@ class TreeNode {
 	 * The second callback, starts with deepest child then visits
 	 * the ancestor nodes depth-first, in postorder. E.g.
 	 *
-	 *  	 A
+	 *     A
 	 *    / \
 	 *   B   C
 	 *  /   / \
@@ -181,16 +184,19 @@ class TreeNode {
 	 * @param {function=} opt_preorderFn The callback to execute when visiting a node.
 	 * @param {function=} opt_postorderFn The callback to execute before leaving a node.
 	 */
+	/* eslint-disable */
 	traverse(opt_preorderFn, opt_postorderFn) {
 		if (opt_preorderFn) {
 			opt_preorderFn(this);
 		}
-		this.getChildren().forEach((child) => child.traverse(opt_preorderFn, opt_postorderFn));
+		this.getChildren().forEach(child =>
+			child.traverse(opt_preorderFn, opt_postorderFn)
+		);
 		if (opt_postorderFn) {
 			opt_postorderFn(this);
 		}
 	}
-
+	/* eslint-enable */
 }
 
 /**
