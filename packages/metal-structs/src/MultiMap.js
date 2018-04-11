@@ -1,11 +1,11 @@
 'use strict';
 
-import { Disposable } from 'metal';
+import {Disposable} from 'metal';
 
 /**
  * A cached reference to the create function.
  */
-var create = Object.create;
+let create = Object.create;
 
 /**
  * Case insensitive string Multimap implementation. Allows multiple values for
@@ -13,6 +13,9 @@ var create = Object.create;
  * @extends {Disposable}
  */
 class MultiMap extends Disposable {
+	/**
+	 * @constructor
+	 */
 	constructor() {
 		super();
 		this.keys = create(null);
@@ -24,6 +27,7 @@ class MultiMap extends Disposable {
 	 * @param {string} name
 	 * @param {*} value
 	 * @chainable
+	 * @return {this}
 	 */
 	add(name, value) {
 		this.keys[name.toLowerCase()] = name;
@@ -35,6 +39,7 @@ class MultiMap extends Disposable {
 	/**
 	 * Clears map names and values.
 	 * @chainable
+	 * @return {this}
 	 */
 	clear() {
 		this.keys = create(null);
@@ -65,9 +70,9 @@ class MultiMap extends Disposable {
 	 * @return {!MultiMap}
 	 */
 	static fromObject(obj) {
-		var map = new MultiMap();
-		var keys = Object.keys(obj);
-		for (var i = 0; i < keys.length; i++) {
+		let map = new MultiMap();
+		let keys = Object.keys(obj);
+		for (let i = 0; i < keys.length; i++) {
 			map.set(keys[i], obj[keys[i]]);
 		}
 		return map;
@@ -80,7 +85,7 @@ class MultiMap extends Disposable {
 	 * @chainable
 	 */
 	get(name) {
-		var values = this.values[name.toLowerCase()];
+		let values = this.values[name.toLowerCase()];
 		if (values) {
 			return values[0];
 		}
@@ -108,13 +113,14 @@ class MultiMap extends Disposable {
 	 * @return {Array.<string>}
 	 */
 	names() {
-		return Object.keys(this.values).map((key) => this.keys[key]);
+		return Object.keys(this.values).map(key => this.keys[key]);
 	}
 
 	/**
 	 * Removes all values from a key name.
 	 * @param {string} name
 	 * @chainable
+	 * @return {this}
 	 */
 	remove(name) {
 		delete this.keys[name.toLowerCase()];
@@ -128,6 +134,7 @@ class MultiMap extends Disposable {
 	 * @param {string} name
 	 * @param {*} value
 	 * @chainable
+	 * @return {this}
 	 */
 	set(name, value) {
 		this.keys[name.toLowerCase()] = name;
