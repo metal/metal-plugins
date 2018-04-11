@@ -1,7 +1,6 @@
 'use strict';
 
 import StorageMechanism from '../../src/mechanism/StorageMechanism';
-import {assert, describe, it} from 'mocha';
 
 describe('StorageMechanism', function() {
 	it('should clear throws unimplemented exception', function() {

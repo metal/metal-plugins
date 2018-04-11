@@ -1,7 +1,6 @@
 'use strict';
 
 import LocalStorageMechanism from '../../src/mechanism/LocalStorageMechanism';
-import {assert, describe, beforeEach, it} from 'mocha';
 
 describe('LocalStorageMechanism', function() {
 	if (!LocalStorageMechanism.isSupported()) {

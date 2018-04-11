@@ -4,7 +4,6 @@
 
 import Storage from '../src/Storage';
 import LocalStorageMechanism from '../src/mechanism/LocalStorageMechanism';
-import {assert, describe, beforeEach, it} from 'mocha';
 
 describe('Storage', function() {
 	it('should throws error for missing mechanism', function() {
