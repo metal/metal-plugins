@@ -1,6 +1,7 @@
 'use strict';
 
 /* jshint ignore:start */
+/* eslint-disable */
 
 /**
  * Abstract interface for storing and retrieving data using some persistence

@@ -3,8 +3,10 @@
 import core from 'metal';
 import StorageMechanism from './mechanism/StorageMechanism';
 
+/**
+ * Storage class.
+ */
 class Storage {
-
 	/**
 	 * Provides a convenient API for data persistence using a selected data
 	 * storage mechanism.
@@ -49,7 +51,7 @@ class Storage {
 	 * @return {*} Deserialized value or undefined if not found.
 	 */
 	get(key) {
-		var json;
+		let json;
 		try {
 			json = this.mechanism.get(key);
 		} catch (e) {
@@ -68,6 +70,7 @@ class Storage {
 	/**
 	 * Returns the list of keys stored in the Storage object.
 	 * @param {!Array<string>} keys
+	 * @return {Array<string>}
 	 */
 	keys() {
 		return this.mechanism.keys();
@@ -92,9 +95,10 @@ class Storage {
 	/**
 	 * Returns the list of values stored in the Storage object.
 	 * @param {!Array<string>} values
+	 * @return {Array<string>}
 	 */
 	values() {
-		return this.keys().map((key) => this.get(key));
+		return this.keys().map(key => this.get(key));
 	}
 }
 
@@ -103,18 +107,28 @@ class Storage {
  * @enum {string}
  */
 Storage.ErrorCode = {
-	INVALID_VALUE: 'Storage: Invalid value was encountered'
+	INVALID_VALUE: 'Storage: Invalid value was encountered',
 };
 
+/**
+ * Assertion function that checks if mechanism is defined
+ * @param {*} mechanism
+ */
 function assertMechanismDefAndNotNull(mechanism) {
 	if (!core.isDefAndNotNull(mechanism)) {
 		throw Error('Storage mechanism is required');
 	}
 }
 
+/**
+ * Assertion function that checks if mechanism is a instance of StorageMechanism
+ * @param {*} mechanism
+ */
 function assertMechanismInstanceOf(mechanism) {
 	if (!(mechanism instanceof StorageMechanism)) {
-		throw Error('Storage mechanism must me an implementation of StorageMechanism');
+		throw Error(
+			'Storage mechanism must me an implementation of StorageMechanism'
+		);
 	}
 }
 
