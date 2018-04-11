@@ -1,38 +1,47 @@
 {
-	"name": "metal-structs",
-	"version": "1.0.1",
-	"description": "A Metal.js set of common data structures.",
-	"license": "BSD",
-	"repository": "metal/metal-structs",
-	"engines": {
-		"node": ">=0.12.0",
-		"npm": ">=3.0.0"
-	},
-	"jsnext:main": "src/all/structs.js",
-	"main": "lib/all/structs.js",
-	"files": [
-		"lib",
-		"src",
-		"test"
-	],
-	"scripts": {
-		"build": "webpack",
-		"compile": "babel --presets env -d lib/ src/",
-		"prepublish": "npm run compile",
-		"test": "gulp test"
-	},
-	"keywords": [
-		"metal"
-	],
-	"dependencies": {
-		"metal": "^2.0.0"
-	},
-	"devDependencies": {
-		"babel-cli": "^6.26.0",
-		"babel-preset-env": "^1.6.1",
-		"babel-core": "^6.26.0",
-		"babel-loader": "^7.1.2",
-		"babel-plugin-transform-node-env-inline": "^0.4.0",
-		"webpack": "^3.5.5"
-	}
+    "name": "metal-structs",
+    "version": "1.0.1",
+    "description": "A Metal.js set of common data structures.",
+    "license": "BSD",
+    "repository": "metal/metal-structs",
+    "engines": {
+        "node": ">=0.12.0",
+        "npm": ">=3.0.0"
+    },
+    "jsnext:main": "src/all/structs.js",
+    "main": "lib/all/structs.js",
+    "files": [
+        "lib",
+        "src",
+        "test"
+    ],
+    "scripts": {
+        "build": "webpack",
+        "compile": "babel --presets env -d lib/ src/",
+        "prepublish": "npm run compile",
+        "test": "karma start",
+        "test:saucelabs": "karma start karma-saucelabs.conf.js"
+    },
+    "keywords": [
+        "metal"
+    ],
+    "dependencies": {
+        "metal": "^2.0.0"
+    },
+    "devDependencies": {
+        "babel-cli": "^6.26.0",
+        "babel-preset-env": "^1.6.1",
+        "babel-core": "^6.26.0",
+        "babel-loader": "^7.1.2",
+        "babel-plugin-transform-node-env-inline": "^0.4.0",
+        "chai": "^4.1.2",
+        "karma": "^1.1.0",
+        "karma-chai": "^0.1.0",
+        "karma-chrome-launcher": "^2.2.0",
+        "karma-mocha": "^1.3.0",
+        "karma-sauce-launcher": "^1.2.0",
+        "karma-webpack": "^2.0.5",
+        "mocha": "^4.0.1",
+        "webpack": "^3.5.5"
+    }
 }
