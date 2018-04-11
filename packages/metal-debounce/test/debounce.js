@@ -1,12 +1,12 @@
 'use strict';
 
-import { cancelDebounce, debounce } from '../src/debounce';
+import {cancelDebounce, debounce} from '../src/debounce';
 
 describe('debounce', function() {
 	it('should only call received function with the last called args after a delay', function(done) {
-		var fn = sinon.stub();
+		let fn = sinon.stub();
 
-		var debounced = debounce(fn, 200);
+		let debounced = debounce(fn, 200);
 		debounced(1, 2, 3);
 		debounced(4, 5, 6);
 
@@ -22,13 +22,13 @@ describe('debounce', function() {
 	});
 
 	it('should call original function with its original context', function(done) {
-		var expectedContext = {};
-		var context;
-		var fn = function() {
-			context = this;
+		let expectedContext = {};
+		let context;
+		let fn = function() {
+			context = this; /* eslint-disable-line */
 		};
 
-		var debounced = debounce(fn.bind(expectedContext), 200);
+		let debounced = debounce(fn.bind(expectedContext), 200);
 		debounced(1, 2, 3);
 
 		setTimeout(function() {
@@ -38,9 +38,9 @@ describe('debounce', function() {
 	});
 
 	it('should only call received function with the last called args after a delay', function(done) {
-		var fn = sinon.stub();
+		let fn = sinon.stub();
 
-		var debounced = debounce(fn, 200);
+		let debounced = debounce(fn, 200);
 		debounced(1, 2, 3);
 		cancelDebounce(debounced);
 
