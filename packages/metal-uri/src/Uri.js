@@ -312,8 +312,7 @@ class Uri {
 			default:
 				url += uri;
 			}
-		}
-		else {
+		} else {
 			this.usingDefaultProtocol_ = false;
 		}
 		return url;

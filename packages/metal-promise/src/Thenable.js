@@ -89,8 +89,7 @@ Thenable.isImplementedBy = function(object) {
 	}
 	try {
 		return !!object.$goog_Thenable;
-	}
-	catch (e) {
+	} catch (e) {
 		// Property access seems to be forbidden.
 
 		return false;

@@ -56,8 +56,7 @@ class FreeList {
 			item = this.head_;
 			this.head_ = item.next;
 			item.next = null;
-		}
-		else {
+		} else {
 			item = this.create_();
 		}
 

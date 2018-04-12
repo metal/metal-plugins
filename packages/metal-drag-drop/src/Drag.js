@@ -141,8 +141,7 @@ class Drag extends State {
 						listenerFn
 					)
 				);
-			}
-			else {
+			} else {
 				this.sourceHandler_.add(
 					dom.on(this.sources, eventTypes[i], listenerFn)
 				);
@@ -304,8 +303,7 @@ class Drag extends State {
 		if (this.axis === 'x') {
 			region.top = this.sourceRegion_.top;
 			region.bottom = this.sourceRegion_.bottom;
-		}
-		else if (this.axis === 'y') {
+		} else if (this.axis === 'y') {
 			region.left = this.sourceRegion_.left;
 			region.right = this.sourceRegion_.right;
 		}
@@ -324,21 +322,18 @@ class Drag extends State {
 
 		if (core.isFunction(constrain)) {
 			object.mixin(region, constrain(region));
-		}
-		else {
+		} else {
 			if (core.isElement(constrain)) {
 				constrain = Position.getRegion(constrain, true);
 			}
 			if (region.left < constrain.left) {
 				region.left = constrain.left;
-			}
-			else if (region.right > constrain.right) {
+			} else if (region.right > constrain.right) {
 				region.left -= region.right - constrain.right;
 			}
 			if (region.top < constrain.top) {
 				region.top = constrain.top;
-			}
-			else if (region.bottom > constrain.bottom) {
+			} else if (region.bottom > constrain.bottom) {
 				region.top -= region.bottom - constrain.bottom;
 			}
 			region.right = region.left + region.width;
@@ -368,11 +363,9 @@ class Drag extends State {
 		let dragPlaceholder = this.dragPlaceholder;
 		if (this.isPlaceholderClone_()) {
 			this.activeDragPlaceholder_ = this.cloneActiveDrag_();
-		}
-		else if (core.isElement(dragPlaceholder)) {
+		} else if (core.isElement(dragPlaceholder)) {
 			this.activeDragPlaceholder_ = dragPlaceholder;
-		}
-		else {
+		} else {
 			this.activeDragPlaceholder_ = this.activeDragSource_;
 		}
 	}
@@ -493,8 +486,7 @@ class Drag extends State {
 			);
 			if (event.type === 'keydown') {
 				this.startDragging_(event);
-			}
-			else {
+			} else {
 				// eslint-disable-next-line
 				this.dragHandler_.add.apply(
 					this.dragHandler_,
@@ -559,20 +551,16 @@ class Drag extends State {
 						: this.steps.y;
 				if (event.keyCode === 37) {
 					deltaX -= speedX;
-				}
-				else if (event.keyCode === 38) {
+				} else if (event.keyCode === 38) {
 					deltaY -= speedY;
-				}
-				else if (event.keyCode === 39) {
+				} else if (event.keyCode === 39) {
 					deltaX += speedX;
-				}
-				else {
+				} else {
 					deltaY += speedY;
 				}
 				this.updatePositionFromDelta(deltaX, deltaY);
 				event.preventDefault();
-			}
-			else if (
+			} else if (
 				event.keyCode === 13 ||
 				event.keyCode === 32 ||
 				event.keyCode === 27
@@ -580,8 +568,7 @@ class Drag extends State {
 				// Enter, space or esc during drag will end it.
 				this.handleDragEndEvent_();
 			}
-		}
-		else if (event.keyCode === 13 || event.keyCode === 32) {
+		} else if (event.keyCode === 13 || event.keyCode === 32) {
 			// Enter or space will start the drag action.
 			this.handleDragStartEvent_(event);
 		}
@@ -657,11 +644,9 @@ class Drag extends State {
 		let handles = this.handles;
 		if (!handles) {
 			return true;
-		}
-		else if (core.isString(handles)) {
+		} else if (core.isString(handles)) {
 			return dom.match(element, handles + ', ' + handles + ' *');
-		}
-		else {
+		} else {
 			return dom.contains(handles, element);
 		}
 	}
@@ -738,11 +723,9 @@ class Drag extends State {
 		if (core.isString(elementOrSelector)) {
 			let matched = this.container.querySelectorAll(elementOrSelector);
 			return Array.prototype.slice.call(matched, 0);
-		}
-		else if (elementOrSelector) {
+		} else if (elementOrSelector) {
 			return [elementOrSelector];
-		}
-		else {
+		} else {
 			return [];
 		}
 	}

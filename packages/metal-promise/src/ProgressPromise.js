@@ -45,8 +45,7 @@ class ProgressPromise extends CancellablePromise {
 						let result = onFulfilled.call(opt_context, value);
 
 						resolve(result);
-					}
-					catch (err) {
+					} catch (err) {
 						reject(err);
 					}
 				  }
@@ -62,12 +61,10 @@ class ProgressPromise extends CancellablePromise {
 								reason.IS_CANCELLATION_ERROR
 						) {
 							reject(reason);
-						}
-						else {
+						} else {
 							resolve(result);
 						}
-					}
-					catch (err) {
+					} catch (err) {
 						reject(err);
 					}
 				  }
@@ -134,13 +131,11 @@ class ProgressPromise extends CancellablePromise {
 			throw new TypeError(
 				'The progress percentage should be a number between 0 and 1'
 			);
-		}
-		else if (progress < this.progress_) {
+		} else if (progress < this.progress_) {
 			throw new Error(
 				'The progress percentage can\'t be lower than the previous percentage'
 			);
-		}
-		else if (progress === this.progress_ || progress === 1) {
+		} else if (progress === this.progress_ || progress === 1) {
 			return;
 		}
 

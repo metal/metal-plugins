@@ -11,8 +11,7 @@ let PositionTestHelper = {
 		let userAgent = window.navigator.userAgent;
 		if (userAgent.match(/iPad/i) || userAgent.match(/iPhone/i)) {
 			return function() {};
-		}
-		else {
+		} else {
 			return testFn;
 		}
 	},

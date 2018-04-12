@@ -153,8 +153,7 @@ var CancellablePromise = function(resolver, opt_context) {
 		 * @private {number}
 		 */
 		this.unhandledRejectionId_ = 0;
-	}
-	else if (CancellablePromise.UNHANDLED_REJECTION_DELAY == 0) {
+	} else if (CancellablePromise.UNHANDLED_REJECTION_DELAY == 0) {
 		/**
 		 * When the {@code UNHANDLED_REJECTION_DELAY} is set to 0 milliseconds, a
 		 * boolean that is set if the Promise is rejected, and reset to false if an
@@ -203,23 +202,19 @@ var CancellablePromise = function(resolver, opt_context) {
 
 							if (reason instanceof Error) {
 								throw reason;
-							}
-							else {
+							} else {
 								throw new Error('Promise rejected.');
 							}
-						}
-						catch (e) {
+						} catch (e) {
 							// Only thrown so browser dev tools can catch rejections of
 							// promises when the option to break on caught exceptions is
 							// activated.
-
 						}
 					}
 					self.resolve_(CancellablePromise.State_.REJECTED, reason);
 				}
 			);
-		}
-		catch (e) {
+		} catch (e) {
 			this.resolve_(CancellablePromise.State_.REJECTED, e);
 		}
 	}
@@ -766,8 +761,7 @@ CancellablePromise.prototype.cancelInternal_ = function(err) {
 
 			this.parent_.cancelChild_(this, err);
 			this.parent_ = null;
-		}
-		else {
+		} else {
 			this.resolve_(CancellablePromise.State_.REJECTED, err);
 		}
 	}
@@ -820,12 +814,10 @@ CancellablePromise.prototype.cancelChild_ = function(childPromise, err) {
 			childCount == 1
 		) {
 			this.cancelInternal_(err);
-		}
-		else {
+		} else {
 			if (beforeChildEntry) {
 				this.removeEntryAfter_(beforeChildEntry);
-			}
-			else {
+			} else {
 				this.popEntry_();
 			}
 
@@ -894,8 +886,7 @@ CancellablePromise.prototype.addChildPromise_ = function(
 					let result = onFulfilled.call(opt_context, value);
 
 					resolve(result);
-				}
-				catch (err) {
+				} catch (err) {
 					reject(err);
 				}
 			  }
@@ -912,12 +903,10 @@ CancellablePromise.prototype.addChildPromise_ = function(
 						// Propagate cancellation to children if no other result is returned.
 
 						reject(reason);
-					}
-					else {
+					} else {
 						resolve(result);
 					}
-				}
-				catch (err) {
+				} catch (err) {
 					reject(err);
 				}
 			  }
@@ -1028,14 +1017,12 @@ CancellablePromise.maybeThen_ = function(
 		value.thenVoid(onFulfilled, onRejected, context);
 
 		return true;
-	}
-	else if (Thenable.isImplementedBy(value)) {
+	} else if (Thenable.isImplementedBy(value)) {
 		value = /** @type {!Thenable} */ (value);
 		value.then(onFulfilled, onRejected, context);
 
 		return true;
-	}
-	else if (isObject(value)) {
+	} else if (isObject(value)) {
 		try {
 			let then = value['then'];
 
@@ -1050,8 +1037,7 @@ CancellablePromise.maybeThen_ = function(
 
 				return true;
 			}
-		}
-		catch (e) {
+		} catch (e) {
 			onRejected.call(context, e);
 
 			return true;
@@ -1102,8 +1088,7 @@ CancellablePromise.tryThen_ = function(
 
 	try {
 		then.call(thenable, resolve, reject);
-	}
-	catch (e) {
+	} catch (e) {
 		reject(e);
 	}
 };
@@ -1147,8 +1132,7 @@ CancellablePromise.prototype.queueEntry_ = function(entry) {
 	if (this.callbackEntriesTail_) {
 		this.callbackEntriesTail_.next = entry;
 		this.callbackEntriesTail_ = entry;
-	}
-	else {
+	} else {
 		// It the work queue was empty set the head too.
 
 		this.callbackEntries_ = entry;
@@ -1240,8 +1224,7 @@ CancellablePromise.prototype.executeCallback_ = function(
 
 		callbackEntry.child.parent_ = null;
 		CancellablePromise.invokeCallback_(callbackEntry, state, result);
-	}
-	else {
+	} else {
 		// Callbacks created with thenAlways or thenVoid do not have the rejection
 		// handling code normally set up in the child Promise.
 
@@ -1253,8 +1236,7 @@ CancellablePromise.prototype.executeCallback_ = function(
 					state,
 					result
 				  );
-		}
-		catch (err) {
+		} catch (err) {
 			CancellablePromise.handleRejection_.call(null, err);
 		}
 	}
@@ -1272,8 +1254,7 @@ CancellablePromise.prototype.executeCallback_ = function(
 CancellablePromise.invokeCallback_ = function(callbackEntry, state, result) {
 	if (state == CancellablePromise.State_.FULFILLED) {
 		callbackEntry.onFulfilled.call(callbackEntry.context, result);
-	}
-	else if (callbackEntry.onRejected) {
+	} else if (callbackEntry.onRejected) {
 		callbackEntry.onRejected.call(callbackEntry.context, result);
 	}
 };
@@ -1352,8 +1333,7 @@ CancellablePromise.prototype.removeUnhandledRejection_ = function() {
 			clearTimeout(p.unhandledRejectionId_);
 			p.unhandledRejectionId_ = 0;
 		}
-	}
-	else if (CancellablePromise.UNHANDLED_REJECTION_DELAY == 0) {
+	} else if (CancellablePromise.UNHANDLED_REJECTION_DELAY == 0) {
 		for (var p = this; p && p.hadUnhandledRejection_; p = p.parent_) {
 			p.hadUnhandledRejection_ = false;
 		}
@@ -1377,8 +1357,7 @@ CancellablePromise.addUnhandledRejection_ = function(promise, reason) {
 			promise.appendLongStack_(reason);
 			CancellablePromise.handleRejection_.call(null, reason);
 		}, CancellablePromise.UNHANDLED_REJECTION_DELAY);
-	}
-	else if (CancellablePromise.UNHANDLED_REJECTION_DELAY == 0) {
+	} else if (CancellablePromise.UNHANDLED_REJECTION_DELAY == 0) {
 		promise.hadUnhandledRejection_ = true;
 		async.run(function() {
 			if (promise.hadUnhandledRejection_) {

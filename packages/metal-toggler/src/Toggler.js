@@ -186,8 +186,7 @@ class Toggler extends State {
 						this.handleKeydown_.bind(this)
 					)
 				);
-			}
-			else {
+			} else {
 				this.headerEventHandler_.add(
 					dom.on(this.header, 'click', this.handleClick_.bind(this)),
 					dom.on(
@@ -208,8 +207,7 @@ class Toggler extends State {
 		let headerElements = this.getHeaderElements_(header);
 		if (this.hasExpanded_(headerElements)) {
 			this.collapse(headerElements);
-		}
-		else {
+		} else {
 			this.expand(headerElements);
 		}
 	}

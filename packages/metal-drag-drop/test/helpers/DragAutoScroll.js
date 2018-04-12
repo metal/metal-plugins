@@ -31,8 +31,7 @@ describe('DragAutoScroll', function() {
 			dom.once(document, 'scroll', function() {
 				done();
 			});
-		}
-		else {
+		} else {
 			done();
 		}
 	});

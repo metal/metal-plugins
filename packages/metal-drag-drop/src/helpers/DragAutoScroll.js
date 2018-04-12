@@ -42,8 +42,7 @@ class DragAutoScroll extends State {
 			let height = window.innerHeight;
 			let width = window.innerWidth;
 			return Position.makeRegion(height, height, 0, width, 0, width);
-		}
-		else {
+		} else {
 			return Position.getRegion(scrollContainer);
 		}
 	}
@@ -72,8 +71,7 @@ class DragAutoScroll extends State {
 	scrollElement_(element, deltaX, deltaY) {
 		if (core.isDocument(element)) {
 			window.scrollBy(deltaX, deltaY);
-		}
-		else {
+		} else {
 			element.scrollTop += deltaY;
 			element.scrollLeft += deltaX;
 		}
