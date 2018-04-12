@@ -6,7 +6,7 @@ const addSpy = sinon.spy();
 
 describe('Ajax', function() {
 	beforeEach(function() {
-		addSpy.reset();
+		addSpy.resetBehaviour();
 	});
 
 	it('should call listener before original method', function() {
