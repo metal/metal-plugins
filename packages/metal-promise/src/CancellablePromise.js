@@ -1,3 +1,4 @@
+/* eslint-disable */
 /* !
  * Promises polyfill from Google's Closure Library.
  *
@@ -12,8 +13,8 @@
 
 import FreeList from './FreeList';
 import Thenable from './Thenable';
-import {isDef, isFunction, isObject, isString, nullFunction} from 'metal';
-import {async} from 'metal';
+import { isDef, isFunction, isObject, isString, nullFunction } from 'metal';
+import { async } from 'metal';
 
 /**
  * Like bind(), except that a 'this object' is not required. Useful when the
@@ -509,8 +510,8 @@ CancellablePromise.allSettled = function(promises) {
 		let onSettled = function(index, fulfilled, result) {
 			toSettle--;
 			results[index] = fulfilled
-				? {fulfilled: true, value: result}
-				: {fulfilled: false, reason: result};
+				? { fulfilled: true, value: result }
+				: { fulfilled: false, reason: result };
 			if (toSettle == 0) {
 				resolve(results);
 			}
@@ -882,13 +883,13 @@ CancellablePromise.prototype.addChildPromise_ = function(
 
 		callbackEntry.onFulfilled = onFulfilled
 			? function(value) {
-				try {
-					let result = onFulfilled.call(opt_context, value);
+					try {
+						let result = onFulfilled.call(opt_context, value);
 
-					resolve(result);
-				} catch (err) {
-					reject(err);
-				}
+						resolve(result);
+					} catch (err) {
+						reject(err);
+					}
 			  }
 			: resolve;
 
@@ -896,19 +897,19 @@ CancellablePromise.prototype.addChildPromise_ = function(
 
 		callbackEntry.onRejected = onRejected
 			? function(reason) {
-				try {
-					let result = onRejected.call(opt_context, reason);
+					try {
+						let result = onRejected.call(opt_context, reason);
 
-					if (!isDef(result) && reason.IS_CANCELLATION_ERROR) {
-						// Propagate cancellation to children if no other result is returned.
+						if (!isDef(result) && reason.IS_CANCELLATION_ERROR) {
+							// Propagate cancellation to children if no other result is returned.
 
-						reject(reason);
-					} else {
-						resolve(result);
+							reject(reason);
+						} else {
+							resolve(result);
+						}
+					} catch (err) {
+						reject(err);
 					}
-				} catch (err) {
-					reject(err);
-				}
 			  }
 			: reject;
 	});
@@ -1232,9 +1233,9 @@ CancellablePromise.prototype.executeCallback_ = function(
 			callbackEntry.always
 				? callbackEntry.onFulfilled.call(callbackEntry.context)
 				: CancellablePromise.invokeCallback_(
-					callbackEntry,
-					state,
-					result
+						callbackEntry,
+						state,
+						result
 				  );
 		} catch (err) {
 			CancellablePromise.handleRejection_.call(null, err);
@@ -1436,5 +1437,5 @@ CancellablePromise.Resolver_ = function(promise, resolve, reject) {
 	this.reject = reject;
 };
 
-export {CancellablePromise};
+export { CancellablePromise };
 export default CancellablePromise;

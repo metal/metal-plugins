@@ -7,7 +7,7 @@
     "lerna": "lerna bootstrap -- --no-optional && npm install --no-optional",
     "lint": "eslint 'packages/metal*/{src,test}/**/*.js'",
     "saucelabs": "karma start karma-saucelabs.conf.js",
-    "test": "karma start && npm run test:jest",
+    "test": "karma start",
     "test:jest": "lerna run test:jest --concurrency 1 --stream",
     "test:saucelabs": "npm run saucelabs -- 0 && npm run saucelabs -- 1 && npm run saucelabs -- 2 && npm run saucelabs -- 3",
     "prettier": "prettier-eslint 'packages/metal*/{src,test}/**/*.js'"

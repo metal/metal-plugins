@@ -1,7 +1,8 @@
+/* eslint-disable */
 'use strict';
 
 import CancellablePromise from './CancellablePromise';
-import {async, isDef} from 'metal';
+import { async, isDef } from 'metal';
 
 class ProgressPromise extends CancellablePromise {
 	/**
@@ -41,32 +42,32 @@ class ProgressPromise extends CancellablePromise {
 		callbackEntry.child = new ProgressPromise(function(resolve, reject) {
 			callbackEntry.onFulfilled = onFulfilled
 				? function(value) {
-					try {
-						let result = onFulfilled.call(opt_context, value);
+						try {
+							let result = onFulfilled.call(opt_context, value);
 
-						resolve(result);
-					} catch (err) {
-						reject(err);
-					}
+							resolve(result);
+						} catch (err) {
+							reject(err);
+						}
 				  }
 				: resolve;
 
 			callbackEntry.onRejected = onRejected
 				? function(reason) {
-					try {
-						let result = onRejected.call(opt_context, reason);
+						try {
+							let result = onRejected.call(opt_context, reason);
 
-						if (
-							!isDef(result) &&
+							if (
+								!isDef(result) &&
 								reason.IS_CANCELLATION_ERROR
-						) {
-							reject(reason);
-						} else {
-							resolve(result);
+							) {
+								reject(reason);
+							} else {
+								resolve(result);
+							}
+						} catch (err) {
+							reject(err);
 						}
-					} catch (err) {
-						reject(err);
-					}
 				  }
 				: reject;
 		});
@@ -133,7 +134,7 @@ class ProgressPromise extends CancellablePromise {
 			);
 		} else if (progress < this.progress_) {
 			throw new Error(
-				'The progress percentage can\'t be lower than the previous percentage'
+				"The progress percentage can't be lower than the previous percentage"
 			);
 		} else if (progress === this.progress_ || progress === 1) {
 			return;
