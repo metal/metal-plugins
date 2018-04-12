@@ -35,7 +35,8 @@ class Align {
 			);
 			position = suggestion.position;
 			bestRegion = suggestion.region;
-		} else {
+		}
+		else {
 			bestRegion = this.getAlignRegion(element, alignElement, position);
 		}
 

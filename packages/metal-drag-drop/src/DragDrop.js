@@ -86,7 +86,8 @@ class DragDrop extends Drag {
 					) {
 						activeTargets = [targets[index]].concat(activeTargets);
 						mainRegion = region;
-					} else {
+					}
+					else {
 						activeTargets.push(targets[index]);
 					}
 				}
@@ -105,7 +106,8 @@ class DragDrop extends Drag {
 			let x = this.mousePos_.x;
 			let y = this.mousePos_.y;
 			return Position.makeRegion(y, 0, x, x, y, 0);
-		} else {
+		}
+		else {
 			// We need to remove the scroll data from the region, since the other regions we'll
 			// be comparing to won't take that information into account.
 			let region = object.mixin({}, this.sourceRegion_);

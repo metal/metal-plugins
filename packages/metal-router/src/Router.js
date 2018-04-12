@@ -473,7 +473,8 @@ class ComponentScreen extends RequestScreen {
 		let params;
 		if (this.router.fetch) {
 			deferred = deferred.then(() => super.load(this.getFetchUrl_(path)));
-		} else {
+		}
+		else {
 			params = this.router.extractParams(path);
 			deferred = deferred.then(() => this.router.data(path, params));
 		}
@@ -548,7 +549,8 @@ class ComponentScreen extends RequestScreen {
 		let state = this.router.lastLoadedState;
 		try {
 			return JSON.parse(state);
-		} catch (err) {
+		}
+		catch (err) {
 			return core.isDefAndNotNull(state) ? state : {};
 		}
 	}
@@ -581,7 +583,8 @@ class ComponentScreen extends RequestScreen {
 	resolveHandler_(name, comp) {
 		if (comp && core.isFunction(comp[name])) {
 			return comp[name];
-		} else {
+		}
+		else {
 			const compName = getFunctionName(comp);
 
 			throw new Error(

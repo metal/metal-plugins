@@ -1,7 +1,7 @@
 'use strict';
 
 import CancellablePromise from './CancellablePromise';
-import { async, isDef } from 'metal';
+import {async, isDef} from 'metal';
 
 class ProgressPromise extends CancellablePromise {
 	/**
@@ -32,34 +32,51 @@ class ProgressPromise extends CancellablePromise {
 	 * @inheritdoc
 	 */
 	addChildPromise_(onFulfilled, onRejected, opt_context) {
-		var callbackEntry = CancellablePromise.getCallbackEntry_(null, null, null);
+		let callbackEntry = CancellablePromise.getCallbackEntry_(
+			null,
+			null,
+			null
+		);
 
 		callbackEntry.child = new ProgressPromise(function(resolve, reject) {
-			callbackEntry.onFulfilled = onFulfilled ? function(value) {
-				try {
-					var result = onFulfilled.call(opt_context, value);
-					resolve(result);
-				} catch (err) {
-					reject(err);
-				}
-			} : resolve;
+			callbackEntry.onFulfilled = onFulfilled
+				? function(value) {
+					try {
+						let result = onFulfilled.call(opt_context, value);
 
-			callbackEntry.onRejected = onRejected ? function(reason) {
-				try {
-					var result = onRejected.call(opt_context, reason);
-					if (!isDef(result) && reason.IS_CANCELLATION_ERROR) {
-						reject(reason);
-					} else {
 						resolve(result);
 					}
-				} catch (err) {
-					reject(err);
-				}
-			} : reject;
+					catch (err) {
+						reject(err);
+					}
+				  }
+				: resolve;
+
+			callbackEntry.onRejected = onRejected
+				? function(reason) {
+					try {
+						let result = onRejected.call(opt_context, reason);
+
+						if (
+							!isDef(result) &&
+								reason.IS_CANCELLATION_ERROR
+						) {
+							reject(reason);
+						}
+						else {
+							resolve(result);
+						}
+					}
+					catch (err) {
+						reject(err);
+					}
+				  }
+				: reject;
 		});
 
 		callbackEntry.child.parent_ = this;
 		this.addCallbackEntry_(callbackEntry);
+
 		return callbackEntry.child;
 	}
 
@@ -69,7 +86,10 @@ class ProgressPromise extends CancellablePromise {
 	 */
 	callChildProgressListeners_(progress) {
 		if (this.callbackEntries_ && this.callbackEntries_.child) {
-			this.callProgressListeners_(progress, this.callbackEntries_.child.listeners_);
+			this.callProgressListeners_(
+				progress,
+				this.callbackEntries_.child.listeners_
+			);
 		}
 	}
 
@@ -111,10 +131,16 @@ class ProgressPromise extends CancellablePromise {
 	 */
 	setProgress_(progress) {
 		if (progress > 1 || progress < 0) {
-			throw new TypeError('The progress percentage should be a number between 0 and 1');
-		} else if (progress < this.progress_) {
-			throw new Error('The progress percentage can\'t be lower than the previous percentage');
-		} else if (progress === this.progress_ || progress === 1) {
+			throw new TypeError(
+				'The progress percentage should be a number between 0 and 1'
+			);
+		}
+		else if (progress < this.progress_) {
+			throw new Error(
+				'The progress percentage can\'t be lower than the previous percentage'
+			);
+		}
+		else if (progress === this.progress_ || progress === 1) {
 			return;
 		}
 

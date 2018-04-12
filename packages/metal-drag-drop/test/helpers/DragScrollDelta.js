@@ -31,7 +31,8 @@ describe('DragScrollDelta', function() {
 				done();
 			});
 			window.scrollTo(0, 0);
-		} else {
+		}
+		else {
 			done();
 		}
 	});
