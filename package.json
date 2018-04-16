@@ -1,13 +1,12 @@
 {
   "scripts": {
-    "checkFormat": "lerna run checkFormat --concurrency 1 --stream",
+    "checkFormat": "npm run prettier -- --list-different",
     "precommit": "lint-staged",
-    "format": "lerna run format --concurrency 1 --stream",
-    "lerna": "lerna bootstrap -- --no-optional",
-    "lint": "lerna run lint --concurrency 1 --stream",
-    "test": "lerna run test --concurrency 1 --stream",
-    "test:jest": "lerna run test:jest --concurrency 1 --stream",
-    "test:saucelabs": "lerna run test:saucelabs --concurrency 1 --stream"
+    "compile": "lerna run compile",
+    "format": "npm run prettier -- --write",
+    "lerna": "lerna bootstrap -- --no-optional && npm install --no-optional",
+    "lint": "eslint 'packages/metal*/{src,test}/**/*.js'",
+    "prettier": "prettier-eslint 'packages/metal*/{src,test}/**/*.js'"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
