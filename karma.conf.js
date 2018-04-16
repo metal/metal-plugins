@@ -6,6 +6,14 @@ module.exports = function (config) {
     config.set({
         browsers: ['Chrome'],
 
+        customHeaders: [
+			{
+				match: './packages/metal-ajax/test/data/data.json',
+				name: 'Content-Length',
+				value: 315186
+			}
+		],
+
         frameworks: ['mocha', 'chai', 'sinon'],
 
         plugins: [
@@ -54,7 +62,14 @@ module.exports = function (config) {
                 watched: false,
                 included: true,
                 served: true,
-            }
+            },
+
+            {
+				pattern: 'packages/metal-ajax/test/data/data.json',
+				watched: false,
+				included: false,
+				served: true
+			}
         ],
 
         singleRun: true,

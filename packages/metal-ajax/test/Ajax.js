@@ -221,7 +221,7 @@ describe('Ajax', function() {
 		});
 	});
 
-	describe('Progress', function() {
+	describe	('Progress', function() {
 		before(function() {
 			if (UA.isSafari && UA.matchUserAgent('Version/9')) {
 				this.skip();
@@ -233,7 +233,7 @@ describe('Ajax', function() {
 
 			const listener = sinon.stub();
 
-			Ajax.request('/base/test/data/data.json', 'get')
+			Ajax.request('/base/packages/metal-ajax/test/data/data.json', 'get')
 				.progress(listener)
 				.then(function(xhrResponse) {
 					assert.equal(xhrResponse.status, 200);
