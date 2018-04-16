@@ -221,7 +221,7 @@ describe('Ajax', function() {
 		});
 	});
 
-	describe	('Progress', function() {
+	describe('Progress', function() {
 		before(function() {
 			if (UA.isSafari && UA.matchUserAgent('Version/9')) {
 				this.skip();
