@@ -1,23 +1,43 @@
 {
-	"devDependencies": {
-		"babel-preset-env": "^1.6.1",
-		"lerna": "^2.5.1",
-		"lint-staged": "^6.0.0"
-	},
-	"scripts": {
-		"checkFormat": "lerna run checkFormat --concurrency 1 --stream",
-		"format": "lerna run format --concurrency 1 --stream",
-		"lerna": "lerna bootstrap -- --no-optional",
-		"lint": "lerna run lint --concurrency 1 --stream",
-		"precommit": "lint-staged",
-		"test": "lerna run test --concurrency 1 --stream",
-		"test:jest": "lerna run test:jest --concurrency 1 --stream",
-		"test:saucelabs": "lerna run test:saucelabs --concurrency 1 --stream"
-	},
-	"lint-staged": {
-		"*.js": [
-			"npm run format",
-			"git add"
-		]
-	}
+  "scripts": {
+    "checkFormat": "npm run prettier -- --list-different",
+    "precommit": "lint-staged",
+    "compile": "lerna run compile",
+    "format": "npm run prettier -- --write",
+    "lerna": "lerna bootstrap -- --no-optional && npm install --no-optional",
+    "lint": "eslint 'packages/metal*/{src,test}/**/*.js'",
+    "saucelabs": "karma start karma-saucelabs.conf.js",
+    "test": "karma start",
+    "test:jest": "lerna run test:jest --concurrency 1 --stream",
+    "test:saucelabs": "npm run saucelabs -- 0 && npm run saucelabs -- 1 && npm run saucelabs -- 2 && npm run saucelabs -- 3",
+    "prettier": "prettier-eslint 'packages/metal*/{src,test}/**/*.js'"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-transform-node-env-inline": "^0.4.0",
+    "babel-preset-env": "^1.6.1",
+    "chai": "^4.1.2",
+    "eslint": "^4.17.0",
+    "eslint-config-liferay": "^2.0.18",
+    "karma": "^1.1.0",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-mocha": "^1.3.0",
+    "karma-sauce-launcher": "~1.1.0",
+    "karma-sinon": "^1.0.5",
+    "karma-webpack": "^2.0.5",
+    "lerna": "^2.10.1",
+    "lint-staged": "^6.1.1",
+    "mocha": "^4.1.0",
+    "prettier-eslint-cli": "^4.7.0",
+    "sinon": "^4.5.0",
+    "webpack": "^3.11.0"
+  },
+  "lint-staged": {
+    "*.js": [
+      "npm run format",
+      "git add"
+    ]
+  }
 }

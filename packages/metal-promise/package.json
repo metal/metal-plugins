@@ -32,7 +32,6 @@
     "babel-cli": "^6.4.5",
     "babel-jest": "^21.2.0",
     "babel-preset-metal": "^4.0.0",
-    "jest": "^21.2.1",
-    "sinon": "^4.0.1"
+    "jest": "^21.2.1"
   }
 }
