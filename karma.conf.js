@@ -25,7 +25,7 @@ module.exports = function (config) {
         ],
 
         preprocessors: {
-            'packages/metal*/test/**/*.js': ['webpack']
+            'packages/*/test/**/*.js': ['webpack']
         },
 
         webpack: {
@@ -58,7 +58,7 @@ module.exports = function (config) {
             // Since all files will be added, we need to ensure manually that these
             // will be added first.
             {
-                pattern: 'packages/metal*/test/**/*.js',
+                pattern: 'packages/*/test/**/*.js',
                 watched: false,
                 included: true,
                 served: true,
