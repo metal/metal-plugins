@@ -41,6 +41,6 @@
     "babel-preset-env": "^1.6.1",
     "husky": "^0.14.3",
     "metal-tools-soy": "^4.2.6",
-    "webpack": "^3.5.5"
+    "webpack": "^3.11.0"
   }
 }
