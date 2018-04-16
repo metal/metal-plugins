@@ -142,9 +142,7 @@ describe('Ajax', function() {
 			this.requests[0].respond(200);
 		});
 
-		it('should send request with multiple headers with same name', function(
-			done
-		) {
+		it('should send request with multiple headers with same name', function(done) {
 			let headers = new MultiMap();
 			headers.add('content-type', 'application/json');
 			headers.add('content-type', 'text/html');
