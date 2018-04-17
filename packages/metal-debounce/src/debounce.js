@@ -1,7 +1,8 @@
 'use strict';
 
-/* eslint-disable-next-line */
-import from from 'core-js/es6/array';
+// This importation is used to polyfill Array.from method that is used in
+// _toConsumableArray() function in babel glue to this rest-spread utilization
+import from from 'core-js/es6/array'; //eslint-disable-line
 
 /**
  * Debounces function execution.
