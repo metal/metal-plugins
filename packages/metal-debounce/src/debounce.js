@@ -1,5 +1,6 @@
 'use strict';
 
+/* eslint-disable-next-line */
 import from from 'core-js/es6/array';
 
 /**
