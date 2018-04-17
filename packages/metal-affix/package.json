@@ -18,7 +18,7 @@
   "scripts": {
     "build": "webpack",
     "compile": "babel --presets env -d lib/ src/",
-    "prepublish": "npm run compile",
+    "prepublish": "npm run compile"
   },
   "keywords": [
     "metal"
