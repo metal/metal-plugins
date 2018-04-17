@@ -17,7 +17,7 @@
   ],
   "scripts": {
     "build": "webpack",
-    "compile": "babel --presets metal -d lib/ src/",
+    "compile": "babel --presets env -d lib/ src/",
     "prepublish": "npm run compile",
     "test": "gulp test"
   },
@@ -34,7 +34,7 @@
   "devDependencies": {
     "babel-cli": "^6.4.5",
     "babel-loader": "^7.1.2",
-    "babel-preset-metal": "^4.0.0",
+    "babel-preset-env": "^1.6.1",
     "gulp": "^3.8.11",
     "gulp-metal": "^1.0.0",
     "webpack": "^3.5.5"
