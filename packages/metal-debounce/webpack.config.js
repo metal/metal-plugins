@@ -29,6 +29,7 @@ let bundle = Object.assign({
 	},
 	plugins: [
 		new webpack.optimize.ModuleConcatenationPlugin(),
+		new webpack.optimize.DedupePlugin()
 	],
 }, common);
 
