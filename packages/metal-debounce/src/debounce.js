@@ -1,5 +1,7 @@
 'use strict';
 
+import from from 'core-js/es6/array';
+
 /**
  * Debounces function execution.
  * @param {!function()} fn
