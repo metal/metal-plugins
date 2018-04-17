@@ -1,7 +1,6 @@
 {
   "scripts": {
     "checkFormat": "npm run prettier -- --list-different",
-    "precommit": "lint-staged",
     "compile": "lerna run compile",
     "format": "npm run prettier -- --write",
     "lerna": "lerna bootstrap -- --no-optional && npm install --no-optional",
@@ -28,16 +27,9 @@
     "karma-sinon": "^1.0.5",
     "karma-webpack": "^2.0.5",
     "lerna": "^2.10.1",
-    "lint-staged": "^6.1.1",
     "mocha": "^4.1.0",
     "prettier-eslint-cli": "^4.7.0",
     "sinon": "^4.5.0",
     "webpack": "^3.11.0"
-  },
-  "lint-staged": {
-    "*.js": [
-      "npm run format",
-      "git add"
-    ]
   }
 }
