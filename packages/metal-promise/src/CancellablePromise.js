@@ -1,4 +1,5 @@
-/*!
+/* eslint-disable */
+/* !
  * Promises polyfill from Google's Closure Library.
  *
  *      Copyright 2013 The Closure Library Authors. All Rights Reserved.
@@ -28,15 +29,19 @@ import { async } from 'metal';
  * @return {!Function} A partially-applied form of the function bind() was
  *     invoked as a method of.
  */
-var partial = function(fn) {
-  var args = Array.prototype.slice.call(arguments, 1);
-  return function() {
-    // Clone the array (with slice()) and append additional arguments
-    // to the existing arguments.
-    var newArgs = args.slice();
-    newArgs.push.apply(newArgs, arguments);
-    return fn.apply(this, newArgs);
-  };
+let partial = function(fn) {
+	let args = Array.prototype.slice.call(arguments, 1);
+
+	return function() {
+		// Clone the array (with slice()) and append additional arguments
+		// to the existing arguments.
+
+		let newArgs = args.slice();
+
+		newArgs.push(...arguments);
+
+		return fn.apply(this, newArgs);
+	};
 };
 
 /**
@@ -97,121 +102,124 @@ var partial = function(fn) {
  * @template TYPE,RESOLVER_CONTEXT
  */
 var CancellablePromise = function(resolver, opt_context) {
-  /**
-   * The internal state of this Promise. Either PENDING, FULFILLED, REJECTED, or
-   * BLOCKED.
-   * @private {CancellablePromise.State_}
-   */
-  this.state_ = CancellablePromise.State_.PENDING;
+	/**
+	 * The internal state of this Promise. Either PENDING, FULFILLED, REJECTED, or
+	 * BLOCKED.
+	 * @private {CancellablePromise.State_}
+	 */
+	this.state_ = CancellablePromise.State_.PENDING;
 
-  /**
-   * The settled result of the Promise. Immutable once set with either a
-   * fulfillment value or rejection reason.
-   * @private {*}
-   */
-  this.result_ = undefined;
+	/**
+	 * The settled result of the Promise. Immutable once set with either a
+	 * fulfillment value or rejection reason.
+	 * @private {*}
+	 */
+	this.result_ = undefined;
 
-  /**
-   * For Promises created by calling {@code then()}, the originating parent.
-   * @private {CancellablePromise}
-   */
-  this.parent_ = null;
+	/**
+	 * For Promises created by calling {@code then()}, the originating parent.
+	 * @private {CancellablePromise}
+	 */
+	this.parent_ = null;
 
-  /**
-   * The linked list of {@code onFulfilled} and {@code onRejected} callbacks
-   * added to this Promise by calls to {@code then()}.
-   * @private {?CancellablePromise.CallbackEntry_}
-   */
-  this.callbackEntries_ = null;
+	/**
+	 * The linked list of {@code onFulfilled} and {@code onRejected} callbacks
+	 * added to this Promise by calls to {@code then()}.
+	 * @private {?CancellablePromise.CallbackEntry_}
+	 */
+	this.callbackEntries_ = null;
 
-  /**
-   * The tail of the linked list of {@code onFulfilled} and {@code onRejected}
-   * callbacks added to this Promise by calls to {@code then()}.
-   * @private {?CancellablePromise.CallbackEntry_}
-   */
-  this.callbackEntriesTail_ = null;
+	/**
+	 * The tail of the linked list of {@code onFulfilled} and {@code onRejected}
+	 * callbacks added to this Promise by calls to {@code then()}.
+	 * @private {?CancellablePromise.CallbackEntry_}
+	 */
+	this.callbackEntriesTail_ = null;
 
-  /**
-   * Whether the Promise is in the queue of Promises to execute.
-   * @private {boolean}
-   */
-  this.executing_ = false;
+	/**
+	 * Whether the Promise is in the queue of Promises to execute.
+	 * @private {boolean}
+	 */
+	this.executing_ = false;
 
-  if (CancellablePromise.UNHANDLED_REJECTION_DELAY > 0) {
-    /**
-     * A timeout ID used when the {@code UNHANDLED_REJECTION_DELAY} is greater
-     * than 0 milliseconds. The ID is set when the Promise is rejected, and
-     * cleared only if an {@code onRejected} callback is invoked for the
-     * Promise (or one of its descendants) before the delay is exceeded.
-     *
-     * If the rejection is not handled before the timeout completes, the
-     * rejection reason is passed to the unhandled rejection handler.
-     * @private {number}
-     */
-    this.unhandledRejectionId_ = 0;
-  } else if (CancellablePromise.UNHANDLED_REJECTION_DELAY == 0) {
-    /**
-     * When the {@code UNHANDLED_REJECTION_DELAY} is set to 0 milliseconds, a
-     * boolean that is set if the Promise is rejected, and reset to false if an
-     * {@code onRejected} callback is invoked for the Promise (or one of its
-     * descendants). If the rejection is not handled before the next timestep,
-     * the rejection reason is passed to the unhandled rejection handler.
-     * @private {boolean}
-     */
-    this.hadUnhandledRejection_ = false;
-  }
+	if (CancellablePromise.UNHANDLED_REJECTION_DELAY > 0) {
+		/**
+		 * A timeout ID used when the {@code UNHANDLED_REJECTION_DELAY} is greater
+		 * than 0 milliseconds. The ID is set when the Promise is rejected, and
+		 * cleared only if an {@code onRejected} callback is invoked for the
+		 * Promise (or one of its descendants) before the delay is exceeded.
+		 *
+		 * If the rejection is not handled before the timeout completes, the
+		 * rejection reason is passed to the unhandled rejection handler.
+		 * @private {number}
+		 */
+		this.unhandledRejectionId_ = 0;
+	} else if (CancellablePromise.UNHANDLED_REJECTION_DELAY == 0) {
+		/**
+		 * When the {@code UNHANDLED_REJECTION_DELAY} is set to 0 milliseconds, a
+		 * boolean that is set if the Promise is rejected, and reset to false if an
+		 * {@code onRejected} callback is invoked for the Promise (or one of its
+		 * descendants). If the rejection is not handled before the next timestep,
+		 * the rejection reason is passed to the unhandled rejection handler.
+		 * @private {boolean}
+		 */
+		this.hadUnhandledRejection_ = false;
+	}
 
-  if (CancellablePromise.LONG_STACK_TRACES) {
-    /**
-     * A list of stack trace frames pointing to the locations where this Promise
-     * was created or had callbacks added to it. Saved to add additional context
-     * to stack traces when an exception is thrown.
-     * @private {!Array<string>}
-     */
-    this.stack_ = [];
-    this.addStackTrace_(new Error('created'));
+	if (CancellablePromise.LONG_STACK_TRACES) {
+		/**
+		 * A list of stack trace frames pointing to the locations where this Promise
+		 * was created or had callbacks added to it. Saved to add additional context
+		 * to stack traces when an exception is thrown.
+		 * @private {!Array<string>}
+		 */
+		this.stack_ = [];
+		this.addStackTrace_(new Error('created'));
 
-    /**
-     * Index of the most recently executed stack frame entry.
-     * @private {number}
-     */
-    this.currentStep_ = 0;
-  }
+		/**
+		 * Index of the most recently executed stack frame entry.
+		 * @private {number}
+		 */
+		this.currentStep_ = 0;
+	}
 
-  // As an optimization, we can skip this if resolver is nullFunction.
-  // This value is passed internally when creating a promise which will be
-  // resolved through a more optimized path.
-  if (resolver != nullFunction) {
-    try {
-      var self = this;
-      resolver.call(
-          opt_context,
-          function(value) {
-            self.resolve_(CancellablePromise.State_.FULFILLED, value);
-          },
-          function(reason) {
-            if (!reason.IS_CANCELLATION_ERROR) {
-              try {
-                // Promise was rejected. Step up one call frame to see why.
-                if (reason instanceof Error) {
-                  throw reason;
-                } else {
-                  throw new Error('Promise rejected.');
-                }
-              } catch (e) {
-                // Only thrown so browser dev tools can catch rejections of
-                // promises when the option to break on caught exceptions is
-                // activated.
-              }
-            }
-            self.resolve_(CancellablePromise.State_.REJECTED, reason);
-          });
-    } catch (e) {
-      this.resolve_(CancellablePromise.State_.REJECTED, e);
-    }
-  }
+	// As an optimization, we can skip this if resolver is nullFunction.
+	// This value is passed internally when creating a promise which will be
+	// resolved through a more optimized path.
+
+	if (resolver != nullFunction) {
+		try {
+			let self = this;
+
+			resolver.call(
+				opt_context,
+				function(value) {
+					self.resolve_(CancellablePromise.State_.FULFILLED, value);
+				},
+				function(reason) {
+					if (!reason.IS_CANCELLATION_ERROR) {
+						try {
+							// Promise was rejected. Step up one call frame to see why.
+
+							if (reason instanceof Error) {
+								throw reason;
+							} else {
+								throw new Error('Promise rejected.');
+							}
+						} catch (e) {
+							// Only thrown so browser dev tools can catch rejections of
+							// promises when the option to break on caught exceptions is
+							// activated.
+						}
+					}
+					self.resolve_(CancellablePromise.State_.REJECTED, reason);
+				}
+			);
+		} catch (e) {
+			this.resolve_(CancellablePromise.State_.REJECTED, e);
+		}
+	}
 };
-
 
 /**
  * Whether traces of {@code then} calls should be included in
@@ -219,7 +227,6 @@ var CancellablePromise = function(resolver, opt_context) {
  * @type {boolean}
  */
 CancellablePromise.LONG_STACK_TRACES = false;
-
 
 /**
  * The delay in milliseconds before a rejected Promise's reason
@@ -233,7 +240,6 @@ CancellablePromise.LONG_STACK_TRACES = false;
  */
 CancellablePromise.UNHANDLED_REJECTION_DELAY = 0;
 
-
 /**
  * The possible internal states for a Promise. These states are not directly
  * observable to external callers.
@@ -241,20 +247,18 @@ CancellablePromise.UNHANDLED_REJECTION_DELAY = 0;
  * @private
  */
 CancellablePromise.State_ = {
-  /** The Promise is waiting for resolution. */
-  PENDING: 0,
+	/** The Promise is waiting for resolution. */
+	PENDING: 0,
 
-  /** The Promise is blocked waiting for the result of another Thenable. */
-  BLOCKED: 1,
+	/** The Promise is blocked waiting for the result of another Thenable. */
+	BLOCKED: 1,
 
-  /** The Promise has been resolved with a fulfillment value. */
-  FULFILLED: 2,
+	/** The Promise has been resolved with a fulfillment value. */
+	FULFILLED: 2,
 
-  /** The Promise has been resolved with a rejection reason. */
-  REJECTED: 3
+	/** The Promise has been resolved with a rejection reason. */
+	REJECTED: 3,
 };
-
-
 
 /**
  * Entries in the callback chain. Each call to {@code then},
@@ -264,37 +268,35 @@ CancellablePromise.State_ = {
  * @private @final @struct @constructor
  */
 CancellablePromise.CallbackEntry_ = function() {
-  /** @type {?CancellablePromise} */
-  this.child = null;
-  /** @type {Function} */
-  this.onFulfilled = null;
-  /** @type {Function} */
-  this.onRejected = null;
-  /** @type {?} */
-  this.context = null;
-  /** @type {?CancellablePromise.CallbackEntry_} */
-  this.next = null;
+	/** @type {?CancellablePromise} */
+	this.child = null;
+	/** @type {Function} */
+	this.onFulfilled = null;
+	/** @type {Function} */
+	this.onRejected = null;
+	/** @type {?} */
+	this.context = null;
+	/** @type {?CancellablePromise.CallbackEntry_} */
+	this.next = null;
 
-  /**
-   * A boolean value to indicate this is a "thenAlways" callback entry.
-   * Unlike a normal "then/thenVoid" a "thenAlways doesn't participate
-   * in "cancel" considerations but is simply an observer and requires
-   * special handling.
-   * @type {boolean}
-   */
-  this.always = false;
+	/**
+	 * A boolean value to indicate this is a "thenAlways" callback entry.
+	 * Unlike a normal "then/thenVoid" a "thenAlways doesn't participate
+	 * in "cancel" considerations but is simply an observer and requires
+	 * special handling.
+	 * @type {boolean}
+	 */
+	this.always = false;
 };
-
 
 /** clear the object prior to reuse */
 CancellablePromise.CallbackEntry_.prototype.reset = function() {
-  this.child = null;
-  this.onFulfilled = null;
-  this.onRejected = null;
-  this.context = null;
-  this.always = false;
+	this.child = null;
+	this.onFulfilled = null;
+	this.onRejected = null;
+	this.context = null;
+	this.always = false;
 };
-
 
 /**
  * The number of currently unused objects to keep around for
@@ -303,12 +305,16 @@ CancellablePromise.CallbackEntry_.prototype.reset = function() {
  */
 CancellablePromise.DEFAULT_MAX_UNUSED = 100;
 
-
 /** @const @private {FreeList<!CancellablePromise.CallbackEntry_>} */
 CancellablePromise.freelist_ = new FreeList(
-    function() { return new CancellablePromise.CallbackEntry_(); },
-    function(item) { item.reset(); }, CancellablePromise.DEFAULT_MAX_UNUSED);
-
+	function() {
+		return new CancellablePromise.CallbackEntry_();
+	},
+	function(item) {
+		item.reset();
+	},
+	CancellablePromise.DEFAULT_MAX_UNUSED
+);
 
 /**
  * @param {Function} onFulfilled
@@ -317,27 +323,30 @@ CancellablePromise.freelist_ = new FreeList(
  * @return {!CancellablePromise.CallbackEntry_}
  * @private
  */
-CancellablePromise.getCallbackEntry_ = function(onFulfilled, onRejected, context) {
-  var entry = CancellablePromise.freelist_.get();
-  entry.onFulfilled = onFulfilled;
-  entry.onRejected = onRejected;
-  entry.context = context;
-  return entry;
-};
+CancellablePromise.getCallbackEntry_ = function(
+	onFulfilled,
+	onRejected,
+	context
+) {
+	let entry = CancellablePromise.freelist_.get();
 
+	entry.onFulfilled = onFulfilled;
+	entry.onRejected = onRejected;
+	entry.context = context;
+
+	return entry;
+};
 
 /**
  * @param {!CancellablePromise.CallbackEntry_} entry
  * @private
  */
 CancellablePromise.returnEntry_ = function(entry) {
-  CancellablePromise.freelist_.put(entry);
+	CancellablePromise.freelist_.put(entry);
 };
-
 
 // NOTE: this is the same template expression as is used for
 // goog.IThenable.prototype.then
-
 
 /**
  * @param {VALUE=} opt_value
@@ -356,19 +365,22 @@ CancellablePromise.returnEntry_ = function(entry) {
  * =:
  */
 CancellablePromise.resolve = function(opt_value) {
-  if (opt_value instanceof CancellablePromise) {
-    // Avoid creating a new object if we already have a promise object
-    // of the correct type.
-    return opt_value;
-  }
+	if (opt_value instanceof CancellablePromise) {
+		// Avoid creating a new object if we already have a promise object
+		// of the correct type.
 
-  // Passing nullFunction will cause the constructor to take an optimized
-  // path that skips calling the resolver function.
-  var promise = new CancellablePromise(nullFunction);
-  promise.resolve_(CancellablePromise.State_.FULFILLED, opt_value);
-  return promise;
+		return opt_value;
+	}
+
+	// Passing nullFunction will cause the constructor to take an optimized
+	// path that skips calling the resolver function.
+
+	let promise = new CancellablePromise(nullFunction);
+
+	promise.resolve_(CancellablePromise.State_.FULFILLED, opt_value);
+
+	return promise;
 };
-
 
 /**
  * @param {*=} opt_reason
@@ -376,9 +388,10 @@ CancellablePromise.resolve = function(opt_value) {
  *     given reason.
  */
 CancellablePromise.reject = function(opt_reason) {
-  return new CancellablePromise(function(resolve, reject) { reject(opt_reason); });
+	return new CancellablePromise(function(resolve, reject) {
+		reject(opt_reason);
+	});
 };
-
 
 /**
  * This is identical to
@@ -393,13 +406,17 @@ CancellablePromise.reject = function(opt_reason) {
  * @private
  */
 CancellablePromise.resolveThen_ = function(value, onFulfilled, onRejected) {
-  var isThenable =
-      CancellablePromise.maybeThen_(value, onFulfilled, onRejected, null);
-  if (!isThenable) {
-    async.run(partial(onFulfilled, value));
-  }
-};
+	let isThenable = CancellablePromise.maybeThen_(
+		value,
+		onFulfilled,
+		onRejected,
+		null
+	);
 
+	if (!isThenable) {
+		async.run(partial(onFulfilled, value));
+	}
+};
 
 /**
  * @param {!Array<?(CancellablePromise<TYPE>|Thenable<TYPE>|Thenable|*)>}
@@ -410,17 +427,16 @@ CancellablePromise.resolveThen_ = function(value, onFulfilled, onRejected) {
  * @template TYPE
  */
 CancellablePromise.race = function(promises) {
-  return new CancellablePromise(function(resolve, reject) {
-    if (!promises.length) {
-      resolve(undefined);
-    }
-    for (var i = 0, promise; i < promises.length; i++) {
-      promise = promises[i];
-      CancellablePromise.resolveThen_(promise, resolve, reject);
-    }
-  });
+	return new CancellablePromise(function(resolve, reject) {
+		if (!promises.length) {
+			resolve(undefined);
+		}
+		for (var i = 0, promise; i < promises.length; i++) {
+			promise = promises[i];
+			CancellablePromise.resolveThen_(promise, resolve, reject);
+		}
+	});
 };
-
 
 /**
  * @param {!Array<?(CancellablePromise<TYPE>|Thenable<TYPE>|Thenable|*)>}
@@ -432,32 +448,38 @@ CancellablePromise.race = function(promises) {
  * @template TYPE
  */
 CancellablePromise.all = function(promises) {
-  return new CancellablePromise(function(resolve, reject) {
-    var toFulfill = promises.length;
-    var values = [];
+	return new CancellablePromise(function(resolve, reject) {
+		let toFulfill = promises.length;
+		let values = [];
 
-    if (!toFulfill) {
-      resolve(values);
-      return;
-    }
+		if (!toFulfill) {
+			resolve(values);
 
-    var onFulfill = function(index, value) {
-      toFulfill--;
-      values[index] = value;
-      if (toFulfill == 0) {
-        resolve(values);
-      }
-    };
+			return;
+		}
 
-    var onReject = function(reason) { reject(reason); };
+		let onFulfill = function(index, value) {
+			toFulfill--;
+			values[index] = value;
+			if (toFulfill == 0) {
+				resolve(values);
+			}
+		};
 
-    for (var i = 0, promise; i < promises.length; i++) {
-      promise = promises[i];
-      CancellablePromise.resolveThen_(promise, partial(onFulfill, i), onReject);
-    }
-  });
+		let onReject = function(reason) {
+			reject(reason);
+		};
+
+		for (var i = 0, promise; i < promises.length; i++) {
+			promise = promises[i];
+			CancellablePromise.resolveThen_(
+				promise,
+				partial(onFulfill, i),
+				onReject
+			);
+		}
+	});
 };
-
 
 /**
  * @param {!Array<?(CancellablePromise<TYPE>|Thenable<TYPE>|Thenable|*)>}
@@ -475,33 +497,36 @@ CancellablePromise.all = function(promises) {
  * @template TYPE
  */
 CancellablePromise.allSettled = function(promises) {
-  return new CancellablePromise(function(resolve, reject) {
-    var toSettle = promises.length;
-    var results = [];
+	return new CancellablePromise(function(resolve, reject) {
+		let toSettle = promises.length;
+		let results = [];
 
-    if (!toSettle) {
-      resolve(results);
-      return;
-    }
+		if (!toSettle) {
+			resolve(results);
 
-    var onSettled = function(index, fulfilled, result) {
-      toSettle--;
-      results[index] = fulfilled ? {fulfilled: true, value: result} :
-                                   {fulfilled: false, reason: result};
-      if (toSettle == 0) {
-        resolve(results);
-      }
-    };
+			return;
+		}
 
-    for (var i = 0, promise; i < promises.length; i++) {
-      promise = promises[i];
-      CancellablePromise.resolveThen_(
-          promise, partial(onSettled, i, true /* fulfilled */),
-          partial(onSettled, i, false /* fulfilled */));
-    }
-  });
+		let onSettled = function(index, fulfilled, result) {
+			toSettle--;
+			results[index] = fulfilled
+				? { fulfilled: true, value: result }
+				: { fulfilled: false, reason: result };
+			if (toSettle == 0) {
+				resolve(results);
+			}
+		};
+
+		for (var i = 0, promise; i < promises.length; i++) {
+			promise = promises[i];
+			CancellablePromise.resolveThen_(
+				promise,
+				partial(onSettled, i, true /* fulfilled */),
+				partial(onSettled, i, false /* fulfilled */)
+			);
+		}
+	});
 };
-
 
 /**
  * @param {!Array<?(CancellablePromise<TYPE>|Thenable<TYPE>|Thenable|*)>}
@@ -512,32 +537,38 @@ CancellablePromise.allSettled = function(promises) {
  * @template TYPE
  */
 CancellablePromise.firstFulfilled = function(promises) {
-  return new CancellablePromise(function(resolve, reject) {
-    var toReject = promises.length;
-    var reasons = [];
+	return new CancellablePromise(function(resolve, reject) {
+		let toReject = promises.length;
+		let reasons = [];
 
-    if (!toReject) {
-      resolve(undefined);
-      return;
-    }
+		if (!toReject) {
+			resolve(undefined);
 
-    var onFulfill = function(value) { resolve(value); };
+			return;
+		}
 
-    var onReject = function(index, reason) {
-      toReject--;
-      reasons[index] = reason;
-      if (toReject == 0) {
-        reject(reasons);
-      }
-    };
+		let onFulfill = function(value) {
+			resolve(value);
+		};
 
-    for (var i = 0, promise; i < promises.length; i++) {
-      promise = promises[i];
-      CancellablePromise.resolveThen_(promise, onFulfill, partial(onReject, i));
-    }
-  });
+		let onReject = function(index, reason) {
+			toReject--;
+			reasons[index] = reason;
+			if (toReject == 0) {
+				reject(reasons);
+			}
+		};
+
+		for (var i = 0, promise; i < promises.length; i++) {
+			promise = promises[i];
+			CancellablePromise.resolveThen_(
+				promise,
+				onFulfill,
+				partial(onReject, i)
+			);
+		}
+	});
 };
-
 
 /**
  * @return {!CancellablePromise.Resolver<TYPE>} Resolver wrapping the promise and its
@@ -546,14 +577,14 @@ CancellablePromise.firstFulfilled = function(promises) {
  * @template TYPE
  */
 CancellablePromise.withResolver = function() {
-  var resolve, reject;
-  var promise = new CancellablePromise(function(rs, rj) {
-    resolve = rs;
-    reject = rj;
-  });
-  return new CancellablePromise.Resolver_(promise, resolve, reject);
-};
+	let resolve, reject;
+	let promise = new CancellablePromise(function(rs, rj) {
+		resolve = rs;
+		reject = rj;
+	});
 
+	return new CancellablePromise.Resolver_(promise, resolve, reject);
+};
 
 /**
  * Adds callbacks that will operate on the result of the Promise, returning a
@@ -571,18 +602,21 @@ CancellablePromise.withResolver = function() {
  * @override
  */
 CancellablePromise.prototype.then = function(
-    opt_onFulfilled, opt_onRejected, opt_context) {
+	opt_onFulfilled,
+	opt_onRejected,
+	opt_context
+) {
+	if (CancellablePromise.LONG_STACK_TRACES) {
+		this.addStackTrace_(new Error('then'));
+	}
 
-  if (CancellablePromise.LONG_STACK_TRACES) {
-    this.addStackTrace_(new Error('then'));
-  }
-
-  return this.addChildPromise_(
-      isFunction(opt_onFulfilled) ? opt_onFulfilled : null,
-      isFunction(opt_onRejected) ? opt_onRejected : null, opt_context);
+	return this.addChildPromise_(
+		isFunction(opt_onFulfilled) ? opt_onFulfilled : null,
+		isFunction(opt_onRejected) ? opt_onRejected : null,
+		opt_context
+	);
 };
 Thenable.addImplementation(CancellablePromise);
-
 
 /**
  * Adds callbacks that will operate on the result of the Promise without
@@ -606,20 +640,25 @@ Thenable.addImplementation(CancellablePromise);
  * @template THIS
  */
 CancellablePromise.prototype.thenVoid = function(
-    opt_onFulfilled, opt_onRejected, opt_context) {
+	opt_onFulfilled,
+	opt_onRejected,
+	opt_context
+) {
+	if (CancellablePromise.LONG_STACK_TRACES) {
+		this.addStackTrace_(new Error('then'));
+	}
 
-  if (CancellablePromise.LONG_STACK_TRACES) {
-    this.addStackTrace_(new Error('then'));
-  }
+	// Note: no default rejection handler is provided here as we need to
+	// distinguish unhandled rejections.
 
-  // Note: no default rejection handler is provided here as we need to
-  // distinguish unhandled rejections.
-  this.addCallbackEntry_(
-      CancellablePromise.getCallbackEntry_(
-          opt_onFulfilled || nullFunction, opt_onRejected || null,
-          opt_context));
+	this.addCallbackEntry_(
+		CancellablePromise.getCallbackEntry_(
+			opt_onFulfilled || nullFunction,
+			opt_onRejected || null,
+			opt_context
+		)
+	);
 };
-
 
 /**
  * Adds a callback that will be invoked when the Promise is settled (fulfilled
@@ -645,16 +684,21 @@ CancellablePromise.prototype.thenVoid = function(
  * @template THIS
  */
 CancellablePromise.prototype.thenAlways = function(onSettled, opt_context) {
-  if (CancellablePromise.LONG_STACK_TRACES) {
-    this.addStackTrace_(new Error('thenAlways'));
-  }
+	if (CancellablePromise.LONG_STACK_TRACES) {
+		this.addStackTrace_(new Error('thenAlways'));
+	}
 
-  var entry = CancellablePromise.getCallbackEntry_(onSettled, onSettled, opt_context);
-  entry.always = true;
-  this.addCallbackEntry_(entry);
-  return this;
+	let entry = CancellablePromise.getCallbackEntry_(
+		onSettled,
+		onSettled,
+		opt_context
+	);
+
+	entry.always = true;
+	this.addCallbackEntry_(entry);
+
+	return this;
 };
-
 
 /**
  * Adds a callback that will be invoked only if the Promise is rejected. This
@@ -670,17 +714,17 @@ CancellablePromise.prototype.thenAlways = function(onSettled, opt_context) {
  * @template THIS
  */
 CancellablePromise.prototype.thenCatch = function(onRejected, opt_context) {
-  if (CancellablePromise.LONG_STACK_TRACES) {
-    this.addStackTrace_(new Error('thenCatch'));
-  }
-  return this.addChildPromise_(null, onRejected, opt_context);
+	if (CancellablePromise.LONG_STACK_TRACES) {
+		this.addStackTrace_(new Error('thenCatch'));
+	}
+
+	return this.addChildPromise_(null, onRejected, opt_context);
 };
 
 /**
  * Alias of {@link CancellablePromise.prototype.thenCatch}
  */
 CancellablePromise.prototype.catch = CancellablePromise.prototype.thenCatch;
-
 
 /**
  * Cancels the Promise if it is still pending by rejecting it with a cancel
@@ -695,15 +739,15 @@ CancellablePromise.prototype.catch = CancellablePromise.prototype.thenCatch;
  *     cancellation reason.
  */
 CancellablePromise.prototype.cancel = function(opt_message) {
-  if (this.state_ == CancellablePromise.State_.PENDING) {
-    async.run(function() {
-      var err = new CancellablePromise.CancellationError(opt_message);
-      err.IS_CANCELLATION_ERROR = true;
-      this.cancelInternal_(err);
-    }, this);
-  }
-};
+	if (this.state_ == CancellablePromise.State_.PENDING) {
+		async.run(function() {
+			let err = new CancellablePromise.CancellationError(opt_message);
 
+			err.IS_CANCELLATION_ERROR = true;
+			this.cancelInternal_(err);
+		}, this);
+	}
+};
 
 /**
  * Cancels this Promise with the given error.
@@ -712,17 +756,17 @@ CancellablePromise.prototype.cancel = function(opt_message) {
  * @private
  */
 CancellablePromise.prototype.cancelInternal_ = function(err) {
-  if (this.state_ == CancellablePromise.State_.PENDING) {
-    if (this.parent_) {
-      // Cancel the Promise and remove it from the parent's child list.
-      this.parent_.cancelChild_(this, err);
-      this.parent_ = null;
-    } else {
-      this.resolve_(CancellablePromise.State_.REJECTED, err);
-    }
-  }
-};
+	if (this.state_ == CancellablePromise.State_.PENDING) {
+		if (this.parent_) {
+			// Cancel the Promise and remove it from the parent's child list.
 
+			this.parent_.cancelChild_(this, err);
+			this.parent_ = null;
+		} else {
+			this.resolve_(CancellablePromise.State_.REJECTED, err);
+		}
+	}
+};
 
 /**
  * Cancels a child Promise from the list of callback entries. If the Promise has
@@ -735,49 +779,57 @@ CancellablePromise.prototype.cancelInternal_ = function(err) {
  * @private
  */
 CancellablePromise.prototype.cancelChild_ = function(childPromise, err) {
-  if (!this.callbackEntries_) {
-    return;
-  }
-  var childCount = 0;
-  var childEntry = null;
-  var beforeChildEntry = null;
+	if (!this.callbackEntries_) {
+		return;
+	}
+	let childCount = 0;
+	let childEntry = null;
+	let beforeChildEntry = null;
 
-  // Find the callback entry for the childPromise, and count whether there are
-  // additional child Promises.
-  for (var entry = this.callbackEntries_; entry; entry = entry.next) {
-    if (!entry.always) {
-      childCount++;
-      if (entry.child == childPromise) {
-        childEntry = entry;
-      }
-      if (childEntry && childCount > 1) {
-        break;
-      }
-    }
-    if (!childEntry) {
-      beforeChildEntry = entry;
-    }
-  }
+	// Find the callback entry for the childPromise, and count whether there are
+	// additional child Promises.
 
-  // Can a child entry be missing?
+	for (let entry = this.callbackEntries_; entry; entry = entry.next) {
+		if (!entry.always) {
+			childCount++;
+			if (entry.child == childPromise) {
+				childEntry = entry;
+			}
+			if (childEntry && childCount > 1) {
+				break;
+			}
+		}
+		if (!childEntry) {
+			beforeChildEntry = entry;
+		}
+	}
 
-  // If the child Promise was the only child, cancel this Promise as well.
-  // Otherwise, reject only the child Promise with the cancel error.
-  if (childEntry) {
-    if (this.state_ == CancellablePromise.State_.PENDING && childCount == 1) {
-      this.cancelInternal_(err);
-    } else {
-      if (beforeChildEntry) {
-        this.removeEntryAfter_(beforeChildEntry);
-      } else {
-        this.popEntry_();
-      }
+	// Can a child entry be missing?
 
-      this.executeCallback_(childEntry, CancellablePromise.State_.REJECTED, err);
-    }
-  }
+	// If the child Promise was the only child, cancel this Promise as well.
+	// Otherwise, reject only the child Promise with the cancel error.
+
+	if (childEntry) {
+		if (
+			this.state_ == CancellablePromise.State_.PENDING &&
+			childCount == 1
+		) {
+			this.cancelInternal_(err);
+		} else {
+			if (beforeChildEntry) {
+				this.removeEntryAfter_(beforeChildEntry);
+			} else {
+				this.popEntry_();
+			}
+
+			this.executeCallback_(
+				childEntry,
+				CancellablePromise.State_.REJECTED,
+				err
+			);
+		}
+	}
 };
-
 
 /**
  * Adds a callback entry to the current Promise, and schedules callback
@@ -789,13 +841,15 @@ CancellablePromise.prototype.cancelChild_ = function(childPromise, err) {
  * @private
  */
 CancellablePromise.prototype.addCallbackEntry_ = function(callbackEntry) {
-  if (!this.hasEntry_() && (this.state_ == CancellablePromise.State_.FULFILLED ||
-                            this.state_ == CancellablePromise.State_.REJECTED)) {
-    this.scheduleCallbacks_();
-  }
-  this.queueEntry_(callbackEntry);
+	if (
+		!this.hasEntry_() &&
+		(this.state_ == CancellablePromise.State_.FULFILLED ||
+			this.state_ == CancellablePromise.State_.REJECTED)
+	) {
+		this.scheduleCallbacks_();
+	}
+	this.queueEntry_(callbackEntry);
 };
-
 
 /**
  * Creates a child Promise and adds it to the callback entry list. The result of
@@ -817,43 +871,54 @@ CancellablePromise.prototype.addCallbackEntry_ = function(callbackEntry) {
  * @private
  */
 CancellablePromise.prototype.addChildPromise_ = function(
-    onFulfilled, onRejected, opt_context) {
+	onFulfilled,
+	onRejected,
+	opt_context
+) {
+	/** @type {CancellablePromise.CallbackEntry_} */
+	let callbackEntry = CancellablePromise.getCallbackEntry_(null, null, null);
 
-  /** @type {CancellablePromise.CallbackEntry_} */
-  var callbackEntry = CancellablePromise.getCallbackEntry_(null, null, null);
+	callbackEntry.child = new CancellablePromise(function(resolve, reject) {
+		// Invoke onFulfilled, or resolve with the parent's value if absent.
 
-  callbackEntry.child = new CancellablePromise(function(resolve, reject) {
-    // Invoke onFulfilled, or resolve with the parent's value if absent.
-    callbackEntry.onFulfilled = onFulfilled ? function(value) {
-      try {
-        var result = onFulfilled.call(opt_context, value);
-        resolve(result);
-      } catch (err) {
-        reject(err);
-      }
-    } : resolve;
+		callbackEntry.onFulfilled = onFulfilled
+			? function(value) {
+					try {
+						let result = onFulfilled.call(opt_context, value);
 
-    // Invoke onRejected, or reject with the parent's reason if absent.
-    callbackEntry.onRejected = onRejected ? function(reason) {
-      try {
-        var result = onRejected.call(opt_context, reason);
-        if (!isDef(result) && reason.IS_CANCELLATION_ERROR) {
-          // Propagate cancellation to children if no other result is returned.
-          reject(reason);
-        } else {
-          resolve(result);
-        }
-      } catch (err) {
-        reject(err);
-      }
-    } : reject;
-  });
+						resolve(result);
+					} catch (err) {
+						reject(err);
+					}
+			  }
+			: resolve;
 
-  callbackEntry.child.parent_ = this;
-  this.addCallbackEntry_(callbackEntry);
-  return callbackEntry.child;
+		// Invoke onRejected, or reject with the parent's reason if absent.
+
+		callbackEntry.onRejected = onRejected
+			? function(reason) {
+					try {
+						let result = onRejected.call(opt_context, reason);
+
+						if (!isDef(result) && reason.IS_CANCELLATION_ERROR) {
+							// Propagate cancellation to children if no other result is returned.
+
+							reject(reason);
+						} else {
+							resolve(result);
+						}
+					} catch (err) {
+						reject(err);
+					}
+			  }
+			: reject;
+	});
+
+	callbackEntry.child.parent_ = this;
+	this.addCallbackEntry_(callbackEntry);
+
+	return callbackEntry.child;
 };
-
 
 /**
  * Unblocks the Promise and fulfills it with the given value.
@@ -862,10 +927,9 @@ CancellablePromise.prototype.addChildPromise_ = function(
  * @private
  */
 CancellablePromise.prototype.unblockAndFulfill_ = function(value) {
-  this.state_ = CancellablePromise.State_.PENDING;
-  this.resolve_(CancellablePromise.State_.FULFILLED, value);
+	this.state_ = CancellablePromise.State_.PENDING;
+	this.resolve_(CancellablePromise.State_.FULFILLED, value);
 };
-
 
 /**
  * Unblocks the Promise and rejects it with the given rejection reason.
@@ -874,10 +938,9 @@ CancellablePromise.prototype.unblockAndFulfill_ = function(value) {
  * @private
  */
 CancellablePromise.prototype.unblockAndReject_ = function(reason) {
-  this.state_ = CancellablePromise.State_.PENDING;
-  this.resolve_(CancellablePromise.State_.REJECTED, reason);
+	this.state_ = CancellablePromise.State_.PENDING;
+	this.resolve_(CancellablePromise.State_.REJECTED, reason);
 };
-
 
 /**
  * Attempts to resolve a Promise with a given resolution state and value. This
@@ -897,34 +960,42 @@ CancellablePromise.prototype.unblockAndReject_ = function(reason) {
  * @private
  */
 CancellablePromise.prototype.resolve_ = function(state, x) {
-  if (this.state_ != CancellablePromise.State_.PENDING) {
-    return;
-  }
+	if (this.state_ != CancellablePromise.State_.PENDING) {
+		return;
+	}
 
-  if (this === x) {
-    state = CancellablePromise.State_.REJECTED;
-    x = new TypeError('Promise cannot resolve to itself');
-  }
+	if (this === x) {
+		state = CancellablePromise.State_.REJECTED;
+		x = new TypeError('Promise cannot resolve to itself');
+	}
 
-  this.state_ = CancellablePromise.State_.BLOCKED;
-  var isThenable = CancellablePromise.maybeThen_(
-      x, this.unblockAndFulfill_, this.unblockAndReject_, this);
-  if (isThenable) {
-    return;
-  }
+	this.state_ = CancellablePromise.State_.BLOCKED;
+	let isThenable = CancellablePromise.maybeThen_(
+		x,
+		this.unblockAndFulfill_,
+		this.unblockAndReject_,
+		this
+	);
 
-  this.result_ = x;
-  this.state_ = state;
-  // Since we can no longer be canceled, remove link to parent, so that the
-  // child promise does not keep the parent promise alive.
-  this.parent_ = null;
-  this.scheduleCallbacks_();
+	if (isThenable) {
+		return;
+	}
 
-  if (state == CancellablePromise.State_.REJECTED && !x.IS_CANCELLATION_ERROR) {
-    CancellablePromise.addUnhandledRejection_(this, x);
-  }
+	this.result_ = x;
+	this.state_ = state;
+	// Since we can no longer be canceled, remove link to parent, so that the
+	// child promise does not keep the parent promise alive.
+
+	this.parent_ = null;
+	this.scheduleCallbacks_();
+
+	if (
+		state == CancellablePromise.State_.REJECTED &&
+		!x.IS_CANCELLATION_ERROR
+	) {
+		CancellablePromise.addUnhandledRejection_(this, x);
+	}
 };
-
 
 /**
  * Invokes the "then" method of an input value if that value is a Thenable. This
@@ -937,30 +1008,45 @@ CancellablePromise.prototype.resolve_ = function(state, x) {
  * @return {boolean} Whether the input value was thenable.
  * @private
  */
-CancellablePromise.maybeThen_ = function(value, onFulfilled, onRejected, context) {
-  if (value instanceof CancellablePromise) {
-    value.thenVoid(onFulfilled, onRejected, context);
-    return true;
-  } else if (Thenable.isImplementedBy(value)) {
-    value = /** @type {!Thenable} */ (value);
-    value.then(onFulfilled, onRejected, context);
-    return true;
-  } else if (isObject(value)) {
-    try {
-      var then = value['then'];
-      if (isFunction(then)) {
-        CancellablePromise.tryThen_(value, then, onFulfilled, onRejected, context);
-        return true;
-      }
-    } catch (e) {
-      onRejected.call(context, e);
-      return true;
-    }
-  }
+CancellablePromise.maybeThen_ = function(
+	value,
+	onFulfilled,
+	onRejected,
+	context
+) {
+	if (value instanceof CancellablePromise) {
+		value.thenVoid(onFulfilled, onRejected, context);
 
-  return false;
+		return true;
+	} else if (Thenable.isImplementedBy(value)) {
+		value = /** @type {!Thenable} */ (value);
+		value.then(onFulfilled, onRejected, context);
+
+		return true;
+	} else if (isObject(value)) {
+		try {
+			let then = value['then'];
+
+			if (isFunction(then)) {
+				CancellablePromise.tryThen_(
+					value,
+					then,
+					onFulfilled,
+					onRejected,
+					context
+				);
+
+				return true;
+			}
+		} catch (e) {
+			onRejected.call(context, e);
+
+			return true;
+		}
+	}
+
+	return false;
 };
-
 
 /**
  * Attempts to call the {@code then} method on an object in the hopes that it is
@@ -980,30 +1066,33 @@ CancellablePromise.maybeThen_ = function(value, onFulfilled, onRejected, context
  * @private
  */
 CancellablePromise.tryThen_ = function(
-    thenable, then, onFulfilled, onRejected, context) {
+	thenable,
+	then,
+	onFulfilled,
+	onRejected,
+	context
+) {
+	let called = false;
+	let resolve = function(value) {
+		if (!called) {
+			called = true;
+			onFulfilled.call(context, value);
+		}
+	};
 
-  var called = false;
-  var resolve = function(value) {
-    if (!called) {
-      called = true;
-      onFulfilled.call(context, value);
-    }
-  };
+	let reject = function(reason) {
+		if (!called) {
+			called = true;
+			onRejected.call(context, reason);
+		}
+	};
 
-  var reject = function(reason) {
-    if (!called) {
-      called = true;
-      onRejected.call(context, reason);
-    }
-  };
-
-  try {
-    then.call(thenable, resolve, reject);
-  } catch (e) {
-    reject(e);
-  }
+	try {
+		then.call(thenable, resolve, reject);
+	} catch (e) {
+		reject(e);
+	}
 };
-
 
 /**
  * Executes the pending callbacks of a settled Promise after a timeout.
@@ -1022,70 +1111,70 @@ CancellablePromise.tryThen_ = function(
  * @private
  */
 CancellablePromise.prototype.scheduleCallbacks_ = function() {
-  if (!this.executing_) {
-    this.executing_ = true;
-    async.run(this.executeCallbacks_, this);
-  }
+	if (!this.executing_) {
+		this.executing_ = true;
+		async.run(this.executeCallbacks_, this);
+	}
 };
-
 
 /**
  * @return {boolean} Whether there are any pending callbacks queued.
  * @private
  */
 CancellablePromise.prototype.hasEntry_ = function() {
-  return !!this.callbackEntries_;
+	return !!this.callbackEntries_;
 };
-
 
 /**
  * @param {CancellablePromise.CallbackEntry_} entry
  * @private
  */
 CancellablePromise.prototype.queueEntry_ = function(entry) {
-  if (this.callbackEntriesTail_) {
-    this.callbackEntriesTail_.next = entry;
-    this.callbackEntriesTail_ = entry;
-  } else {
-    // It the work queue was empty set the head too.
-    this.callbackEntries_ = entry;
-    this.callbackEntriesTail_ = entry;
-  }
-};
+	if (this.callbackEntriesTail_) {
+		this.callbackEntriesTail_.next = entry;
+		this.callbackEntriesTail_ = entry;
+	} else {
+		// It the work queue was empty set the head too.
 
+		this.callbackEntries_ = entry;
+		this.callbackEntriesTail_ = entry;
+	}
+};
 
 /**
  * @return {CancellablePromise.CallbackEntry_} entry
  * @private
  */
 CancellablePromise.prototype.popEntry_ = function() {
-  var entry = null;
-  if (this.callbackEntries_) {
-    entry = this.callbackEntries_;
-    this.callbackEntries_ = entry.next;
-    entry.next = null;
-  }
-  // It the work queue is empty clear the tail too.
-  if (!this.callbackEntries_) {
-    this.callbackEntriesTail_ = null;
-  }
-  return entry;
-};
+	let entry = null;
 
+	if (this.callbackEntries_) {
+		entry = this.callbackEntries_;
+		this.callbackEntries_ = entry.next;
+		entry.next = null;
+	}
+	// It the work queue is empty clear the tail too.
+
+	if (!this.callbackEntries_) {
+		this.callbackEntriesTail_ = null;
+	}
+
+	return entry;
+};
 
 /**
  * @param {CancellablePromise.CallbackEntry_} previous
  * @private
  */
 CancellablePromise.prototype.removeEntryAfter_ = function(previous) {
-  // If the last entry is being removed, update the tail
-  if (previous.next == this.callbackEntriesTail_) {
-    this.callbackEntriesTail_ = previous;
-  }
+	// If the last entry is being removed, update the tail
 
-  previous.next = previous.next.next;
+	if (previous.next == this.callbackEntriesTail_) {
+		this.callbackEntriesTail_ = previous;
+	}
+
+	previous.next = previous.next.next;
 };
-
 
 /**
  * Executes all pending callbacks for this Promise.
@@ -1093,16 +1182,16 @@ CancellablePromise.prototype.removeEntryAfter_ = function(previous) {
  * @private
  */
 CancellablePromise.prototype.executeCallbacks_ = function() {
-  var entry = null;
-  while (entry = this.popEntry_()) {
-    if (CancellablePromise.LONG_STACK_TRACES) {
-      this.currentStep_++;
-    }
-    this.executeCallback_(entry, this.state_, this.result_);
-  }
-  this.executing_ = false;
-};
+	let entry = null;
 
+	while ((entry = this.popEntry_())) {
+		if (CancellablePromise.LONG_STACK_TRACES) {
+			this.currentStep_++;
+		}
+		this.executeCallback_(entry, this.state_, this.result_);
+	}
+	this.executing_ = false;
+};
 
 /**
  * Executes a pending callback for this Promise. Invokes an {@code onFulfilled}
@@ -1116,32 +1205,44 @@ CancellablePromise.prototype.executeCallbacks_ = function() {
  * @private
  */
 CancellablePromise.prototype.executeCallback_ = function(
-    callbackEntry, state, result) {
-  // Cancel an unhandled rejection if the then/thenVoid call had an onRejected.
-  if (state == CancellablePromise.State_.REJECTED && callbackEntry.onRejected &&
-      !callbackEntry.always) {
-    this.removeUnhandledRejection_();
-  }
+	callbackEntry,
+	state,
+	result
+) {
+	// Cancel an unhandled rejection if the then/thenVoid call had an onRejected.
 
-  if (callbackEntry.child) {
-    // When the parent is settled, the child no longer needs to hold on to it,
-    // as the parent can no longer be canceled.
-    callbackEntry.child.parent_ = null;
-    CancellablePromise.invokeCallback_(callbackEntry, state, result);
-  } else {
-    // Callbacks created with thenAlways or thenVoid do not have the rejection
-    // handling code normally set up in the child Promise.
-    try {
-      callbackEntry.always ?
-          callbackEntry.onFulfilled.call(callbackEntry.context) :
-          CancellablePromise.invokeCallback_(callbackEntry, state, result);
-    } catch (err) {
-      CancellablePromise.handleRejection_.call(null, err);
-    }
-  }
-  CancellablePromise.returnEntry_(callbackEntry);
+	if (
+		state == CancellablePromise.State_.REJECTED &&
+		callbackEntry.onRejected &&
+		!callbackEntry.always
+	) {
+		this.removeUnhandledRejection_();
+	}
+
+	if (callbackEntry.child) {
+		// When the parent is settled, the child no longer needs to hold on to it,
+		// as the parent can no longer be canceled.
+
+		callbackEntry.child.parent_ = null;
+		CancellablePromise.invokeCallback_(callbackEntry, state, result);
+	} else {
+		// Callbacks created with thenAlways or thenVoid do not have the rejection
+		// handling code normally set up in the child Promise.
+
+		try {
+			callbackEntry.always
+				? callbackEntry.onFulfilled.call(callbackEntry.context)
+				: CancellablePromise.invokeCallback_(
+						callbackEntry,
+						state,
+						result
+				  );
+		} catch (err) {
+			CancellablePromise.handleRejection_.call(null, err);
+		}
+	}
+	CancellablePromise.returnEntry_(callbackEntry);
 };
-
 
 /**
  * Executes the onFulfilled or onRejected callback for a callbackEntry.
@@ -1152,13 +1253,12 @@ CancellablePromise.prototype.executeCallback_ = function(
  * @private
  */
 CancellablePromise.invokeCallback_ = function(callbackEntry, state, result) {
-  if (state == CancellablePromise.State_.FULFILLED) {
-    callbackEntry.onFulfilled.call(callbackEntry.context, result);
-  } else if (callbackEntry.onRejected) {
-    callbackEntry.onRejected.call(callbackEntry.context, result);
-  }
+	if (state == CancellablePromise.State_.FULFILLED) {
+		callbackEntry.onFulfilled.call(callbackEntry.context, result);
+	} else if (callbackEntry.onRejected) {
+		callbackEntry.onRejected.call(callbackEntry.context, result);
+	}
 };
-
 
 /**
  * Records a stack trace entry for functions that call {@code then} or the
@@ -1169,18 +1269,19 @@ CancellablePromise.invokeCallback_ = function(callbackEntry, state, result) {
  * @private
  */
 CancellablePromise.prototype.addStackTrace_ = function(err) {
-  if (CancellablePromise.LONG_STACK_TRACES && isString(err.stack)) {
-    // Extract the third line of the stack trace, which is the entry for the
-    // user function that called into Promise code.
-    var trace = err.stack.split('\n', 4)[3];
-    var message = err.message;
+	if (CancellablePromise.LONG_STACK_TRACES && isString(err.stack)) {
+		// Extract the third line of the stack trace, which is the entry for the
+		// user function that called into Promise code.
 
-    // Pad the message to align the traces.
-    message += Array(11 - message.length).join(' ');
-    this.stack_.push(message + trace);
-  }
+		let trace = err.stack.split('\n', 4)[3];
+		let message = err.message;
+
+		// Pad the message to align the traces.
+
+		message += Array(11 - message.length).join(' ');
+		this.stack_.push(message + trace);
+	}
 };
-
 
 /**
  * Adds extra stack trace information to an exception for the list of
@@ -1192,25 +1293,33 @@ CancellablePromise.prototype.addStackTrace_ = function(err) {
  * @private
  */
 CancellablePromise.prototype.appendLongStack_ = function(err) {
-  if (CancellablePromise.LONG_STACK_TRACES && err && isString(err.stack) &&
-      this.stack_.length) {
-    var longTrace = ['Promise trace:'];
+	if (
+		CancellablePromise.LONG_STACK_TRACES &&
+		err &&
+		isString(err.stack) &&
+		this.stack_.length
+	) {
+		let longTrace = ['Promise trace:'];
 
-    for (var promise = this; promise; promise = promise.parent_) {
-      for (var i = this.currentStep_; i >= 0; i--) {
-        longTrace.push(promise.stack_[i]);
-      }
-      longTrace.push(
-          'Value: ' +
-          '[' + (promise.state_ == CancellablePromise.State_.REJECTED ? 'REJECTED' :
-                                                                  'FULFILLED') +
-          '] ' +
-          '<' + String(promise.result_) + '>');
-    }
-    err.stack += '\n\n' + longTrace.join('\n');
-  }
+		for (let promise = this; promise; promise = promise.parent_) {
+			for (let i = this.currentStep_; i >= 0; i--) {
+				longTrace.push(promise.stack_[i]);
+			}
+			longTrace.push(
+				'Value: ' +
+					'[' +
+					(promise.state_ == CancellablePromise.State_.REJECTED
+						? 'REJECTED'
+						: 'FULFILLED') +
+					'] ' +
+					'<' +
+					String(promise.result_) +
+					'>'
+			);
+		}
+		err.stack += '\n\n' + longTrace.join('\n');
+	}
 };
-
 
 /**
  * Marks this rejected Promise as having being handled. Also marks any parent
@@ -1220,18 +1329,17 @@ CancellablePromise.prototype.appendLongStack_ = function(err) {
  * @private
  */
 CancellablePromise.prototype.removeUnhandledRejection_ = function() {
-  if (CancellablePromise.UNHANDLED_REJECTION_DELAY > 0) {
-    for (var p = this; p && p.unhandledRejectionId_; p = p.parent_) {
-      clearTimeout(p.unhandledRejectionId_);
-      p.unhandledRejectionId_ = 0;
-    }
-  } else if (CancellablePromise.UNHANDLED_REJECTION_DELAY == 0) {
-    for (var p = this; p && p.hadUnhandledRejection_; p = p.parent_) {
-      p.hadUnhandledRejection_ = false;
-    }
-  }
+	if (CancellablePromise.UNHANDLED_REJECTION_DELAY > 0) {
+		for (var p = this; p && p.unhandledRejectionId_; p = p.parent_) {
+			clearTimeout(p.unhandledRejectionId_);
+			p.unhandledRejectionId_ = 0;
+		}
+	} else if (CancellablePromise.UNHANDLED_REJECTION_DELAY == 0) {
+		for (var p = this; p && p.hadUnhandledRejection_; p = p.parent_) {
+			p.hadUnhandledRejection_ = false;
+		}
+	}
 };
-
 
 /**
  * Marks this rejected Promise as unhandled. If no {@code onRejected} callback
@@ -1245,23 +1353,21 @@ CancellablePromise.prototype.removeUnhandledRejection_ = function() {
  * @private
  */
 CancellablePromise.addUnhandledRejection_ = function(promise, reason) {
-  if (CancellablePromise.UNHANDLED_REJECTION_DELAY > 0) {
-    promise.unhandledRejectionId_ = setTimeout(function() {
-      promise.appendLongStack_(reason);
-      CancellablePromise.handleRejection_.call(null, reason);
-    }, CancellablePromise.UNHANDLED_REJECTION_DELAY);
-
-  } else if (CancellablePromise.UNHANDLED_REJECTION_DELAY == 0) {
-    promise.hadUnhandledRejection_ = true;
-    async.run(function() {
-      if (promise.hadUnhandledRejection_) {
-        promise.appendLongStack_(reason);
-        CancellablePromise.handleRejection_.call(null, reason);
-      }
-    });
-  }
+	if (CancellablePromise.UNHANDLED_REJECTION_DELAY > 0) {
+		promise.unhandledRejectionId_ = setTimeout(function() {
+			promise.appendLongStack_(reason);
+			CancellablePromise.handleRejection_.call(null, reason);
+		}, CancellablePromise.UNHANDLED_REJECTION_DELAY);
+	} else if (CancellablePromise.UNHANDLED_REJECTION_DELAY == 0) {
+		promise.hadUnhandledRejection_ = true;
+		async.run(function() {
+			if (promise.hadUnhandledRejection_) {
+				promise.appendLongStack_(reason);
+				CancellablePromise.handleRejection_.call(null, reason);
+			}
+		});
+	}
 };
-
 
 /**
  * A method that is invoked with the rejection reasons for Promises that are
@@ -1270,7 +1376,6 @@ CancellablePromise.addUnhandledRejection_ = function(promise, reason) {
  * @private
  */
 CancellablePromise.handleRejection_ = async.throwException;
-
 
 /**
  * Sets a handler that will be called with reasons from unhandled rejected
@@ -1285,10 +1390,8 @@ CancellablePromise.handleRejection_ = async.throwException;
  *     rejected Promises. Defaults to {@code async.throwException}.
  */
 CancellablePromise.setUnhandledRejectionHandler = function(handler) {
-  CancellablePromise.handleRejection_ = handler;
+	CancellablePromise.handleRejection_ = handler;
 };
-
-
 
 /**
  * Error used as a rejection reason for canceled Promises.
@@ -1299,19 +1402,17 @@ CancellablePromise.setUnhandledRejectionHandler = function(handler) {
  * @final
  */
 CancellablePromise.CancellationError = class extends Error {
-  constructor(opt_message) {
-     super(opt_message);
+	constructor(opt_message) {
+		super(opt_message);
 
-     if (opt_message) {
-       this.message = opt_message;
-     }
-   }
+		if (opt_message) {
+			this.message = opt_message;
+		}
+	}
 };
 
 /** @override */
 CancellablePromise.CancellationError.prototype.name = 'cancel';
-
-
 
 /**
  * Internal implementation of the resolver interface.
@@ -1326,15 +1427,15 @@ CancellablePromise.CancellationError.prototype.name = 'cancel';
  * @template TYPE
  */
 CancellablePromise.Resolver_ = function(promise, resolve, reject) {
-  /** @const */
-  this.promise = promise;
+	/** @const */
+	this.promise = promise;
 
-  /** @const */
-  this.resolve = resolve;
+	/** @const */
+	this.resolve = resolve;
 
-  /** @const */
-  this.reject = reject;
+	/** @const */
+	this.reject = reject;
 };
 
-export {CancellablePromise};
+export { CancellablePromise };
 export default CancellablePromise;
