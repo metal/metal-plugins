@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+/* eslint-disable */
 
 'use strict';
 
@@ -22,7 +23,7 @@
  * @extends {IThenable.<TYPE>}
  * @template TYPE
  */
-var Thenable = function() {};
+let Thenable = function() {};
 
 /**
  * Adds callbacks that will operate on the result of the Thenable, returning a
@@ -53,7 +54,6 @@ var Thenable = function() {};
  */
 Thenable.prototype.then = function() {};
 
-
 /**
  * An expando property to indicate that an object implements
  * {@code Thenable}.
@@ -63,7 +63,6 @@ Thenable.prototype.then = function() {};
  * @const
  */
 Thenable.IMPLEMENTED_BY_PROP = '$goog_Thenable';
-
 
 /**
  * Marks a given class (constructor) as an implementation of Thenable, so
@@ -76,10 +75,9 @@ Thenable.IMPLEMENTED_BY_PROP = '$goog_Thenable';
  *     corresponding class must have already implemented the interface.
  */
 Thenable.addImplementation = function(ctor) {
-  ctor.prototype.then = ctor.prototype.then;
-  ctor.prototype.$goog_Thenable = true;
+	ctor.prototype.then = ctor.prototype.then;
+	ctor.prototype.$goog_Thenable = true;
 };
-
 
 /**
  * @param {*} object
@@ -87,15 +85,16 @@ Thenable.addImplementation = function(ctor) {
  *     The class/superclass of the instance must call {@code addImplementation}.
  */
 Thenable.isImplementedBy = function(object) {
-  if (!object) {
-    return false;
-  }
-  try {
-    return !!object.$goog_Thenable;
-  } catch (e) {
-    // Property access seems to be forbidden.
-    return false;
-  }
+	if (!object) {
+		return false;
+	}
+	try {
+		return !!object.$goog_Thenable;
+	} catch (e) {
+		// Property access seems to be forbidden.
+
+		return false;
+	}
 };
 
 export default Thenable;
