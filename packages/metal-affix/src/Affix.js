@@ -1,7 +1,7 @@
 'use strict';
 
 import core from 'metal';
-import { dom, DomEventEmitterProxy } from 'metal-dom';
+import {dom, DomEventEmitterProxy} from 'metal-dom';
 import State from 'metal-state';
 import EventEmitter from 'metal-events';
 import Position from 'metal-position';
@@ -13,14 +13,19 @@ class Affix extends State {
 	/**
 	 * @inheritDoc
 	 */
-	constructor(opt_config) {
-		super(opt_config);
+	constructor(optConfig) {
+		super(optConfig);
 
 		if (!Affix.emitter_) {
 			Affix.emitter_ = new EventEmitter();
-			Affix.proxy_ = new DomEventEmitterProxy(document, Affix.emitter_, null, {
-				scroll: true
-			});
+			Affix.proxy_ = new DomEventEmitterProxy(
+				document,
+				Affix.emitter_,
+				null,
+				{
+					scroll: true,
+				}
+			);
 		}
 
 		/**
@@ -35,7 +40,10 @@ class Affix extends State {
 		 * @type {EventHandle}
 		 * @protected
 		 */
-		this.scrollHandle_ = Affix.emitter_.on('scroll', this.checkPosition.bind(this));
+		this.scrollHandle_ = Affix.emitter_.on(
+			'scroll',
+			this.checkPosition.bind(this)
+		);
 
 		this.on('elementChanged', this.checkPosition);
 		this.on('offsetTopChanged', this.checkPosition);
@@ -47,7 +55,14 @@ class Affix extends State {
 	 * @inheritDoc
 	 */
 	disposeInternal() {
-		dom.removeClasses(this.element, Affix.Position.Bottom + ' ' + Affix.Position.Default + ' ' + Affix.Position.Top);
+		dom.removeClasses(
+			this.element,
+			Affix.Position.Bottom +
+				' ' +
+				Affix.Position.Default +
+				' ' +
+				Affix.Position.Top
+		);
 		this.scrollHandle_.dispose();
 		super.disposeInternal();
 	}
@@ -75,9 +90,15 @@ class Affix extends State {
 		if (!core.isDef(this.offsetBottom)) {
 			return false;
 		}
-		var clientHeight = Position.getHeight(this.scrollElement);
-		var scrollElementClientHeight = Position.getClientHeight(this.scrollElement);
-		return Position.getScrollTop(this.scrollElement) + scrollElementClientHeight >= clientHeight - this.offsetBottom;
+		let clientHeight = Position.getHeight(this.scrollElement);
+		let scrollElementClientHeight = Position.getClientHeight(
+			this.scrollElement
+		);
+		return (
+			Position.getScrollTop(this.scrollElement) +
+				scrollElementClientHeight >=
+			clientHeight - this.offsetBottom
+		);
 	}
 
 	/**
@@ -112,7 +133,7 @@ class Affix extends State {
 Affix.Position = {
 	Top: 'affix-top',
 	Bottom: 'affix-bottom',
-	Default: 'affix'
+	Default: 'affix',
 };
 
 Affix.STATE = {
@@ -123,7 +144,7 @@ Affix.STATE = {
 	 */
 	scrollElement: {
 		setter: dom.toElement,
-		value: document
+		value: document,
 	},
 
 	/**
@@ -131,7 +152,7 @@ Affix.STATE = {
 	 * @type {number}
 	 */
 	offsetTop: {
-		validator: core.isNumber
+		validator: core.isNumber,
 	},
 
 	/**
@@ -139,7 +160,7 @@ Affix.STATE = {
 	 * @type {number}
 	 */
 	offsetBottom: {
-		validator: core.isNumber
+		validator: core.isNumber,
 	},
 
 	/**
@@ -147,9 +168,9 @@ Affix.STATE = {
 	 * @type {Element}
 	 */
 	element: {
-		setter: dom.toElement
-	}
+		setter: dom.toElement,
+	},
 };
 
-export { Affix };
+export {Affix};
 export default Affix;
