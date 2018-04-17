@@ -10,11 +10,15 @@ import State from 'metal-state';
 class Clipboard extends State {
 	/**
 	 * Delegates a click event to the passed selector.
+	 * @param {*} optConfig
+	 * @constructor
 	 */
-	constructor(opt_config) {
-		super(opt_config);
+	constructor(optConfig) {
+		super(optConfig);
 
-		this.listener_ = dom.on(this.selector, 'click', (e) => this.initialize(e));
+		this.listener_ = dom.on(this.selector, 'click', e =>
+			this.initialize(e)
+		);
 	}
 
 	/**
@@ -43,7 +47,7 @@ class Clipboard extends State {
 			action: this.action(e.delegateTarget),
 			target: this.target(e.delegateTarget),
 			text: this.text(e.delegateTarget),
-			trigger: e.delegateTarget
+			trigger: e.delegateTarget,
 		});
 	}
 }
@@ -63,7 +67,7 @@ Clipboard.STATE = {
 		validator: core.isFunction,
 		value: function(delegateTarget) {
 			return delegateTarget.getAttribute('data-action');
-		}
+		},
 	},
 
 	/**
@@ -72,7 +76,7 @@ Clipboard.STATE = {
 	 */
 	selector: {
 		value: '[data-clipboard]',
-		validator: core.isString
+		validator: core.isString,
 	},
 
 	/**
@@ -83,8 +87,10 @@ Clipboard.STATE = {
 	target: {
 		validator: core.isFunction,
 		value: function(delegateTarget) {
-			return document.querySelector(delegateTarget.getAttribute('data-target'));
-		}
+			return document.querySelector(
+				delegateTarget.getAttribute('data-target')
+			);
+		},
 	},
 
 	/**
@@ -95,8 +101,8 @@ Clipboard.STATE = {
 		validator: core.isFunction,
 		value: function(delegateTarget) {
 			return delegateTarget.getAttribute('data-text');
-		}
-	}
+		},
+	},
 };
 
 /**
@@ -105,9 +111,11 @@ Clipboard.STATE = {
 class ClipboardAction extends State {
 	/**
 	 * Initializes selection either from a `text` or `target` state.
+	 * @param {*} optConfig
+	 * @constructor
 	 */
-	constructor(opt_config) {
-		super(opt_config);
+	constructor(optConfig) {
+		super(optConfig);
 
 		if (this.text) {
 			this.selectValue();
@@ -160,13 +168,13 @@ class ClipboardAction extends State {
 				action: this.action,
 				text: this.selectedText,
 				trigger: this.trigger,
-				clearSelection: this.clearSelection.bind(this)
+				clearSelection: this.clearSelection.bind(this),
 			});
 		} else {
 			this.host.emit('error', {
 				action: this.action,
 				trigger: this.trigger,
-				clearSelection: this.clearSelection.bind(this)
+				clearSelection: this.clearSelection.bind(this),
 			});
 		}
 	}
@@ -189,7 +197,10 @@ class ClipboardAction extends State {
 	 * Selects the content from element passed on `target` state.
 	 */
 	selectTarget() {
-		if (this.target.nodeName === 'INPUT' || this.target.nodeName === 'TEXTAREA') {
+		if (
+			this.target.nodeName === 'INPUT' ||
+			this.target.nodeName === 'TEXTAREA'
+		) {
 			this.target.select();
 			this.selectedText = this.target.value;
 		} else {
@@ -209,7 +220,11 @@ class ClipboardAction extends State {
 	 */
 	selectValue() {
 		this.removeFakeElement();
-		this.removeFakeHandler = dom.once(document, 'click', this.removeFakeElement.bind(this));
+		this.removeFakeHandler = dom.once(
+			document,
+			'click',
+			this.removeFakeElement.bind(this)
+		);
 
 		this.fake = document.createElement('textarea');
 		this.fake.style.position = 'fixed';
@@ -240,7 +255,7 @@ ClipboardAction.STATE = {
 		value: 'copy',
 		validator: function(val) {
 			return val === 'copy' || val === 'cut';
-		}
+		},
 	},
 
 	/**
@@ -250,7 +265,7 @@ ClipboardAction.STATE = {
 	host: {
 		validator: function(val) {
 			return val instanceof Clipboard;
-		}
+		},
 	},
 
 	/**
@@ -258,7 +273,7 @@ ClipboardAction.STATE = {
 	 * @type {string}
 	 */
 	selectedText: {
-		validator: core.isString
+		validator: core.isString,
 	},
 
 	/**
@@ -266,7 +281,7 @@ ClipboardAction.STATE = {
 	 * @type {Element}
 	 */
 	target: {
-		validator: core.isElement
+		validator: core.isElement,
 	},
 
 	/**
@@ -274,7 +289,7 @@ ClipboardAction.STATE = {
 	 * @type {string}
 	 */
 	text: {
-		validator: core.isString
+		validator: core.isString,
 	},
 
 	/**
@@ -282,9 +297,9 @@ ClipboardAction.STATE = {
 	 * @type {!Element}
 	 */
 	trigger: {
-		validator: core.isElement
-	}
+		validator: core.isElement,
+	},
 };
 
-export { Clipboard, ClipboardAction };
+export {Clipboard, ClipboardAction};
 export default Clipboard;
