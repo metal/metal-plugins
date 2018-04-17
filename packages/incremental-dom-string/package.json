@@ -1,0 +1,42 @@
+{
+  "name": "incremental-dom-string",
+  "version": "0.0.2",
+  "description": "Ability to render Incremental DOM virtual elements into strings on the server and the client.",
+  "scripts": {
+    "build": "gulp build",
+    "coverage": "nyc --reporter=lcov --reporter=text npm test",
+    "lint": "gulp lint",
+    "prepublish": "gulp build",
+    "test": "gulp test"
+  },
+  "author": "Eduardo Lundgren <eduardolundgren@gmail.com>",
+  "license": "BSD-3-Clause",
+  "main": "./dist/incremental-dom-string.js",
+  "files": [
+    "index.js",
+    "dist",
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/metal/incremental-dom-string.git"
+  },
+  "devDependencies": {
+    "babel-preset-env": "^1.6.1",
+    "babel-register": "^6.23.0",
+    "chai": "^3.5.0",
+    "eslint": "^3.13.1",
+    "eslint-config-google": "^0.7.1",
+    "eslint-loader": "^1.6.1",
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^3.0.1",
+    "gulp-mocha": "^3.0.1",
+    "mocha": "^3.2.0",
+    "nyc": "^10.1.2",
+    "rollup-plugin-babel": "^2.7.1",
+    "rollup-stream": "^1.19.0",
+    "sinon": "^1.17.7",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
+  }
+}
