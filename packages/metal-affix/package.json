@@ -1,0 +1,39 @@
+{
+  "name": "metal-affix",
+  "version": "2.0.0",
+  "description": "Metal's affix component",
+  "license": "BSD",
+  "repository": "metal/metal-affix",
+  "engines": {
+    "node": ">=0.12.0",
+    "npm": ">=3.0.0"
+  },
+  "jsnext:main": "src/Affix.js",
+  "main": "lib/Affix.js",
+  "files": [
+    "lib",
+    "src",
+    "test"
+  ],
+  "scripts": {
+    "build": "webpack",
+    "compile": "babel --presets env -d lib/ src/",
+    "prepublish": "npm run compile"
+  },
+  "keywords": [
+    "metal"
+  ],
+  "dependencies": {
+    "metal": "^2.0.0",
+    "metal-state": "^2.0.0",
+    "metal-dom": "^2.0.0",
+    "metal-events": "^2.0.0",
+    "metal-position": "^2.0.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.4.5",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "webpack": "^3.5.5"
+  }
+}
