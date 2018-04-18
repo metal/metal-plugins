@@ -32,6 +32,7 @@ describe('Clipboard', function() {
 
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
 
+			// eslint-disable-next-line
 			clipboard.on('sucess', e => {
 				assert.strictEqual(1, document.execCommand.callCount);
 				assert.strictEqual('copy', document.execCommand.args[0][0]);
@@ -39,10 +40,6 @@ describe('Clipboard', function() {
 					'From data-text',
 					window.getSelection().toString()
 				);
-			});
-
-			clipboard.on('error', e => {
-				console.error(messageFallback(e.action));
 			});
 		});
 
@@ -58,7 +55,7 @@ describe('Clipboard', function() {
 				},
 			});
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
-
+			// eslint-disable-next-line
 			clipboard.on('sucess', e => {
 				assert.strictEqual(
 					'From text state fn',
@@ -66,10 +63,6 @@ describe('Clipboard', function() {
 				);
 				assert.strictEqual(1, document.execCommand.callCount);
 				assert.strictEqual('copy', document.execCommand.args[0][0]);
-			});
-
-			clipboard.on('error', e => {
-				console.error(messageFallback(e.action));
 			});
 		});
 	});
@@ -94,13 +87,13 @@ describe('Clipboard', function() {
 			});
 
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
-
+			// eslint-disable-next-line
 			clipboard.on('sucess', e => {
 				assert.strictEqual(0, document.execCommand.callCount);
 			});
 
 			dom.triggerEvent(dom.toElement('.copy'), 'click');
-
+			// eslint-disable-next-line
 			clipboard.on('sucess', e => {
 				assert.strictEqual(
 					'copy class',
@@ -111,7 +104,7 @@ describe('Clipboard', function() {
 			});
 
 			dom.triggerEvent(document.querySelectorAll('.copy')[1], 'click');
-
+			// eslint-disable-next-line
 			clipboard.on('sucess', e => {
 				assert.strictEqual(
 					'copy class 2',
@@ -119,10 +112,6 @@ describe('Clipboard', function() {
 				);
 				assert.strictEqual(2, document.execCommand.callCount);
 				assert.strictEqual('copy', document.execCommand.args[1][0]);
-			});
-
-			clipboard.on('error', e => {
-				console.error(messageFallback(e.action));
 			});
 		});
 	});
@@ -136,7 +125,7 @@ describe('Clipboard', function() {
 
 			clipboard = new Clipboard();
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
-
+			// eslint-disable-next-line
 			clipboard.on('sucess', e => {
 				assert.strictEqual(
 					'From data-text',
@@ -144,10 +133,6 @@ describe('Clipboard', function() {
 				);
 				assert.strictEqual(1, document.execCommand.callCount);
 				assert.strictEqual('cut', document.execCommand.args[0][0]);
-			});
-
-			clipboard.on('error', e => {
-				console.error(messageFallback(e.action));
 			});
 		});
 
@@ -163,7 +148,7 @@ describe('Clipboard', function() {
 				},
 			});
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
-
+			// eslint-disable-next-line
 			clipboard.on('sucess', e => {
 				assert.strictEqual(
 					'From data-text',
@@ -171,10 +156,6 @@ describe('Clipboard', function() {
 				);
 				assert.strictEqual(1, document.execCommand.callCount);
 				assert.strictEqual('copy', document.execCommand.args[0][0]);
-			});
-
-			clipboard.on('error', e => {
-				console.error(messageFallback(e.action));
 			});
 		});
 	});
@@ -188,19 +169,15 @@ describe('Clipboard', function() {
 			clipboard = new Clipboard();
 
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
-
+			// eslint-disable-next-line
 			clipboard.on('sucess', e => {
 				assert.ok(document.querySelector('textarea'));
 			});
 
 			dom.triggerEvent(document, 'click');
-
+			// eslint-disable-next-line
 			clipboard.on('sucess', e => {
 				assert.ok(!document.querySelector('textarea'));
-			});
-
-			clipboard.on('error', e => {
-				console.error(messageFallback(e.action));
 			});
 		});
 
@@ -212,19 +189,15 @@ describe('Clipboard', function() {
 			clipboard = new Clipboard();
 
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
-
+			// eslint-disable-next-line
 			clipboard.on('sucess', e => {
 				assert.ok(document.querySelector('textarea'));
 			});
 
 			clipboard.dispose();
-
+			// eslint-disable-next-line
 			clipboard.on('sucess', e => {
 				assert.ok(!document.querySelector('textarea'));
-			});
-
-			clipboard.on('error', e => {
-				console.error(messageFallback(e.action));
 			});
 		});
 	});
@@ -242,7 +215,7 @@ describe('Clipboard', function() {
 			clipboard = new Clipboard();
 
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
-
+			// eslint-disable-next-line
 			clipboard.on('sucess', e => {
 				assert.strictEqual(
 					'From text input',
@@ -250,10 +223,6 @@ describe('Clipboard', function() {
 				);
 				assert.strictEqual(1, document.execCommand.callCount);
 				assert.strictEqual('copy', document.execCommand.args[0][0]);
-			});
-
-			clipboard.on('error', e => {
-				console.error(messageFallback(e.action));
 			});
 		});
 
@@ -269,7 +238,7 @@ describe('Clipboard', function() {
 			clipboard = new Clipboard();
 
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
-
+			// eslint-disable-next-line
 			clipboard.on('sucess', e => {
 				assert.strictEqual(
 					'From textarea',
@@ -277,10 +246,6 @@ describe('Clipboard', function() {
 				);
 				assert.strictEqual(1, document.execCommand.callCount);
 				assert.strictEqual('copy', document.execCommand.args[0][0]);
-			});
-
-			clipboard.on('error', e => {
-				console.error(messageFallback(e.action));
 			});
 		});
 
@@ -293,7 +258,7 @@ describe('Clipboard', function() {
 			clipboard = new Clipboard();
 
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
-
+			// eslint-disable-next-line
 			clipboard.on('sucess', e => {
 				assert.strictEqual(
 					'From div',
@@ -301,10 +266,6 @@ describe('Clipboard', function() {
 				);
 				assert.strictEqual(1, document.execCommand.callCount);
 				assert.strictEqual('copy', document.execCommand.args[0][0]);
-			});
-
-			clipboard.on('error', e => {
-				console.error(messageFallback(e.action));
 			});
 		});
 
@@ -322,7 +283,7 @@ describe('Clipboard', function() {
 			});
 
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
-
+			// eslint-disable-next-line
 			clipboard.on('sucess', e => {
 				assert.strictEqual(
 					'From span',
@@ -330,10 +291,6 @@ describe('Clipboard', function() {
 				);
 				assert.strictEqual(1, document.execCommand.callCount);
 				assert.strictEqual('copy', document.execCommand.args[0][0]);
-			});
-
-			clipboard.on('error', e => {
-				console.error(messageFallback(e.action));
 			});
 		});
 	});
@@ -370,7 +327,7 @@ describe('Clipboard', function() {
 			let listener = sinon.stub();
 			clipboard.on('success', listener);
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
-
+			// eslint-disable-next-line
 			clipboard.on('sucess', e => {
 				assert.strictEqual(
 					'From data-text',
