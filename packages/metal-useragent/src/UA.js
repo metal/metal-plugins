@@ -19,9 +19,9 @@ class UA {
 	 * @static
 	 */
 	static getNativeUserAgent() {
-		var navigator = UA.globals.window && UA.globals.window.navigator;
+		let navigator = UA.globals.window && UA.globals.window.navigator;
 		if (navigator) {
-			var userAgent = navigator.userAgent;
+			let userAgent = navigator.userAgent;
 			if (userAgent) {
 				return userAgent;
 			}
@@ -38,9 +38,9 @@ class UA {
 	 * @static
 	 */
 	static getNativePlatform() {
-		var navigator = UA.globals.window && UA.globals.window.navigator;
+		let navigator = UA.globals.window && UA.globals.window.navigator;
 		if (navigator) {
-			var platform = navigator.platform;
+			let platform = navigator.platform;
 			if (platform) {
 				return platform;
 			}
@@ -54,7 +54,7 @@ class UA {
 	 * @return {boolean}
 	 * @private
 	 * @static
-	*/
+	 */
 	static matchPlatform(str) {
 		return UA.platform.indexOf(str) !== -1;
 	}
@@ -65,7 +65,7 @@ class UA {
 	 * @return {boolean}
 	 * @private
 	 * @static
-	*/
+	 */
 	static matchUserAgent(str) {
 		return UA.userAgent.indexOf(str) !== -1;
 	}
@@ -73,6 +73,7 @@ class UA {
 	/**
 	 * Tests the user agent.
 	 * @param {string} userAgent The user agent string.
+	 * @param {string} platform
 	 * @static
 	 */
 	static testUserAgent(userAgent = '', platform = '') {
@@ -137,14 +138,19 @@ class UA {
 		 * @type {boolean}
 		 * @static
 		 */
-		UA.isChrome = (UA.matchUserAgent('Chrome') || UA.matchUserAgent('CriOS')) && !UA.isOpera && !UA.isEdge;
+		UA.isChrome =
+			(UA.matchUserAgent('Chrome') || UA.matchUserAgent('CriOS')) &&
+			!UA.isOpera &&
+			!UA.isEdge;
 
 		/**
 		 * Whether the user's browser is Safari.
 		 * @type {boolean}
 		 * @static
 		 */
-		UA.isSafari = UA.matchUserAgent('Safari') && !(UA.isChrome || UA.isOpera || UA.isEdge);
+		UA.isSafari =
+			UA.matchUserAgent('Safari') &&
+			!(UA.isChrome || UA.isOpera || UA.isEdge);
 
 		/**
 		 * Whether the user's browser is Firefox.
@@ -161,12 +167,12 @@ class UA {
  * @static
  */
 Object.defineProperty(UA, 'globals', {
-  writable: true,
-  value: function() {
-    if (!isServerSide()) {
+	writable: true,
+	value: function() {
+		if (!isServerSide()) {
 			return window;
 		}
-  }
+	},
 });
 
 UA.testUserAgent(UA.getNativeUserAgent(), UA.getNativePlatform());
