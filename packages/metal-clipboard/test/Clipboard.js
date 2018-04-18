@@ -29,14 +29,21 @@ describe('Clipboard', function() {
 			);
 
 			clipboard = new Clipboard();
+
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
 
-			assert.strictEqual(
-				'From data-text',
-				window.getSelection().toString()
-			);
-			assert.strictEqual(1, document.execCommand.callCount);
-			assert.strictEqual('copy', document.execCommand.args[0][0]);
+			clipboard.on('sucess', e => {
+				assert.strictEqual(1, document.execCommand.callCount);
+				assert.strictEqual('copy', document.execCommand.args[0][0]);
+				assert.strictEqual(
+					'From data-text',
+					window.getSelection().toString()
+				);
+			});
+
+			clipboard.on('error', e => {
+				console.error(messageFallback(e.action));
+			});
 		});
 
 		it('should copy text from "text" state fn to clipboard', function() {
@@ -52,12 +59,18 @@ describe('Clipboard', function() {
 			});
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
 
-			assert.strictEqual(
-				'From text state fn',
-				window.getSelection().toString()
-			);
-			assert.strictEqual(1, document.execCommand.callCount);
-			assert.strictEqual('copy', document.execCommand.args[0][0]);
+			clipboard.on('sucess', e => {
+				assert.strictEqual(
+					'From text state fn',
+					window.getSelection().toString()
+				);
+				assert.strictEqual(1, document.execCommand.callCount);
+				assert.strictEqual('copy', document.execCommand.args[0][0]);
+			});
+
+			clipboard.on('error', e => {
+				console.error(messageFallback(e.action));
+			});
 		});
 	});
 
@@ -79,21 +92,38 @@ describe('Clipboard', function() {
 			clipboard = new Clipboard({
 				selector: '.copy',
 			});
+
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
-			assert.strictEqual(0, document.execCommand.callCount);
+
+			clipboard.on('sucess', e => {
+				assert.strictEqual(0, document.execCommand.callCount);
+			});
 
 			dom.triggerEvent(dom.toElement('.copy'), 'click');
-			assert.strictEqual('copy class', window.getSelection().toString());
-			assert.strictEqual(1, document.execCommand.callCount);
-			assert.strictEqual('copy', document.execCommand.args[0][0]);
+
+			clipboard.on('sucess', e => {
+				assert.strictEqual(
+					'copy class',
+					window.getSelection().toString()
+				);
+				assert.strictEqual(1, document.execCommand.callCount);
+				assert.strictEqual('copy', document.execCommand.args[0][0]);
+			});
 
 			dom.triggerEvent(document.querySelectorAll('.copy')[1], 'click');
-			assert.strictEqual(
-				'copy class 2',
-				window.getSelection().toString()
-			);
-			assert.strictEqual(2, document.execCommand.callCount);
-			assert.strictEqual('copy', document.execCommand.args[1][0]);
+
+			clipboard.on('sucess', e => {
+				assert.strictEqual(
+					'copy class 2',
+					window.getSelection().toString()
+				);
+				assert.strictEqual(2, document.execCommand.callCount);
+				assert.strictEqual('copy', document.execCommand.args[1][0]);
+			});
+
+			clipboard.on('error', e => {
+				console.error(messageFallback(e.action));
+			});
 		});
 	});
 
@@ -107,12 +137,18 @@ describe('Clipboard', function() {
 			clipboard = new Clipboard();
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
 
-			assert.strictEqual(
-				'From data-text',
-				window.getSelection().toString()
-			);
-			assert.strictEqual(1, document.execCommand.callCount);
-			assert.strictEqual('cut', document.execCommand.args[0][0]);
+			clipboard.on('sucess', e => {
+				assert.strictEqual(
+					'From data-text',
+					window.getSelection().toString()
+				);
+				assert.strictEqual(1, document.execCommand.callCount);
+				assert.strictEqual('cut', document.execCommand.args[0][0]);
+			});
+
+			clipboard.on('error', e => {
+				console.error(messageFallback(e.action));
+			});
 		});
 
 		it('should copy text to clipboard using the action specified by the action state', function() {
@@ -128,12 +164,18 @@ describe('Clipboard', function() {
 			});
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
 
-			assert.strictEqual(
-				'From data-text',
-				window.getSelection().toString()
-			);
-			assert.strictEqual(1, document.execCommand.callCount);
-			assert.strictEqual('copy', document.execCommand.args[0][0]);
+			clipboard.on('sucess', e => {
+				assert.strictEqual(
+					'From data-text',
+					window.getSelection().toString()
+				);
+				assert.strictEqual(1, document.execCommand.callCount);
+				assert.strictEqual('copy', document.execCommand.args[0][0]);
+			});
+
+			clipboard.on('error', e => {
+				console.error(messageFallback(e.action));
+			});
 		});
 	});
 
@@ -146,10 +188,20 @@ describe('Clipboard', function() {
 			clipboard = new Clipboard();
 
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
-			assert.ok(document.querySelector('textarea'));
+
+			clipboard.on('sucess', e => {
+				assert.ok(document.querySelector('textarea'));
+			});
 
 			dom.triggerEvent(document, 'click');
-			assert.ok(!document.querySelector('textarea'));
+
+			clipboard.on('sucess', e => {
+				assert.ok(!document.querySelector('textarea'));
+			});
+
+			clipboard.on('error', e => {
+				console.error(messageFallback(e.action));
+			});
 		});
 
 		it('should remove fake text element used for copying when Clipboard instance is disposed', function() {
@@ -160,10 +212,20 @@ describe('Clipboard', function() {
 			clipboard = new Clipboard();
 
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
-			assert.ok(document.querySelector('textarea'));
+
+			clipboard.on('sucess', e => {
+				assert.ok(document.querySelector('textarea'));
+			});
 
 			clipboard.dispose();
-			assert.ok(!document.querySelector('textarea'));
+
+			clipboard.on('sucess', e => {
+				assert.ok(!document.querySelector('textarea'));
+			});
+
+			clipboard.on('error', e => {
+				console.error(messageFallback(e.action));
+			});
 		});
 	});
 
@@ -181,12 +243,18 @@ describe('Clipboard', function() {
 
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
 
-			assert.strictEqual(
-				'From text input',
-				window.getSelection().toString()
-			);
-			assert.strictEqual(1, document.execCommand.callCount);
-			assert.strictEqual('copy', document.execCommand.args[0][0]);
+			clipboard.on('sucess', e => {
+				assert.strictEqual(
+					'From text input',
+					window.getSelection().toString()
+				);
+				assert.strictEqual(1, document.execCommand.callCount);
+				assert.strictEqual('copy', document.execCommand.args[0][0]);
+			});
+
+			clipboard.on('error', e => {
+				console.error(messageFallback(e.action));
+			});
 		});
 
 		it('should copy text from textarea element to clipboard', function() {
@@ -202,12 +270,18 @@ describe('Clipboard', function() {
 
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
 
-			assert.strictEqual(
-				'From textarea',
-				window.getSelection().toString()
-			);
-			assert.strictEqual(1, document.execCommand.callCount);
-			assert.strictEqual('copy', document.execCommand.args[0][0]);
+			clipboard.on('sucess', e => {
+				assert.strictEqual(
+					'From textarea',
+					window.getSelection().toString()
+				);
+				assert.strictEqual(1, document.execCommand.callCount);
+				assert.strictEqual('copy', document.execCommand.args[0][0]);
+			});
+
+			clipboard.on('error', e => {
+				console.error(messageFallback(e.action));
+			});
 		});
 
 		it('should copy text from any element to clipboard', function() {
@@ -220,9 +294,18 @@ describe('Clipboard', function() {
 
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
 
-			assert.strictEqual('From div', window.getSelection().toString());
-			assert.strictEqual(1, document.execCommand.callCount);
-			assert.strictEqual('copy', document.execCommand.args[0][0]);
+			clipboard.on('sucess', e => {
+				assert.strictEqual(
+					'From div',
+					window.getSelection().toString()
+				);
+				assert.strictEqual(1, document.execCommand.callCount);
+				assert.strictEqual('copy', document.execCommand.args[0][0]);
+			});
+
+			clipboard.on('error', e => {
+				console.error(messageFallback(e.action));
+			});
 		});
 
 		it('should copy text from the element given in the "target" state', function() {
@@ -240,9 +323,18 @@ describe('Clipboard', function() {
 
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
 
-			assert.strictEqual('From span', window.getSelection().toString());
-			assert.strictEqual(1, document.execCommand.callCount);
-			assert.strictEqual('copy', document.execCommand.args[0][0]);
+			clipboard.on('sucess', e => {
+				assert.strictEqual(
+					'From span',
+					window.getSelection().toString()
+				);
+				assert.strictEqual(1, document.execCommand.callCount);
+				assert.strictEqual('copy', document.execCommand.args[0][0]);
+			});
+
+			clipboard.on('error', e => {
+				console.error(messageFallback(e.action));
+			});
 		});
 	});
 
@@ -278,10 +370,13 @@ describe('Clipboard', function() {
 			let listener = sinon.stub();
 			clipboard.on('success', listener);
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
-			assert.strictEqual(
-				'From data-text',
-				window.getSelection().toString()
-			);
+
+			clipboard.on('sucess', e => {
+				assert.strictEqual(
+					'From data-text',
+					window.getSelection().toString()
+				);
+			});
 
 			let event = listener.args[0][0];
 			event.clearSelection();
