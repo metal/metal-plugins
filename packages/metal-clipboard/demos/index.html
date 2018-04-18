@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Demo: Clipboard</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+
+	<script src="../build/globals/clipboard.js"></script>
+
+	<style>
+	body {
+		width: 480px;
+		margin: 0 auto;
+	}
+
+	.glyphicon-link {
+		cursor: pointer;
+	}
+
+	#textarea-btn {
+		margin-top: 10px;
+	}
+	</style>
+</head>
+<body>
+	<h2>Copy text from attribute</h2>
+
+	<button class="btn btn-sm btn-success" data-clipboard data-text="Button" type="button">Copy to clipboard</button>
+
+	<hr>
+
+	<h2>Copy text from another element</h2>
+
+	<div class="input-group">
+		<input id="input" class="form-control" type="text" value="https://github.com/metal/metal-clipboard">
+		<span id="icon-copy" class="input-group-addon" data-clipboard="" data-target="input" type="button"><span class="glyphicon glyphicon-link"></span></span>
+	</div>
+
+	<hr>
+
+	<h2>Cut text from another element</h2>
+
+	<textarea id="textarea" class="form-control" rows="5" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">Mussum ipsum cacilds, vidis litro abertis. Consetis adipiscings elitis. Pra lá , depois divoltis porris, paradis. Paisis, filhis, espiritis santis. Mé faiz elementum girarzis, nisi eros vermeio, in elementis mé pra quem é amistosis quis leo. Manduma pindureta quium dia nois paga.</textarea>
+
+	<button id="textarea-btn" class="btn btn-sm btn-success" data-clipboard data-action="cut" data-target="textarea" type="button">Cut to clipboard</button>
+
+	<hr>
+
+	<h2>Copy text from non-editable element</h2>
+
+	<p id="paragraph">Mussum ipsum cacilds, vidis litro abertis. Consetis adipiscings elitis. Pra lá , depois divoltis porris, paradis. Paisis, filhis, espiritis santis. Mé faiz elementum girarzis, nisi eros vermeio, in elementis mé pra quem é amistosis quis leo. Manduma pindureta quium dia nois paga.</p>
+
+	<button class="btn btn-sm btn-success" data-clipboard data-target="#paragraph">Copy to clipboard</button>
+
+	<script>
+		var clipboard = new metal.Clipboard();
+
+		clipboard.on('success', function(e) {
+			e.clearSelection();
+
+			console.info('Copied!');
+			console.info('Action:', e.action);
+			console.info('Text:', e.text);
+		});
+
+		clipboard.on('error', function(e) {
+			console.warn(messageFallback(e.action));
+		});
+
+		// Simplistic detection, do not use it in production
+    function messageFallback(action) {
+      var actionMsg = '';
+      var actionKey = (action === 'cut' ? 'X' : 'C');
+
+      if(/iPhone|iPad/i.test(navigator.userAgent)) {
+        actionMsg = 'No support :(';
+      }
+      else if (/Mac/i.test(navigator.userAgent)) {
+        actionMsg = 'Press ⌘-' + actionKey + ' to ' + action;
+      }
+      else {
+        actionMsg = 'Press Ctrl-' + actionKey + ' to ' + action;
+      }
+
+      return actionMsg;
+    }
+	</script>
+</body>
+</html>
