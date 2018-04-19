@@ -91,12 +91,10 @@ module.exports = function (config) {
         customLaunchers: batch,
 
         plugins: [
-            'karma-chai',
-            'karma-chrome-launcher',
+            'karma-chai-sinon',
             'karma-mocha',
-            'karma-sinon',
             'karma-webpack',
-            karmaSauceLauncher,
+            karmaSauceLauncher
         ],
 
         reporters: ['dots', 'saucelabs'],
