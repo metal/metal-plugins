@@ -16,7 +16,7 @@ describe('Anim', function() {
 	});
 
 	it('should emulate transitionend after transition-duration', function(done) {
-		var start = Date.now();
+		let start = Date.now();
 		Anim.emulateTransitionEnd(this.element);
 		dom.once(this.element, 'transitionend', function() {
 			assert.ok(Date.now() - start >= 300);
@@ -25,7 +25,7 @@ describe('Anim', function() {
 	});
 
 	it('should emulate animationend after animation-duration interval', function(done) {
-		var start = Date.now();
+		let start = Date.now();
 		Anim.emulateAnimationEnd(this.element);
 		dom.once(this.element, 'animationend', function() {
 			assert.ok(Date.now() - start >= 200);
@@ -34,7 +34,7 @@ describe('Anim', function() {
 	});
 
 	it('should emulate the longest duration when `emulateEnd` is used (transitionend)', function(done) {
-		var listener = sinon.stub();
+		let listener = sinon.stub();
 		dom.once(this.element, 'transitionend', listener);
 		dom.once(this.element, 'animationend', listener);
 		Anim.emulateEnd(this.element);
@@ -48,7 +48,7 @@ describe('Anim', function() {
 	it('should emulate the longest duration when `emulateEnd` is used (animationend)', function(done) {
 		this.element.style.transitionDuration = '0.2s';
 		this.element.style.animationDuration = '0.3s';
-		var listener = sinon.stub();
+		let listener = sinon.stub();
 		dom.once(this.element, 'transitionend', listener);
 		dom.once(this.element, 'animationend', listener);
 		Anim.emulateEnd(this.element);
@@ -73,7 +73,9 @@ describe('Anim', function() {
 	it('should not emulate end event for a specified duration', function(done) {
 		Anim.emulateEnd(this.element, 0);
 		dom.on(this.element, 'animationend', function() {
-			assert.fail('Transition end event must be fired for the same duration');
+			assert.fail(
+				'Transition end event must be fired for the same duration'
+			);
 		});
 		dom.on(this.element, 'transitionend', function() {
 			done();
