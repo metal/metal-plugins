@@ -16,9 +16,9 @@
     "test/**/*.js"
   ],
   "scripts": {
+    "build": "webpack",
     "compile": "babel --presets env -d lib/ src/",
-    "prepublish": "npm run compile",
-    "test": "gulp test"
+    "prepublish": "npm run compile"
   },
   "keywords": [
     "metal"
@@ -30,7 +30,6 @@
   "devDependencies": {
     "babel-cli": "^6.4.5",
     "babel-preset-env": "^1.6.1",
-    "gulp": "^3.8.11",
-    "gulp-metal": "^1.0.0"
+    "webpack": "^3.5.5"
   }
 }
