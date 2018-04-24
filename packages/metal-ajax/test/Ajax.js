@@ -3,6 +3,7 @@
 import Ajax from '../src/Ajax';
 import UA from 'metal-useragent';
 import {MultiMap} from 'metal-structs';
+import sinon from 'sinon';
 
 describe('Ajax', function() {
 	describe('Utils', function() {
@@ -228,24 +229,45 @@ describe('Ajax', function() {
 			}
 		});
 
-		it('should track progress of ajax request', function(done) {
-			this.timeout(30000);
+		beforeEach(function() {
+			this.xhr = sinon.useFakeXMLHttpRequest();
 
+			let requests = (this.requests = []);
+
+			this.xhr.onCreate = function(xhr) {
+				requests.push(xhr);
+			};
+		});
+
+		afterEach(function() {
+			this.xhr.restore();
+		});
+
+		it('should track progress of ajax request', function(done) {
 			const listener = sinon.stub();
 
 			Ajax.request('/base/packages/metal-ajax/test/data/data.json', 'get')
 				.progress(listener)
 				.then(function(xhrResponse) {
 					assert.equal(xhrResponse.status, 200);
+
 					assert.isTrue(listener.callCount > 0);
 
 					for (let i = 0; i < listener.callCount; i++) {
 						const progress = listener.getCall(i).args[0];
 
-						assert.isTrue(progress > 0 && progress < 1);
+						assert.isTrue(progress >= 0 && progress < 1);
 					}
 					done();
 				});
+
+			this.requests[0].onprogress({
+				lengthComputable: true,
+				loaded: 30,
+				total: 100,
+			});
+
+			this.requests[0].respond(200);
 		});
 	});
 });
