@@ -8,6 +8,7 @@ const NAMESPACE = '__METAL_CSS_TRANSISIONS__';
  * Processes an array of components, creating an object with keys and values.
  * If the component does not already have a key, it will be given a unique key.
  * @param {!Array} children Array of metal components.
+ * @return {object} retMap Processed object from an array of components
  */
 export function getChildrenMap(children) {
 	let COUNTER = 1;
@@ -20,7 +21,10 @@ export function getChildrenMap(children) {
 
 	children.forEach(child => {
 		if (child && child.props) {
-			let {props: {key}, tag} = child;
+			let {
+				props: {key},
+				tag
+			} = child;
 
 			if (!key) {
 				if (!tag) {
@@ -47,14 +51,16 @@ export function getChildrenMap(children) {
 	return retMap;
 }
 
-/**
- * Merges two children maps so that there are no duplicates.
- * @param {!Object} next Map of new children components.
- * @param {!Object} prev Map of previous children components.
- */
 const map = new Map();
 
+/**
+ * Merges two children maps so that there are no duplicates.
+ * @param {!Object} nextMap Map of new children components.
+ * @param {!Object} prevMap Map of previous children components.
+ * @return {Object} mergedMap Merged map from two children maps without duplicates.
+ */
 export function mergeChildrenMap(nextMap = map, prevMap = map) {
+	// eslint-disable-next-line
 	function getValueForKey(key) {
 		if (nextMap.has(key)) {
 			return nextMap.get(key);

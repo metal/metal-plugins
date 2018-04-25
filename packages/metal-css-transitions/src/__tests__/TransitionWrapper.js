@@ -52,8 +52,12 @@ describe('TransitionWrapper', function() {
 			render() {
 				return (
 					<TransitionWrapper name="test">
-						<div class="child1" key={1}>Child</div>
-						<div class="child2" key={2}>Child</div>
+						<div class="child1" key={1}>
+							Child
+						</div>
+						<div class="child2" key={2}>
+							Child
+						</div>
 					</TransitionWrapper>
 				);
 			}
@@ -170,8 +174,12 @@ describe('TransitionWrapper', function() {
 		component = new App();
 
 		component.props.children = [
-			<div class="child" key="1">1</div>,
-			<div class="child" key="2">2</div>
+			<div class="child" key="1">
+				1
+			</div>,
+			<div class="child" key="2">
+				2
+			</div>
 		];
 
 		jest.runAllTimers();
@@ -179,9 +187,15 @@ describe('TransitionWrapper', function() {
 		expect(component).toMatchSnapshot();
 
 		component.props.children = [
-			<div class="child" key={3}>3</div>,
-			<div class="child" key={1}>1</div>,
-			<div class="child" key={2}>2</div>
+			<div class="child" key={3}>
+				3
+			</div>,
+			<div class="child" key={1}>
+				1
+			</div>,
+			<div class="child" key={2}>
+				2
+			</div>
 		];
 
 		jest.runAllTimers();
@@ -203,8 +217,12 @@ describe('TransitionWrapper', function() {
 		component = new App();
 
 		component.props.children = [
-			<div class="child" key="1">1</div>,
-			<div class="child" key="2">2</div>
+			<div class="child" key="1">
+				1
+			</div>,
+			<div class="child" key="2">
+				2
+			</div>
 		];
 
 		jest.runAllTimers();
@@ -212,9 +230,15 @@ describe('TransitionWrapper', function() {
 		expect(component).toMatchSnapshot();
 
 		component.props.children = [
-			<div class="child" key="3">3</div>,
-			<div class="child" key="1">1</div>,
-			<div class="child" key="2">2</div>
+			<div class="child" key="3">
+				3
+			</div>,
+			<div class="child" key="1">
+				1
+			</div>,
+			<div class="child" key="2">
+				2
+			</div>
 		];
 
 		jest.runAllTimers();
@@ -263,8 +287,11 @@ describe('TransitionWrapper', function() {
 			render() {
 				return (
 					<TransitionWrapper ref="transitionWrapper" name="test">
-						{this.state.show_ &&
-							<div class="test-child" ref="testChild">2</div>}
+						{this.state.show_ && (
+							<div class="test-child" ref="testChild">
+								2
+							</div>
+						)}
 					</TransitionWrapper>
 				);
 			}
