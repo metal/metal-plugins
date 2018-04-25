@@ -27,6 +27,7 @@
 				"useTabs": true
 			}
 		],
+		"comma-dangle": 0,
 		"semi": 1,
 		"no-bitwise": 0,
 		"curly": 2,
