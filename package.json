@@ -26,7 +26,12 @@
     "chai": "^4.1.2",
     "eslint": "^4.17.0",
     "eslint-config-liferay": "^2.0.18",
+<<<<<<< HEAD
     "istanbul": "^0.4.5",
+=======
+    "eslint-plugin-prettier": "^2.6.0",
+    "eslint-plugin-react": "^7.7.0",
+>>>>>>> Adds missing lint dependencies
     "karma": "^1.1.0",
     "karma-chai-sinon": "^0.1.5",
     "karma-chrome-launcher": "^2.2.0",
