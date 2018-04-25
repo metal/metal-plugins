@@ -19,8 +19,8 @@
     "build": "babel --presets env -d lib/ src/",
     "build:benchmark": "browserify ./benchmark/index.js -o ./benchmark/build/index.js -t [ babelify --presets [ metal-jsx es2015 ] ]",
     "prepublish": "npm run build",
-    "prepush": "npm test:jest",
-    "test:jest": "jest"
+    "test:jest": "jest",
+    "test:watch": "jest --watchAll"
   },
   "author": "Bryce Osterhaus <bryceosterhaus@gmail.com>",
   "keywords": [
