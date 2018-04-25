@@ -91,7 +91,10 @@ module.exports = function (config) {
             },
         },
 
-        exclude: ['packages/metal-promise/**/*.js'],
+        exclude: [
+            'packages/metal-promise/**/*.js',
+            'packages/metal-css-transitions/**/*.js'
+        ],
 
         files: [
             // Since all files will be added, we need to ensure manually that these
