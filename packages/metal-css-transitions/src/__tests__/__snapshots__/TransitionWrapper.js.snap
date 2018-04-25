@@ -2,8 +2,8 @@
 
 exports[`TransitionWrapper renders with multiple children 1`] = `
 <span>
-  <div class="child1 test-appear">Child</div>
-  <div class="child2 test-appear">Child</div>
+  <div class="child1 test-appear"> Child </div>
+  <div class="child2 test-appear"> Child </div>
 </span>
 `;
 
@@ -17,30 +17,30 @@ exports[`TransitionWrapper renders without children 1`] = `<span class="wrapper"
 
 exports[`TransitionWrapper should render children in the order they are given when keys are numbers 1`] = `
 <span>
-  <div class="child">1</div>
-  <div class="child">2</div>
+  <div class="child"> 1 </div>
+  <div class="child"> 2 </div>
 </span>
 `;
 
 exports[`TransitionWrapper should render children in the order they are given when keys are numbers 2`] = `
 <span>
-  <div class="child">3</div>
-  <div class="child test-leave test-leave-active">1</div>
-  <div class="child test-leave test-leave-active">2</div>
+  <div class="child"> 3 </div>
+  <div class="child test-leave test-leave-active"> 1 </div>
+  <div class="child test-leave test-leave-active"> 2 </div>
 </span>
 `;
 
 exports[`TransitionWrapper should render children in the order they are given when keys are strings 1`] = `
 <span>
-  <div class="child">1</div>
-  <div class="child">2</div>
+  <div class="child"> 1 </div>
+  <div class="child"> 2 </div>
 </span>
 `;
 
 exports[`TransitionWrapper should render children in the order they are given when keys are strings 2`] = `
 <span>
-  <div class="child">3</div>
-  <div class="child">1</div>
-  <div class="child">2</div>
+  <div class="child"> 3 </div>
+  <div class="child"> 1 </div>
+  <div class="child"> 2 </div>
 </span>
 `;
