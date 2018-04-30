@@ -16,7 +16,7 @@ function convertMatchesToObj(matches) {
 		name: matches[2],
 		paramPattern: matches[3],
 		unnamedPattern: matches[4],
-		modifier: matches[5]
+		modifier: matches[5],
 	};
 }
 
@@ -69,7 +69,7 @@ function escape(str) {
 /**
  * Makes trailing slash optional on paths.
  * @param {string} regex
- * @param {string}
+ * @return {string}
  */
 function makeTrailingSlashOptional(regex) {
 	if (/\/$/.test(regex)) {
@@ -112,7 +112,7 @@ export function parse(routeOrTokens) {
 			prefix: data.prefix || '',
 			pattern: data.paramPattern || data.unnamedPattern || '[^\\/]+',
 			repeat: data.modifier === '*' || data.modifier === '+',
-			optional: data.modifier === '*' || data.modifier === '?'
+			optional: data.modifier === '*' || data.modifier === '?',
 		});
 
 		matches = REGEX.exec(route);
@@ -139,7 +139,7 @@ export function toRegex(routeOrTokens) {
  * Extracts data from the given path according to the specified route format.
  * @param {!Array|string} routeOrTokens Either a route format string or tokens
  *     previously parsed via the `parse` function.
- * @param {string} The path to extract param data from.
+ * @param {string} path The path to extract param data from.
  * @return {Object<string, string>} The data object, or null if the path doesn't
  *     match the given format.
  */
