@@ -52,7 +52,7 @@ describe('Anim', function() {
 		let listener = sinon.stub();
 		dom.once(this.element, 'transitionend', listener);
 		dom.once(this.element, 'animationend', listener);
-		Anim.emulateEnd(this.element);
+		console.log(Anim.emulateEnd(this.element));
 		setTimeout(function() {
 			assert.strictEqual(1, listener.callCount);
 			assert.strictEqual('animationend', listener.args[0][0].customType);

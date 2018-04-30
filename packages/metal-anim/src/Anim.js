@@ -65,6 +65,7 @@ class Anim {
 		}
 
 		let delayed = setTimeout(function() {
+			//console.log('checkAnimationEventName',features.checkAnimationEventName()[type]);
 			dom.triggerEvent(element, features.checkAnimationEventName()[type]);
 		}, duration);
 
@@ -72,6 +73,7 @@ class Anim {
 			clearTimeout(delayed);
 			hoistedEvtHandler.removeListener();
 		};
+		
 		let hoistedEvtHandler = dom.once(element, type + 'end', abort);
 
 		return {
@@ -88,7 +90,8 @@ class Anim {
 	static getComputedDurationMs(element, type) {
 		return (
 			(parseFloat(
-				window
+				document
+					.defaultView
 					.getComputedStyle(element, null)
 					.getPropertyValue(type + '-duration')
 			) || 0) * 1000
