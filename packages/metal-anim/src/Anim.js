@@ -16,6 +16,8 @@ class Anim {
 	 * @return {!Object} Object containing `abort` function.
 	 */
 	static emulateEnd(element, optDurationMs) {
+		console.log('animation duration: ', this.getComputedDurationMs(element, 'animation'));
+		console.log('transition duration: ', this.getComputedDurationMs(element, 'transition'));	
 		if (
 			this.getComputedDurationMs(element, 'animation') >
 			this.getComputedDurationMs(element, 'transition')
