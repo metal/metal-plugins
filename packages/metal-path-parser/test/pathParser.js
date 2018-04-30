@@ -1,6 +1,6 @@
 'use strict';
 
-import { extractData, parse, toRegex } from '../src/pathParser';
+import {extractData, parse, toRegex} from '../src/pathParser';
 
 describe('pathParser', function() {
 	describe('parse', function() {
@@ -95,7 +95,9 @@ describe('pathParser', function() {
 		});
 
 		it('should return regex matching paths with optional params', function() {
-			const regex = toRegex('/my/path/pre:optfoo?/and1/:required/and2/:optbar?');
+			const regex = toRegex(
+				'/my/path/pre:optfoo?/and1/:required/and2/:optbar?'
+			);
 			assert.ok(!'/not/my/path'.match(regex));
 			assert.ok(!'/my/path'.match(regex));
 			assert.ok(!'/my/path/10/and1/and2/20'.match(regex));
@@ -161,19 +163,25 @@ describe('pathParser', function() {
 		});
 
 		it('should return param data found extracted from real path', function() {
-			const data = extractData('/my/path/:foo/:bar', '/my/path/test/test2');
+			const data = extractData(
+				'/my/path/:foo/:bar',
+				'/my/path/test/test2'
+			);
 			const expectedData = {
 				foo: 'test',
-				bar: 'test2'
+				bar: 'test2',
 			};
 			assert.deepEqual(expectedData, data);
 		});
 
 		it('should return unnamed param data found extracted from real path', function() {
-			const data = extractData('/my/path/prefix-(\\d+)/(\\w+)', '/my/path/prefix-10/test');
+			const data = extractData(
+				'/my/path/prefix-(\\d+)/(\\w+)',
+				'/my/path/prefix-10/test'
+			);
 			const expectedData = {
 				0: '10',
-				1: 'test'
+				1: 'test',
 			};
 			assert.deepEqual(expectedData, data);
 		});
@@ -184,9 +192,12 @@ describe('pathParser', function() {
 		});
 
 		it('should return repeatable param values as arrays', function() {
-			const data = extractData('/my/path/:foo*', '/my/path/test/test2/test3');
+			const data = extractData(
+				'/my/path/:foo*',
+				'/my/path/test/test2/test3'
+			);
 			const expectedData = {
-				foo: ['test', 'test2', 'test3']
+				foo: ['test', 'test2', 'test3'],
 			};
 			assert.deepEqual(expectedData, data);
 		});
@@ -196,7 +207,7 @@ describe('pathParser', function() {
 			const data = extractData(tokens, '/my/path/test/10');
 			const expectedData = {
 				foo: 'test',
-				0: '10'
+				0: '10',
 			};
 			assert.deepEqual(expectedData, data);
 		});
