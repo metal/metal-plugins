@@ -19,6 +19,7 @@ describe('Anim', function() {
 		let start = Date.now();
 		Anim.emulateTransitionEnd(this.element);
 		dom.once(this.element, 'transitionend', function() {
+			
 			assert.ok(Date.now() - start >= 300);
 			done();
 		});
@@ -45,7 +46,7 @@ describe('Anim', function() {
 		}, 350);
 	});
 
-	it('should emulate the longest duration when `emulateEnd` is used (animationend)', function(done) {
+	it.only('should emulate the longest duration when `emulateEnd` is used (animationend)', function(done) {
 		this.element.style.transitionDuration = '0.2s';
 		this.element.style.animationDuration = '0.3s';
 		let listener = sinon.stub();
