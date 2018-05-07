@@ -13,6 +13,7 @@
     "test:coverage:open": "npm run test:coverage && serve coverage/lcov/lcov-report/",
     "test:jest": "lerna run test:jest --concurrency 1 --stream",
     "test:saucelabs": "npm run saucelabs -- 0 && npm run saucelabs -- 1 && npm run saucelabs -- 2 && npm run saucelabs -- 3",
+    "test:watch": "karma start --single-run=false --auto-watch=true",
     "precommit": "lint-staged",
     "prettier": "prettier-eslint 'packages/*/{src,test}/**/*.js'"
   },
