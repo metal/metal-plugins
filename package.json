@@ -2,11 +2,14 @@
   "scripts": {
     "checkFormat": "npm run prettier -- --list-different",
     "compile": "lerna run compile",
+    "clear": "rm -rf coverage",
     "format": "npm run prettier -- --write",
     "lerna": "lerna bootstrap -- --no-optional && npm install --no-optional",
     "lint": "eslint 'packages/*/{src,test}/**/*.js'",
     "saucelabs": "karma start karma-saucelabs.conf.js",
     "test": "karma start",
+    "test:coverage": "npm run clear && karma start karma-coverage.conf.js",
+    "test:coverage:open": "npm run test:coverage && serve coverage/lcov/lcov-report/",
     "test:jest": "lerna run test:jest --concurrency 1 --stream",
     "test:saucelabs": "npm run saucelabs -- 0 && npm run saucelabs -- 1 && npm run saucelabs -- 2 && npm run saucelabs -- 3",
     "prettier": "prettier-eslint 'packages/*/{src,test}/**/*.js'"
@@ -14,13 +17,14 @@
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.4",
+    "babel-plugin-istanbul": "^4.1.6",
     "babel-plugin-transform-node-env-inline": "^0.4.0",
     "babel-preset-env": "^1.6.1",
     "chai": "^4.1.2",
     "eslint": "^4.17.0",
     "eslint-config-liferay": "^2.0.18",
+    "istanbul": "^0.4.5",
     "karma": "^1.1.0",
-    "karma-babel-preprocessor": "^8.0.0-beta.0",
     "karma-chai-sinon": "^0.1.5",
     "karma-chrome-launcher": "^2.2.0",
     "karma-mocha": "^1.3.0",
@@ -31,6 +35,7 @@
     "lerna": "^2.10.1",
     "mocha": "^4.1.0",
     "prettier-eslint-cli": "^4.7.0",
+    "serve": "^6.5.6",
     "sinon": "^4.5.0",
     "sinon-chai": "^3.0.0",
     "webpack": "^4.2.0"
