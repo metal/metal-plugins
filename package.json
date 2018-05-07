@@ -1,4 +1,5 @@
 {
+  "private": true,
   "scripts": {
     "checkFormat": "npm run prettier -- --list-different",
     "compile": "lerna run compile",
