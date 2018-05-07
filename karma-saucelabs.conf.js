@@ -94,6 +94,7 @@ module.exports = function (config) {
             'karma-chai-sinon',
             'karma-mocha',
             'karma-webpack',
+            'karma-sharding',
             karmaSauceLauncher
         ],
 

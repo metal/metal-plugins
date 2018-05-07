@@ -29,13 +29,14 @@ module.exports = function (config) {
             value: 315186
         }],
 
-        frameworks: ['mocha', 'chai-sinon'],
+        frameworks: ['sharding', 'mocha', 'chai-sinon'],
 
         plugins: [
             'karma-chai-sinon',
             'karma-chrome-launcher',
             'karma-mocha',
-            'karma-webpack'
+            'karma-webpack',
+            'karma-sharding'
         ],
 
         preprocessors: {
