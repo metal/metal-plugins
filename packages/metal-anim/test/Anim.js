@@ -19,7 +19,6 @@ describe('Anim', function() {
 		let start = Date.now();
 		Anim.emulateTransitionEnd(this.element);
 		dom.once(this.element, 'transitionend', function() {
-			
 			assert.ok(Date.now() - start >= 300);
 			done();
 		});

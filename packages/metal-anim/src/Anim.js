@@ -16,8 +16,14 @@ class Anim {
 	 * @return {!Object} Object containing `abort` function.
 	 */
 	static emulateEnd(element, optDurationMs) {
-		console.log('animation duration: ', this.getComputedDurationMs(element, 'animation'));
-		console.log('transition duration: ', this.getComputedDurationMs(element, 'transition'));	
+		console.log(
+			'animation duration: ',
+			this.getComputedDurationMs(element, 'animation')
+		);
+		console.log(
+			'transition duration: ',
+			this.getComputedDurationMs(element, 'transition')
+		);
 		if (
 			this.getComputedDurationMs(element, 'animation') >
 			this.getComputedDurationMs(element, 'transition')
@@ -65,7 +71,7 @@ class Anim {
 		}
 
 		let delayed = setTimeout(function() {
-			//console.log('checkAnimationEventName',features.checkAnimationEventName()[type]);
+			// console.log('checkAnimationEventName',features.checkAnimationEventName()[type]);
 			dom.triggerEvent(element, features.checkAnimationEventName()[type]);
 		}, duration);
 
@@ -73,7 +79,7 @@ class Anim {
 			clearTimeout(delayed);
 			hoistedEvtHandler.removeListener();
 		};
-		
+
 		let hoistedEvtHandler = dom.once(element, type + 'end', abort);
 
 		return {
@@ -90,8 +96,7 @@ class Anim {
 	static getComputedDurationMs(element, type) {
 		return (
 			(parseFloat(
-				document
-					.defaultView
+				document.defaultView
 					.getComputedStyle(element, null)
 					.getPropertyValue(type + '-duration')
 			) || 0) * 1000
