@@ -1,0 +1,35 @@
+{
+  "name": "metal-anim",
+  "version": "2.0.0",
+  "description": "Metal's animation utility",
+  "license": "BSD",
+  "repository": "metal/metal-anim",
+  "engines": {
+    "node": ">=0.12.0",
+    "npm": ">=3.0.0"
+  },
+  "jsnext:main": "src/Anim.js",
+  "main": "lib/Anim.js",
+  "files": [
+    "lib",
+    "src/**/*.js",
+    "test/**/*.js"
+  ],
+  "scripts": {
+    "build": "webpack",
+    "compile": "babel --presets env -d lib/ src/",
+    "prepublish": "npm run compile"
+  },
+  "keywords": [
+    "metal"
+  ],
+  "dependencies": {
+    "metal": "^2.16.5",
+    "metal-dom": "^2.16.5"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.4.5",
+    "babel-preset-env": "^1.6.1",
+    "webpack": "^3.5.5"
+  }
+}
