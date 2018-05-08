@@ -94,6 +94,13 @@ class Anim {
 	 * @return {number} The computed duration in milliseconds.
 	 */
 	static getComputedDurationMs(element, type) {
+		console.log(
+			(parseFloat(
+				document.defaultView
+					.getComputedStyle(element, null)
+					.getPropertyValue(type + '-duration')
+			) || 0) * 1000
+		);
 		return (
 			(parseFloat(
 				document.defaultView
