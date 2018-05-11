@@ -1,0 +1,11 @@
+{
+	"env": {
+		"browser": true,
+		"node": true,
+		"es6": true
+	},
+	"extends": "liferay",
+	"rules": {
+		"prefer-rest-params": 0
+	}
+}

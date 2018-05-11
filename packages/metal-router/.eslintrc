@@ -1,9 +1,4 @@
 {
-	"env": {
-		"browser": true,
-		"node": true
-	},
-	"extends": "liferay",
 	"globals": {
 		"IncrementalDOM": true
 	}
