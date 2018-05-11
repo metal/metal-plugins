@@ -11,7 +11,6 @@ import from from 'core-js/es6/array'; //eslint-disable-line
  * @return {!function()}
  */
 function throttle(fn, delay = 0) {
-	const context = this;
 	let last = 0;
 
 	return (...args) => {
@@ -20,7 +19,7 @@ function throttle(fn, delay = 0) {
 
 		if (next < now) {
 			try {
-				fn.call(context, ...args);
+				fn.call(null, ...args);
 			} catch (error) {
 				throw error;
 			} finally {
