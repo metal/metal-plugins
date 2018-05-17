@@ -14,6 +14,7 @@
     "test:coverage:open": "npm run test:coverage && serve coverage/lcov/lcov-report/",
     "test:jest": "lerna run test:jest --concurrency 1 --stream",
     "test:saucelabs": "npm run saucelabs -- 0 && npm run saucelabs -- 1 && npm run saucelabs -- 2 && npm run saucelabs -- 3",
+    "test:mobile": "concurrently \"node test-mobile.js\" \"npm run test:watch\"",
     "test:watch": "karma start --single-run=false --auto-watch=true",
     "precommit": "lint-staged",
     "prettier": "prettier-eslint 'packages/*/{src,test}/**/*.js'"
@@ -25,6 +26,11 @@
     "babel-plugin-transform-node-env-inline": "^0.4.1",
     "babel-preset-env": "^1.6.1",
     "chai": "^4.1.2",
+<<<<<<< HEAD
+=======
+    "chalk": "^2.4.1",
+    "concurrently": "^3.5.1",
+>>>>>>> 26bfdd3... Adds test:mobile capability to debug mobile browsers errors
     "eslint": "^4.17.0",
     "eslint-config-liferay": "^2.0.18",
     "istanbul": "^0.4.5",
@@ -41,6 +47,7 @@
     "lerna": "^2.11.0",
     "lint-staged": "^7.1.0",
     "mocha": "^4.1.0",
+    "ngrok": "^3.0.1",
     "prettier-eslint-cli": "^4.7.0",
     "serve": "^6.5.6",
     "sinon": "^4.5.0",
