@@ -45,7 +45,7 @@ class Anim {
 	 * @return {!Object} Object containing `abort` function.
 	 */
 	static emulateTransitionEnd(element, optDurationMs) {
-		this.emulateEnd_(element, 'transition', optDurationMs);
+		return this.emulateEnd_(element, 'transition', optDurationMs);
 	}
 
 	/**
