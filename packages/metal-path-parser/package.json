@@ -1,0 +1,34 @@
+{
+  "name": "metal-path-parser",
+  "version": "1.0.3",
+  "description": "Utility functions for parsing express-like url paths",
+  "license": "BSD",
+  "repository": "metal/metal-path-parser",
+  "engines": {
+    "node": ">=0.12.0",
+    "npm": ">=3.0.0"
+  },
+  "main": "lib/pathParser.js",
+  "jsnext:main": "src/pathParser.js",
+  "files": [
+    "lib",
+    "src",
+    "test"
+  ],
+  "scripts": {
+    "build": "webpack",
+    "compile": "babel --presets env -d lib/ src/",
+    "prepublish": "npm run compile"
+  },
+  "keywords": [
+    "metal"
+  ],
+  "dependencies": {
+    "metal": "^2.16.5"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "webpack": "^3.11.0"
+  }
+}
