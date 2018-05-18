@@ -1,0 +1,110 @@
+'use strict';
+
+import {isFunction, isString} from 'metal';
+
+const NAMESPACE = '__METAL_CSS_TRANSISIONS__';
+
+/**
+ * Processes an array of components, creating an object with keys and values.
+ * If the component does not already have a key, it will be given a unique key.
+ * @param {!Array} children Array of metal components.
+ * @return {object} retMap Processed object from an array of components
+ */
+export function getChildrenMap(children) {
+	let COUNTER = 1;
+
+	const retMap = new Map();
+
+	const keys = children.map(
+		child => (child.props ? child.props.key : undefined)
+	);
+
+	children.forEach(child => {
+		if (child && child.props) {
+			let {
+				props: {key},
+				tag
+			} = child;
+
+			if (!key) {
+				if (!tag) {
+					tag = NAMESPACE;
+				} else if (!isString(tag)) {
+					tag = isFunction(tag) ? tag.name : NAMESPACE;
+				}
+
+				while (keys.indexOf(`${tag}-${COUNTER}`) !== -1) {
+					COUNTER += 1;
+				}
+
+				key = `${tag}-${COUNTER}`;
+
+				keys.push(key);
+
+				child.props.key = key;
+			}
+
+			retMap.set(key, child);
+		}
+	});
+
+	return retMap;
+}
+
+const map = new Map();
+
+/**
+ * Merges two children maps so that there are no duplicates.
+ * @param {!Object} nextMap Map of new children components.
+ * @param {!Object} prevMap Map of previous children components.
+ * @return {Object} mergedMap Merged map from two children maps without duplicates.
+ */
+export function mergeChildrenMap(nextMap = map, prevMap = map) {
+	// eslint-disable-next-line
+	function getValueForKey(key) {
+		if (nextMap.has(key)) {
+			return nextMap.get(key);
+		} else {
+			return prevMap.get(key);
+		}
+	}
+
+	const nextKeysPending = {};
+
+	let pendingKeys = [];
+
+	prevMap.forEach((value, prevKey) => {
+		if (nextMap.has(prevKey)) {
+			if (pendingKeys.length) {
+				nextKeysPending[prevKey] = pendingKeys;
+
+				pendingKeys = [];
+			}
+		} else {
+			pendingKeys.push(prevKey);
+		}
+	});
+
+	const mergedMap = new Map();
+
+	for (let i = 0; i < pendingKeys.length; i++) {
+		mergedMap.set(pendingKeys[i], getValueForKey(pendingKeys[i]));
+	}
+
+	nextMap.forEach((value, nextKey) => {
+		if (nextKeysPending.hasOwnProperty(nextKey)) {
+			for (let i = 0; i < nextKeysPending[nextKey].length; i++) {
+				const pendingNextKey = nextKeysPending[nextKey][i];
+
+				mergedMap.set(
+					nextKeysPending[nextKey][i],
+					getValueForKey(pendingNextKey)
+				);
+			}
+		}
+
+		mergedMap.set(nextKey, getValueForKey(nextKey));
+	});
+
+	return mergedMap;
+}

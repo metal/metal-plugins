@@ -1,0 +1,64 @@
+{
+  "name": "metal-css-transitions",
+  "description": "Metal component used to apply css transitions",
+  "version": "2.3.5",
+  "license": "BSD",
+  "repository": "https://github.com/metal/metal-css-transisions.git",
+  "engines": {
+    "node": ">=6.0.0",
+    "npm": ">=3.0.0"
+  },
+  "main": "lib/TransitionWrapper.js",
+  "jsnext:main": "src/TransitionWrapper.js",
+  "files": [
+    "lib",
+    "src",
+    "test"
+  ],
+  "scripts": {
+    "build": "babel --presets env -d lib/ src/",
+    "build:benchmark": "browserify ./benchmark/index.js -o ./benchmark/build/index.js -t [ babelify --presets [ metal-jsx es2015 ] ]",
+    "prepublish": "npm run build",
+    "test:jest": "jest",
+    "test:watch": "jest --watchAll"
+  },
+  "author": "Bryce Osterhaus <bryceosterhaus@gmail.com>",
+  "keywords": [
+    "metal"
+  ],
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.js"
+    ],
+    "roots": [
+      "<rootDir>/src/"
+    ],
+    "snapshotSerializers": [
+      "metal-jest-serializer"
+    ],
+    "timers": "fake"
+  },
+  "babel": {
+    "presets": [
+      "metal-jsx",
+      "env"
+    ]
+  },
+  "dependencies": {
+    "metal-anim": "^2.0.0",
+    "metal-dom": "^2.16.5",
+    "metal-jsx": "^2.16.5"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-jest": "^22.4.3",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-jest": "^22.4.3",
+    "babel-preset-metal-jsx": "0.1.1",
+    "babelify": "^8.0.0",
+    "browserify": "^14.4.0",
+    "husky": "^0.14.3",
+    "jest": "^22.4.3",
+    "metal-jest-serializer": "^2.0.0"
+  }
+}
