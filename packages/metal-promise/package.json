@@ -26,10 +26,10 @@
     "promise"
   ],
   "dependencies": {
-    "metal": "^2.0.0"
+    "metal": "^2.16.5"
   },
   "devDependencies": {
-    "babel-cli": "^6.4.5",
+    "babel-cli": "^6.26.0",
     "babel-jest": "^21.2.0",
     "babel-preset-metal": "^4.0.0",
     "jest": "^21.2.1"

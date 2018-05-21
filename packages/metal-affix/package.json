@@ -24,16 +24,16 @@
     "metal"
   ],
   "dependencies": {
-    "metal": "^2.0.0",
-    "metal-state": "^2.0.0",
-    "metal-dom": "^2.0.0",
-    "metal-events": "^2.0.0",
-    "metal-position": "^2.0.0"
+    "metal": "^2.16.5",
+    "metal-state": "^2.16.5",
+    "metal-dom": "^2.14.0",
+    "metal-events": "^2.14.0",
+    "metal-position": "^2.1.1"
   },
   "devDependencies": {
-    "babel-cli": "^6.4.5",
+    "babel-cli": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.1",
-    "webpack": "^3.5.5"
+    "webpack": "^3.11.0"
   }
 }
