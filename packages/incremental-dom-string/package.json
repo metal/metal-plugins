@@ -1,27 +1,8 @@
 {
   "name": "incremental-dom-string",
-  "version": "0.0.2",
   "description": "Ability to render Incremental DOM virtual elements into strings on the server and the client.",
-  "scripts": {
-    "build": "gulp build",
-    "compile": "gulp build",
-    "lint": "eslint '{src,test}/**/*.js'",
-    "prepublish": "gulp build",
-    "test": "karma start",
-    "test:saucelabs": "karma start karma-saucelabs.conf.js"
-  },
+  "version": "0.0.2",
   "author": "Eduardo Lundgren <eduardolundgren@gmail.com>",
-  "license": "BSD-3-Clause",
-  "main": "./lib/incremental-dom-string.js",
-  "files": [
-    "index.js",
-    "lib",
-    "src"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/metal/metal-plugins/tree/master/packages/incremental-dom-string.git"
-  },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
@@ -35,5 +16,21 @@
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "webpack": "^3.11.0"
+  },
+  "files": [
+    "index.js",
+    "lib",
+    "src"
+  ],
+  "license": "BSD-3-Clause",
+  "main": "./lib/incremental-dom-string.js",
+  "repository": "metal/metal-plugins/tree/master/packages/incremental-dom-string.git",
+  "scripts": {
+    "build": "gulp build",
+    "compile": "gulp build",
+    "lint": "eslint '{src,test}/**/*.js'",
+    "prepublish": "gulp build",
+    "test": "karma start",
+    "test:saucelabs": "karma start karma-saucelabs.conf.js"
   }
 }

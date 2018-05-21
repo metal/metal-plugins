@@ -1,32 +1,7 @@
 {
   "name": "metal-router",
-  "version": "3.8.0",
   "description": "Routing solution to link URLs to Metal.js components using HTML5 History API.",
-  "license": "BSD",
-  "repository": "https://github.com/metal/metal-plugins/tree/master/packages/metal-router",
-  "engines": {
-    "node": ">=0.12.0",
-    "npm": ">=3.0.0"
-  },
-  "jsnext:main": "src/all/router.js",
-  "main": "lib/all/router.js",
-  "files": [
-    "build",
-    "lib",
-    "src"
-  ],
-  "scripts": {
-    "build": "webpack",
-    "compile": "babel --presets env -d lib/ src/",
-    "demo": "npm run soy:demo && npm run build && npm run start",
-    "prepublish": "npm run soy && npm run compile",
-    "soy": "metalsoy",
-    "soy:demo": "metalsoy -s demos/**/*.soy -d demos/src --soyDeps src/**/*.soy",
-    "start": "superstatic . -c ./demos/server.json --port 8080"
-  },
-  "keywords": [
-    "metal"
-  ],
+  "version": "3.8.0",
   "dependencies": {
     "metal": "^2.16.5",
     "metal-component": "^2.15.0",
@@ -45,5 +20,30 @@
     "metal-tools-soy": "^6.0.0",
     "superstatic": "^5.0.1",
     "webpack": "^3.11.0"
+  },
+  "engines": {
+    "node": ">=0.12.0",
+    "npm": ">=3.0.0"
+  },
+  "files": [
+    "build",
+    "lib",
+    "src"
+  ],
+  "jsnext:main": "src/all/router.js",
+  "keywords": [
+    "metal"
+  ],
+  "license": "BSD",
+  "main": "lib/all/router.js",
+  "repository": "https://github.com/metal/metal-plugins/tree/master/packages/metal-router",
+  "scripts": {
+    "build": "webpack",
+    "compile": "babel --presets env -d lib/ src/",
+    "demo": "npm run soy:demo && npm run build && npm run start",
+    "prepublish": "npm run soy && npm run compile",
+    "soy": "metalsoy",
+    "soy:demo": "metalsoy -s demos/**/*.soy -d demos/src --soyDeps src/**/*.soy",
+    "start": "superstatic . -c ./demos/server.json --port 8080"
   }
 }

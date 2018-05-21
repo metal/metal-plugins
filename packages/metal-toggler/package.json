@@ -1,28 +1,7 @@
 {
   "name": "metal-toggler",
-  "version": "3.1.0",
   "description": "Metal's toggler component",
-  "license": "BSD",
-  "repository": "https://github.com/metal/metal-plugins/tree/master/packages/metal-toggler",
-  "engines": {
-    "node": ">=0.12.0",
-    "npm": ">=3.0.0"
-  },
-  "jsnext:main": "src/Toggler.js",
-  "main": "lib/Toggler.js",
-  "files": [
-    "lib",
-    "src",
-    "test"
-  ],
-  "scripts": {
-    "build": "webpack",
-    "compile": "babel --presets env -d lib/ src/",
-    "prepublish": "npm run compile"
-  },
-  "keywords": [
-    "metal"
-  ],
+  "version": "3.1.0",
   "dependencies": {
     "bootstrap": "^3.3.6",
     "metal": "^2.16.5",
@@ -42,5 +21,26 @@
     "sass-loader": "^6.0.6",
     "style-loader": "^0.18.2",
     "webpack": "^3.11.0"
+  },
+  "engines": {
+    "node": ">=0.12.0",
+    "npm": ">=3.0.0"
+  },
+  "files": [
+    "lib",
+    "src",
+    "test"
+  ],
+  "jsnext:main": "src/Toggler.js",
+  "keywords": [
+    "metal"
+  ],
+  "license": "BSD",
+  "main": "lib/Toggler.js",
+  "repository": "https://github.com/metal/metal-plugins/tree/master/packages/metal-toggler",
+  "scripts": {
+    "build": "webpack",
+    "compile": "babel --presets env -d lib/ src/",
+    "prepublish": "npm run compile"
   }
 }

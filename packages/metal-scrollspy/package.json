@@ -1,25 +1,7 @@
 {
   "name": "metal-scrollspy",
-  "version": "2.1.0",
   "description": "Metal's scrollspy component",
-  "keywords": [
-    "metal"
-  ],
-  "license": "BSD",
-  "files": [
-    "lib",
-    "src",
-    "test"
-  ],
-  "main": "lib/Scrollspy.js",
-  "jsnext:main": "src/Scrollspy.js",
-  "repository": "metal/metal-scrollspy",
-  "scripts": {
-    "build": "npm run soy && webpack",
-    "compile": "babel --presets env -d lib/ src/",
-    "prepublish": "npm run soy && npm run compile",
-    "soy": "metalsoy --soyDeps node_modules/metal*/src/**/*.soy"
-  },
+  "version": "2.1.0",
   "dependencies": {
     "bootstrap": "^3.3.6",
     "metal": "^2.16.5",
@@ -39,5 +21,23 @@
   "engines": {
     "node": ">=0.12.0",
     "npm": ">=3.0.0"
+  },
+  "files": [
+    "lib",
+    "src",
+    "test"
+  ],
+  "jsnext:main": "src/Scrollspy.js",
+  "keywords": [
+    "metal"
+  ],
+  "license": "BSD",
+  "main": "lib/Scrollspy.js",
+  "repository": "metal/metal-scrollspy",
+  "scripts": {
+    "build": "npm run soy && webpack",
+    "compile": "babel --presets env -d lib/ src/",
+    "prepublish": "npm run soy && npm run compile",
+    "soy": "metalsoy --soyDeps node_modules/metal*/src/**/*.soy"
   }
 }

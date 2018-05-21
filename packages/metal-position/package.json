@@ -1,30 +1,11 @@
 {
   "name": "metal-position",
-  "version": "2.1.1",
   "description": "Metal.js position helps you to best position a DOM element into the screen. Useful to build tooltips, dropdowns an much more.",
-  "license": "BSD",
-  "repository": "metal/metal-position",
+  "version": "2.1.1",
   "author": {
     "name": "Eduardo Lundgren",
     "email": "edu@rdo.io"
   },
-  "engines": {
-    "node": ">=0.12.0"
-  },
-  "jsnext:main": "src/all/position.js",
-  "main": "lib/all/position.js",
-  "files": [
-    "lib",
-    "src/**/*.js",
-    "test/**/*.js"
-  ],
-  "scripts": {
-    "compile": "babel --presets env -d lib/ src/",
-    "prepublish": "npm run compile"
-  },
-  "keywords": [
-    "metal"
-  ],
   "dependencies": {
     "metal": "^2.16.5",
     "metal-dom": "^2.14.0"
@@ -35,5 +16,24 @@
     "babel-plugin-transform-node-env-inline": "^0.4.0",
     "babel-preset-env": "^1.6.1",
     "webpack": "^3.11.0"
+  },
+  "engines": {
+    "node": ">=0.12.0"
+  },
+  "files": [
+    "lib",
+    "src/**/*.js",
+    "test/**/*.js"
+  ],
+  "jsnext:main": "src/all/position.js",
+  "keywords": [
+    "metal"
+  ],
+  "license": "BSD",
+  "main": "lib/all/position.js",
+  "repository": "metal/metal-position",
+  "scripts": {
+    "compile": "babel --presets env -d lib/ src/",
+    "prepublish": "npm run compile"
   }
 }
