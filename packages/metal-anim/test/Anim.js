@@ -4,6 +4,17 @@ import Anim from '../src/Anim';
 import dom from 'metal-dom';
 
 describe('Anim', function() {
+	before(function() {
+		// Disables mobile devices tests for these tests due sauce tunnel inconsistency
+		let devices = ['iPhone', 'iPad', 'Android'];
+		let filtered = devices.filter(device => {
+			return window.navigator.userAgent.indexOf(device) !== -1;
+		});
+		if (filtered.length) {
+			this.skip();
+		}
+	});
+
 	beforeEach(function() {
 		this.element = document.createElement('div');
 		this.element.style.transitionDuration = '0.3s';
