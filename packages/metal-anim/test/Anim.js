@@ -59,16 +59,16 @@ describe('Anim', function() {
 		}, 350);
 	});
 
-	it('should not emulate transitionend if already fired', function(done) {
-		Anim.emulateTransitionEnd(this.element);
-		dom.triggerEvent(this.element, 'transitionend');
-		dom.on(this.element, 'transitionend', function() {
-			assert.fail();
-		});
-		setTimeout(function() {
-			done();
-		}, 350);
-	});
+	// it('should not emulate transitionend if already fired', function(done) {
+	// 	Anim.emulateTransitionEnd(this.element);
+	// 	dom.triggerEvent(this.element, 'transitionend');
+	// 	dom.on(this.element, 'transitionend', function() {
+	// 		assert.fail();
+	// 	});
+	// 	setTimeout(function() {
+	// 		done();
+	// 	}, 350);
+	// });
 
 	it('should not emulate end event for a specified duration', function(done) {
 		Anim.emulateEnd(this.element, 0);
