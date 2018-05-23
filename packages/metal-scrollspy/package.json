@@ -1,43 +1,43 @@
 {
-	"name": "metal-scrollspy",
-	"version": "2.1.0",
-	"description": "Metal's scrollspy component",
-	"keywords": [
-		"metal"
-	],
-	"license": "BSD",
-	"files": [
-		"lib",
-		"src",
-		"test"
-	],
-	"main": "lib/Scrollspy.js",
-	"jsnext:main": "src/Scrollspy.js",
-	"repository": "metal/metal-scrollspy",
-	"scripts": {
-		"build": "npm run soy && webpack",
-		"compile": "babel --presets env -d lib/ src/",
-		"prepublish": "npm run soy && npm run compile",
-		"soy": "metalsoy --soyDeps node_modules/metal*/src/**/*.soy"
-	},
-	"dependencies": {
-		"bootstrap": "^3.3.6",
-		"metal": "^2.6.15",
-		"metal-dom": "^2.6.15",
-		"metal-position": "^2.1.1",
-		"metal-state": "^2.16.5"
-	},
-	"devDependencies": {
-		"babel-cli": "^6.4.5",
-		"babel-core": "^6.26.0",
-		"babel-loader": "^7.1.2",
-		"babel-plugin-transform-node-env-inline": "^0.3.0",
-		"babel-preset-env": "^1.6.1",
-		"metal-tools-soy": "^6.0.0",
-		"webpack": "^3.10.0"
-	},
-	"engines": {
-		"node": ">=0.12.0",
-		"npm": ">=3.0.0"
-	}
+  "name": "metal-scrollspy",
+  "version": "2.1.0",
+  "description": "Metal's scrollspy component",
+  "keywords": [
+    "metal"
+  ],
+  "license": "BSD",
+  "files": [
+    "lib",
+    "src",
+    "test"
+  ],
+  "main": "lib/Scrollspy.js",
+  "jsnext:main": "src/Scrollspy.js",
+  "repository": "metal/metal-scrollspy",
+  "scripts": {
+    "build": "npm run soy && webpack",
+    "compile": "babel --presets env -d lib/ src/",
+    "prepublish": "npm run soy && npm run compile",
+    "soy": "metalsoy --soyDeps node_modules/metal*/src/**/*.soy"
+  },
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "metal": "^2.6.15",
+    "metal-dom": "^2.6.15",
+    "metal-position": "^2.1.1",
+    "metal-state": "^2.16.5"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.4.5",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-transform-node-env-inline": "^0.3.0",
+    "babel-preset-env": "^1.6.1",
+    "metal-tools-soy": "^6.0.0",
+    "webpack": "^3.10.0"
+  },
+  "engines": {
+    "node": ">=0.12.0",
+    "npm": ">=3.0.0"
+  }
 }
