@@ -1,34 +1,30 @@
 {
-  "name": "metal-affix",
+  "name": "metal-anim",
   "version": "2.0.0",
-  "description": "Metal's affix component",
+  "description": "Metal's animation utility",
   "keywords": [
     "metal"
   ],
   "license": "BSD",
   "files": [
     "lib",
-    "src",
-    "test"
+    "src/**/*.js",
+    "test/**/*.js"
   ],
-  "main": "lib/Affix.js",
-  "jsnext:main": "src/Affix.js",
-  "repository": "metal/metal-affix",
+  "main": "lib/Anim.js",
+  "jsnext:main": "src/Anim.js",
+  "repository": "metal/metal-anim",
   "scripts": {
     "build": "webpack",
     "compile": "babel --presets env -d lib/ src/",
     "prepublish": "npm run compile"
   },
   "dependencies": {
-    "metal": "^2.0.0",
-    "metal-dom": "^2.0.0",
-    "metal-events": "^2.0.0",
-    "metal-position": "^2.0.0",
-    "metal-state": "^2.0.0"
+    "metal": "^2.16.5",
+    "metal-dom": "^2.16.5"
   },
   "devDependencies": {
     "babel-cli": "^6.4.5",
-    "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.1",
     "webpack": "^3.5.5"
   },

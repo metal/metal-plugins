@@ -2,6 +2,18 @@
   "name": "incremental-dom-string",
   "version": "0.0.2",
   "description": "Ability to render Incremental DOM virtual elements into strings on the server and the client.",
+  "license": "BSD-3-Clause",
+  "author": "Eduardo Lundgren <eduardolundgren@gmail.com>",
+  "files": [
+    "index.js",
+    "lib",
+    "src"
+  ],
+  "main": "./lib/incremental-dom-string.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/metal/metal-plugins/tree/master/packages/incremental-dom-string.git"
+  },
   "scripts": {
     "build": "gulp build",
     "compile": "gulp build",
@@ -9,18 +21,6 @@
     "prepublish": "gulp build",
     "test": "karma start",
     "test:saucelabs": "karma start karma-saucelabs.conf.js"
-  },
-  "author": "Eduardo Lundgren <eduardolundgren@gmail.com>",
-  "license": "BSD-3-Clause",
-  "main": "./lib/incremental-dom-string.js",
-  "files": [
-    "index.js",
-    "lib",
-    "src"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/metal/metal-plugins/tree/master/packages/incremental-dom-string.git"
   },
   "devDependencies": {
     "babel-cli": "^6.4.5",

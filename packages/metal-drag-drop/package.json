@@ -2,30 +2,26 @@
   "name": "metal-drag-drop",
   "version": "3.1.0",
   "description": "Metal's drag and drop component.",
+  "keywords": [
+    "drag",
+    "drop",
+    "metal"
+  ],
   "license": "BSD",
-  "repository": "https://github.com/metal/metal-plugins/tree/master/packages/metal-drag-drop",
-  "engines": {
-    "node": ">=0.12.0",
-    "npm": ">=3.0.0"
-  },
-  "jsnext:main": "src/all/drag.js",
-  "main": "lib/all/drag.js",
   "files": [
     "lib",
     "src/**/*.js",
     "test/**/*.js"
   ],
+  "main": "lib/all/drag.js",
+  "jsnext:main": "src/all/drag.js",
+  "repository": "https://github.com/metal/metal-plugins/tree/master/packages/metal-drag-drop",
   "scripts": {
     "build": "npm run soy && webpack",
     "compile": "babel --presets env -d lib/ src/",
     "prepublish": "npm run soy && npm run compile",
     "soy": "metalsoy --soyDeps node_modules/metal*/src/**/*.soy"
   },
-  "keywords": [
-    "drag",
-    "drop",
-    "metal"
-  ],
   "dependencies": {
     "bootstrap": "^3.3.6",
     "metal": "^2.14.0",
@@ -42,5 +38,9 @@
     "husky": "^0.14.3",
     "metal-tools-soy": "^4.2.6",
     "webpack": "^3.11.0"
+  },
+  "engines": {
+    "node": ">=0.12.0",
+    "npm": ">=3.0.0"
   }
 }
