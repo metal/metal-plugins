@@ -2,7 +2,6 @@
   "private": true,
   "scripts": {
     "checkFormat": "npm run prettier -- --list-different",
-    "clear": "rm -rf coverage",
     "precommit": "lint-staged",
     "compile": "lerna run compile",
     "clear": "rm -rf coverage",
