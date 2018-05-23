@@ -2,12 +2,13 @@
   "private": true,
   "scripts": {
     "checkFormat": "npm run prettier -- --list-different",
-    "precommit": "lint-staged",
     "compile": "lerna run compile",
     "clear": "rm -rf coverage",
     "format": "npm run prettier -- --write",
     "lerna": "lerna bootstrap -- --no-optional && npm install --no-optional",
     "lint": "eslint 'packages/*/{src,test}/**/*.js'",
+    "precommit": "lint-staged",
+    "prettier": "prettier-eslint 'packages/*/{src,test}/**/*.js'",
     "saucelabs": "karma start karma-saucelabs.conf.js",
     "test": "karma start",
     "test:coverage": "npm run clear && karma start karma-coverage.conf.js",
@@ -15,8 +16,7 @@
     "test:jest": "lerna run test:jest --concurrency 1 --stream",
     "test:mobile": "concurrently \"node test-mobile.js\" \"npm run test:watch\"",
     "test:saucelabs": "npm run saucelabs -- 0 && npm run saucelabs -- 1 && npm run saucelabs -- 2 && npm run saucelabs -- 3",
-    "test:watch": "karma start --single-run=false --auto-watch=true",
-    "prettier": "prettier-eslint 'packages/*/{src,test}/**/*.js'"
+    "test:watch": "karma start --single-run=false --auto-watch=true"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -25,6 +25,7 @@
     "babel-plugin-transform-node-env-inline": "^0.4.1",
     "babel-preset-env": "^1.7.0",
     "chai": "^4.1.2",
+    "concurrently": "^3.5.1",
     "eslint": "^4.17.0",
     "eslint-config-liferay": "^2.0.18",
     "istanbul": "^0.4.5",
