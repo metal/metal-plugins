@@ -26,7 +26,7 @@ cache:
 jobs:
   include:
     - stage: test
-      install: npm ci && npm run lerna
+      install: npm ci && npm run lerna:ci
       addons:
         sauce_connect:
               username: metal-plugins
