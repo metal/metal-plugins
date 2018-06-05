@@ -6,29 +6,25 @@
 
 metal-plugins is a collection of utilities that are often used in Metal.js projects, such as Ajax, Promise, and URI.
 
-* [Official website](http://metaljs.com)
+- [Official website](http://metaljs.com)
 
 ## Setup
 
-1. Install a recent release of [NodeJS](https://nodejs.org/en/download/) if you don't have it yet.
+1.  Install a recent release of [NodeJS](https://nodejs.org/en/download/) if you don't have it yet.
 
-2. Install local dependencies:
+2.  Run the bootstrap script to install local dependencies and link packages together:
 
-  ```
-  npm install
-  ```
 
-3. Run the bootstrap script to install local dependencies and link packages together:
+```
+npm run lerna
+```
 
-  ```
-  npm run lerna
-  ```
+3.  Run tests:
 
-4. Run tests:
 
-  ```
-  npm test
-  ```
+```
+npm test
+```
 
 ## Contributing
 
