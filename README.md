@@ -14,13 +14,11 @@ metal-plugins is a collection of utilities that are often used in Metal.js proje
 
 2.  Run the bootstrap script to install local dependencies and link packages together:
 
-
 ```
 npm run lerna
 ```
 
 3.  Run tests:
-
 
 ```
 npm test
