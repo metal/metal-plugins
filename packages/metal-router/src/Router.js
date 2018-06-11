@@ -147,8 +147,10 @@ class Router extends Component {
 	 */
 	render() {
 		if (this.isActive_) {
+			const component = this.asyncComponent_ || this.component;
+
 			IncrementalDOM.elementVoid(
-				this.component,
+				component,
 				null,
 				null,
 				'ref',
@@ -232,6 +234,13 @@ Router.STATE = {
 		validator: core.isBoolean,
 		value: false,
 	},
+
+	/**
+	 * Internal value for the constructor of the component that was loaded
+	 * async. This component overrides the original component.
+	 * @type {!Function}
+	 */
+	asyncComponent_: {},
 
 	/**
 	 * Handler to be called before a router is activated. Can be given as a
@@ -481,7 +490,7 @@ class ComponentScreen extends RequestScreen {
 		if (this.router.async) {
 			deferred = deferred.then(loadedState =>
 				this.router.component().then(component => {
-					this.router.component = component;
+					this.router.asyncComponent_ = component;
 
 					if (this.router.cacheable) {
 						this.router.async = false;
