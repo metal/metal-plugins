@@ -1,7 +1,7 @@
 {
   "name": "metal-useragent",
   "description": "Metal.js browser user agent detection.",
-  "version": "2.2.0",
+  "version": "3.0.0",
   "dependencies": {
     "metal": "^2.16.5"
   },
