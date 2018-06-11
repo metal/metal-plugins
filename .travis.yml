@@ -1,18 +1,43 @@
+stages:
+  - precache
+  - lint
+  - test
+
 language: node_js
-node_js:
-- '8'
-sudo: false
-addons:
-  sauce_connect:
-    username: metal-plugins
-    no_ssl_bump_domains: all
-  jwt:
-    secure: Jv23RPlpERrmm55cFsCl032KC3r/iaxtPgeV4jZ74U9z8kKSZmi8FjlYfS0R5znlajC/pjmOD/jTTj8biFBo7MPD8tHx3IaQw6XWpDGGFbBfYqVVryraEjYfhvOfAAwqy5lIn/p3N+AgFWw8c96sLBVsLfFR+uuIe2EwH7ewfFUGvxFU5kIt8bjBqvJzurG3nKpUfEkEzZ6z6h0sJR8Ax4skzp2qye1T7NulLXrbwuneib7Q7kCJ/WH6LZh9so/2pWgGXlZ4Jb+Ii3IhrfiEVMik4nO9YtGyv8E2gcjNCBQXzUnO435t9gjUzwsTQUvdYunloHSllJlT244mjHCWECwjU+PdWJTPG5grrFJwq3aGABUaZN/CMPoqNtzyyk/1Xe7F8C64qNIuTRApWTPvzfyRFD/kTRo+Vq4xGLfkgzzndpJUD18vZf4F3rAy29AQzU7+YynlCc0OmGwrIMCsTMWtEyd2XL9ZToBfexNFUqVJsh2EwbcshMOJoYPp3IfC/jfqDA6+f746uipbuKwVxFci3/WL+0CsiBfaxmZCphVi44p+Le8f94dvlkBCugkPWE/tGO+QFZZcqStLJg2qimB2qqU02LqFi1JtD5NRksBbHH295XFXkahZFkgMOvA8LHS/JJ8MI6ZfItzEwNsQEYMIHQz8uMmlvhiNumGZT+M=
-before_install:
-- npm install
-- npm run lerna
-script:
-- npm run checkFormat
-- npm run lint
-- npm run test:saucelabs
-- npm run test:jest
+node_js: '8'
+
+env: PATH=~/npm/node_modules/.bin:$PATH
+
+before_install: |
+  [[ ! -x ~/npm/node_modules/.bin/npm ]] && {
+    cd ~/npm && npm install npm@^5.8.0
+    cd -
+  } || true
+  # avoids bugs around https://github.com/travis-ci/travis-ci/issues/5092
+  export PATH=~/npm/node_modules/.bin:$PATH
+
+install: npm ci --ignore-scripts
+
+cache:
+  directories:
+    - ~/.npm # cache npm's cache
+    - ~/npm # cache latest npm
+
+jobs:
+  include:
+    - stage: test
+      install: npm ci && npm run lerna:ci
+      addons:
+        sauce_connect:
+              username: metal-plugins
+              no_ssl_bump_domains: all
+        jwt:
+          secure: Jv23RPlpERrmm55cFsCl032KC3r/iaxtPgeV4jZ74U9z8kKSZmi8FjlYfS0R5znlajC/pjmOD/jTTj8biFBo7MPD8tHx3IaQw6XWpDGGFbBfYqVVryraEjYfhvOfAAwqy5lIn/p3N+AgFWw8c96sLBVsLfFR+uuIe2EwH7ewfFUGvxFU5kIt8bjBqvJzurG3nKpUfEkEzZ6z6h0sJR8Ax4skzp2qye1T7NulLXrbwuneib7Q7kCJ/WH6LZh9so/2pWgGXlZ4Jb+Ii3IhrfiEVMik4nO9YtGyv8E2gcjNCBQXzUnO435t9gjUzwsTQUvdYunloHSllJlT244mjHCWECwjU+PdWJTPG5grrFJwq3aGABUaZN/CMPoqNtzyyk/1Xe7F8C64qNIuTRApWTPvzfyRFD/kTRo+Vq4xGLfkgzzndpJUD18vZf4F3rAy29AQzU7+YynlCc0OmGwrIMCsTMWtEyd2XL9ZToBfexNFUqVJsh2EwbcshMOJoYPp3IfC/jfqDA6+f746uipbuKwVxFci3/WL+0CsiBfaxmZCphVi44p+Le8f94dvlkBCugkPWE/tGO+QFZZcqStLJg2qimB2qqU02LqFi1JtD5NRksBbHH295XFXkahZFkgMOvA8LHS/JJ8MI6ZfItzEwNsQEYMIHQz8uMmlvhiNumGZT+M=
+        chrome: stable
+      script: npm run test:saucelabs && npm run test:jest
+
+    - stage: lint
+      script: npm run checkFormat && npm run lint 
+      
+    - stage: precache
+      script: true

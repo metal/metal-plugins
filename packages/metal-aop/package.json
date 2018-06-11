@@ -1,40 +1,40 @@
 {
-	"name": "metal-aop",
-	"version": "3.0.0",
-	"description": "Metal.js utility for AOP.",
-	"license": "BSD",
-	"repository": "https://github.com/metal/metal-plugins/tree/master/packages/metal-aop",
-	"engines": {
-		"node": ">=0.12.0",
-		"npm": ">=3.0.0"
-	},
-	"main": "lib/AOP.js",
-	"jsnext:main": "src/AOP.js",
-	"files": [
-		"lib",
-		"src",
-		"test"
-	],
-	"scripts": {
-		"compile": "babel --presets env -d lib/ src/",
-		"precommit": "lint-staged",
-		"prepublish": "npm run compile"
-	},
-	"keywords": [
-		"metal"
-	],
-	"devDependencies": {
-		"babel-cli": "^6.26.0",
-		"babel-core": "^6.26.0",
-		"babel-loader": "^7.1.2",
-		"babel-preset-env": "^1.6.1",
-		"lint-staged": "^5.0.0",
-		"webpack": "^3.11.0"
-	},
-	"lint-staged": {
-		"*.js": [
-			"npm run format",
-			"git add"
-		]
-	}
+  "name": "metal-aop",
+  "description": "Metal.js utility for AOP.",
+  "version": "3.0.0",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "lint-staged": "^5.0.0",
+    "webpack": "^3.11.0"
+  },
+  "engines": {
+    "node": ">=0.12.0",
+    "npm": ">=3.0.0"
+  },
+  "files": [
+    "lib",
+    "src",
+    "test"
+  ],
+  "jsnext:main": "src/AOP.js",
+  "keywords": [
+    "metal"
+  ],
+  "license": "BSD",
+  "lint-staged": {
+    "*.js": [
+      "npm run format",
+      "git add"
+    ]
+  },
+  "main": "lib/AOP.js",
+  "repository": "https://github.com/metal/metal-plugins/tree/master/packages/metal-aop",
+  "scripts": {
+    "compile": "babel --presets env -d lib/ src/",
+    "precommit": "lint-staged",
+    "prepublish": "npm run compile"
+  }
 }

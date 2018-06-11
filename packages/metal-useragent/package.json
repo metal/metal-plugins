@@ -1,35 +1,35 @@
 {
   "name": "metal-useragent",
-  "version": "2.2.0",
   "description": "Metal.js browser user agent detection.",
-  "license": "BSD",
-  "repository": "metal/metal-useragent",
+  "version": "2.2.0",
+  "dependencies": {
+    "metal": "^2.16.5"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "webpack": "^3.11.0"
+  },
   "engines": {
     "node": ">=0.12.0",
     "npm": ">=3.0.0"
   },
-  "jsnext:main": "src/UA.js",
-  "main": "lib/UA.js",
   "files": [
     "lib",
     "src",
     "test"
   ],
+  "jsnext:main": "src/UA.js",
+  "keywords": [
+    "metal"
+  ],
+  "license": "BSD",
+  "main": "lib/UA.js",
+  "repository": "metal/metal-useragent",
   "scripts": {
     "build": "webpack",
     "compile": "babel --presets env -d lib/ src/",
     "prepublish": "npm run compile",
     "test": "gulp test"
-  },
-  "keywords": [
-    "metal"
-  ],
-  "dependencies": {
-    "metal": "^2.0.0"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.4.5",
-    "babel-preset-env": "^1.6.1",
-    "webpack": "^3.5.5"
   }
 }

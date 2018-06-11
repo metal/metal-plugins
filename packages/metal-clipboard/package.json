@@ -1,40 +1,40 @@
 {
   "name": "metal-clipboard",
-  "version": "2.0.0",
   "description": "Metal's component for copying content to the clipboard",
-  "license": "BSD",
-  "repository": "metal/metal-clipboard",
+  "version": "2.0.0",
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "metal": "^2.16.5",
+    "metal-dom": "^2.14.0",
+    "metal-state": "^2.16.5"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-transform-node-env-inline": "^0.4.0",
+    "babel-preset-env": "^1.6.1",
+    "webpack": "^3.11.0"
+  },
   "engines": {
     "node": ">=0.12.0",
     "npm": ">=3.0.0"
   },
-  "jsnext:main": "src/Clipboard.js",
-  "main": "lib/Clipboard.js",
   "files": [
     "lib",
     "src",
     "test"
   ],
-  "scripts": {
-    "build": "webpack",
-    "compile": "babel --presets env -d lib/ src/",
-    "prepublish": "npm run compile"
-  },
+  "jsnext:main": "src/Clipboard.js",
   "keywords": [
     "clipboard",
     "metal"
   ],
-  "dependencies": {
-    "bootstrap": "^3.3.6",
-    "metal": "^2.0.0",
-    "metal-state": "^2.0.0",
-    "metal-dom": "^2.0.0"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.4.5",
-    "babel-loader": "^7.1.2",
-    "babel-plugin-transform-node-env-inline": "^0.4.0",
-    "babel-preset-env": "^1.6.1",
-    "webpack": "^3.5.5"
+  "license": "BSD",
+  "main": "lib/Clipboard.js",
+  "repository": "metal/metal-clipboard",
+  "scripts": {
+    "build": "webpack",
+    "compile": "babel --presets env -d lib/ src/",
+    "prepublish": "npm run compile"
   }
 }

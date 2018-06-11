@@ -1,46 +1,46 @@
 {
   "name": "metal-drag-drop",
-  "version": "3.1.0",
   "description": "Metal's drag and drop component.",
-  "license": "BSD",
-  "repository": "https://github.com/metal/metal-plugins/tree/master/packages/metal-drag-drop",
+  "version": "3.1.0",
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "metal": "^2.16.5",
+    "metal-dom": "^2.16.5",
+    "metal-events": "^2.16.5",
+    "metal-position": "^2.1.1",
+    "metal-state": "^2.16.5"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-transform-node-env-inline": "^0.4.0",
+    "babel-preset-env": "^1.6.1",
+    "husky": "^0.14.3",
+    "metal-tools-soy": "^6.0.0",
+    "webpack": "^3.11.0"
+  },
   "engines": {
     "node": ">=0.12.0",
     "npm": ">=3.0.0"
   },
-  "jsnext:main": "src/all/drag.js",
-  "main": "lib/all/drag.js",
   "files": [
     "lib",
     "src/**/*.js",
     "test/**/*.js"
   ],
-  "scripts": {
-    "build": "npm run soy && webpack",
-    "compile": "babel --presets env -d lib/ src/",
-    "prepublish": "npm run soy && npm run compile",
-    "soy": "metalsoy --soyDeps node_modules/metal*/src/**/*.soy"
-  },
+  "jsnext:main": "src/all/drag.js",
   "keywords": [
     "drag",
     "drop",
     "metal"
   ],
-  "dependencies": {
-    "bootstrap": "^3.3.6",
-    "metal": "^2.14.0",
-    "metal-dom": "^2.14.0",
-    "metal-events": "^2.14.0",
-    "metal-position": "^2.1.1",
-    "metal-state": "^2.14.0"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.4.5",
-    "babel-loader": "^7.1.2",
-    "babel-plugin-transform-node-env-inline": "^0.2.0",
-    "babel-preset-env": "^1.6.1",
-    "husky": "^0.14.3",
-    "metal-tools-soy": "^4.2.6",
-    "webpack": "^3.11.0"
+  "license": "BSD",
+  "main": "lib/all/drag.js",
+  "repository": "https://github.com/metal/metal-plugins/tree/master/packages/metal-drag-drop",
+  "scripts": {
+    "build": "npm run soy && webpack",
+    "compile": "babel --presets env -d lib/ src/",
+    "prepublish": "npm run soy && npm run compile",
+    "soy": "metalsoy --soyDeps node_modules/metal*/src/**/*.soy"
   }
 }
