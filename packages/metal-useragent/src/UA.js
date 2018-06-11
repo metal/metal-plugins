@@ -168,10 +168,8 @@ class UA {
  */
 Object.defineProperty(UA, 'globals', {
 	writable: true,
-	value: function() {
-		if (!isServerSide()) {
-			return window;
-		}
+	value: {
+		window: isServerSide() ? null : window,
 	},
 });
 
