@@ -18,6 +18,7 @@ const rootDir = resolve(__dirname, '../');
 function linkBinaries(_package, nodeModulePath) {
 	console.log('linking binaries in ', _package);
 	shell.mkdir(nodeModulePath);
+	console.log(`ln -s ${rootDir}/node_modules/.bin ${nodeModulePath}/.bin`);
 	shell.exec(`ln -s ${rootDir}/node_modules/.bin ${nodeModulePath}/.bin`);
 }
 
