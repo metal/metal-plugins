@@ -8,8 +8,9 @@
     "compile": "lerna run compile",
     "clear": "rm -rf coverage",
     "format": "npm run prettier -- --write",
-    "lerna": "lerna bootstrap -- --no-optional --no-package-lock ",
-    "lerna:ci": "lerna bootstrap -- --no-optional --ci",
+    "lerna": "lerna bootstrap -- --no-optional --no-package-lock && npm run link-binaries",
+    "lerna:ci": "lerna bootstrap -- --no-optional --ci && npm run link-binaries",
+    "link-binaries": "node scripts/link-binaries.js",
     "lint": "eslint 'packages/*/{src,test}/**/*.js'",
     "saucelabs": "karma start karma-saucelabs.conf.js",
     "test": "karma start",
@@ -19,7 +20,7 @@
     "test:saucelabs": "npm run saucelabs -- 0 && npm run saucelabs -- 1 && npm run saucelabs -- 2 && npm run saucelabs -- 3",
     "test:watch": "karma start --single-run=false --auto-watch=true",
     "precommit": "lint-staged",
-    "prettier": "prettier-eslint 'packages/*/{src,test}/**/*.js'"
+    "prettier": "prettier-eslint '{packages, scripts}/*/{src,test}/**/*.js'"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
