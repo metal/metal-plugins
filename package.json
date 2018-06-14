@@ -1,11 +1,14 @@
 {
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "checkFormat": "npm run prettier -- --list-different",
     "compile": "lerna run compile",
     "clear": "rm -rf coverage",
     "format": "npm run prettier -- --write",
-    "lerna": "lerna bootstrap -- --no-optional && npm install --no-optional",
+    "lerna": "lerna bootstrap -- --no-optional --no-package-lock ",
     "lerna:ci": "lerna bootstrap -- --no-optional --ci",
     "lint": "eslint 'packages/*/{src,test}/**/*.js'",
     "saucelabs": "karma start karma-saucelabs.conf.js",
