@@ -8,25 +8,18 @@ node_js: '8'
 
 env: PATH=~/npm/node_modules/.bin:$PATH
 
-before_install: |
-  [[ ! -x ~/npm/node_modules/.bin/npm ]] && {
-    cd ~/npm && npm install npm@^5.8.0
-    cd -
-  } || true
-  # avoids bugs around https://github.com/travis-ci/travis-ci/issues/5092
-  export PATH=~/npm/node_modules/.bin:$PATH
+before_install:
+  - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.7.0
+  - export PATH=$HOME/.yarn/bin:$PATH
 
-install: npm ci --ignore-scripts
+install: yarn
 
 cache:
-  directories:
-    - ~/.npm # cache npm's cache
-    - ~/npm # cache latest npm
+  yarn: true
 
 jobs:
   include:
     - stage: test
-      install: npm ci && npm run lerna:ci
       addons:
         sauce_connect:
               username: metal-plugins
