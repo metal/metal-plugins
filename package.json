@@ -9,7 +9,6 @@
     "clear": "rm -rf coverage",
     "format": "npm run prettier -- --write",
     "lerna": "lerna bootstrap -- --no-optional --no-package-lock && npm run link-binaries",
-    "lerna:ci": "lerna bootstrap -- --no-optional --ci && npm run link-binaries",
     "link-binaries": "node scripts/link-binaries.js",
     "lint": "eslint 'packages/*/{src,test}/**/*.js'",
     "saucelabs": "karma start karma-saucelabs.conf.js",
