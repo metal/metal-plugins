@@ -6260,14 +6260,14 @@ metal-component@^2.15.0, metal-component@^2.16.5:
     metal-events "^2.16.5"
     metal-state "^2.16.5"
 
-metal-dom@^2.14.0, metal-dom@^2.16.5:
+metal-dom@^2.16.5:
   version "2.16.5"
   resolved "https://registry.yarnpkg.com/metal-dom/-/metal-dom-2.16.5.tgz#f78e9460863d6fc0f746cf1ea5060fc15af6c33f"
   dependencies:
     metal "^2.16.5"
     metal-events "^2.16.5"
 
-metal-events@^2.14.0, metal-events@^2.16.5:
+metal-events@^2.16.5:
   version "2.16.5"
   resolved "https://registry.yarnpkg.com/metal-events/-/metal-events-2.16.5.tgz#f953ad0f03b1c0d7804ebb4de035f83586f00f21"
   dependencies:
