@@ -1,0 +1,65 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getChildrenMap should create a keyed object based on props.key 1`] = `
+Map {
+  "foo" => Object {
+    "props": Object {
+      "key": "foo",
+    },
+    "tag": "div",
+  },
+  "bar" => Object {
+    "props": Object {
+      "key": "bar",
+    },
+    "tag": "div",
+  },
+}
+`;
+
+exports[`getChildrenMap should create a keyed object based on props.key when keys are numbers 1`] = `
+Map {
+  2 => Object {
+    "props": Object {
+      "key": 2,
+    },
+    "tag": "div",
+  },
+  1 => Object {
+    "props": Object {
+      "key": 1,
+    },
+    "tag": "div",
+  },
+}
+`;
+
+exports[`getChildrenMap should create a keyed object even if tag is all sorts of types 1`] = `
+Map {
+  "div-1" => Object {
+    "props": Object {
+      "key": "div-1",
+    },
+    "tag": "div",
+  },
+  "testTest-1" => Object {
+    "props": Object {
+      "key": "testTest-1",
+    },
+    "tag": [Function],
+  },
+  "__METAL_CSS_TRANSISIONS__-1" => Object {
+    "props": Object {
+      "key": "__METAL_CSS_TRANSISIONS__-1",
+    },
+    "tag": Object {
+      "foo": "bar",
+    },
+  },
+  "__METAL_CSS_TRANSISIONS__-2" => Object {
+    "props": Object {
+      "key": "__METAL_CSS_TRANSISIONS__-2",
+    },
+  },
+}
+`;
