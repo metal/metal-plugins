@@ -4,6 +4,12 @@ import Anim from '../src/Anim';
 import dom from 'metal-dom';
 
 describe('Anim', function() {
+	// Retry all tests in this suite up to 4 times,
+	// It only reports the final result as to whether
+	// the test passed at some point (after some number of tries),
+	// or failed (because all the tries failed).
+	this.retries(4);
+
 	before(function() {
 		// Disables mobile devices tests for these tests due sauce tunnel inconsistency
 		let devices = ['iPhone', 'iPad', 'Android'];
