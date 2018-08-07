@@ -2,7 +2,7 @@ const karmaConfig = require('./karma.conf.js');
 
 module.exports = function (config) {
     karmaConfig(config);
-    
+
     const preset = Object.assign(karmaConfig, {
         reporters: ['progress', 'coverage'],
 
@@ -46,6 +46,6 @@ module.exports = function (config) {
             'karma-sharding'
         ],
     });
-    
+
     config.set(preset);
 }
