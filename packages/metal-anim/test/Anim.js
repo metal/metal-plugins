@@ -10,17 +10,6 @@ describe('Anim', function() {
 	// or failed (because all the tries failed).
 	this.retries(4);
 
-	before(function() {
-		// Disables mobile devices tests for these tests due sauce tunnel inconsistency
-		let devices = ['iPhone', 'iPad', 'Android'];
-		let filtered = devices.filter(device => {
-			return window.navigator.userAgent.indexOf(device) !== -1;
-		});
-		if (filtered.length) {
-			this.skip();
-		}
-	});
-
 	beforeEach(function() {
 		this.element = document.createElement('div');
 		this.element.style.transitionDuration = '0.3s';
