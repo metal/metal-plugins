@@ -4,16 +4,31 @@ const karmaSauceLauncher = require('karma-sauce-launcher');
 
 const karmaConfig = require('./karma.conf.js');
 
+// Instances of browsers that specs will be splitted(sharded).
+function shard(browserList, instances) {
+	return Array.apply(null, { length: instances * browserList.length })
+		.map(function (e, i) { return browserList[i % browserList.length] });
+};
+
 module.exports = function(config) {
 	karmaConfig(config);
 
 	const launchers = [
 		{
 			// batch Apple
-			sl_safari: {
+			// Tests in latest safari(11) are disabled. Check the following links:
+			// https://stackoverflow.com/questions/47522080/selenium-webdriver-safari-11-0-typeerror-value-is-not-a-sequence?rq=1
+			// https://github.com/karma-runner/karma-sauce-launcher/pull/149
+			// sl_safari: {
+			// 	base: 'SauceLabs',
+			// 	browserName: 'safari',
+			// 	platform: 'OS X 10.11',
+			// },
+			sl_safari_10: {
 				base: 'SauceLabs',
 				browserName: 'safari',
-				platform: 'OS X 10.12',
+				platform: 'OS X 10.11',
+				version: '10',
 			},
 		},
 
@@ -75,7 +90,7 @@ module.exports = function(config) {
 	}
 
 	config.set({
-		browsers: Object.keys(batch),
+		browsers: shard(Object.keys(batch), 2),
 
 		browserDisconnectTimeout: 10000,
 		browserDisconnectTolerance: 2,
