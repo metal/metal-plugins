@@ -11,6 +11,7 @@ describe('Anim', function() {
 	this.retries(4);
 
 	beforeEach(function() {
+		this.timeout(1000);
 		this.element = document.createElement('div');
 		this.element.style.transitionDuration = '0.3s';
 		this.element.style.animationDuration = '0.2s';
