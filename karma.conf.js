@@ -14,12 +14,22 @@ let localLaunchers = {
             // Without a remote debugging port, Google Chrome exits immediately.
             '--remote-debugging-port=9333'
         ]
-    }
+    },
 };
+
+// Instances of browsers that specs will be splitted(sharded).
+function shard(browserList, instances) {
+    return Array.apply(null, { length: instances * browserList.length })
+        .map(function (e, i) { return browserList[i % browserList.length] });
+};
+
+if (!process.env.CHROME_BIN) {
+    process.env.CHROME_BIN = require('puppeteer').executablePath();
+}
 
 module.exports = function (config) {
     config.set({
-        browsers: Object.keys(localLaunchers),
+        browsers: shard([Object.keys(localLaunchers)], 4),
 
         customLaunchers: localLaunchers,
 
@@ -84,7 +94,7 @@ module.exports = function (config) {
 		browserConsoleLogOptions: { terminal: true },
 
         browserNoActivityTimeout: 5 * 60 * 1000,
-        
+
         client: {
             mocha: {
                 timeout: 4000,
