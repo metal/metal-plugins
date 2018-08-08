@@ -5,6 +5,8 @@ const karmaSauceLauncher = require('karma-sauce-launcher');
 const karmaConfig = require('./karma.conf.js');
 
 // Instances of browsers that specs will be splitted(sharded).
+// More information here: https://github.com/rschuft/karma-sharding
+// We cannot use sharding with Mocha.retries, so we are disabling it temporary.
 function shard(browserList, instances) {
 	return Array.apply(null, { length: instances * browserList.length })
 		.map(function (e, i) { return browserList[i % browserList.length] });
@@ -90,7 +92,7 @@ module.exports = function(config) {
 	}
 
 	config.set({
-		browsers: shard(Object.keys(batch), 2),
+		browsers: Object.keys(batch),
 
 		browserDisconnectTimeout: 10000,
 		browserDisconnectTolerance: 2,
@@ -105,7 +107,6 @@ module.exports = function(config) {
 			'karma-chai-sinon',
 			'karma-mocha',
 			'karma-webpack',
-			'karma-sharding',
 			karmaSauceLauncher,
 		],
 
