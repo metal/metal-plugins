@@ -8,6 +8,8 @@ describe('Anim', function() {
 	// It only reports the final result as to whether
 	// the test passed at some point (after some number of tries),
 	// or failed (because all the tries failed).
+	// More information: https://mochajs.org/#retry-tests
+	// http://webdriver.io/guide/testrunner/retry.html
 	this.retries(4);
 
 	before(function() {
