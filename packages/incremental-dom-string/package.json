@@ -28,9 +28,6 @@
   "scripts": {
     "build": "gulp build",
     "compile": "gulp build",
-    "lint": "eslint '{src,test}/**/*.js'",
-    "prepublish": "gulp build",
-    "test": "karma start",
-    "test:saucelabs": "karma start karma-saucelabs.conf.js"
+    "prepublish": "gulp build"
   }
 }
