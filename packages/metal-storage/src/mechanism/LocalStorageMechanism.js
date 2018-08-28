@@ -13,7 +13,9 @@ class LocalStorageMechanism extends StorageMechanism {
 	 * @return {Storage} the reference for global local storage. by default
 	 */
 	storage() {
-		return LocalStorageMechanism.globals.localStorage;
+		if (!isServerSide()) {
+			return LocalStorageMechanism.globals.localStorage;
+		}
 	}
 
 	/**

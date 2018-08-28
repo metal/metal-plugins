@@ -2,6 +2,7 @@
 
 import core from 'metal';
 import StorageMechanism from './mechanism/StorageMechanism';
+import {isServerSide} from 'metal';
 
 /**
  * Storage class.
@@ -14,6 +15,10 @@ class Storage {
 	 * @constructor
 	 */
 	constructor(mechanism) {
+		if (isServerSide()) {
+			return;
+		}
+
 		assertMechanismDefAndNotNull(mechanism);
 		assertMechanismInstanceOf(mechanism);
 
