@@ -1,6 +1,7 @@
 'use strict';
 
 import StorageMechanism from './StorageMechanism';
+import {isServerSide} from 'metal';
 
 /**
  * Abstract interface for storing and retrieving data using some persistence
@@ -41,6 +42,7 @@ class LocalStorageMechanism extends StorageMechanism {
 	 */
 	static isSupported() {
 		return (
+			!isServerSide() &&
 			typeof window !== 'undefined' &&
 			typeof window.localStorage !== 'undefined'
 		);
