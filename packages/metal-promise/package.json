@@ -11,6 +11,7 @@
     "@babel/preset-env": "^7.0.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^23.4.2",
+    "browserslist-config-clay": "^2.3.2",
     "jest": "^23.5.0",
     "regenerator-runtime": "^0.12.1"
   },
@@ -36,5 +37,8 @@
     "prepublish": "npm run compile",
     "test": "jest",
     "test:jest": "npm run test"
-  }
+  },
+  "browserslist": [
+    "extends browserslist-config-clay"
+  ]
 }

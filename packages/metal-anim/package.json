@@ -27,10 +27,14 @@
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
+    "browserslist-config-clay": "^2.3.2",
     "webpack": "^3.5.5"
   },
   "engines": {
     "node": ">=0.12.0",
     "npm": ">=3.0.0"
-  }
+  },
+  "browserslist": [
+    "extends browserslist-config-clay"
+  ]
 }

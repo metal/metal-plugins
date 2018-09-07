@@ -12,9 +12,10 @@
   "devDependencies": {
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
     "babel-loader": "^8.0.0",
     "babel-plugin-transform-node-env-inline": "^0.4.0",
-    "@babel/preset-env": "^7.0.0",
+    "browserslist-config-clay": "^2.3.2",
     "metal-tools-soy": "^6.0.0",
     "webpack": "^3.11.0"
   },
@@ -39,5 +40,8 @@
     "compile": "babel --presets=@babel/preset-env -d lib/ src/",
     "prepublish": "npm run soy && npm run compile",
     "soy": "metalsoy --soyDeps node_modules/metal*/src/**/*.soy"
-  }
+  },
+  "browserslist": [
+    "extends browserslist-config-clay"
+  ]
 }
