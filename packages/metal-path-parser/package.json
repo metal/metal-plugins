@@ -1,27 +1,9 @@
 {
   "name": "metal-path-parser",
-  "version": "1.0.3",
   "description": "Utility functions for parsing express-like url paths",
-  "license": "BSD",
-  "repository": "metal/metal-path-parser",
-  "engines": {
-    "node": ">=0.12.0",
-    "npm": ">=3.0.0"
-  },
-  "main": "lib/pathParser.js",
-  "jsnext:main": "src/pathParser.js",
-  "files": [
-    "lib",
-    "src",
-    "test"
-  ],
-  "scripts": {
-    "build": "webpack",
-    "compile": "babel --presets=@babel/preset-env -d lib/ src/",
-    "prepublish": "npm run compile"
-  },
-  "keywords": [
-    "metal"
+  "version": "1.0.3",
+  "browserslist": [
+    "extends browserslist-config-clay"
   ],
   "dependencies": {
     "metal": "^2.16.5"
@@ -33,7 +15,25 @@
     "browserslist-config-clay": "^2.3.2",
     "webpack": "^3.11.0"
   },
-  "browserslist": [
-    "extends browserslist-config-clay"
-  ]
+  "engines": {
+    "node": ">=0.12.0",
+    "npm": ">=3.0.0"
+  },
+  "files": [
+    "lib",
+    "src",
+    "test"
+  ],
+  "jsnext:main": "src/pathParser.js",
+  "keywords": [
+    "metal"
+  ],
+  "license": "BSD",
+  "main": "lib/pathParser.js",
+  "repository": "metal/metal-path-parser",
+  "scripts": {
+    "build": "webpack",
+    "compile": "babel --presets=@babel/preset-env -d lib/ src/",
+    "prepublish": "npm run compile"
+  }
 }

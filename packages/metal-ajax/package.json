@@ -2,6 +2,9 @@
   "name": "metal-ajax",
   "description": "Metal.js utility to perform Ajax requests",
   "version": "3.1.1",
+  "browserslist": [
+    "extends browserslist-config-clay"
+  ],
   "dependencies": {
     "metal": "^2.16.5",
     "metal-promise": "^3.0.4",
@@ -36,8 +39,5 @@
   "scripts": {
     "compile": "babel --presets=@babel/preset-env -d lib/ src/",
     "prepublish": "npm run compile"
-  },
-  "browserslist": [
-    "extends browserslist-config-clay"
-  ]
+  }
 }

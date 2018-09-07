@@ -3,6 +3,9 @@
   "description": "Ability to render Incremental DOM virtual elements into strings on the server and the client.",
   "version": "0.0.2",
   "author": "Eduardo Lundgren <eduardolundgren@gmail.com>",
+  "browserslist": [
+    "extends browserslist-config-clay"
+  ],
   "devDependencies": {
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.0.0",
@@ -29,8 +32,5 @@
     "build": "gulp build",
     "compile": "gulp build",
     "prepublish": "gulp build"
-  },
-  "browserslist": [
-    "extends browserslist-config-clay"
-  ]
+  }
 }

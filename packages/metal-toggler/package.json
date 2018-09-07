@@ -2,6 +2,9 @@
   "name": "metal-toggler",
   "description": "Metal's toggler component",
   "version": "3.1.0",
+  "browserslist": [
+    "extends browserslist-config-clay"
+  ],
   "dependencies": {
     "bootstrap": "^4.1.3",
     "metal": "^2.16.5",
@@ -44,8 +47,5 @@
     "build": "webpack",
     "compile": "babel --presets=@babel/preset-env -d lib/ src/",
     "prepublish": "npm run compile"
-  },
-  "browserslist": [
-    "extends browserslist-config-clay"
-  ]
+  }
 }

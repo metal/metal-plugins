@@ -2,6 +2,9 @@
   "name": "metal-useragent",
   "description": "Metal.js browser user agent detection.",
   "version": "3.0.0",
+  "browserslist": [
+    "extends browserslist-config-clay"
+  ],
   "dependencies": {
     "metal": "^2.16.5"
   },
@@ -33,8 +36,5 @@
     "compile": "babel --presets=@babel/preset-env -d lib/ src/",
     "prepublish": "npm run compile",
     "test": "gulp test"
-  },
-  "browserslist": [
-    "extends browserslist-config-clay"
-  ]
+  }
 }

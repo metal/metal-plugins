@@ -2,6 +2,9 @@
   "name": "metal-throttle",
   "description": "Metal's throttle utility",
   "version": "3.0.0",
+  "browserslist": [
+    "extends browserslist-config-clay"
+  ],
   "dependencies": {},
   "devDependencies": {
     "@babel/cli": "^7.0.0",
@@ -33,8 +36,5 @@
     "build": "webpack",
     "compile": "babel --presets=@babel/preset-env -d lib/ src/",
     "prepublish": "npm run compile"
-  },
-  "browserslist": [
-    "extends browserslist-config-clay"
-  ]
+  }
 }

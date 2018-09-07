@@ -2,6 +2,9 @@
   "name": "metal-aop",
   "description": "Metal.js utility for AOP.",
   "version": "3.0.0",
+  "browserslist": [
+    "extends browserslist-config-clay"
+  ],
   "devDependencies": {
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.0.0",
@@ -37,8 +40,5 @@
     "compile": "babel --presets=@babel/preset-env -d lib/ src/",
     "precommit": "lint-staged",
     "prepublish": "npm run compile"
-  },
-  "browserslist": [
-    "extends browserslist-config-clay"
-  ]
+  }
 }

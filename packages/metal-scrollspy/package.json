@@ -2,6 +2,9 @@
   "name": "metal-scrollspy",
   "description": "Metal's scrollspy component",
   "version": "2.1.0",
+  "browserslist": [
+    "extends browserslist-config-clay"
+  ],
   "dependencies": {
     "bootstrap": "^4.1.3",
     "metal": "^2.16.5",
@@ -40,8 +43,5 @@
     "compile": "babel --presets=@babel/preset-env -d lib/ src/",
     "prepublish": "npm run soy && npm run compile",
     "soy": "metalsoy --soyDeps node_modules/metal*/src/**/*.soy"
-  },
-  "browserslist": [
-    "extends browserslist-config-clay"
-  ]
+  }
 }

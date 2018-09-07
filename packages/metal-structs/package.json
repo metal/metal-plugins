@@ -2,6 +2,9 @@
   "name": "metal-structs",
   "description": "A Metal.js set of common data structures.",
   "version": "1.0.1",
+  "browserslist": [
+    "extends browserslist-config-clay"
+  ],
   "dependencies": {
     "metal": "^2.16.5"
   },
@@ -35,8 +38,5 @@
     "build": "webpack",
     "compile": "babel --presets=@babel/preset-env -d lib/ src/",
     "prepublish": "npm run compile"
-  },
-  "browserslist": [
-    "extends browserslist-config-clay"
-  ]
+  }
 }

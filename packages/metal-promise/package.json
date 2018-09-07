@@ -2,6 +2,9 @@
   "name": "metal-promise",
   "description": "Promises polyfill from Google's Closure Library in ES6",
   "version": "3.0.4",
+  "browserslist": [
+    "extends browserslist-config-clay"
+  ],
   "dependencies": {
     "metal": "^2.16.5"
   },
@@ -37,8 +40,5 @@
     "prepublish": "npm run compile",
     "test": "jest",
     "test:jest": "npm run test"
-  },
-  "browserslist": [
-    "extends browserslist-config-clay"
-  ]
+  }
 }
