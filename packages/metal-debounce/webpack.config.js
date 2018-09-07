@@ -24,7 +24,7 @@ let bundle = Object.assign({
 	devtool: 'source-map',
 	output: {
 		library: 'metal',
-		libraryTarget: 'global',
+		libraryTarget: 'this',
 		filename: `./build/globals/${packageName}.js`,
 	},
 	plugins: [
@@ -36,7 +36,7 @@ let bundle = Object.assign({
 let minified = Object.assign({
 	output: {
 		library: 'metal',
-		libraryTarget: 'global',
+		libraryTarget: 'this',
 		filename: './build/globals/debounce-min.js',
 	},
 	plugins: [
