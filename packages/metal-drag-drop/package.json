@@ -2,8 +2,11 @@
   "name": "metal-drag-drop",
   "description": "Metal's drag and drop component.",
   "version": "3.1.0",
+  "browserslist": [
+    "extends browserslist-config-clay"
+  ],
   "dependencies": {
-    "bootstrap": "^3.3.6",
+    "bootstrap": "^4.1.3",
     "metal": "^2.16.5",
     "metal-dom": "^2.16.5",
     "metal-events": "^2.16.5",
@@ -11,10 +14,12 @@
     "metal-state": "^2.16.5"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-loader": "^7.1.2",
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "babel-loader": "^8.0.0",
     "babel-plugin-transform-node-env-inline": "^0.4.0",
-    "babel-preset-env": "^1.6.1",
+    "browserslist-config-clay": "^2.3.2",
     "husky": "^0.14.3",
     "metal-tools-soy": "^6.0.0",
     "webpack": "^3.11.0"
@@ -39,7 +44,7 @@
   "repository": "https://github.com/metal/metal-plugins/tree/master/packages/metal-drag-drop",
   "scripts": {
     "build": "npm run soy && webpack",
-    "compile": "babel --presets env -d lib/ src/",
+    "compile": "babel --presets=@babel/preset-env -d lib/ src/",
     "prepublish": "npm run soy && npm run compile",
     "soy": "metalsoy --soyDeps node_modules/metal*/src/**/*.soy"
   }

@@ -2,11 +2,15 @@
   "name": "metal-aop",
   "description": "Metal.js utility for AOP.",
   "version": "3.0.0",
+  "browserslist": [
+    "extends browserslist-config-clay"
+  ],
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-preset-env": "^1.6.1",
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "babel-loader": "^8.0.0",
+    "browserslist-config-clay": "^2.3.2",
     "lint-staged": "^5.0.0",
     "webpack": "^3.11.0"
   },
@@ -33,7 +37,7 @@
   "main": "lib/AOP.js",
   "repository": "https://github.com/metal/metal-plugins/tree/master/packages/metal-aop",
   "scripts": {
-    "compile": "babel --presets env -d lib/ src/",
+    "compile": "babel --presets=@babel/preset-env -d lib/ src/",
     "precommit": "lint-staged",
     "prepublish": "npm run compile"
   }
