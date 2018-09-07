@@ -4,8 +4,8 @@
   "version": "2.0.0",
   "dependencies": {
     "metal": "^2.16.5",
-    "metal-dom": "^2.14.0",
-    "metal-events": "^2.14.0",
+    "metal-dom": "^2.16.5",
+    "metal-events": "^2.16.5",
     "metal-position": "^2.1.1",
     "metal-state": "^2.16.5"
   },

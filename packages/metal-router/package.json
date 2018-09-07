@@ -16,7 +16,7 @@
     "@babel/core": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "babel-loader": "^8.0.0",
-    "bootstrap": "^3.3.6",
+    "bootstrap": "^4.1.3",
     "browserslist-config-clay": "^2.3.2",
     "metal-ajax": "^2.0.3",
     "metal-tools-soy": "^6.0.0",

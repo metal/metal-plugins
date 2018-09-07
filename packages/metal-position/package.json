@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "metal": "^2.16.5",
-    "metal-dom": "^2.14.0"
+    "metal-dom": "^2.16.5"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
