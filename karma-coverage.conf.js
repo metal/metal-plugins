@@ -30,7 +30,7 @@ module.exports = function (config) {
                         options: {
                             compact: true,
                             comments: false,
-                            presets: ['env'],
+                            presets: ['@babel/preset-env'],
                             plugins: ['istanbul']
                         }
                     }

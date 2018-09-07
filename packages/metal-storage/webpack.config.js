@@ -11,7 +11,7 @@ let common = {
 				loader: 'babel-loader',
 				options: {
 					compact: false,
-					presets: ['env'],
+					presets: ['@babel/preset-env'],
 					plugins: ['babel-plugin-transform-node-env-inline'],
 				},
 			},

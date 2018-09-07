@@ -16,7 +16,7 @@
   "repository": "metal/metal-anim",
   "scripts": {
     "build": "webpack",
-    "compile": "babel --presets env -d lib/ src/",
+    "compile": "babel --presets=@babel/preset-env -d lib/ src/",
     "prepublish": "npm run compile"
   },
   "dependencies": {
@@ -24,8 +24,9 @@
     "metal-dom": "^2.16.5"
   },
   "devDependencies": {
-    "babel-cli": "^6.4.5",
-    "babel-preset-env": "^1.6.1",
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
     "webpack": "^3.5.5"
   },
   "engines": {

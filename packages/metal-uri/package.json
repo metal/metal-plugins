@@ -10,10 +10,10 @@
     "url-parse": "^1.1.9"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-preset-env": "^1.6.1",
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "babel-loader": "^8.0.0",
+    "@babel/preset-env": "^7.0.0",
     "webpack": "^3.11.0"
   },
   "engines": {
@@ -37,7 +37,7 @@
   },
   "repository": "https://github.com/metal/metal-plugins/tree/master/packages/metal-uri",
   "scripts": {
-    "compile": "babel --presets env -d lib/ src/",
+    "compile": "babel --presets=@babel/preset-env -d lib/ src/",
     "prepublish": "npm run compile"
   }
 }
