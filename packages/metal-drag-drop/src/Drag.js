@@ -155,7 +155,7 @@ class Drag extends State {
 	 * @protected
 	 */
 	buildEventObject_() {
-		return {
+		let defaultEventObject = {
 			placeholder: this.activeDragPlaceholder_,
 			source: this.activeDragSource_,
 			relativeX: this.sourceRelativePos_.x,
@@ -163,6 +163,18 @@ class Drag extends State {
 			x: this.sourceRegion_.left,
 			y: this.sourceRegion_.top,
 		};
+
+		if (!this.mousePos_) {
+			return defaultEventObject;
+		}
+
+		return object.mixin(
+			{
+				mouseX: this.mousePos_.x,
+				mouseY: this.mousePos_.y,
+			},
+			defaultEventObject
+		);
 	}
 
 	/**
