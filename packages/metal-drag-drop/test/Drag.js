@@ -6,7 +6,7 @@ import DragShim from '../src/helpers/DragShim';
 import DragTestHelper from './fixtures/DragTestHelper';
 import Position from 'metal-position';
 
-describe('Drag', function() {
+describe.only('Drag', function() {
 	let drag;
 	let item;
 	let item2;
@@ -512,6 +512,26 @@ describe('Drag', function() {
 			assert.ok(dom.hasClass(event.placeholder, 'dragging'));
 			assert.strictEqual(40 + 'px', event.placeholder.style.left);
 			assert.strictEqual(50 + 'px', event.placeholder.style.top);
+		});
+
+		it('should propagate original event when dragging', function () {
+			drag = new Drag({
+				dragPlaceholder: Drag.Placeholder.CLONE,
+				sources: item
+			});
+
+			let listener = sinon.stub();
+
+			drag.on(Drag.Events.DRAG, listener);
+
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
+
+			let event = listener.args[0][0];
+
+			assert.ok(event.originalEvent)
+			assert.strictEqual(event.originalEvent.clientX, 40);
+			assert.strictEqual(event.originalEvent.clientY, 50);
 		});
 
 		it('should remove clone from document after drag is over', function() {
