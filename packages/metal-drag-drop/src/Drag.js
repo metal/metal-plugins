@@ -155,26 +155,15 @@ class Drag extends State {
 	 * @protected
 	 */
 	buildEventObject_() {
-		let defaultEventObject = {
+		return {
 			placeholder: this.activeDragPlaceholder_,
 			source: this.activeDragSource_,
 			relativeX: this.sourceRelativePos_.x,
 			relativeY: this.sourceRelativePos_.y,
 			x: this.sourceRegion_.left,
 			y: this.sourceRegion_.top,
+			originalEvent: this.originalEvent_,
 		};
-
-		if (!this.mousePos_) {
-			return defaultEventObject;
-		}
-
-		return object.mixin(
-			{
-				mouseX: this.mousePos_.x,
-				mouseY: this.mousePos_.y,
-			},
-			defaultEventObject
-		);
 	}
 
 	/**
@@ -449,6 +438,7 @@ class Drag extends State {
 	 * @protected
 	 */
 	handleDragMoveEvent_(event) {
+		this.originalEvent_ = event;
 		let position = event.targetTouches ? event.targetTouches[0] : event;
 		let distanceX = position.clientX - this.mousePos_.x;
 		let distanceY = position.clientY - this.mousePos_.y;
