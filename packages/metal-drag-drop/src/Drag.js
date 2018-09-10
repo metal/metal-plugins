@@ -162,6 +162,7 @@ class Drag extends State {
 			relativeY: this.sourceRelativePos_.y,
 			x: this.sourceRegion_.left,
 			y: this.sourceRegion_.top,
+			originalEvent: this.originalEvent_,
 		};
 	}
 
@@ -420,7 +421,7 @@ class Drag extends State {
 	 * Triggered when the mouse drag action ends.
 	 * @protected
 	 */
-	handleDragEndEvent_() {
+	handleDragEndEvent_(event) {
 		if (this.autoScroll) {
 			this.autoScroll.stop();
 		}
@@ -437,6 +438,7 @@ class Drag extends State {
 	 * @protected
 	 */
 	handleDragMoveEvent_(event) {
+		this.originalEvent_ = event;
 		let position = event.targetTouches ? event.targetTouches[0] : event;
 		let distanceX = position.clientX - this.mousePos_.x;
 		let distanceY = position.clientY - this.mousePos_.y;
@@ -509,7 +511,7 @@ class Drag extends State {
 	 */
 	handleKeyDown_(event) {
 		if (event.keyCode === 27 && this.isDragging()) {
-			this.handleDragEndEvent_();
+			this.handleDragEndEvent_(event);
 		}
 	}
 
@@ -566,7 +568,7 @@ class Drag extends State {
 				event.keyCode === 27
 			) {
 				// Enter, space or esc during drag will end it.
-				this.handleDragEndEvent_();
+				this.handleDragEndEvent_(event);
 			}
 		} else if (event.keyCode === 13 || event.keyCode === 32) {
 			// Enter or space will start the drag action.
