@@ -514,10 +514,10 @@ describe.only('Drag', function() {
 			assert.strictEqual(50 + 'px', event.placeholder.style.top);
 		});
 
-		it('should propagate original event when dragging', function () {
+		it('should propagate original event when dragging', function() {
 			drag = new Drag({
 				dragPlaceholder: Drag.Placeholder.CLONE,
-				sources: item
+				sources: item,
 			});
 
 			let listener = sinon.stub();
@@ -529,7 +529,7 @@ describe.only('Drag', function() {
 
 			let event = listener.args[0][0];
 
-			assert.ok(event.originalEvent)
+			assert.ok(event.originalEvent);
 			assert.strictEqual(event.originalEvent.clientX, 40);
 			assert.strictEqual(event.originalEvent.clientY, 50);
 		});
