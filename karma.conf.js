@@ -66,7 +66,8 @@ module.exports = function (config) {
                         options: {
                             compact: true,
                             comments: false,
-                            presets: ['@babel/preset-env']
+                            presets: ['@babel/preset-env'],
+                            plugins: ['@babel/plugin-syntax-object-rest-spread']
                         }
                     }
                 }]
