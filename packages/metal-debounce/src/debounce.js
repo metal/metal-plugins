@@ -4,6 +4,10 @@
 // _toConsumableArray() function in babel glue to this rest-spread utilization
 import from from 'core-js/es6/array'; //eslint-disable-line
 
+// This import is used to polyfill Symbol method that is used in _toConsumableArray
+// function in babel glue to this rest-spread utilization
+import Symbol from 'core-js/es6/symbol';
+
 /**
  * Debounces function execution.
  * @param {!function()} fn
