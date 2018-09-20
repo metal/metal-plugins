@@ -29,5 +29,8 @@
     "build": "gulp build",
     "compile": "gulp build",
     "prepublish": "gulp build"
+  },
+  "dependencies": {
+    "del": "^3.0.0"
   }
 }
