@@ -7,7 +7,7 @@ const source = require('vinyl-source-stream');
 
 gulp.task('build', ['clean'], () =>
   rollup({
-    entry: 'index.js',
+    input: 'index.js',
     plugins: [
       babel({
         presets: [
@@ -22,7 +22,7 @@ gulp.task('build', ['clean'], () =>
       }),
     ],
     format: 'umd',
-    moduleName: 'IncrementalDOM',
+    name: 'IncrementalDOM',
   })
   .pipe(source('incremental-dom-string.js'))
   .pipe(buffer())
