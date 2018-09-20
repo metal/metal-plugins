@@ -2,23 +2,18 @@
   "name": "metal-toggler",
   "description": "Metal's toggler component",
   "version": "3.1.0",
-  "browserslist": [
-    "extends browserslist-config-clay"
-  ],
   "dependencies": {
-    "bootstrap": "^4.1.3",
+    "bootstrap": "^3.3.6",
     "metal": "^2.16.5",
-    "metal-dom": "^2.16.5",
-    "metal-events": "^2.16.5",
+    "metal-dom": "^2.14.0",
+    "metal-events": "^2.14.0",
     "metal-state": "^2.16.5"
   },
   "devDependencies": {
-    "@babel/cli": "^7.0.0",
-    "@babel/core": "^7.0.0",
-    "@babel/preset-env": "^7.0.0",
-    "babel-loader": "^8.0.0",
+    "babel-cli": "^6.26.0",
+    "babel-loader": "^7.1.2",
     "babel-plugin-transform-node-env-inline": "^0.4.0",
-    "browserslist-config-clay": "^2.3.2",
+    "babel-preset-env": "^1.6.1",
     "css-loader": "^0.28.7",
     "extract-text-webpack-plugin": "^3.0.0",
     "metal-tools-soy": "^6.0.0",
@@ -45,7 +40,7 @@
   "repository": "https://github.com/metal/metal-plugins/tree/master/packages/metal-toggler",
   "scripts": {
     "build": "webpack",
-    "compile": "babel --presets=@babel/preset-env -d lib/ src/",
+    "compile": "babel --presets env -d lib/ src/",
     "prepublish": "npm run compile"
   }
 }

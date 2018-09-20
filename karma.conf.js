@@ -66,7 +66,7 @@ module.exports = function (config) {
                         options: {
                             compact: true,
                             comments: false,
-                            presets: ['@babel/preset-env']
+                            presets: ['env']
                         }
                     }
                 }]

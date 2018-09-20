@@ -2,17 +2,13 @@
   "name": "metal-throttle",
   "description": "Metal's throttle utility",
   "version": "3.0.0",
-  "browserslist": [
-    "extends browserslist-config-clay"
-  ],
   "dependencies": {},
   "devDependencies": {
-    "@babel/cli": "^7.0.0",
-    "@babel/core": "^7.0.0",
-    "@babel/preset-env": "^7.0.0",
-    "babel-loader": "^8.0.0",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
     "babel-plugin-transform-node-env-inline": "^0.4.0",
-    "browserslist-config-clay": "^2.3.2",
+    "babel-preset-env": "^1.6.1",
     "uglifyjs-webpack-plugin": "^1.2.4",
     "webpack": "^3.11.0"
   },
@@ -34,7 +30,7 @@
   "repository": "metal/metal-plugins/tree/master/packages/metal-throttle",
   "scripts": {
     "build": "webpack",
-    "compile": "babel --presets=@babel/preset-env -d lib/ src/",
+    "compile": "babel --presets env -d lib/ src/",
     "prepublish": "npm run compile"
   }
 }

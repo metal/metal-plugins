@@ -12,7 +12,7 @@ let common = {
 				loader: 'babel-loader',
 				options: {
 					compact: false,
-					presets: ['@babel/preset-env'],
+					presets: ['env'],
 					plugins: ['babel-plugin-transform-node-env-inline'],
 				},
 			},

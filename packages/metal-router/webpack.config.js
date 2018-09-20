@@ -8,7 +8,7 @@ module.exports = {
 				loader: 'babel-loader',
 				options: {
 					compact: false,
-					presets: ['@babel/preset-env']
+					presets: ['babel-preset-env']
 				}
 			}
 		}]

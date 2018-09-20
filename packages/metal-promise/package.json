@@ -2,21 +2,14 @@
   "name": "metal-promise",
   "description": "Promises polyfill from Google's Closure Library in ES6",
   "version": "3.0.4",
-  "browserslist": [
-    "extends browserslist-config-clay"
-  ],
   "dependencies": {
     "metal": "^2.16.5"
   },
   "devDependencies": {
-    "@babel/cli": "^7.0.0",
-    "@babel/core": "^7.0.0",
-    "@babel/preset-env": "^7.0.0",
-    "babel-core": "^7.0.0-bridge.0",
-    "babel-jest": "^23.4.2",
-    "browserslist-config-clay": "^2.3.2",
-    "jest": "^23.5.0",
-    "regenerator-runtime": "^0.12.1"
+    "babel-cli": "^6.26.0",
+    "babel-jest": "^21.2.0",
+    "babel-preset-metal": "^4.0.0",
+    "jest": "^21.2.1"
   },
   "engines": {
     "node": ">=0.12.0",

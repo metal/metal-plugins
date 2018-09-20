@@ -12,7 +12,7 @@ gulp.task('build', ['clean'], () =>
       babel({
         presets: [
           [
-            "@babel/preset-env",
+            "env",
             {
               "modules": false
             }
