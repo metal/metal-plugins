@@ -409,4 +409,30 @@ describe('element creation', () => {
 			expect(matchData[1]).toBe('bar');
 		});
 	});
+
+	describe('with XSS vectors', () => {
+		it('should escape attributes', () => {
+			const contentXSS = "<img src=x onerror=alert('contentxss')>";
+			const output = renderToString(() => {
+				elementOpen('div');
+					elementOpen('span');
+						text(contentXSS);
+					elementClose('span');
+				elementClose('div');
+			});
+
+			expect(output).toBe('<div><span>&lt;img src=x onerror=alert(&#039;contentxss&#039;)&gt;</span></div>');
+		});
+
+		it('should escape text nodes', () => {
+			const attributeXSS = "\"><img src=x onerror=alert('attributexss')>";
+			const output = renderToString(() => {
+				elementOpen('div', null, ['id', attributeXSS]);
+					text('text');
+				elementClose('div');
+			});
+
+			expect(output).toBe('<div id=\"&quot;&gt;&lt;img src=x onerror=alert(&#039;attributexss&#039;)&gt;\">text</div>');
+		});
+	});
 });

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Demo: IncrementalDomString</title>
+	<script src="../../lib/incremental-dom-string.js"></script>
+</head>
+<body>
+	<h1>IncrementalDomString</h1>
+    <script type="text/javascript">
+        const attributeXSS = "\"><img src=x onerror=alert('attributexss')>";
+        const contentXSS = "<img src=x onerror=alert('contentxss')>";
+
+        const output1 = IncrementalDOM.renderToString(
+            () => {
+                IncrementalDOM.elementOpen('div');
+                    IncrementalDOM.elementOpen('span');
+                        IncrementalDOM.text(contentXSS);
+                    IncrementalDOM.elementClose('span');
+                IncrementalDOM.elementClose('div');
+            }
+        );
+
+        const output2 = IncrementalDOM.renderToString(
+            () => {
+                IncrementalDOM.elementOpen('div', null, ['id', attributeXSS]);
+                    IncrementalDOM.text('text');
+                IncrementalDOM.elementClose('div');
+            }
+        );
+
+        document.body.innerHTML = output1;
+        document.body.innerHTML = output2;
+	</script>
+</body>
+</html>
