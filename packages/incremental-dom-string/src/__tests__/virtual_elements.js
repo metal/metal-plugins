@@ -1,15 +1,14 @@
+import {currentElement, patch, text} from '../core.js';
+
 import {
 	attr,
-	currentElement,
 	elementClose,
 	elementOpen,
 	elementOpenEnd,
 	elementOpenStart,
 	elementVoid,
-	patch,
 	renderToString,
-	text,
-} from '../index.js';
+} from '../virtual_elements.js';
 
 describe('element creation', () => {
 	const findAttribute = (node, attr, check = true) => {
@@ -17,9 +16,9 @@ describe('element creation', () => {
 		const match = node.innerHTML.match(data);
 
 		if (check) {
-			assert.ok(match !== null);
-			assert.ok(Array.isArray(match));
-			assert.strictEqual(match.length, 2);
+			expect(match !== null).toBeTruthy();
+			expect(Array.isArray(match)).toBeTruthy();
+			expect(match.length).toEqual(2);
 		}
 
 		return match;
@@ -31,7 +30,7 @@ describe('element creation', () => {
 			text('Hello wor', val => val + 'l', val => val + 'd');
 			elementClose('div');
 		});
-		assert.strictEqual(output, '<div>Hello world</div>');
+		expect(output).toBe('<div>Hello world</div>');
 	});
 
 	it('when creating a single node with text', () => {
@@ -40,7 +39,7 @@ describe('element creation', () => {
 			text('Hello world');
 			elementClose('div');
 		});
-		assert.strictEqual(output, '<div>Hello world</div>');
+		expect(output).toBe('<div>Hello world</div>');
 	});
 
 	it('when creating a single node with a child node with text', () => {
@@ -51,7 +50,7 @@ describe('element creation', () => {
 			elementClose('span');
 			elementClose('div');
 		});
-		assert.strictEqual(output, '<div><span>Hello world 2</span></div>');
+		expect(output).toBe('<div><span>Hello world 2</span></div>');
 	});
 
 	it('when creating a single node with multiple child nodes with text', () => {
@@ -65,8 +64,7 @@ describe('element creation', () => {
 			elementClose('span');
 			elementClose('div');
 		});
-		assert.strictEqual(
-			output,
+		expect(output).toBe(
 			'<div><p>First child</p><span>Second child</span></div>'
 		);
 	});
@@ -77,7 +75,7 @@ describe('element creation', () => {
 			text('Test text');
 			elementClose('div');
 		});
-		assert.strictEqual(output, '<div id="test-div">Test text</div>');
+		expect(output).toBe('<div id="test-div">Test text</div>');
 	});
 
 	it('when creating a single node with multiple static attributes', () => {
@@ -103,7 +101,7 @@ describe('element creation', () => {
 			text('Some text');
 			elementClose('div');
 		});
-		assert.strictEqual(output, expected);
+		expect(output).toEqual(expected);
 	});
 
 	it('when creating a single node with multiple attributes', () => {
@@ -129,7 +127,7 @@ describe('element creation', () => {
 			text('Some text');
 			elementClose('div');
 		});
-		assert.strictEqual(output, expected);
+		expect(output).toEqual(expected);
 	});
 
 	it('when creating a single node with several child nodes with attributes and text', () => {
@@ -156,7 +154,7 @@ describe('element creation', () => {
 			'</div>',
 		].join('');
 
-		assert.strictEqual(output, expected);
+		expect(output).toEqual(expected);
 	});
 
 	it('when creating a void node', () => {
@@ -164,7 +162,7 @@ describe('element creation', () => {
 			elementVoid('input', null, ['type', 'text']);
 		});
 
-		assert.strictEqual(output, '<input type="text"></input>');
+		expect(output).toBe('<input type="text"></input>');
 	});
 
 	it('when creating a void node with various attributes', () => {
@@ -178,8 +176,7 @@ describe('element creation', () => {
 				'test',
 			]);
 		});
-		assert.strictEqual(
-			output,
+		expect(output).toBe(
 			'<div id="test-id" name="test-name" data-test="test"></div>'
 		);
 	});
@@ -200,7 +197,7 @@ describe('element creation', () => {
 		let expected =
 			'<main id="main-element" data-foo="bar"><section></section></main>';
 
-		assert.strictEqual(output, expected);
+		expect(output).toEqual(expected);
 
 		/* eslint-disable */
 		function createList(n = 1) {
@@ -213,7 +210,7 @@ describe('element creation', () => {
 			elementClose('ul');
 		}
 
-		const node = { innerHTML: '' };
+		const node = {innerHTML: ''};
 
 		patch(node, () => {
 			return createList(10);
@@ -234,7 +231,7 @@ describe('element creation', () => {
 			'</ul>',
 		].join('');
 
-		assert.strictEqual(node.innerHTML, expected);
+		expect(node.innerHTML).toEqual(expected);
 
 		patch(node, () => {
 			createList(5);
@@ -250,7 +247,7 @@ describe('element creation', () => {
 			'</ul>',
 		].join('');
 
-		assert.strictEqual(node.innerHTML, expected);
+		expect(node.innerHTML).toEqual(expected);
 	});
 
 	it('should flush the output', () => {
@@ -266,14 +263,13 @@ describe('element creation', () => {
 			elementClose('main');
 		});
 
-		assert.strictEqual(
-			output1,
+		expect(output1).toBe(
 			'<main id="main-element" data-foo="bar"><section></section></main>'
 		);
 
 		const output2 = renderToString(() => {});
 
-		assert.strictEqual(output2, '');
+		expect(output2).toBe('');
 	});
 
 	it('should allow creating complex nodes', () => {
@@ -298,11 +294,11 @@ describe('element creation', () => {
 			'</a></div></main>',
 		].join('');
 
-		assert.strictEqual(output, expected);
+		expect(output).toEqual(expected);
 	});
 
 	describe('with patch', () => {
-		let el = { innerHTML: '' };
+		let el = {innerHTML: ''};
 
 		beforeEach(() => {
 			patch(el, () => {
@@ -332,47 +328,47 @@ describe('element creation', () => {
 				'data-foo="Hello" data-bar="World"></div>',
 			].join('');
 
-			assert.strictEqual(el.innerHTML, expected);
+			expect(el.innerHTML).toEqual(expected);
 		});
 
 		it('should render with static attributes', () => {
 			const matchId = findAttribute(el, 'id');
-			assert.strictEqual(matchId[1], 'someId');
+			expect(matchId[1]).toBe('someId');
 
 			const matchClass = findAttribute(el, 'class');
-			assert.strictEqual(matchClass[1], 'someClass');
+			expect(matchClass[1]).toBe('someClass');
 
 			const matchData = findAttribute(el, 'data-custom');
-			assert.strictEqual(matchData[1], 'custom');
+			expect(matchData[1]).toBe('custom');
 		});
 
 		it('should render with dynamic attributes', () => {
 			let matchData = findAttribute(el, 'data-foo');
-			assert.strictEqual(matchData[1], 'Hello');
+			expect(matchData[1]).toBe('Hello');
 
 			matchData = findAttribute(el, 'data-bar');
-			assert.strictEqual(matchData[1], 'World');
+			expect(matchData[1]).toBe('World');
 		});
 
 		it('should allow creation without static attributes', () => {
 			patch(el, () => {
 				elementVoid('div', null, null, 'id', 'test');
 			});
-			assert.strictEqual(el.innerHTML, '<div id="test"></div>');
+			expect(el.innerHTML).toBe('<div id="test"></div>');
 		});
 
 		it('should patch inside renderToString flush buffer', () => {
 			const output = renderToString(() => {
 				patch(el, () => elementVoid('div'));
-				assert.strictEqual(el.innerHTML, '<div></div>');
+				expect(el.innerHTML).toBe('<div></div>');
 			});
-			assert.strictEqual(output, '');
+			expect(output).toBe('');
 		});
 
 		it('should capture currentElement inside patch', () => {
 			let current = {};
 			patch(current, () => elementVoid('div'));
-			assert.strictEqual(current, currentElement());
+			expect(current).toBe(currentElement());
 		});
 	});
 
@@ -387,32 +383,62 @@ describe('element creation', () => {
 		}
 
 		it('should be present when specified', () => {
-			const node = { innerHTML: '' };
+			const node = {innerHTML: ''};
 
-			patch(node, () => render({ key: 'hello' }));
+			patch(node, () => render({key: 'hello'}));
 
 			const matchData = findAttribute(node, 'data-expanded');
-			assert.strictEqual(matchData[1], 'hello');
+			expect(matchData[1]).toBe('hello');
 		});
 
 		it('should not be present when not specified', () => {
-			const node = { innerHTML: '' };
+			const node = {innerHTML: ''};
 
-			patch(node, () => render({ key: false }));
+			patch(node, () => render({key: false}));
 
 			const matchData = findAttribute(node, 'data-expanded', false);
-			assert.ok(matchData === null);
-			assert.strictEqual(node.innerHTML, '<div></div>');
+			expect(matchData === null).toBeTruthy();
+			expect(node.innerHTML).toBe('<div></div>');
 		});
 
 		it('should update output when changed', () => {
-			const node = { innerHTML: '' };
+			const node = {innerHTML: ''};
 
-			patch(node, () => render({ key: 'foo' }));
-			patch(node, () => render({ key: 'bar' }));
+			patch(node, () => render({key: 'foo'}));
+			patch(node, () => render({key: 'bar'}));
 
 			const matchData = findAttribute(node, 'data-expanded');
-			assert.strictEqual(matchData[1], 'bar');
+			expect(matchData[1]).toBe('bar');
+		});
+	});
+
+	describe('with XSS vectors', () => {
+		it('should escape attributes', () => {
+			const contentXSS = "<img src=x onerror=alert('contentxss')>";
+			const output = renderToString(() => {
+				elementOpen('div');
+				elementOpen('span');
+				text(contentXSS);
+				elementClose('span');
+				elementClose('div');
+			});
+
+			expect(output).toBe(
+				"<div><span>&lt;img src=x onerror=alert('contentxss')></span></div>"
+			);
+		});
+
+		it('should escape text nodes', () => {
+			const attributeXSS = "\"><img src=x onerror=alert('attributexss')>";
+			const output = renderToString(() => {
+				elementOpen('div', null, ['id', attributeXSS]);
+				text('text');
+				elementClose('div');
+			});
+
+			expect(output).toBe(
+				'<div id="&quot;><img src=x onerror=alert(\'attributexss\')>">text</div>'
+			);
 		});
 	});
 });

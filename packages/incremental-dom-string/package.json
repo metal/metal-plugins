@@ -4,18 +4,14 @@
   "version": "0.0.2",
   "author": "Eduardo Lundgren <eduardolundgren@gmail.com>",
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-preset-env": "^1.6.1",
-    "gulp": "^3.9.1",
-    "nyc": "^10.1.2",
-    "rollup-plugin-babel": "^2.7.1",
-    "rollup-stream": "^1.19.0",
-    "sinon": "^1.17.7",
-    "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0",
-    "webpack": "^3.11.0"
+    "babel-jest": "^23.6.0",
+    "babel-preset-env": "^1.7.0",
+    "eslint": "^3.13.1",
+    "eslint-config-google": "^0.7.1",
+    "eslint-loader": "^1.6.1",
+    "jest": "^23.6.0",
+    "webpack": "^4.19.1",
+    "webpack-cli": "^3.1.0"
   },
   "files": [
     "index.js",
@@ -26,8 +22,13 @@
   "main": "./lib/incremental-dom-string.js",
   "repository": "metal/metal-plugins/tree/master/packages/incremental-dom-string.git",
   "scripts": {
-    "build": "gulp build",
-    "compile": "gulp build",
-    "prepublish": "gulp build"
+    "build": "webpack",
+    "compile": "webpack",
+    "prepublish": "webpack",
+    "test": "jest",
+    "test:jest": "npm run test"
+  },
+  "dependencies": {
+    "xss-filters": "^1.2.7"
   }
 }

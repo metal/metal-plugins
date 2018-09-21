@@ -3,6 +3,7 @@
   "description": "Promises polyfill from Google's Closure Library in ES6",
   "version": "3.0.4",
   "dependencies": {
+    "babel-preset-env": "^1.7.0",
     "metal": "^2.16.5"
   },
   "devDependencies": {
