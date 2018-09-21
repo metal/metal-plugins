@@ -4,8 +4,7 @@ module.exports = {
 	entry: './index.js',
 	output: {
 		filename: 'incremental-dom-string.js',
-		library: 'IncrementalDOM',
-		libraryTarget: 'this',
+		libraryTarget: 'commonjs',
 		path: path.resolve('./lib/'),
 	},
 	module: {
