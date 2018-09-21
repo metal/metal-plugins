@@ -1,8 +1,4 @@
-import {
-	currentElement,
-	patch,
-	text,
-} from '../core.js';
+import {currentElement, patch, text} from '../core.js';
 
 import {
 	attr,
@@ -68,7 +64,9 @@ describe('element creation', () => {
 			elementClose('span');
 			elementClose('div');
 		});
-		expect(output).toBe('<div><p>First child</p><span>Second child</span></div>');
+		expect(output).toBe(
+			'<div><p>First child</p><span>Second child</span></div>'
+		);
 	});
 
 	it('when creating a single node with attributes', () => {
@@ -178,7 +176,9 @@ describe('element creation', () => {
 				'test',
 			]);
 		});
-		expect(output).toBe('<div id="test-id" name="test-name" data-test="test"></div>');
+		expect(output).toBe(
+			'<div id="test-id" name="test-name" data-test="test"></div>'
+		);
 	});
 
 	it('when patching a node', () => {
@@ -210,7 +210,7 @@ describe('element creation', () => {
 			elementClose('ul');
 		}
 
-		const node = { innerHTML: '' };
+		const node = {innerHTML: ''};
 
 		patch(node, () => {
 			return createList(10);
@@ -263,7 +263,9 @@ describe('element creation', () => {
 			elementClose('main');
 		});
 
-		expect(output1).toBe('<main id="main-element" data-foo="bar"><section></section></main>');
+		expect(output1).toBe(
+			'<main id="main-element" data-foo="bar"><section></section></main>'
+		);
 
 		const output2 = renderToString(() => {});
 
@@ -296,7 +298,7 @@ describe('element creation', () => {
 	});
 
 	describe('with patch', () => {
-		let el = { innerHTML: '' };
+		let el = {innerHTML: ''};
 
 		beforeEach(() => {
 			patch(el, () => {
@@ -381,18 +383,18 @@ describe('element creation', () => {
 		}
 
 		it('should be present when specified', () => {
-			const node = { innerHTML: '' };
+			const node = {innerHTML: ''};
 
-			patch(node, () => render({ key: 'hello' }));
+			patch(node, () => render({key: 'hello'}));
 
 			const matchData = findAttribute(node, 'data-expanded');
 			expect(matchData[1]).toBe('hello');
 		});
 
 		it('should not be present when not specified', () => {
-			const node = { innerHTML: '' };
+			const node = {innerHTML: ''};
 
-			patch(node, () => render({ key: false }));
+			patch(node, () => render({key: false}));
 
 			const matchData = findAttribute(node, 'data-expanded', false);
 			expect(matchData === null).toBeTruthy();
@@ -400,10 +402,10 @@ describe('element creation', () => {
 		});
 
 		it('should update output when changed', () => {
-			const node = { innerHTML: '' };
+			const node = {innerHTML: ''};
 
-			patch(node, () => render({ key: 'foo' }));
-			patch(node, () => render({ key: 'bar' }));
+			patch(node, () => render({key: 'foo'}));
+			patch(node, () => render({key: 'bar'}));
 
 			const matchData = findAttribute(node, 'data-expanded');
 			expect(matchData[1]).toBe('bar');
@@ -411,28 +413,32 @@ describe('element creation', () => {
 	});
 
 	describe('with XSS vectors', () => {
-		it('should escape attributes', () => {
+		it('should escape attributes', () => {
 			const contentXSS = "<img src=x onerror=alert('contentxss')>";
 			const output = renderToString(() => {
 				elementOpen('div');
-					elementOpen('span');
-						text(contentXSS);
-					elementClose('span');
+				elementOpen('span');
+				text(contentXSS);
+				elementClose('span');
 				elementClose('div');
 			});
 
-			expect(output).toBe('<div><span>&lt;img src=x onerror=alert(\'contentxss\')></span></div>');
+			expect(output).toBe(
+				"<div><span>&lt;img src=x onerror=alert('contentxss')></span></div>"
+			);
 		});
 
-		it('should escape text nodes', () => {
+		it('should escape text nodes', () => {
 			const attributeXSS = "\"><img src=x onerror=alert('attributexss')>";
 			const output = renderToString(() => {
 				elementOpen('div', null, ['id', attributeXSS]);
-					text('text');
+				text('text');
 				elementClose('div');
 			});
 
-			expect(output).toBe('<div id=\"&quot;><img src=x onerror=alert(\'attributexss\')>\">text</div>');
+			expect(output).toBe(
+				'<div id="&quot;><img src=x onerror=alert(\'attributexss\')>">text</div>'
+			);
 		});
 	});
 });
