@@ -1,4 +1,4 @@
-import escapeHtml from './escapeHtml.js';
+import {inDoubleQuotedAttr} from 'xss-filters';
 import {symbols} from './symbols.js';
 
 /** @const */
@@ -19,7 +19,7 @@ const updateAttribute = function(el, name, value) {
 // have a specific mutator.
 attributes[symbols.default] = function(el, name, value) {
 	if (Array.isArray(el)) {
-		el.push(` ${name}="${escapeHtml(value)}"`);
+		el.push(` ${name}="${inDoubleQuotedAttr(value)}"`);
 	}
 };
 

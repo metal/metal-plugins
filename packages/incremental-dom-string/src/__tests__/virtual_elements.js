@@ -421,7 +421,7 @@ describe('element creation', () => {
 				elementClose('div');
 			});
 
-			expect(output).toBe('<div><span>&lt;img src=x onerror=alert(&#039;contentxss&#039;)&gt;</span></div>');
+			expect(output).toBe('<div><span>&lt;img src=x onerror=alert(\'contentxss\')></span></div>');
 		});
 
 		it('should escape text nodes', () => {
@@ -432,7 +432,7 @@ describe('element creation', () => {
 				elementClose('div');
 			});
 
-			expect(output).toBe('<div id=\"&quot;&gt;&lt;img src=x onerror=alert(&#039;attributexss&#039;)&gt;\">text</div>');
+			expect(output).toBe('<div id=\"&quot;><img src=x onerror=alert(\'attributexss\')>\">text</div>');
 		});
 	});
 });
