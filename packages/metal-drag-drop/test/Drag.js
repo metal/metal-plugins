@@ -514,6 +514,42 @@ describe('Drag', function() {
 			assert.strictEqual(50 + 'px', event.placeholder.style.top);
 		});
 
+		it('should propagate original event when dragging', function() {
+			drag = new Drag({
+				dragPlaceholder: Drag.Placeholder.CLONE,
+				sources: item,
+			});
+
+			let listener = sinon.stub();
+
+			drag.on(Drag.Events.DRAG, listener);
+
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
+
+			let event = listener.args[0][0];
+
+			assert.ok(event.originalEvent);
+			assert.strictEqual(event.originalEvent.clientX, 40);
+			assert.strictEqual(event.originalEvent.clientY, 50);
+		});
+
+		it('should propagate original event when finishing a dragging', function() {
+			drag = new Drag({
+				dragPlaceholder: Drag.Placeholder.CLONE,
+				sources: item,
+			});
+
+			let listener = sinon.stub();
+			drag.on(Drag.Events.END, listener);
+
+			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
+			DragTestHelper.triggerMouseEvent(document, 'mouseup');
+
+			assert.ok(listener.args[0][0].originalEvent);
+		});
+
 		it('should remove clone from document after drag is over', function() {
 			drag = new Drag({
 				dragPlaceholder: Drag.Placeholder.CLONE,

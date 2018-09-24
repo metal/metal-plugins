@@ -37,7 +37,7 @@ jobs:
       script: npm run test:saucelabs && npm run test:jest
 
     - stage: lint
-      script: npm run checkFormat && npm run lint 
-      
+      script: npm run checkFormat && npm run lint
+
     - stage: precache
       script: true

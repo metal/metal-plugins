@@ -14,12 +14,24 @@ let localLaunchers = {
             // Without a remote debugging port, Google Chrome exits immediately.
             '--remote-debugging-port=9333'
         ]
-    }
+    },
 };
+
+// Instances of browsers that specs will be splitted(sharded).
+// More information here: https://github.com/rschuft/karma-sharding
+// We cannot use sharding with Mocha.retries, so we are disabling it temporary.
+function shard(browserList, instances) {
+    return Array.apply(null, { length: instances * browserList.length })
+        .map(function (e, i) { return browserList[i % browserList.length] });
+};
+
+if (!process.env.CHROME_BIN) {
+    process.env.CHROME_BIN = require('puppeteer').executablePath();
+}
 
 module.exports = function (config) {
     config.set({
-        browsers: Object.keys(localLaunchers),
+        browsers: [Object.keys(localLaunchers)],
 
         customLaunchers: localLaunchers,
 
@@ -29,14 +41,13 @@ module.exports = function (config) {
             value: 315186
         }],
 
-        frameworks: ['sharding', 'mocha', 'chai-sinon'],
+        frameworks: ['mocha', 'chai-sinon'],
 
         plugins: [
             'karma-chai-sinon',
             'karma-chrome-launcher',
             'karma-mocha',
             'karma-webpack',
-            'karma-sharding'
         ],
 
         preprocessors: {
@@ -84,7 +95,7 @@ module.exports = function (config) {
 		browserConsoleLogOptions: { terminal: true },
 
         browserNoActivityTimeout: 5 * 60 * 1000,
-        
+
         client: {
             mocha: {
                 timeout: 4000,
