@@ -29,9 +29,9 @@
     "concurrently": "^3.5.1",
     "eslint": "^4.17.0",
     "eslint-config-liferay": "^2.0.18",
-    "istanbul": "^0.4.5",
     "eslint-plugin-prettier": "^2.6.0",
     "eslint-plugin-react": "^7.7.0",
+    "istanbul": "^0.4.5",
     "karma": "^1.1.0",
     "karma-chai-sinon": "^0.1.5",
     "karma-chrome-launcher": "^2.2.0",
@@ -40,7 +40,7 @@
     "karma-sharding": "^4.4.0",
     "karma-sinon": "^1.0.5",
     "karma-webpack": "^3.0.0",
-    "lerna": "^2.11.0",
+    "lerna": "^3.4.0",
     "lint-staged": "^7.1.0",
     "mocha": "^4.1.0",
     "ngrok": "^3.0.1",
@@ -56,5 +56,6 @@
       "npm run format",
       "git add"
     ]
-  }
+  },
+  "name": "metal-plugins"
 }
