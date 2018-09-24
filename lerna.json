@@ -1,5 +1,15 @@
 {
-  "lerna": "2.10.1",
+  "ignoreChanges": [
+    "**/__fixtures__/**",
+    "**/__tests__/**",
+    "**/demos/**",
+    "**/test/**",
+    "**/package-lock.json",
+    "**/package.json",
+    "**/*.config.js",
+    "**/*.md",
+    "**/.*"
+  ],
   "packages": [
     "packages/*"
   ],
