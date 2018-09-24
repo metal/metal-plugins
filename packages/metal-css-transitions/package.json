@@ -36,6 +36,7 @@
     "snapshotSerializers": [
       "metal-jest-serializer"
     ],
+    "testURL": "http://localhost:8080",
     "timers": "fake"
   },
   "babel": {
