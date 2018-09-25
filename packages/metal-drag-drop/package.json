@@ -1,7 +1,7 @@
 {
   "name": "metal-drag-drop",
   "description": "Metal's drag and drop component.",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "dependencies": {
     "bootstrap": "^3.3.6",
     "metal": "^2.16.5",
