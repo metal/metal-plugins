@@ -1,7 +1,7 @@
 {
   "name": "metal-router",
   "description": "Routing solution to link URLs to Metal.js components using HTML5 History API.",
-  "version": "3.8.1",
+  "version": "3.8.2",
   "dependencies": {
     "metal": "^2.16.5",
     "metal-component": "^2.15.0",
