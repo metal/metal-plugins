@@ -31,5 +31,6 @@
   "engines": {
     "node": ">=0.12.0",
     "npm": ">=3.0.0"
-  }
+  },
+  "gitHead": "282bfcb63137ce4b9982f91a7a10a7eb8f2ab15a"
 }

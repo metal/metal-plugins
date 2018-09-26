@@ -31,5 +31,6 @@
   },
   "dependencies": {
     "xss-filters": "^1.2.7"
-  }
+  },
+  "gitHead": "282bfcb63137ce4b9982f91a7a10a7eb8f2ab15a"
 }

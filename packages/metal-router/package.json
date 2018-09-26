@@ -45,5 +45,6 @@
     "soy": "metalsoy",
     "soy:demo": "metalsoy -s demos/**/*.soy -d demos/src --soyDeps src/**/*.soy",
     "start": "superstatic . -c ./demos/server.json --port 8080"
-  }
+  },
+  "gitHead": "282bfcb63137ce4b9982f91a7a10a7eb8f2ab15a"
 }

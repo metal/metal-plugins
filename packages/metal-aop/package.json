@@ -36,5 +36,6 @@
     "compile": "babel --presets env -d lib/ src/",
     "precommit": "lint-staged",
     "prepublish": "npm run compile"
-  }
+  },
+  "gitHead": "282bfcb63137ce4b9982f91a7a10a7eb8f2ab15a"
 }
