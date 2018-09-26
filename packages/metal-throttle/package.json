@@ -1,8 +1,7 @@
 {
   "name": "metal-throttle",
   "description": "Metal's throttle utility",
-  "version": "3.0.0",
-  "dependencies": {},
+  "version": "3.0.1",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",

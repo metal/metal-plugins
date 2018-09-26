@@ -1,7 +1,7 @@
 {
   "name": "metal-promise",
   "description": "Promises polyfill from Google's Closure Library in ES6",
-  "version": "3.0.4",
+  "version": "3.0.5",
   "dependencies": {
     "metal": "^2.16.6"
   },

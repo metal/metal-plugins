@@ -1,10 +1,10 @@
 {
   "name": "metal-uri",
   "description": "Class for parsing and formatting URIs.",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "dependencies": {
     "metal": "^2.16.6",
-    "metal-structs": "^1.0.0",
+    "metal-structs": "^1.0.2",
     "path-browserify": "0.0.0",
     "resolve-pathname": "^2.2.0",
     "url-parse": "^1.1.9"

@@ -1,12 +1,12 @@
 {
   "name": "metal-affix",
   "description": "Metal's affix component",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "dependencies": {
     "metal": "^2.16.6",
     "metal-dom": "^2.16.6",
     "metal-events": "^2.16.6",
-    "metal-position": "^2.1.1",
+    "metal-position": "^2.1.2",
     "metal-state": "^2.16.6"
   },
   "devDependencies": {

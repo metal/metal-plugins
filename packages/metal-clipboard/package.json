@@ -1,7 +1,7 @@
 {
   "name": "metal-clipboard",
   "description": "Metal's component for copying content to the clipboard",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "dependencies": {
     "bootstrap": "^3.3.6",
     "metal": "^2.16.6",

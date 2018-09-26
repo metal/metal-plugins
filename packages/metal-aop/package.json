@@ -1,7 +1,7 @@
 {
   "name": "metal-aop",
   "description": "Metal.js utility for AOP.",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",

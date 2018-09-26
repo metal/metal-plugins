@@ -1,7 +1,7 @@
 {
   "name": "incremental-dom-string",
   "description": "Ability to render Incremental DOM virtual elements into strings on the server and the client.",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "Eduardo Lundgren <eduardolundgren@gmail.com>",
   "devDependencies": {
     "babel-jest": "^23.6.0",

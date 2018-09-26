@@ -1,7 +1,7 @@
 {
   "name": "metal-toggler",
   "description": "Metal's toggler component",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "dependencies": {
     "bootstrap": "^3.3.6",
     "metal": "^2.16.6",

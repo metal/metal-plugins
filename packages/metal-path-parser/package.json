@@ -1,6 +1,6 @@
 {
   "name": "metal-path-parser",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Utility functions for parsing express-like url paths",
   "license": "BSD",
   "repository": "metal/metal-path-parser",
