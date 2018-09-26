@@ -47,8 +47,8 @@
   },
   "dependencies": {
     "metal-anim": "^2.0.0",
-    "metal-dom": "^2.16.5",
-    "metal-jsx": "^2.16.5"
+    "metal-dom": "^2.16.6",
+    "metal-jsx": "^2.16.6"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

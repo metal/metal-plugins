@@ -3,7 +3,7 @@
   "description": "Class for parsing and formatting URIs.",
   "version": "3.1.1",
   "dependencies": {
-    "metal": "^2.16.5",
+    "metal": "^2.16.6",
     "metal-structs": "^1.0.0",
     "path-browserify": "0.0.0",
     "resolve-pathname": "^2.2.0",
