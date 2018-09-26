@@ -3,7 +3,7 @@
   "description": "Metal.js browser user agent detection.",
   "version": "3.0.0",
   "dependencies": {
-    "metal": "^2.16.5"
+    "metal": "^2.16.6"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

@@ -7,8 +7,8 @@
     "email": "edu@rdo.io"
   },
   "dependencies": {
-    "metal": "^2.16.5",
-    "metal-dom": "^2.14.0"
+    "metal": "^2.16.6",
+    "metal-dom": "^2.16.6"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

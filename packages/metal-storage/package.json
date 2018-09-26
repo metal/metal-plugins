@@ -3,7 +3,7 @@
   "description": "Provides a convenient API for data persistence using a selected data storage mechanism",
   "version": "2.0.0",
   "dependencies": {
-    "metal": "^2.16.5"
+    "metal": "^2.16.6"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
