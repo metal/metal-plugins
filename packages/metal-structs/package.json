@@ -3,7 +3,7 @@
   "description": "A Metal.js set of common data structures.",
   "version": "1.0.1",
   "dependencies": {
-    "metal": "^2.16.5"
+    "metal": "^2.16.6"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
