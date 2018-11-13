@@ -1,12 +1,14 @@
 import CancellablePromise from '../src/CancellablePromise';
 import sinon from 'sinon';
-import { async, nullFunction } from 'metal';
+import {async, nullFunction} from 'metal';
 
 let unhandledRejectionHandler = sinon.stub();
 
 describe('CancellablePromise', function() {
 	beforeAll(function() {
-		CancellablePromise.setUnhandledRejectionHandler(unhandledRejectionHandler);
+		CancellablePromise.setUnhandledRejectionHandler(
+			unhandledRejectionHandler
+		);
 	});
 
 	beforeEach(function() {
@@ -39,13 +41,15 @@ describe('CancellablePromise', function() {
 				async.nextTick(function() {
 					resolve('value');
 				});
-			}).catch(function() {
-				fail();
-			}).then(function(value) {
-				expect(value).toBe('value');
-				expect(unhandledRejectionHandler.callCount).toBe(0);
-				done();
-			});
+			})
+				.catch(function() {
+					fail();
+				})
+				.then(function(value) {
+					expect(value).toBe('value');
+					expect(unhandledRejectionHandler.callCount).toBe(0);
+					done();
+				});
 		});
 
 		test('promise should resolve with another promise', function(done) {
@@ -57,12 +61,15 @@ describe('CancellablePromise', function() {
 
 			const promise = CancellablePromise.resolve(blocker);
 
-			promise.then(function(value) {
-				hasFulfilled = true;
-				expect(value).toBe('value');
-			}, function() {
-				fail();
-			});
+			promise.then(
+				function(value) {
+					hasFulfilled = true;
+					expect(value).toBe('value');
+				},
+				function() {
+					fail();
+				}
+			);
 
 			expect(hasFulfilled).toBe(false);
 			resolveBlocker('value');
@@ -77,15 +84,18 @@ describe('CancellablePromise', function() {
 		});
 
 		test('promise should resolve without calling constructor', function(done) {
-			CancellablePromise.resolve().then(function() {
-				return 'value1';
-			}).then(function(value) {
-				expect(value).toBe('value1');
-				return 'value2';
-			}).then(function(value) {
-				expect(value).toBe('value2');
-				done();
-			});
+			CancellablePromise.resolve()
+				.then(function() {
+					return 'value1';
+				})
+				.then(function(value) {
+					expect(value).toBe('value1');
+					return 'value2';
+				})
+				.then(function(value) {
+					expect(value).toBe('value2');
+					done();
+				});
 		});
 
 		test('multiple resolves should not throw error', function(done) {
@@ -109,56 +119,69 @@ describe('CancellablePromise', function() {
 		test('thenAlways should work with promise.resolve', function(done) {
 			let thenAlwaysCalled = false;
 
-			CancellablePromise.resolve('value').thenAlways(function() {
-				expect(arguments.length).toBe(0);
-				thenAlwaysCalled = true;
-			}).then(function(value) {
-				expect(value).toBe('value');
-				expect(thenAlwaysCalled).toBe(true);
-				done();
-			});
+			CancellablePromise.resolve('value')
+				.thenAlways(function() {
+					expect(arguments.length).toBe(0);
+					thenAlwaysCalled = true;
+				})
+				.then(function(value) {
+					expect(value).toBe('value');
+					expect(thenAlwaysCalled).toBe(true);
+					done();
+				});
 		});
 
 		test('thenAlways should work with promise.reject', function(done) {
 			let thenAlwaysCalled = false;
 
-			CancellablePromise.reject('error').thenAlways(function() {
-				expect(arguments.length).toBe(0);
-				thenAlwaysCalled = true;
-			}).then(function() {
-				fail();
-			}, function(value) {
-				expect(value).toBe('error');
-				expect(thenAlwaysCalled).toBe(true);
-				expect(unhandledRejectionHandler.callCount).toBe(0);
-				done();
-			});
+			CancellablePromise.reject('error')
+				.thenAlways(function() {
+					expect(arguments.length).toBe(0);
+					thenAlwaysCalled = true;
+				})
+				.then(
+					function() {
+						fail();
+					},
+					function(value) {
+						expect(value).toBe('error');
+						expect(thenAlwaysCalled).toBe(true);
+						expect(unhandledRejectionHandler.callCount).toBe(0);
+						done();
+					}
+				);
 		});
 
 		test('thenAlways should be callable multiple times', function(done) {
 			const calls = [];
 
-			CancellablePromise.resolve('value').then(function(value) {
-				expect(value).toBe('value');
-				calls.push(1);
-				return value;
-			}).thenAlways(function() {
-				expect(arguments.length).toBe(0);
-				calls.push(2);
-				fail('thenAlways throw');
-			}).then(function(value) {
-				expect(value).toBe('value');
-				calls.push(3);
-			}).thenAlways(function() {
-				expect(calls).toEqual([1, 2, 3]);
-			}).thenAlways(function() {
-				const rejection = unhandledRejectionHandler.getCall(0);
-				expect(unhandledRejectionHandler.callCount).toBe(1);
-				expect(rejection.args[0].message).toBe('thenAlways throw');
-			}).thenAlways(function() {
-				expect(calls.length).toBe(3);
-				done();
-			});
+			CancellablePromise.resolve('value')
+				.then(function(value) {
+					expect(value).toBe('value');
+					calls.push(1);
+					return value;
+				})
+				.thenAlways(function() {
+					expect(arguments.length).toBe(0);
+					calls.push(2);
+					fail('thenAlways throw');
+				})
+				.then(function(value) {
+					expect(value).toBe('value');
+					calls.push(3);
+				})
+				.thenAlways(function() {
+					expect(calls).toEqual([1, 2, 3]);
+				})
+				.thenAlways(function() {
+					const rejection = unhandledRejectionHandler.getCall(0);
+					expect(unhandledRejectionHandler.callCount).toBe(1);
+					expect(rejection.args[0].message).toBe('thenAlways throw');
+				})
+				.thenAlways(function() {
+					expect(calls.length).toBe(3);
+					done();
+				});
 		});
 	});
 
@@ -167,13 +190,15 @@ describe('CancellablePromise', function() {
 			new CancellablePromise(function(resolve, reject) {
 				reject('error');
 				resolve();
-			}).then(function() {
-				fail();
-			}).catch(function(error) {
-				expect(error).toBe('error');
-				expect(unhandledRejectionHandler.callCount).toBe(0);
-				done();
-			});
+			})
+				.then(function() {
+					fail();
+				})
+				.catch(function(error) {
+					expect(error).toBe('error');
+					expect(unhandledRejectionHandler.callCount).toBe(0);
+					done();
+				});
 		});
 
 		test('promise should call thenAlways after error is caught', function(done) {
@@ -181,11 +206,13 @@ describe('CancellablePromise', function() {
 				async.nextTick(function() {
 					reject('error');
 				});
-			}).catch(function(error) {
-				expect(error).toBe('error');
-			}).thenAlways(function() {
-				done();
-			});
+			})
+				.catch(function(error) {
+					expect(error).toBe('error');
+				})
+				.thenAlways(function() {
+					done();
+				});
 		});
 
 		test('promise should catch errors thrown after resolving', function(done) {
@@ -193,12 +220,14 @@ describe('CancellablePromise', function() {
 				async.nextTick(function() {
 					resolve();
 				});
-			}).then(function() {
-				fail('Error in then');
-			}).catch(function(error) {
-				expect(error.message).toBe('Error in then');
-				done();
-			});
+			})
+				.then(function() {
+					fail('Error in then');
+				})
+				.catch(function(error) {
+					expect(error.message).toBe('Error in then');
+					done();
+				});
 		});
 
 		test('multiple rejects should not throw error', function(done) {
@@ -209,15 +238,18 @@ describe('CancellablePromise', function() {
 				reject('bar');
 			});
 
-			promise.then(function() {
-				fail();
-			}, function(value) {
-				timesCalled++;
-				expect(value).toBe('foo');
-				expect(timesCalled).toBe(1);
-				expect(unhandledRejectionHandler.callCount).toBe(0);
-				done();
-			});
+			promise.then(
+				function() {
+					fail();
+				},
+				function(value) {
+					timesCalled++;
+					expect(value).toBe('foo');
+					expect(timesCalled).toBe(1);
+					expect(unhandledRejectionHandler.callCount).toBe(0);
+					done();
+				}
+			);
 		});
 
 		test('promise should resolve with rejected promise', function(done) {
@@ -229,12 +261,15 @@ describe('CancellablePromise', function() {
 
 			const promise = CancellablePromise.resolve(blocker);
 
-			promise.then(function() {
-				fail();
-			}, function(value) {
-				hasRejected = true;
-				expect(value).toBe('error');
-			});
+			promise.then(
+				function() {
+					fail();
+				},
+				function(value) {
+					hasRejected = true;
+					expect(value).toBe('error');
+				}
+			);
 
 			expect(hasRejected).toBe(false);
 			rejectBlocker('error');
@@ -255,10 +290,12 @@ describe('CancellablePromise', function() {
 				async.nextTick(function() {
 					reject('non cancellation error');
 				});
-			}).catch(function(error) {
-				expect(error.IS_CANCELLATION_ERROR).toBe(true);
-				done();
-			}).cancel();
+			})
+				.catch(function(error) {
+					expect(error.IS_CANCELLATION_ERROR).toBe(true);
+					done();
+				})
+				.cancel();
 		});
 
 		test('promise should not continue after cancel', function(done) {
@@ -276,38 +313,52 @@ describe('CancellablePromise', function() {
 		test('promise should catch rejection error rather than cancellation error', function(done) {
 			const promise = CancellablePromise.reject('error');
 			promise.cancel();
-			promise.then(function() {
-				fail();
-			}, function(error) {
-				expect(unhandledRejectionHandler.callCount).toBe(0);
-				expect(error).toBe('error');
-				done();
-			});
+			promise.then(
+				function() {
+					fail();
+				},
+				function(error) {
+					expect(unhandledRejectionHandler.callCount).toBe(0);
+					expect(error).toBe('error');
+					done();
+				}
+			);
 		});
 
 		test('promise cancelling should propagate', function(done) {
 			let cancelError;
 			const promise = new CancellablePromise(nullFunction);
 
-			const promise2 = promise.then(function() {
-				fail();
-			}, function(error) {
-				cancelError = error;
-				expect(error.IS_CANCELLATION_ERROR).toBe(true);
-				expect(error.message).toBe('parent cancel message');
-				return 'value';
-			}).then(function(value) {
-				expect(value).toBe('value');
-			}, function() {
-				fail();
-			});
+			const promise2 = promise
+				.then(
+					function() {
+						fail();
+					},
+					function(error) {
+						cancelError = error;
+						expect(error.IS_CANCELLATION_ERROR).toBe(true);
+						expect(error.message).toBe('parent cancel message');
+						return 'value';
+					}
+				)
+				.then(
+					function(value) {
+						expect(value).toBe('value');
+					},
+					function() {
+						fail();
+					}
+				);
 
-			const promise3 = promise.then(function() {
-				fail();
-			}, function(error) {
-				expect(cancelError).toBe('parent cancel message');
-				return null;
-			});
+			const promise3 = promise.then(
+				function() {
+					fail();
+				},
+				function(error) {
+					expect(cancelError).toBe('parent cancel message');
+					return null;
+				}
+			);
 
 			promise.cancel('parent cancel message');
 			CancellablePromise.all([promise2, promise3]).thenAlways(function() {
@@ -329,7 +380,7 @@ describe('CancellablePromise', function() {
 			const array = [
 				createPromise('a', 100),
 				createPromise('b'),
-				createPromise(0)
+				createPromise(0),
 			];
 
 			CancellablePromise.all(array).then(function(value) {
@@ -342,7 +393,7 @@ describe('CancellablePromise', function() {
 			const array = [
 				createThenable('a'),
 				createThenable('b'),
-				createThenable(0)
+				createThenable(0),
 			];
 
 			CancellablePromise.all(array).then(function(value) {
@@ -352,11 +403,7 @@ describe('CancellablePromise', function() {
 		});
 
 		test('promise.all should work on non thenables', function(done) {
-			const array = [
-				createPromise('a', 100),
-				'b',
-				createThenable(0)
-			];
+			const array = [createPromise('a', 100), 'b', createThenable(0)];
 
 			CancellablePromise.all(array).then(function(value) {
 				expect(value).toEqual(['a', 'b', 0]);
@@ -368,7 +415,7 @@ describe('CancellablePromise', function() {
 			const array = [
 				createPromise('a', 100),
 				createRejectedPromise('rejected-b'),
-				createPromise('c')
+				createPromise('c'),
 			];
 
 			CancellablePromise.all(array).catch(function(error) {
@@ -390,31 +437,31 @@ describe('CancellablePromise', function() {
 				createRejectedPromise('b'),
 				'c',
 				createRejectedThenable('rejected-d'),
-				createPromise('e')
+				createPromise('e'),
 			];
 
 			CancellablePromise.allSettled(array).then(function(value) {
 				expect(value).toEqual([
 					{
 						fulfilled: true,
-						value: 'a'
+						value: 'a',
 					},
 					{
 						fulfilled: false,
-						reason: 'b'
+						reason: 'b',
 					},
 					{
 						fulfilled: true,
-						value: 'c'
+						value: 'c',
 					},
 					{
 						fulfilled: true,
-						value: undefined
+						value: undefined,
 					},
 					{
 						fulfilled: true,
-						value: 'e'
-					}
+						value: 'e',
+					},
 				]);
 				done();
 			});
@@ -434,7 +481,7 @@ describe('CancellablePromise', function() {
 				createPromise('a', 40),
 				createRejectedPromise('rejected-b', 30),
 				createRejectedPromise('rejected-c', 10),
-				createPromise('d', 20)
+				createPromise('d', 20),
 			];
 
 			CancellablePromise.firstFulfilled(array).then(function(value) {
@@ -448,7 +495,7 @@ describe('CancellablePromise', function() {
 				createPromise('a', 40),
 				createRejectedPromise('rejected-b', 30),
 				createRejectedPromise('rejected-c', 10),
-				'd'
+				'd',
 			];
 
 			CancellablePromise.firstFulfilled(array).then(function(value) {
@@ -461,22 +508,31 @@ describe('CancellablePromise', function() {
 			const array = [
 				createRejectedPromise('rejected-a', 20),
 				createRejectedPromise('rejected-b', 30),
-				createRejectedPromise('rejected-c', 10)
+				createRejectedPromise('rejected-c', 10),
 			];
 
-			CancellablePromise.firstFulfilled(array).then(function() {
-				fail();
-			}, function(value) {
-				expect(value).toEqual(['rejected-a', 'rejected-b', 'rejected-c']);
-				expect(unhandledRejectionHandler.callCount).toBe(0);
-				done();
-			});
+			CancellablePromise.firstFulfilled(array).then(
+				function() {
+					fail();
+				},
+				function(value) {
+					expect(value).toEqual([
+						'rejected-a',
+						'rejected-b',
+						'rejected-c',
+					]);
+					expect(unhandledRejectionHandler.callCount).toBe(0);
+					done();
+				}
+			);
 		});
 	});
 });
 
 function fail(msg) {
-	throw new Error(msg || 'Test failed. This assertion shouldn\'t have been reached.');
+	throw new Error(
+		msg || 'Test failed. This assertion shouldn\'t have been reached.'
+	);
 }
 
 function createPromise(value, delay) {
