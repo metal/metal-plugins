@@ -421,7 +421,7 @@ class Drag extends State {
 	 * Triggered when the mouse drag action ends.
 	 * @protected
 	 */
-	handleDragEndEvent_(event) {
+	handleDragEndEvent_() {
 		if (this.autoScroll) {
 			this.autoScroll.stop();
 		}
