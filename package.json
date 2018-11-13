@@ -4,7 +4,7 @@
     "checkFormat": "npm run prettier -- --list-different",
     "compile": "lerna run compile",
     "clearCoverage": "rm -rf coverage",
-    "clear": "lerna clear",
+    "clear": "lerna clean",
     "format": "npm run prettier -- --write",
     "lerna": "lerna bootstrap -- --no-optional --hoist && npm install --no-optional",
     "lerna:ci": "lerna bootstrap -- --no-optional --hoist --ci",
