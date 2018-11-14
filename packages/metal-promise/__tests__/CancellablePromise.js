@@ -17,7 +17,7 @@ describe('CancellablePromise', function() {
 
 	describe('resolve', function() {
 		test('promise should resolve', function(done) {
-			new CancellablePromise(function(resolve, reject) {
+			new CancellablePromise(function(resolve) {
 				resolve('value');
 			}).then(function(value) {
 				expect(value).toBe('value');
@@ -26,7 +26,7 @@ describe('CancellablePromise', function() {
 		});
 
 		test('promise should resolve asynchronously', function(done) {
-			new CancellablePromise(function(resolve, reject) {
+			new CancellablePromise(function(resolve) {
 				async.nextTick(function() {
 					resolve('value');
 				});
@@ -37,7 +37,7 @@ describe('CancellablePromise', function() {
 		});
 
 		test('promise should resolve with catch', function(done) {
-			new CancellablePromise(function(resolve, reject) {
+			new CancellablePromise(function(resolve) {
 				async.nextTick(function() {
 					resolve('value');
 				});
@@ -101,7 +101,7 @@ describe('CancellablePromise', function() {
 		test('multiple resolves should not throw error', function(done) {
 			let timesCalled = 0;
 
-			const promise = new CancellablePromise(function(resolve, reject) {
+			const promise = new CancellablePromise(function(resolve) {
 				resolve('foo');
 				resolve('bar');
 			});
@@ -216,7 +216,7 @@ describe('CancellablePromise', function() {
 		});
 
 		test('promise should catch errors thrown after resolving', function(done) {
-			new CancellablePromise(function(resolve, reject) {
+			new CancellablePromise(function(resolve) {
 				async.nextTick(function() {
 					resolve();
 				});
@@ -355,6 +355,7 @@ describe('CancellablePromise', function() {
 					fail();
 				},
 				function(error) {
+					cancelError = error;
 					expect(cancelError).toBe('parent cancel message');
 					return null;
 				}
@@ -529,21 +530,37 @@ describe('CancellablePromise', function() {
 	});
 });
 
-function fail(msg) {
+/**
+ * This function is used to throw a error when asserting
+ * @param {?String} message
+ */
+function fail(message) {
 	throw new Error(
-		msg || 'Test failed. This assertion shouldn\'t have been reached.'
+		message || 'Test failed. This assertion shouldn\'t have been reached.'
 	);
 }
 
+/**
+ * This function is used to mock a promise that will be resolved.
+ * @param {!*} value
+ * @param {number} delay
+ * @return {function} a promise that returns the received value param.
+ */
 function createPromise(value, delay) {
 	delay = delay || 10;
-	return new CancellablePromise(function(resolve, reject) {
+	return new CancellablePromise(function(resolve) {
 		setTimeout(function() {
 			resolve(value);
 		}, delay);
 	});
 }
 
+/**
+ * This function is used to mock a promise that will be rejected.
+ * @param {!*} value
+ * @param {number} delay
+ * @return {function} a promise that reject the value.
+ */
 function createRejectedPromise(value, delay) {
 	delay = delay || 10;
 	return new CancellablePromise(function(resolve, reject) {
@@ -553,12 +570,24 @@ function createRejectedPromise(value, delay) {
 	});
 }
 
+/**
+ * This function is used to mock a promise that will be resolved
+ * in another one and throw an error.
+ * @param {!*} value
+ * @return {function} a promise that throw an error.
+ */
 function createRejectedThenable(value) {
 	return CancellablePromise.resolve().then(function() {
 		new Error(value);
 	});
 }
 
+/**
+ * This function is used to mock a promise that will be resolved
+ * in another one and return the received value.
+ * @param {*} value
+ * @return {function}
+ */
 function createThenable(value) {
 	return CancellablePromise.resolve().then(function() {
 		return value;

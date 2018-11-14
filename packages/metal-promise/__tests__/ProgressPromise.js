@@ -74,12 +74,7 @@ describe('ProgressPromise', function() {
 
 	test('promise should not call listener if the same value is passed twice', function(done) {
 		const listener = sinon.stub();
-
-		const promise = new ProgressPromise(function(
-			resolve,
-			reject,
-			progress
-		) {
+		new ProgressPromise(function(resolve, reject, progress) {
 			async.nextTick(() => {
 				progress(0.5);
 				progress(0.5);
@@ -98,11 +93,7 @@ describe('ProgressPromise', function() {
 	test('promise should call all progress listeners when progress changes', function(done) {
 		const listener = sinon.stub();
 
-		const promise = new ProgressPromise(function(
-			resolve,
-			reject,
-			progress
-		) {
+		new ProgressPromise(function(resolve, reject, progress) {
 			async.nextTick(() => {
 				progress(0.5);
 				progress(0.75);
@@ -125,11 +116,7 @@ describe('ProgressPromise', function() {
 	test('promise should call all progress listeners of child promises', function(done) {
 		const listener = sinon.stub();
 
-		const promise = new ProgressPromise(function(
-			resolve,
-			reject,
-			progress
-		) {
+		new ProgressPromise(function(resolve, reject, progress) {
 			async.nextTick(() => {
 				progress(0.5);
 				progress(0.75);
@@ -148,11 +135,7 @@ describe('ProgressPromise', function() {
 	});
 
 	test('promise should call thenCatch if the promise is canceled', function(done) {
-		const promise = new ProgressPromise(function(
-			resolve,
-			reject,
-			progress
-		) {
+		new ProgressPromise(function(resolve) {
 			async.nextTick(() => {
 				resolve();
 			});
