@@ -1,4 +1,4 @@
-import {currentElement, patch, text} from '../core.js';
+import {currentElement, patch, text} from '../src/core.js';
 
 import {
 	attr,
@@ -8,7 +8,7 @@ import {
 	elementOpenStart,
 	elementVoid,
 	renderToString,
-} from '../virtual_elements.js';
+} from '../src/virtual_elements.js';
 
 describe('element creation', () => {
 	const findAttribute = (node, attr, check = true) => {
