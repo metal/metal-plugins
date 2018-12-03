@@ -4,11 +4,11 @@
   "version": "3.1.0",
   "dependencies": {
     "bootstrap": "^3.3.6",
-    "metal": "^2.16.5",
-    "metal-dom": "^2.16.5",
-    "metal-events": "^2.16.5",
-    "metal-position": "^2.1.1",
-    "metal-state": "^2.16.5"
+    "metal": "^2.16.7",
+    "metal-dom": "^2.16.7",
+    "metal-events": "^2.16.7",
+    "metal-position": "^2.1.2",
+    "metal-state": "^2.16.7"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
