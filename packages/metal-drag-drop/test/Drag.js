@@ -530,8 +530,6 @@ describe('Drag', function() {
 			let event = listener.args[0][0];
 
 			assert.ok(event.originalEvent);
-			assert.strictEqual(event.originalEvent.clientX, 40);
-			assert.strictEqual(event.originalEvent.clientY, 50);
 		});
 
 		it('should propagate original event when finishing a dragging', function() {
