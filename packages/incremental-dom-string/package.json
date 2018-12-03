@@ -5,6 +5,7 @@
   "author": "Eduardo Lundgren <eduardolundgren@gmail.com>",
   "devDependencies": {
     "babel-jest": "^23.6.0",
+    "babel-loader": "^7.1.5",
     "babel-preset-env": "^1.7.0",
     "eslint": "^3.13.1",
     "eslint-config-google": "^0.7.1",
