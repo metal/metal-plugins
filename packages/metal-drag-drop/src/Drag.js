@@ -253,6 +253,7 @@ class Drag extends State {
 		if (this.activeDragPlaceholder_) {
 			this.activeDragPlaceholder_.setAttribute('aria-grabbed', 'false');
 			dom.removeClasses(this.activeDragPlaceholder_, this.draggingClass);
+			dom.removeClasses(this.activeDragSource_, this.dragSourceClass);
 			if (this.isPlaceholderClone_()) {
 				dom.exitDocument(this.activeDragPlaceholder_);
 			}
@@ -708,6 +709,9 @@ class Drag extends State {
 	startDragging_(event) {
 		this.dragging_ = true;
 		this.createActiveDragPlaceholder_();
+		if (this.dragPlaceholder) {
+			dom.addClasses(this.activeDragSource_, this.dragSourceClass);
+		}
 		dom.addClasses(this.activeDragPlaceholder_, this.draggingClass);
 		this.activeDragPlaceholder_.setAttribute('aria-grabbed', 'true');
 		this.emit(Drag.Events.START, {
@@ -911,6 +915,16 @@ Drag.STATE = {
 	 */
 	dragPlaceholder: {
 		validator: 'validateElementOrString_',
+	},
+
+	/**
+	 * The CSS class that should be added to the drag source node when being dragged.
+	 * @type {string}
+	 * @default 'dragged'
+	 */
+	dragSourceClass: {
+		validator: core.isString,
+		value: 'dragged',
 	},
 
 	/**
