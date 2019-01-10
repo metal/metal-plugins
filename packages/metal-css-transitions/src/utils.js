@@ -15,8 +15,8 @@ export function getChildrenMap(children) {
 
 	const retMap = new Map();
 
-	const keys = children.map(
-		child => (child.props ? child.props.key : undefined)
+	const keys = children.map(child =>
+		child.props ? child.props.key : undefined
 	);
 
 	children.forEach(child => {
