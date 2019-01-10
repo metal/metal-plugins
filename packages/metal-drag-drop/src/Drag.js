@@ -724,9 +724,11 @@ class Drag extends State {
 	toElements_(elementOrSelector) {
 		if (core.isString(elementOrSelector)) {
 			const matched = this.container.querySelectorAll(elementOrSelector);
-			return Array.prototype
-				.slice.call(matched, 0)
-				.filter(element => dom.match(element, ':not([aria-grabbed="true"])'));
+			return Array.prototype.slice
+				.call(matched, 0)
+				.filter(element =>
+					dom.match(element, ':not([aria-grabbed="true"])')
+				);
 		} else if (elementOrSelector) {
 			return [elementOrSelector];
 		} else {
