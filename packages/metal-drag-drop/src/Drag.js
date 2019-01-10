@@ -726,7 +726,7 @@ class Drag extends State {
 			const matched = this.container.querySelectorAll(elementOrSelector);
 			return Array.prototype
 				.slice.call(matched, 0)
-				.filter(element => element.matches(':not([aria-grabbed="true"])'));
+				.filter(element => dom.match(element, ':not([aria-grabbed="true"])'));
 		} else if (elementOrSelector) {
 			return [elementOrSelector];
 		} else {
