@@ -809,6 +809,37 @@ describe('Drag', function() {
 			assert.deepEqual([scroll, scroll2, document], drag.scrollContainers);
 		});
 
+		it('should avoid aria grabbled elements in scrollContainers', function() {
+			let scroll = document.querySelector('.scroll');
+			scroll.setAttribute('aria-grabbed', 'true');
+
+			drag = new Drag({
+				scrollContainers: '.scroll',
+				sources: item,
+			});
+
+			assert.deepEqual([document], drag.scrollContainers);
+		});
+
+		it('should support "scrollContainers" complex selectors', function() {
+			let scroll = document.querySelector('.scroll');
+			let scroll2 = scroll.cloneNode(true);
+
+			dom.enterDocument(scroll2);
+			dom.addClasses(scroll, 'scroll1');
+			dom.addClasses(scroll2, 'scroll2');
+
+			drag = new Drag({
+				scrollContainers: `
+          .scroll1,
+					.scroll2
+        `,
+				sources: item,
+			});
+
+			assert.deepEqual([scroll, scroll2, document], drag.scrollContainers);
+		});
+
 		it('should ignore elements that match "scrollContainers" selector that are outside "container"', function() {
 			let scroll = document.querySelector('.scroll');
 			let scroll2 = scroll.cloneNode(true);
