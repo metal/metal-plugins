@@ -369,6 +369,41 @@ describe('Drag', function() {
 		assert.ok(!dom.hasClass(item, 'myDraggingClass'));
 	});
 
+	it('should add CSS class defined by "dragSourceClass" to dragged element', function() {
+		drag = new Drag({
+			dragPlaceholder: Drag.Placeholder.CLONE,
+			dragSourceClass: 'myDragSourceClass',
+			sources: item,
+		});
+
+		let listener = sinon.stub();
+
+		drag.on(Drag.Events.DRAG, listener);
+
+		DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
+
+		let event = listener.args[0][0];
+
+		assert.isTrue(dom.hasClass(item, 'myDragSourceClass'));
+		assert.isTrue(dom.hasClass(event.source, 'myDragSourceClass'));
+		assert.isFalse(
+			dom.hasClass(drag.activeDragPlaceholder_, 'myDragSourceClass')
+		);
+	});
+
+	it('should not add CSS class defined by "dragSourceClass" when the dragPlaceholder has the same reference of dragSouce', function() {
+		drag = new Drag({
+			dragSourceClass: 'myDragSourceClass',
+			sources: item,
+		});
+
+		DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
+		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
+
+		assert.isFalse(dom.hasClass(item, 'myDragSourceClass'));
+	});
+
 	it('should set the "aria-grabbed" attribute to true for dragged element', function() {
 		drag = new Drag({
 			sources: item,
