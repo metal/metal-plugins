@@ -40,6 +40,14 @@ class Drag extends State {
 		this.activeDragSource_ = null;
 
 		/**
+		 * The element that will handle a placeholder for the source
+		 * element when the reference of the placeholder is the same as the source.
+		 * @type {Element}
+		 * @protected
+		 */
+		this.activeSourcePlaceholder_ = null;
+
+		/**
 		 * The distance that has been dragged.
 		 * @type {number}
 		 * @protected
@@ -257,6 +265,9 @@ class Drag extends State {
 			if (this.isPlaceholderClone_()) {
 				dom.exitDocument(this.activeDragPlaceholder_);
 			}
+			if (this.isSourcePlaceholder_()) {
+				dom.exitDocument(this.activeSourcePlaceholder_);
+			}
 		}
 		this.activeDragPlaceholder_ = null;
 		this.activeDragSource_ = null;
@@ -369,7 +380,36 @@ class Drag extends State {
 			this.activeDragPlaceholder_ = dragPlaceholder;
 		} else {
 			this.activeDragPlaceholder_ = this.activeDragSource_;
+			this.activeSourcePlaceholder_ = this.createSourcePlaceholder_();
 		}
+	}
+
+	/**
+	 * Creates an element that will be used as placeholder for source element to take up
+	 * the same amount of space as the original source, preventing browser's scroll suddenly when resizing.
+	 * @return {!Element}
+	 * @protected
+	 */
+	createSourcePlaceholder_() {
+		let placeholder = document.createElement('a');
+
+		let styles = window.getComputedStyle(this.activeDragSource_);
+
+		object.mixin(placeholder.style, {
+			display: styles.display,
+			boxSizing: styles.boxSizing || styles.webkitBoxSizing,
+			width: styles.width,
+			height: styles.height,
+			margin: styles.margin,
+			flexShrink: styles.flexShrink || styles.webkitFlexShrink,
+			flexGrow: styles.flexGrow || styles.webkitFlexGrow,
+			// Avoid the browser needing to worry about pointer events of this element.
+			pointerEvents: styles.pointerEvents,
+		});
+
+		dom.append(this.activeDragSource_.parentNode, placeholder);
+
+		return placeholder;
 	}
 
 	/**
@@ -621,6 +661,14 @@ class Drag extends State {
 	 */
 	isDragging() {
 		return this.dragging_;
+	}
+
+	/**
+	 * Checks if the source is not the original source.
+	 * @return {boolean}
+	 */
+	isSourcePlaceholder_() {
+		return !!this.activeSourcePlaceholder_;
 	}
 
 	/**
