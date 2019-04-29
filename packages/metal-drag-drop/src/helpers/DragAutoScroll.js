@@ -104,6 +104,7 @@ class DragAutoScroll extends State {
 				deltaX -= this.speed;
 				// eslint-disable-next-line
 			} else if (
+				scrollContainers[i].scrollWidth > scrollRegion.width &&
 				Math.abs(mouseX - scrollRegion.right) <= this.maxDistance
 			) {
 				deltaX += this.speed;
@@ -115,6 +116,7 @@ class DragAutoScroll extends State {
 				deltaY -= this.speed;
 				// eslint-disable-next-line
 			} else if (
+				scrollContainers[i].scrollHeight > scrollRegion.height &&
 				Math.abs(mouseY - scrollRegion.bottom) <= this.maxDistance
 			) {
 				deltaY += this.speed;
