@@ -93,6 +93,19 @@ class DragAutoScroll extends State {
 				continue;
 			}
 
+			let scrollHeight = scrollContainers[i].scrollHeight;
+			let scrollWidth = scrollContainers[i].scrollWidth;
+
+			if (scrollContainers[i] === document) {
+				scrollHeight = scrollContainers[i].documentElement.scrollHeight;
+				scrollWidth = scrollContainers[i].documentElement.scrollWidth;
+			} else if (scrollContainers[i] === window) {
+				scrollHeight =
+					scrollContainers[i].document.documentElement.scrollHeight;
+				scrollWidth =
+					scrollContainers[i].document.documentElement.scrollWidth;
+			}
+
 			let deltaX = 0;
 			let deltaY = 0;
 			let scrollTop = Position.getScrollTop(scrollContainers[i]);
@@ -104,6 +117,7 @@ class DragAutoScroll extends State {
 				deltaX -= this.speed;
 				// eslint-disable-next-line
 			} else if (
+				scrollWidth > scrollRegion.width &&
 				Math.abs(mouseX - scrollRegion.right) <= this.maxDistance
 			) {
 				deltaX += this.speed;
@@ -115,6 +129,7 @@ class DragAutoScroll extends State {
 				deltaY -= this.speed;
 				// eslint-disable-next-line
 			} else if (
+				scrollHeight > scrollRegion.height &&
 				Math.abs(mouseY - scrollRegion.bottom) <= this.maxDistance
 			) {
 				deltaY += this.speed;
