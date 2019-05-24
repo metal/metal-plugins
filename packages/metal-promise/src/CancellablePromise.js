@@ -13,8 +13,8 @@
 
 import FreeList from './FreeList';
 import Thenable from './Thenable';
-import { isDef, isFunction, isObject, isString, nullFunction } from 'metal';
-import { async } from 'metal';
+import {isDef, isFunction, isObject, isString, nullFunction} from 'metal';
+import {async} from 'metal';
 
 /**
  * Like bind(), except that a 'this object' is not required. Useful when the
@@ -510,8 +510,8 @@ CancellablePromise.allSettled = function(promises) {
 		let onSettled = function(index, fulfilled, result) {
 			toSettle--;
 			results[index] = fulfilled
-				? { fulfilled: true, value: result }
-				: { fulfilled: false, reason: result };
+				? {fulfilled: true, value: result}
+				: {fulfilled: false, reason: result};
 			if (toSettle == 0) {
 				resolve(results);
 			}
@@ -1437,5 +1437,5 @@ CancellablePromise.Resolver_ = function(promise, resolve, reject) {
 	this.reject = reject;
 };
 
-export { CancellablePromise };
+export {CancellablePromise};
 export default CancellablePromise;

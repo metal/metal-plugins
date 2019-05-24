@@ -13,12 +13,12 @@ describe('Drag', function() {
 	let item3;
 
 	beforeEach(function() {
-		let parent = document.createElement('div');
+		const parent = document.createElement('div');
 		dom.addClasses(parent, 'parent');
 		parent.style.position = 'absolute';
 		parent.style.left = 0;
 		parent.style.top = 0;
-		let html =
+		const html =
 			'<div class="item" style="position:fixed;top:20px;left:20px;' +
 			'width:10px;height:10px;"><span class="handle"></span></div>';
 		dom.append(parent, html);
@@ -107,7 +107,7 @@ describe('Drag', function() {
 
 		DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
 
-		let listener = sinon.stub();
+		const listener = sinon.stub();
 		drag.on(Drag.Events.DRAG, listener);
 
 		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
@@ -131,7 +131,7 @@ describe('Drag', function() {
 		DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
 		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 
-		let listener = sinon.stub();
+		const listener = sinon.stub();
 		drag.on(Drag.Events.END, listener);
 		DragTestHelper.triggerMouseEvent(document, 'mouseup');
 
@@ -159,7 +159,7 @@ describe('Drag', function() {
 		drag = new Drag({
 			sources: item,
 		});
-		let listener = sinon.stub();
+		const listener = sinon.stub();
 		drag.on(Drag.Events.START, listener);
 
 		DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
@@ -187,7 +187,7 @@ describe('Drag', function() {
 			sources: item,
 		});
 
-		let listener = sinon.stub();
+		const listener = sinon.stub();
 		drag.on(Drag.Events.DRAG, listener);
 
 		DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
@@ -206,7 +206,7 @@ describe('Drag', function() {
 			sources: item,
 		});
 
-		let listener = sinon.stub();
+		const listener = sinon.stub();
 		drag.on(Drag.Events.DRAG, listener);
 
 		DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
@@ -234,7 +234,7 @@ describe('Drag', function() {
 	});
 
 	it('should only drag sources that match selector inside given container', function() {
-		let parent = document.createElement('div');
+		const parent = document.createElement('div');
 		dom.replace(item, parent);
 		dom.append(parent, item);
 
@@ -255,11 +255,11 @@ describe('Drag', function() {
 	});
 
 	it('should handle changing the value of the "container" property', function(done) {
-		let parent = document.createElement('div');
+		const parent = document.createElement('div');
 		dom.replace(item, parent);
 		dom.append(parent, item);
 
-		let parent2 = document.createElement('div');
+		const parent2 = document.createElement('div');
 		dom.replace(item2, parent2);
 		dom.append(parent2, item2);
 
@@ -287,11 +287,11 @@ describe('Drag', function() {
 	});
 
 	it('should not stop dragging specified element source when container changes', function(done) {
-		let parent = document.createElement('div');
+		const parent = document.createElement('div');
 		dom.replace(item, parent);
 		dom.append(parent, item);
 
-		let parent2 = document.createElement('div');
+		const parent2 = document.createElement('div');
 		dom.enterDocument(parent2);
 
 		drag = new Drag({
@@ -376,14 +376,14 @@ describe('Drag', function() {
 			sources: item,
 		});
 
-		let listener = sinon.stub();
+		const listener = sinon.stub();
 
 		drag.on(Drag.Events.DRAG, listener);
 
 		DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
 		DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 
-		let event = listener.args[0][0];
+		const event = listener.args[0][0];
 
 		assert.isTrue(dom.hasClass(item, 'myDragSourceClass'));
 		assert.isTrue(dom.hasClass(event.source, 'myDragSourceClass'));
@@ -431,7 +431,7 @@ describe('Drag', function() {
 
 	describe('Handles', function() {
 		it('should not drag element if clicked outside handle', function() {
-			let handle = item.querySelector('.handle');
+			const handle = item.querySelector('.handle');
 			drag = new Drag({
 				handles: handle,
 				sources: item,
@@ -443,7 +443,7 @@ describe('Drag', function() {
 		});
 
 		it('should drag element if clicked inside handle', function() {
-			let handle = item.querySelector('.handle');
+			const handle = item.querySelector('.handle');
 			drag = new Drag({
 				handles: handle,
 				sources: item,
@@ -458,7 +458,7 @@ describe('Drag', function() {
 		});
 
 		it('should work with handle selectors', function() {
-			let handle = item.querySelector('.handle');
+			const handle = item.querySelector('.handle');
 			drag = new Drag({
 				handles: '.handle',
 				sources: item,
@@ -535,13 +535,13 @@ describe('Drag', function() {
 				sources: item,
 			});
 
-			let listener = sinon.stub();
+			const listener = sinon.stub();
 			drag.on(Drag.Events.DRAG, listener);
 
 			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
 			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 
-			let event = listener.args[0][0];
+			const event = listener.args[0][0];
 			assert.strictEqual(item, event.source);
 			assert.notStrictEqual(item, event.placeholder);
 			assert.ok(dom.hasClass(event.placeholder, 'dragging'));
@@ -555,14 +555,14 @@ describe('Drag', function() {
 				sources: item,
 			});
 
-			let listener = sinon.stub();
+			const listener = sinon.stub();
 
 			drag.on(Drag.Events.DRAG, listener);
 
 			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
 			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 
-			let event = listener.args[0][0];
+			const event = listener.args[0][0];
 
 			assert.ok(event.originalEvent);
 		});
@@ -573,7 +573,7 @@ describe('Drag', function() {
 				sources: item,
 			});
 
-			let listener = sinon.stub();
+			const listener = sinon.stub();
 			drag.on(Drag.Events.END, listener);
 
 			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
@@ -589,7 +589,7 @@ describe('Drag', function() {
 				sources: item,
 			});
 
-			let listener = sinon.stub();
+			const listener = sinon.stub();
 			drag.on(Drag.Events.END, listener);
 
 			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
@@ -600,7 +600,7 @@ describe('Drag', function() {
 		});
 
 		it('should not move source node if "dragPlaceholder" is set to another element', function() {
-			let placeholder = document.createElement('div');
+			const placeholder = document.createElement('div');
 			drag = new Drag({
 				dragPlaceholder: placeholder,
 				sources: item,
@@ -614,19 +614,19 @@ describe('Drag', function() {
 		});
 
 		it('should move the element set as the "dragPlaceholder"', function() {
-			let placeholder = document.createElement('div');
+			const placeholder = document.createElement('div');
 			drag = new Drag({
 				dragPlaceholder: placeholder,
 				sources: item,
 			});
 
-			let listener = sinon.stub();
+			const listener = sinon.stub();
 			drag.on(Drag.Events.DRAG, listener);
 
 			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
 			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 
-			let event = listener.args[0][0];
+			const event = listener.args[0][0];
 			assert.strictEqual(item, event.source);
 			assert.strictEqual(placeholder, event.placeholder);
 			assert.ok(dom.hasClass(event.placeholder, 'dragging'));
@@ -670,7 +670,7 @@ describe('Drag', function() {
 				sources: item,
 			});
 
-			let listener = sinon.stub();
+			const listener = sinon.stub();
 			drag.on(Drag.Events.DRAG, listener);
 
 			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
@@ -679,7 +679,7 @@ describe('Drag', function() {
 			assert.strictEqual('20px', item.style.left);
 			assert.strictEqual('20px', item.style.top);
 
-			let event = listener.args[0][0];
+			const event = listener.args[0][0];
 			assert.notStrictEqual(item, event.placeholder);
 			assert.ok(dom.hasClass(event.placeholder, 'dragging'));
 			assert.strictEqual(40 + 'px', event.placeholder.style.left);
@@ -698,20 +698,20 @@ describe('Drag', function() {
 			assert.notStrictEqual(drag.cloneContainer, document.body);
 			assert.ok(!drag.cloneContainer);
 
-			let listener = sinon.stub();
+			const listener = sinon.stub();
 			drag.on(Drag.Events.DRAG, listener);
 
 			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
 			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 
-			let event = listener.args[0][0];
+			const event = listener.args[0][0];
 			assert.notStrictEqual(event.placeholder.parentNode, document.body);
 		});
 	});
 
 	describe('Scroll', function() {
 		beforeEach(function() {
-			let html =
+			const html =
 				'<div class="scroll" ' +
 				'style="position:relative;width:200px;height:200px;max-height:20px;overflow-y:scroll;"></div>';
 			dom.append(document.body, html);
@@ -731,7 +731,7 @@ describe('Drag', function() {
 				sources: item,
 			});
 
-			let initialRegion = Position.getRegion(item);
+			const initialRegion = Position.getRegion(item);
 			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
 			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 			drag.once(Drag.Events.DRAG, function(event) {
@@ -756,13 +756,13 @@ describe('Drag', function() {
 		});
 
 		it('should update position of dragged element when scroll container is scrolled', function(done) {
-			let scrollNode = document.querySelector('.scroll');
+			const scrollNode = document.querySelector('.scroll');
 			drag = new Drag({
 				scrollContainers: scrollNode,
 				sources: item,
 			});
 
-			let initialRegion = Position.getRegion(item);
+			const initialRegion = Position.getRegion(item);
 			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
 			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 			drag.once(Drag.Events.DRAG, function(event) {
@@ -780,7 +780,7 @@ describe('Drag', function() {
 		});
 
 		it('should update position of dragged element on scroll without moving if "preventDefault" is Called', function(done) {
-			let scrollNode = document.querySelector('.scroll');
+			const scrollNode = document.querySelector('.scroll');
 			drag = new Drag({
 				scrollContainers: scrollNode,
 				sources: item,
@@ -789,7 +789,7 @@ describe('Drag', function() {
 				event.preventDefault();
 			});
 
-			let initialRegion = Position.getRegion(item);
+			const initialRegion = Position.getRegion(item);
 			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
 			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 			drag.once(Drag.Events.DRAG, function(data) {
@@ -807,13 +807,13 @@ describe('Drag', function() {
 		});
 
 		it('should update position of dragged element on scroll from selector scroll container', function(done) {
-			let scrollNode = document.querySelector('.scroll');
+			const scrollNode = document.querySelector('.scroll');
 			drag = new Drag({
 				scrollContainers: '.scroll',
 				sources: item,
 			});
 
-			let initialRegion = Position.getRegion(item);
+			const initialRegion = Position.getRegion(item);
 			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
 			DragTestHelper.triggerMouseEvent(document, 'mousemove', 40, 50);
 			drag.once(Drag.Events.DRAG, function(data) {
@@ -832,8 +832,8 @@ describe('Drag', function() {
 		});
 
 		it('should convert "scrollContainers" given as selector into elements', function() {
-			let scroll = document.querySelector('.scroll');
-			let scroll2 = scroll.cloneNode(true);
+			const scroll = document.querySelector('.scroll');
+			const scroll2 = scroll.cloneNode(true);
 			dom.enterDocument(scroll2);
 
 			drag = new Drag({
@@ -841,11 +841,14 @@ describe('Drag', function() {
 				sources: item,
 			});
 
-			assert.deepEqual([scroll, scroll2, document], drag.scrollContainers);
+			assert.deepEqual(
+				[scroll, scroll2, document],
+				drag.scrollContainers
+			);
 		});
 
 		it('should avoid aria grabbled elements in scrollContainers', function() {
-			let scroll = document.querySelector('.scroll');
+			const scroll = document.querySelector('.scroll');
 			scroll.setAttribute('aria-grabbed', 'true');
 
 			drag = new Drag({
@@ -857,8 +860,8 @@ describe('Drag', function() {
 		});
 
 		it('should support "scrollContainers" complex selectors', function() {
-			let scroll = document.querySelector('.scroll');
-			let scroll2 = scroll.cloneNode(true);
+			const scroll = document.querySelector('.scroll');
+			const scroll2 = scroll.cloneNode(true);
 
 			dom.enterDocument(scroll2);
 			dom.addClasses(scroll, 'scroll1');
@@ -872,13 +875,16 @@ describe('Drag', function() {
 				sources: item,
 			});
 
-			assert.deepEqual([scroll, scroll2, document], drag.scrollContainers);
+			assert.deepEqual(
+				[scroll, scroll2, document],
+				drag.scrollContainers
+			);
 		});
 
 		it('should ignore elements that match "scrollContainers" selector that are outside "container"', function() {
-			let scroll = document.querySelector('.scroll');
-			let scroll2 = scroll.cloneNode(true);
-			let parent = document.createElement('div');
+			const scroll = document.querySelector('.scroll');
+			const scroll2 = scroll.cloneNode(true);
+			const parent = document.createElement('div');
 			dom.append(parent, scroll2);
 			dom.enterDocument(parent);
 
@@ -892,15 +898,15 @@ describe('Drag', function() {
 		});
 
 		it('should update elements that match "scrollContainers" selector when "container" is changed', function() {
-			let scroll = document.querySelector('.scroll');
+			const scroll = document.querySelector('.scroll');
 
-			let scroll2 = scroll.cloneNode(true);
-			let parent = document.createElement('div');
+			const scroll2 = scroll.cloneNode(true);
+			const parent = document.createElement('div');
 			dom.append(parent, scroll2);
 			dom.enterDocument(parent);
 
-			let scroll3 = scroll.cloneNode(true);
-			let parent2 = document.createElement('div');
+			const scroll3 = scroll.cloneNode(true);
+			const parent2 = document.createElement('div');
 			dom.append(parent2, scroll3);
 			dom.enterDocument(parent2);
 
@@ -945,7 +951,7 @@ describe('Drag', function() {
 		});
 
 		it('should auto scroll a container when dragging near boundaries', function(done) {
-			let scroll = document.querySelector('.scroll');
+			const scroll = document.querySelector('.scroll');
 			drag = new Drag({
 				autoScroll: true,
 				scrollContainers: '.scroll',
@@ -962,7 +968,7 @@ describe('Drag', function() {
 		});
 
 		it('should not auto scroll if "autoScroll" is not set', function(done) {
-			let scroll = document.querySelector('.scroll');
+			const scroll = document.querySelector('.scroll');
 			drag = new Drag({
 				scrollContainers: '.scroll',
 				sources: item,
@@ -985,7 +991,7 @@ describe('Drag', function() {
 			item.style.height = '20px';
 			item.style.width = '20px';
 
-			let container = document.createElement('div');
+			const container = document.createElement('div');
 			container.style.width = '100px';
 			container.style.height = '100px';
 			dom.addClasses(container, 'container');
@@ -1004,7 +1010,7 @@ describe('Drag', function() {
 				sources: item,
 			});
 
-			let listener = sinon.stub();
+			const listener = sinon.stub();
 			drag.on(Drag.Events.DRAG, listener);
 
 			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
@@ -1030,9 +1036,9 @@ describe('Drag', function() {
 				sources: item,
 			});
 
-			let listener = sinon.stub();
+			const listener = sinon.stub();
 			drag.on(Drag.Events.DRAG, listener);
-			let containerRegion = Position.getRegion(drag.constrain);
+			const containerRegion = Position.getRegion(drag.constrain);
 
 			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
 			DragTestHelper.triggerMouseEvent(document, 'mousemove', 30, 30);
@@ -1042,8 +1048,14 @@ describe('Drag', function() {
 
 			DragTestHelper.triggerMouseEvent(document, 'mousemove', 230, 230);
 			assert.strictEqual(2, listener.callCount);
-			assert.strictEqual(containerRegion.right - 20, listener.args[1][0].x);
-			assert.strictEqual(containerRegion.bottom - 20, listener.args[1][0].y);
+			assert.strictEqual(
+				containerRegion.right - 20,
+				listener.args[1][0].x
+			);
+			assert.strictEqual(
+				containerRegion.bottom - 20,
+				listener.args[1][0].y
+			);
 		});
 
 		it('should only drag item within the limits defined by the "constrain" selector', function() {
@@ -1052,9 +1064,9 @@ describe('Drag', function() {
 				sources: item,
 			});
 
-			let listener = sinon.stub();
+			const listener = sinon.stub();
 			drag.on(Drag.Events.DRAG, listener);
-			let containerRegion = Position.getRegion(drag.constrain);
+			const containerRegion = Position.getRegion(drag.constrain);
 
 			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
 			DragTestHelper.triggerMouseEvent(document, 'mousemove', 30, 30);
@@ -1064,26 +1076,32 @@ describe('Drag', function() {
 
 			DragTestHelper.triggerMouseEvent(document, 'mousemove', 230, 230);
 			assert.strictEqual(2, listener.callCount);
-			assert.strictEqual(containerRegion.right - 20, listener.args[1][0].x);
-			assert.strictEqual(containerRegion.bottom - 20, listener.args[1][0].y);
+			assert.strictEqual(
+				containerRegion.right - 20,
+				listener.args[1][0].x
+			);
+			assert.strictEqual(
+				containerRegion.bottom - 20,
+				listener.args[1][0].y
+			);
 		});
 
 		it('should only drag item within the limits defined by the "constrain" object', function() {
 			drag = new Drag({
-				constrain: function(region) {
-					let width = region.right - region.left;
-					let right = Math.min(region.right, 60);
+				constrain(region) {
+					const width = region.right - region.left;
+					const right = Math.min(region.right, 60);
 					return {
 						bottom: region.botton,
 						left: right - width,
-						right: right,
+						right,
 						top: region.top,
 					};
 				},
 				sources: item,
 			});
 
-			let listener = sinon.stub();
+			const listener = sinon.stub();
 			drag.on(Drag.Events.DRAG, listener);
 
 			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
@@ -1109,7 +1127,7 @@ describe('Drag', function() {
 				sources: item,
 			});
 
-			let listener = sinon.stub();
+			const listener = sinon.stub();
 			drag.on(Drag.Events.DRAG, listener);
 
 			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
@@ -1140,7 +1158,7 @@ describe('Drag', function() {
 				sources: item,
 			});
 
-			let containerRegion = Position.getRegion(drag.constrain);
+			const containerRegion = Position.getRegion(drag.constrain);
 			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
 			DragTestHelper.triggerMouseEvent(document, 'mousemove', 30, 30);
 
@@ -1165,7 +1183,7 @@ describe('Drag', function() {
 				sources: item,
 			});
 
-			let listener = sinon.stub();
+			const listener = sinon.stub();
 			drag.once(Drag.Events.DRAG, listener);
 
 			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
@@ -1182,7 +1200,7 @@ describe('Drag', function() {
 				sources: item,
 			});
 
-			let listener = sinon.stub();
+			const listener = sinon.stub();
 			drag.once(Drag.Events.DRAG, listener);
 
 			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
@@ -1199,7 +1217,7 @@ describe('Drag', function() {
 				sources: item,
 			});
 
-			let listener = sinon.stub();
+			const listener = sinon.stub();
 			drag.once(Drag.Events.DRAG, listener);
 
 			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
@@ -1220,7 +1238,7 @@ describe('Drag', function() {
 				sources: item,
 			});
 
-			let listener = sinon.stub();
+			const listener = sinon.stub();
 			drag.once(Drag.Events.DRAG, listener);
 
 			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
@@ -1242,7 +1260,7 @@ describe('Drag', function() {
 				},
 			});
 
-			let listener = sinon.stub();
+			const listener = sinon.stub();
 			drag.on(Drag.Events.DRAG, listener);
 
 			DragTestHelper.triggerMouseEvent(item, 'mousedown', 20, 20);
@@ -1434,7 +1452,7 @@ describe('Drag', function() {
 			assert.strictEqual('20px', item.style.top);
 		});
 
-		it('should not move source if it\'s not being dragged', function() {
+		it("should not move source if it's not being dragged", function() {
 			drag = new Drag({
 				sources: item,
 			});

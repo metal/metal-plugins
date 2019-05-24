@@ -46,11 +46,11 @@ class DragScrollDelta extends EventEmitter {
 	 * @protected
 	 */
 	handleScroll_(index, event) {
-		let newPosition = {
+		const newPosition = {
 			scrollLeft: Position.getScrollLeft(event.currentTarget),
 			scrollTop: Position.getScrollTop(event.currentTarget),
 		};
-		let position = this.scrollPositions_[index];
+		const position = this.scrollPositions_[index];
 		this.scrollPositions_[index] = newPosition;
 
 		this.emit('scrollDelta', {
@@ -79,7 +79,7 @@ class DragScrollDelta extends EventEmitter {
 					scrollTop: Position.getScrollTop(scrollContainers[i]),
 				});
 
-				let index = this.scrollPositions_.length - 1;
+				const index = this.scrollPositions_.length - 1;
 				this.handler_.add(
 					dom.on(
 						scrollContainers[i],

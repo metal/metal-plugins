@@ -18,19 +18,19 @@ class Ajax {
 	 * @return {!Array.<Object<string, string>>}
 	 */
 	static parseResponseHeaders(allHeaders) {
-		let headers = [];
+		const headers = [];
 		if (!allHeaders) {
 			return headers;
 		}
-		let pairs = allHeaders.split('\u000d\u000a');
+		const pairs = allHeaders.split('\u000d\u000a');
 		for (let i = 0; i < pairs.length; i++) {
-			let index = pairs[i].indexOf('\u003a\u0020');
+			const index = pairs[i].indexOf('\u003a\u0020');
 			if (index > 0) {
-				let name = pairs[i].substring(0, index);
-				let value = pairs[i].substring(index + 2);
+				const name = pairs[i].substring(0, index);
+				const value = pairs[i].substring(index + 2);
 				headers.push({
-					name: name,
-					value: value,
+					name,
+					value,
 				});
 			}
 		}
@@ -63,10 +63,10 @@ class Ajax {
 		url = url || '';
 		method = method || 'GET';
 
-		let request = new XMLHttpRequest();
+		const request = new XMLHttpRequest();
 		let previousReadyState = 0;
 
-		let promise = new Promise(function(resolve, reject, progress) {
+		const promise = new Promise(function(resolve, reject, progress) {
 			request.onload = function() {
 				if (request.aborted) {
 					request.onerror();
@@ -94,7 +94,7 @@ class Ajax {
 				if (request.terminatedPrematurely) {
 					message = 'Request terminated prematurely';
 				}
-				let error = new Error(message);
+				const error = new Error(message);
 				error.request = request;
 				reject(error);
 			};

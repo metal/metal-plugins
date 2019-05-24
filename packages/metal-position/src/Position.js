@@ -55,8 +55,8 @@ class Position {
 	 * @protected
 	 */
 	static getDocumentRegion_(element) {
-		let height = this.getHeight(element);
-		let width = this.getWidth(element);
+		const height = this.getHeight(element);
+		const width = this.getWidth(element);
 		return this.makeRegion(height, height, 0, width, 0, width);
 	}
 
@@ -166,7 +166,7 @@ class Position {
 			return this.getClientSize_(node, prop);
 		}
 		if (core.isDocument(node)) {
-			let docEl = node.documentElement;
+			const docEl = node.documentElement;
 			return Math.max(
 				node.body['scroll' + prop],
 				docEl['scroll' + prop],
@@ -188,15 +188,15 @@ class Position {
 	 * @return {Array<number>}
 	 */
 	static getTransformMatrixValues(node) {
-		let style = getComputedStyle(node);
-		let transform =
+		const style = getComputedStyle(node);
+		const transform =
 			style.msTransform ||
 			style.transform ||
 			style.webkitTransform ||
 			style.mozTransform;
 		if (transform !== 'none') {
-			let values = [];
-			let regex = /([\d-\.\s]+)/g;
+			const values = [];
+			const regex = /([\d-\.\s]+)/g;
 			let matches = regex.exec(transform);
 			while (matches) {
 				values.push(matches[1]);
@@ -213,8 +213,8 @@ class Position {
 	 * @return {number}
 	 */
 	static getTranslation(node) {
-		let values = Position.getTransformMatrixValues(node);
-		let translation = {
+		const values = Position.getTransformMatrixValues(node);
+		const translation = {
 			left: 0,
 			top: 0,
 		};
@@ -292,10 +292,10 @@ class Position {
 		if (!this.intersectRegion(r1, r2)) {
 			return null;
 		}
-		let bottom = Math.min(r1.bottom, r2.bottom);
-		let right = Math.min(r1.right, r2.right);
-		let left = Math.max(r1.left, r2.left);
-		let top = Math.max(r1.top, r2.top);
+		const bottom = Math.min(r1.bottom, r2.bottom);
+		const right = Math.min(r1.right, r2.right);
+		const left = Math.max(r1.left, r2.left);
+		const top = Math.max(r1.top, r2.top);
 		return this.makeRegion(
 			bottom,
 			bottom - top,
@@ -320,12 +320,12 @@ class Position {
 	 */
 	static makeRegion(bottom, height, left, right, top, width) {
 		return {
-			bottom: bottom,
-			height: height,
-			left: left,
-			right: right,
-			top: top,
-			width: width,
+			bottom,
+			height,
+			left,
+			right,
+			top,
+			width,
 		};
 	}
 
@@ -341,8 +341,8 @@ class Position {
 	 * @protected
 	 */
 	static makeRegionFromBoundingRect_(rect, includeScroll) {
-		let deltaX = includeScroll ? Position.getScrollLeft(document) : 0;
-		let deltaY = includeScroll ? Position.getScrollTop(document) : 0;
+		const deltaX = includeScroll ? Position.getScrollLeft(document) : 0;
+		const deltaY = includeScroll ? Position.getScrollTop(document) : 0;
 		return this.makeRegion(
 			rect.bottom + deltaY,
 			rect.height,

@@ -22,7 +22,7 @@ function parse(uri) {
  */
 function validatePort(port) {
 	if (port && port > MAX_PORT) {
-		throw new TypeError('Port number can\'t exceed 65535');
+		throw new TypeError("Port number can't exceed 65535");
 	}
 }
 

@@ -39,8 +39,8 @@ class DragAutoScroll extends State {
 	 */
 	getRegionWithoutScroll_(scrollContainer) {
 		if (core.isDocument(scrollContainer)) {
-			let height = window.innerHeight;
-			let width = window.innerWidth;
+			const height = window.innerHeight;
+			const width = window.innerWidth;
 			return Position.makeRegion(height, height, 0, width, 0, width);
 		} else {
 			return Position.getRegion(scrollContainer);
@@ -86,7 +86,7 @@ class DragAutoScroll extends State {
 	 */
 	scrollInternal_(scrollContainers, mouseX, mouseY) {
 		for (let i = 0; i < scrollContainers.length; i++) {
-			let scrollRegion = this.getRegionWithoutScroll_(
+			const scrollRegion = this.getRegionWithoutScroll_(
 				scrollContainers[i]
 			); // eslint-disable-line
 			if (!Position.pointInsideRegion(mouseX, mouseY, scrollRegion)) {
@@ -108,8 +108,8 @@ class DragAutoScroll extends State {
 
 			let deltaX = 0;
 			let deltaY = 0;
-			let scrollTop = Position.getScrollTop(scrollContainers[i]);
-			let scrollLeft = Position.getScrollLeft(scrollContainers[i]);
+			const scrollTop = Position.getScrollTop(scrollContainers[i]);
+			const scrollLeft = Position.getScrollLeft(scrollContainers[i]);
 			if (
 				scrollLeft > 0 &&
 				Math.abs(mouseX - scrollRegion.left) <= this.maxDistance

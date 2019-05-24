@@ -36,7 +36,7 @@ describe('ProgressPromise', function() {
 			});
 	});
 
-	test('promise should throw error if progress isn\'t between 0 and 1', function(done) {
+	test("promise should throw error if progress isn't between 0 and 1", function(done) {
 		const promise = new ProgressPromise(function() {});
 
 		try {
@@ -64,7 +64,7 @@ describe('ProgressPromise', function() {
 				promise.setProgress_(0.1);
 			} catch (e) {
 				expect(e.message).toBe(
-					'The progress percentage can\'t be lower than the previous percentage'
+					"The progress percentage can't be lower than the previous percentage"
 				);
 
 				done();

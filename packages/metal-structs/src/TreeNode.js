@@ -63,7 +63,7 @@ class TreeNode {
 	 * @return {!Array<TreeNode>} All ancestor nodes in bottom-up order.
 	 */
 	getAncestors() {
-		let ancestors = [];
+		const ancestors = [];
 		let node = this.getParent();
 		while (node) {
 			ancestors.push(node);

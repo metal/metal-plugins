@@ -14,7 +14,7 @@ describe('DragScrollDelta', function() {
 	});
 
 	beforeEach(function() {
-		let html =
+		const html =
 			'<div class="scroll" style="width:200px;height:200px;max-height:20px;overflow-y:scroll;">' +
 			'<div class="dragNode" style="height:100px;width:100px;"></div></div>';
 		dom.append(document.body, html);
@@ -61,9 +61,11 @@ describe('DragScrollDelta', function() {
 	});
 
 	it('should emit "scrollDelta" event when a container is scrolled', function(done) {
-		let scrollNode = document.querySelector('.scroll');
+		const scrollNode = document.querySelector('.scroll');
 		dragScrollDelta = new DragScrollDelta();
-		dragScrollDelta.start(document.querySelector('.dragNode'), [scrollNode]);
+		dragScrollDelta.start(document.querySelector('.dragNode'), [
+			scrollNode,
+		]);
 
 		dragScrollDelta.once('scrollDelta', function(event) {
 			assert.strictEqual(0, event.deltaX);
@@ -74,13 +76,15 @@ describe('DragScrollDelta', function() {
 	});
 
 	it('should not emit "scrollDelta" event if scrolled element does not contain drag node', function(done) {
-		let scrollNode = document.querySelector('.scroll');
-		let anotherDragNode = document.querySelector('.dragNode').cloneNode(true);
+		const scrollNode = document.querySelector('.scroll');
+		const anotherDragNode = document
+			.querySelector('.dragNode')
+			.cloneNode(true);
 		dom.enterDocument(anotherDragNode);
 		dragScrollDelta = new DragScrollDelta();
 		dragScrollDelta.start(anotherDragNode, [scrollNode]);
 
-		let listener = sinon.stub();
+		const listener = sinon.stub();
 		dragScrollDelta.once('scrollDelta', listener);
 
 		dom.once(scrollNode, 'scroll', function() {
@@ -91,13 +95,13 @@ describe('DragScrollDelta', function() {
 	});
 
 	it('should not emit "scrollDelta" event if drag node has "fixed" position', function(done) {
-		let dragNode = document.querySelector('.dragNode');
+		const dragNode = document.querySelector('.dragNode');
 		dragNode.style.position = 'fixed';
 
 		dragScrollDelta = new DragScrollDelta();
 		dragScrollDelta.start(dragNode, [document]);
 
-		let listener = sinon.stub();
+		const listener = sinon.stub();
 		dragScrollDelta.once('scrollDelta', listener);
 
 		dom.once(document, 'scroll', function() {
@@ -108,11 +112,13 @@ describe('DragScrollDelta', function() {
 	});
 
 	it('should not emit "scrollDelta" event if "stop" is called', function(done) {
-		let scrollNode = document.querySelector('.scroll');
+		const scrollNode = document.querySelector('.scroll');
 		dragScrollDelta = new DragScrollDelta();
-		dragScrollDelta.start(document.querySelector('.dragNode'), [scrollNode]);
+		dragScrollDelta.start(document.querySelector('.dragNode'), [
+			scrollNode,
+		]);
 
-		let listener = sinon.stub();
+		const listener = sinon.stub();
 		dragScrollDelta.once('scrollDelta', listener);
 		dragScrollDelta.stop();
 
@@ -124,11 +130,13 @@ describe('DragScrollDelta', function() {
 	});
 
 	it('should not emit "scrollDelta" event if "dispose" is called', function(done) {
-		let scrollNode = document.querySelector('.scroll');
+		const scrollNode = document.querySelector('.scroll');
 		dragScrollDelta = new DragScrollDelta();
-		dragScrollDelta.start(document.querySelector('.dragNode'), [scrollNode]);
+		dragScrollDelta.start(document.querySelector('.dragNode'), [
+			scrollNode,
+		]);
 
-		let listener = sinon.stub();
+		const listener = sinon.stub();
 		dragScrollDelta.once('scrollDelta', listener);
 		dragScrollDelta.dispose();
 

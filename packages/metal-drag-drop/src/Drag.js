@@ -131,14 +131,14 @@ class Drag extends State {
 	 * @protected
 	 */
 	attachSourceEvents_() {
-		let toAttach = {
+		const toAttach = {
 			keydown: this.handleSourceKeyDown_.bind(this),
 			mousedown: this.handleDragStartEvent_.bind(this),
 			touchstart: this.handleDragStartEvent_.bind(this),
 		};
-		let eventTypes = Object.keys(toAttach);
+		const eventTypes = Object.keys(toAttach);
 		for (let i = 0; i < eventTypes.length; i++) {
-			let listenerFn = toAttach[eventTypes[i]];
+			const listenerFn = toAttach[eventTypes[i]];
 			if (core.isString(this.sources)) {
 				this.sourceHandler_.add(
 					// eslint-disable-next-line
@@ -181,7 +181,7 @@ class Drag extends State {
 	 * @protected
 	 */
 	calculateEndPosition_() {
-		let endPos = this.sourceRelativePos_;
+		const endPos = this.sourceRelativePos_;
 
 		const {parentNode} = this.activeDragSource_;
 
@@ -285,7 +285,7 @@ class Drag extends State {
 	 * @protected
 	 */
 	cloneActiveDrag_() {
-		let placeholder = this.activeDragSource_.cloneNode(true);
+		const placeholder = this.activeDragSource_.cloneNode(true);
 		placeholder.style.position = 'absolute';
 		placeholder.style.left = this.sourceRelativePos_.x + 'px';
 		placeholder.style.top = this.sourceRelativePos_.y + 'px';
@@ -360,8 +360,8 @@ class Drag extends State {
 	 * @protected
 	 */
 	constrainToSteps_(region) {
-		let deltaX = region.left - this.sourceRegion_.left;
-		let deltaY = region.top - this.sourceRegion_.top;
+		const deltaX = region.left - this.sourceRegion_.left;
+		const deltaY = region.top - this.sourceRegion_.top;
 		region.left -= deltaX % this.steps.x;
 		region.right = region.left + region.width;
 		region.top -= deltaY % this.steps.y;
@@ -373,7 +373,7 @@ class Drag extends State {
 	 * @protected
 	 */
 	createActiveDragPlaceholder_() {
-		let dragPlaceholder = this.dragPlaceholder;
+		const dragPlaceholder = this.dragPlaceholder;
 		if (this.isPlaceholderClone_()) {
 			this.activeDragPlaceholder_ = this.cloneActiveDrag_();
 		} else if (core.isElement(dragPlaceholder)) {
@@ -391,9 +391,9 @@ class Drag extends State {
 	 * @protected
 	 */
 	createSourcePlaceholder_() {
-		let placeholder = document.createElement('a');
+		const placeholder = document.createElement('a');
 
-		let styles = window.getComputedStyle(this.activeDragSource_);
+		const styles = window.getComputedStyle(this.activeDragSource_);
 
 		object.mixin(placeholder.style, {
 			display: styles.display,
@@ -480,9 +480,9 @@ class Drag extends State {
 	 */
 	handleDragMoveEvent_(event) {
 		this.originalEvent_ = event;
-		let position = event.targetTouches ? event.targetTouches[0] : event;
-		let distanceX = position.clientX - this.mousePos_.x;
-		let distanceY = position.clientY - this.mousePos_.y;
+		const position = event.targetTouches ? event.targetTouches[0] : event;
+		const distanceX = position.clientX - this.mousePos_.x;
+		const distanceY = position.clientY - this.mousePos_.y;
 		this.mousePos_.x = position.clientX;
 		this.mousePos_.y = position.clientY;
 		if (
@@ -576,7 +576,7 @@ class Drag extends State {
 	 */
 	handleSourceKeyDown_(event) {
 		if (this.isDragging()) {
-			let currentTarget = event.delegateTarget || event.currentTarget;
+			const currentTarget = event.delegateTarget || event.currentTarget;
 			if (currentTarget !== this.activeDragSource_) {
 				return;
 			}
@@ -584,11 +584,11 @@ class Drag extends State {
 				// Arrow keys during drag move the source.
 				let deltaX = 0;
 				let deltaY = 0;
-				let speedX =
+				const speedX =
 					this.keyboardSpeed >= this.steps.x
 						? this.keyboardSpeed
 						: this.steps.x;
-				let speedY =
+				const speedY =
 					this.keyboardSpeed >= this.steps.y
 						? this.keyboardSpeed
 						: this.steps.y;
@@ -692,7 +692,7 @@ class Drag extends State {
 	 * @return {boolean}
 	 */
 	isWithinHandle_(element) {
-		let handles = this.handles;
+		const handles = this.handles;
 		if (!handles) {
 			return true;
 		} else if (core.isString(handles)) {
@@ -744,7 +744,7 @@ class Drag extends State {
 	 */
 	setterScrollContainersFn_(val) {
 		this.prevScrollContainersSelector_ = core.isString(val) ? val : null;
-		let elements = this.toElements_(val);
+		const elements = this.toElements_(val);
 		elements.push(document);
 		return elements;
 	}
@@ -794,8 +794,8 @@ class Drag extends State {
 	 */
 	updatePosition(newRegion) {
 		this.constrain_(newRegion);
-		let deltaX = newRegion.left - this.sourceRegion_.left;
-		let deltaY = newRegion.top - this.sourceRegion_.top;
+		const deltaX = newRegion.left - this.sourceRegion_.left;
+		const deltaY = newRegion.top - this.sourceRegion_.top;
 		if (deltaX !== 0 || deltaY !== 0) {
 			this.sourceRegion_ = newRegion;
 			this.sourceRelativePos_.x += deltaX;
@@ -811,7 +811,7 @@ class Drag extends State {
 	 * @param {number} deltaY
 	 */
 	updatePositionFromDelta(deltaX, deltaY) {
-		let newRegion = object.mixin({}, this.sourceRegion_);
+		const newRegion = object.mixin({}, this.sourceRegion_);
 		newRegion.left += deltaX;
 		newRegion.right += deltaX;
 		newRegion.top += deltaY;
@@ -823,7 +823,7 @@ class Drag extends State {
 	 * Updates the dragged element's position, according to the current mouse position.
 	 */
 	updatePositionFromMouse() {
-		let newRegion = {
+		const newRegion = {
 			height: this.sourceRegion_.height,
 			left: this.mousePos_.x + this.mouseSourceDelta_.x,
 			top: this.mousePos_.y + this.mouseSourceDelta_.y,
@@ -928,7 +928,7 @@ Drag.STATE = {
 	container: {
 		setter: dom.toElement,
 		validator: 'validateElementOrString_',
-		valueFn: function() {
+		valueFn() {
 			if (!isServerSide()) {
 				return document;
 			}

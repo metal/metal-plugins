@@ -42,8 +42,8 @@ class Toggler extends State {
 	 * @param {string|!Element} header
 	 */
 	collapse(header) {
-		let headerElements = this.getHeaderElements_(header);
-		let content = this.getContentElement_(headerElements);
+		const headerElements = this.getHeaderElements_(header);
+		const content = this.getContentElement_(headerElements);
 
 		this.emit('headerToggled', {headerElements, content});
 		this.emit('headerCollapsed', {headerElements, content});
@@ -61,8 +61,8 @@ class Toggler extends State {
 	 * @param {string|!Element} header
 	 */
 	expand(header) {
-		let headerElements = this.getHeaderElements_(header);
-		let content = this.getContentElement_(headerElements);
+		const headerElements = this.getHeaderElements_(header);
+		const content = this.getContentElement_(headerElements);
 
 		this.emit('headerToggled', {headerElements, content});
 		this.emit('headerExpanded', {headerElements, content});
@@ -204,7 +204,7 @@ class Toggler extends State {
 	 * @param {string|!Element} header
 	 */
 	toggle(header) {
-		let headerElements = this.getHeaderElements_(header);
+		const headerElements = this.getHeaderElements_(header);
 		if (this.hasExpanded_(headerElements)) {
 			this.collapse(headerElements);
 		} else {

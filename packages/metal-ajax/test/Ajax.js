@@ -8,7 +8,8 @@ import sinon from 'sinon';
 describe('Ajax', function() {
 	describe('Utils', function() {
 		it('should parse response headers', function() {
-			let headers = 'Name\u003a\u0020Value\u000d\u000aName\u003a\u0020Value';
+			const headers =
+				'Name\u003a\u0020Value\u000d\u000aName\u003a\u0020Value';
 			assert.deepEqual(
 				[
 					{
@@ -25,7 +26,7 @@ describe('Ajax', function() {
 		});
 
 		it('should return empty array when parsing empty response headers', function() {
-			let headers = '';
+			const headers = '';
 			assert.deepEqual([], Ajax.parseResponseHeaders(headers));
 		});
 	});
@@ -34,7 +35,7 @@ describe('Ajax', function() {
 		beforeEach(function() {
 			this.xhr = sinon.useFakeXMLHttpRequest();
 
-			let requests = (this.requests = []);
+			const requests = (this.requests = []);
 
 			this.xhr.onCreate = function(xhr) {
 				requests.push(xhr);
@@ -63,7 +64,7 @@ describe('Ajax', function() {
 		});
 
 		it('should cancel send request to an url', function(done) {
-			let self = this;
+			const self = this;
 			Ajax.request('/url')
 				.then(function() {
 					assert.fail();
@@ -76,7 +77,7 @@ describe('Ajax', function() {
 		});
 
 		it('should send request with credentials', function(done) {
-			let withCredentials = true;
+			const withCredentials = true;
 			Ajax.request(
 				'/url',
 				'POST',
@@ -94,7 +95,7 @@ describe('Ajax', function() {
 		});
 
 		it('should send request without credentials', function(done) {
-			let withCredentials = false;
+			const withCredentials = false;
 			Ajax.request(
 				'/url',
 				'POST',
@@ -120,7 +121,9 @@ describe('Ajax', function() {
 		});
 
 		it('should send request with body', function(done) {
-			Ajax.request('/url', 'post', 'requestBody').then(function(xhrResponse) {
+			Ajax.request('/url', 'post', 'requestBody').then(function(
+				xhrResponse
+			) {
 				assert.strictEqual('requestBody', xhrResponse.requestBody);
 				assert.strictEqual('responseBody', xhrResponse.response);
 				done();
@@ -129,9 +132,11 @@ describe('Ajax', function() {
 		});
 
 		it('should send request with header', function(done) {
-			let headers = new MultiMap();
+			const headers = new MultiMap();
 			headers.add('content-type', 'application/json');
-			Ajax.request('/url', 'get', null, headers).then(function(xhrResponse) {
+			Ajax.request('/url', 'get', null, headers).then(function(
+				xhrResponse
+			) {
 				assert.deepEqual(
 					{
 						'content-type': 'application/json;charset=utf-8',
@@ -144,13 +149,16 @@ describe('Ajax', function() {
 		});
 
 		it('should send request with multiple headers with same name', function(done) {
-			let headers = new MultiMap();
+			const headers = new MultiMap();
 			headers.add('content-type', 'application/json');
 			headers.add('content-type', 'text/html');
-			Ajax.request('/url', 'get', null, headers).then(function(xhrResponse) {
+			Ajax.request('/url', 'get', null, headers).then(function(
+				xhrResponse
+			) {
 				assert.deepEqual(
 					{
-						'content-type': 'application/json, text/html;charset=utf-8',
+						'content-type':
+							'application/json, text/html;charset=utf-8',
 					},
 					xhrResponse.requestHeaders
 				);
@@ -183,34 +191,55 @@ describe('Ajax', function() {
 		});
 
 		it('should parse request query string', function(done) {
-			let params = new MultiMap();
+			const params = new MultiMap();
 			params.add('query', 1);
 			params.add('query', ' ');
-			Ajax.request('/url?foo=1', 'get', null, null, params, null, false).then(
-				function(xhrResponse) {
-					assert.strictEqual('/url?foo=1&query=1&query=%20', xhrResponse.url);
-					done();
-				}
-			);
+			Ajax.request(
+				'/url?foo=1',
+				'get',
+				null,
+				null,
+				params,
+				null,
+				false
+			).then(function(xhrResponse) {
+				assert.strictEqual(
+					'/url?foo=1&query=1&query=%20',
+					xhrResponse.url
+				);
+				done();
+			});
 			this.requests[0].respond(200);
 		});
 
 		it('should parse request query string without params', function(done) {
-			Ajax.request('/url?foo=1', 'get', null, null, null, null, false).then(
-				function(xhrResponse) {
-					assert.strictEqual('/url?foo=1', xhrResponse.url);
-					done();
-				}
-			);
+			Ajax.request(
+				'/url?foo=1',
+				'get',
+				null,
+				null,
+				null,
+				null,
+				false
+			).then(function(xhrResponse) {
+				assert.strictEqual('/url?foo=1', xhrResponse.url);
+				done();
+			});
 			this.requests[0].respond(200);
 		});
 
 		it('should cancel request if given timeout is reached', function(done) {
-			Ajax.request('/url?foo=1', 'get', null, null, null, 100, false).catch(
-				function() {
-					done();
-				}
-			);
+			Ajax.request(
+				'/url?foo=1',
+				'get',
+				null,
+				null,
+				null,
+				100,
+				false
+			).catch(function() {
+				done();
+			});
 		});
 
 		it('should fail on request error', function(done) {
@@ -232,7 +261,7 @@ describe('Ajax', function() {
 		beforeEach(function() {
 			this.xhr = sinon.useFakeXMLHttpRequest();
 
-			let requests = (this.requests = []);
+			const requests = (this.requests = []);
 
 			this.xhr.onCreate = function(xhr) {
 				requests.push(xhr);

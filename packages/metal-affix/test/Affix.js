@@ -44,7 +44,7 @@ describe('Affix', function() {
 
 	it('should never set affix-top when offsetTop not specified', function(done) {
 		affix = new Affix({
-			element: element,
+			element,
 		});
 		window.scrollTo(0, 100);
 		nextScrollTick(function() {
@@ -56,7 +56,7 @@ describe('Affix', function() {
 
 	it('should never set affix-bottom when offsetBottom not specified', function(done) {
 		affix = new Affix({
-			element: element,
+			element,
 		});
 		window.scrollTo(0, Position.getHeight(document));
 		nextScrollTick(function() {
@@ -68,7 +68,7 @@ describe('Affix', function() {
 
 	it('should set affix-top when reaches offsetTop', function() {
 		affix = new Affix({
-			element: element,
+			element,
 			offsetTop: 100,
 		});
 		assert.ok(dom.hasClass(affix.element, 'affix-top'));
@@ -76,7 +76,7 @@ describe('Affix', function() {
 
 	it('should restore class to affix when is not on offsetTop', function(done) {
 		affix = new Affix({
-			element: element,
+			element,
 			offsetTop: 50,
 		});
 		assert.ok(dom.hasClass(affix.element, 'affix-top'));
@@ -93,7 +93,7 @@ describe('Affix', function() {
 
 	it('should set affix-bottom when reaches offsetBottom', function(done) {
 		affix = new Affix({
-			element: element,
+			element,
 			offsetBottom: 0,
 		});
 		window.scrollTo(
@@ -108,7 +108,7 @@ describe('Affix', function() {
 
 	it('should restore class to affix when is not on offsetBottom', function(done) {
 		affix = new Affix({
-			element: element,
+			element,
 			offsetBottom: 0,
 		});
 		assert.ok(dom.hasClass(affix.element, 'affix'));
@@ -132,7 +132,7 @@ describe('Affix', function() {
 	it('should set affix-top when reaches offsetTop inside scrollElement', function(done) {
 		affix = new Affix({
 			element: elementInsideContainer,
-			scrollElement: scrollElement,
+			scrollElement,
 			offsetTop: 10,
 		});
 		scrollElement.scrollTop = 5;
@@ -145,7 +145,7 @@ describe('Affix', function() {
 	it('should set affix-bottom when reaches offsetBottom inside scrollElement', function(done) {
 		affix = new Affix({
 			element: elementInsideContainer,
-			scrollElement: scrollElement,
+			scrollElement,
 			offsetBottom: 0,
 		});
 		scrollElement.scrollTop = Position.getHeight(scrollElement);
@@ -157,8 +157,8 @@ describe('Affix', function() {
 	});
 });
 
-let nextScrollTick = function(fn, optEl) {
-	let handler = dom.on(optEl || document, 'scroll', function() {
+const nextScrollTick = function(fn, optEl) {
+	const handler = dom.on(optEl || document, 'scroll', function() {
 		fn();
 		handler.removeListener();
 	});

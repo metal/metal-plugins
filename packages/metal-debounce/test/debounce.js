@@ -4,9 +4,9 @@ import {cancelDebounce, debounce} from '../src/debounce';
 
 describe('debounce', function() {
 	it('should only call received function with the last called args after a delay', function(done) {
-		let fn = sinon.stub();
+		const fn = sinon.stub();
 
-		let debounced = debounce(fn, 200);
+		const debounced = debounce(fn, 200);
 		debounced(1, 2, 3);
 		debounced(4, 5, 6);
 
@@ -22,13 +22,13 @@ describe('debounce', function() {
 	});
 
 	it('should call original function with its original context', function(done) {
-		let expectedContext = {};
+		const expectedContext = {};
 		let context;
-		let fn = function() {
+		const fn = function() {
 			context = this; /* eslint-disable-line */
 		};
 
-		let debounced = debounce(fn.bind(expectedContext), 200);
+		const debounced = debounce(fn.bind(expectedContext), 200);
 		debounced(1, 2, 3);
 
 		setTimeout(function() {
@@ -38,9 +38,9 @@ describe('debounce', function() {
 	});
 
 	it('should only call received function with the last called args after a delay', function(done) {
-		let fn = sinon.stub();
+		const fn = sinon.stub();
 
-		let debounced = debounce(fn, 200);
+		const debounced = debounce(fn, 200);
 		debounced(1, 2, 3);
 		cancelDebounce(debounced);
 

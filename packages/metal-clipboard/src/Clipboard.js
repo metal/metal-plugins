@@ -65,7 +65,7 @@ Clipboard.STATE = {
 	 */
 	action: {
 		validator: core.isFunction,
-		value: function(delegateTarget) {
+		value(delegateTarget) {
 			return delegateTarget.getAttribute('data-action');
 		},
 	},
@@ -86,7 +86,7 @@ Clipboard.STATE = {
 	 */
 	target: {
 		validator: core.isFunction,
-		value: function(delegateTarget) {
+		value(delegateTarget) {
 			return document.querySelector(
 				delegateTarget.getAttribute('data-target')
 			);
@@ -99,7 +99,7 @@ Clipboard.STATE = {
 	 */
 	text: {
 		validator: core.isFunction,
-		value: function(delegateTarget) {
+		value(delegateTarget) {
 			return delegateTarget.getAttribute('data-text');
 		},
 	},
@@ -204,8 +204,8 @@ class ClipboardAction extends State {
 			this.target.select();
 			this.selectedText = this.target.value;
 		} else {
-			let range = document.createRange();
-			let selection = window.getSelection();
+			const range = document.createRange();
+			const selection = window.getSelection();
 
 			range.selectNodeContents(this.target);
 			selection.addRange(range);
@@ -253,7 +253,7 @@ ClipboardAction.STATE = {
 	 */
 	action: {
 		value: 'copy',
-		validator: function(val) {
+		validator(val) {
 			return val === 'copy' || val === 'cut';
 		},
 	},
@@ -263,7 +263,7 @@ ClipboardAction.STATE = {
 	 * @type {!Clipboard}
 	 */
 	host: {
-		validator: function(val) {
+		validator(val) {
 			return val instanceof Clipboard;
 		},
 	},

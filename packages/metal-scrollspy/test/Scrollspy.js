@@ -57,8 +57,8 @@ describe('Scrollspy', function() {
 
 		it('should activate element at offset', function() {
 			spy = new Scrollspy({
-				element: element,
-				scrollElement: scrollElement,
+				element,
+				scrollElement,
 				offset: 0,
 			});
 			assert.ok(dom.hasClass(dom.toElement('#element1'), 'active'));
@@ -66,8 +66,8 @@ describe('Scrollspy', function() {
 
 		it('should activate element when scrolling', function(done) {
 			spy = new Scrollspy({
-				element: element,
-				scrollElement: scrollElement,
+				element,
+				scrollElement,
 				offset: 0,
 			});
 			scrollElement.scrollTop = 500;
@@ -109,8 +109,8 @@ describe('Scrollspy', function() {
 
 		it('should activate element when scrolling at offset', function(done) {
 			spy = new Scrollspy({
-				element: element,
-				scrollElement: scrollElement,
+				element,
+				scrollElement,
 				offset: 100,
 			});
 			scrollElement.scrollTop = 400;
@@ -123,8 +123,8 @@ describe('Scrollspy', function() {
 
 		it('should activate last element when scrolling to maximum position', function(done) {
 			spy = new Scrollspy({
-				element: element,
-				scrollElement: scrollElement,
+				element,
+				scrollElement,
 				offset: 0,
 			});
 			scrollElement.scrollTop = 99999;
@@ -140,8 +140,8 @@ describe('Scrollspy', function() {
 
 		it('should always activate closest element when scrolling', function(done) {
 			spy = new Scrollspy({
-				element: element,
-				scrollElement: scrollElement,
+				element,
+				scrollElement,
 				offset: 0,
 			});
 			scrollElement.scrollTop = 1000;
@@ -157,8 +157,8 @@ describe('Scrollspy', function() {
 
 		it('should update current active index when scroll element is changed', function() {
 			spy = new Scrollspy({
-				element: element,
-				scrollElement: scrollElement,
+				element,
+				scrollElement,
 				offset: 0,
 			});
 
@@ -179,8 +179,8 @@ describe('Scrollspy', function() {
 
 		it('should listen to scrolls on the new scroll element', function(done) {
 			spy = new Scrollspy({
-				element: element,
-				scrollElement: scrollElement,
+				element,
+				scrollElement,
 				offset: 0,
 			});
 
@@ -236,7 +236,7 @@ describe('Scrollspy', function() {
 
 		it('should activate element', function() {
 			spy = new Scrollspy({
-				element: element,
+				element,
 				offset: 0,
 			});
 			assert.ok(dom.hasClass(dom.toElement('#element1'), 'active'));
@@ -245,7 +245,7 @@ describe('Scrollspy', function() {
 		it('should not activate any element if scroll position is before all of them', function() {
 			dom.toElement('#contentElement').style.marginTop = '50px';
 			spy = new Scrollspy({
-				element: element,
+				element,
 				offset: 0,
 			});
 			assert.ok(!document.querySelector('.active'));
@@ -254,9 +254,9 @@ describe('Scrollspy', function() {
 
 		it('should activate resolved element', function() {
 			spy = new Scrollspy({
-				element: element,
+				element,
 				offset: 0,
-				resolveElement: function(el) {
+				resolveElement(el) {
 					return el.parentNode;
 				},
 			});
@@ -267,7 +267,7 @@ describe('Scrollspy', function() {
 
 		it('should activate element when scrolling', function(done) {
 			spy = new Scrollspy({
-				element: element,
+				element,
 				offset: 0,
 			});
 			window.scrollTo(0, 5000);
@@ -310,7 +310,7 @@ describe('Scrollspy', function() {
 		it('should deactivates all elements when window is scrolled to position before all elements', function(done) {
 			dom.toElement('#contentElement').style.marginTop = '50px';
 			spy = new Scrollspy({
-				element: element,
+				element,
 				offset: 0,
 			});
 
@@ -329,7 +329,7 @@ describe('Scrollspy', function() {
 
 		it('should activate element when scrolling at offset', function(done) {
 			spy = new Scrollspy({
-				element: element,
+				element,
 				offset: 1000,
 			});
 			window.scrollTo(0, 4000);
@@ -342,7 +342,7 @@ describe('Scrollspy', function() {
 
 		it('should update active element when the value of the offset state changes', function(done) {
 			spy = new Scrollspy({
-				element: element,
+				element,
 				offset: 0,
 			});
 			window.scrollTo(0, 4000);
@@ -359,7 +359,7 @@ describe('Scrollspy', function() {
 
 		it('should activate last element when scrolling to maximum position', function(done) {
 			spy = new Scrollspy({
-				element: element,
+				element,
 				offset: 0,
 			});
 			window.scrollTo(0, 99999);
@@ -374,7 +374,7 @@ describe('Scrollspy', function() {
 
 		it('should activate last element when scrolling to maximum position with offset', function(done) {
 			spy = new Scrollspy({
-				element: element,
+				element,
 				offset: 100,
 			});
 			window.scrollTo(0, 99999);
@@ -389,7 +389,7 @@ describe('Scrollspy', function() {
 
 		it('should activate index of closest element when scrolling', function(done) {
 			spy = new Scrollspy({
-				element: element,
+				element,
 				offset: 0,
 			});
 			window.scrollTo(0, 10000);
@@ -404,7 +404,7 @@ describe('Scrollspy', function() {
 
 		it('should activate the right item on the new element when it changes', function() {
 			spy = new Scrollspy({
-				element: element,
+				element,
 				offset: 0,
 			});
 
@@ -428,7 +428,7 @@ describe('Scrollspy', function() {
 			dom.addClasses(dom.toElement('#element3'), 'mySelector');
 
 			spy = new Scrollspy({
-				element: element,
+				element,
 				offset: 0,
 			});
 

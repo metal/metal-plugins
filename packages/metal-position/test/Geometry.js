@@ -4,10 +4,10 @@ import Geometry from '../src/Geometry';
 
 describe('Geometry', function() {
 	it('should overlapped rectangles intersects', function() {
-		let P01 = [0, 0];
-		let P02 = [10, 10];
-		let P11 = [0, 0];
-		let P12 = [10, 10];
+		const P01 = [0, 0];
+		const P02 = [10, 10];
+		const P11 = [0, 0];
+		const P12 = [10, 10];
 		assert.ok(
 			Geometry.intersectRect(
 				P01[0],
@@ -23,10 +23,10 @@ describe('Geometry', function() {
 	});
 
 	it('should internal rectangles intersects', function() {
-		let P01 = [0, 0];
-		let P02 = [10, 10];
-		let P11 = [1, 1];
-		let P12 = [9, 9];
+		const P01 = [0, 0];
+		const P02 = [10, 10];
+		const P11 = [1, 1];
+		const P12 = [9, 9];
 		assert.ok(
 			Geometry.intersectRect(
 				P01[0],
@@ -42,10 +42,10 @@ describe('Geometry', function() {
 	});
 
 	it('should partially overlapped rectangles intersects', function() {
-		let P01 = [0, 0];
-		let P02 = [10, 10];
-		let P11 = [9, 9];
-		let P12 = [1, 1];
+		const P01 = [0, 0];
+		const P02 = [10, 10];
+		const P11 = [9, 9];
+		const P12 = [1, 1];
 		assert.ok(
 			Geometry.intersectRect(
 				P01[0],
@@ -61,10 +61,10 @@ describe('Geometry', function() {
 	});
 
 	it('should external rectangles not intersect', function() {
-		let P01 = [0, 0];
-		let P02 = [10, 10];
-		let P11 = [11, 11];
-		let P12 = [12, 12];
+		const P01 = [0, 0];
+		const P02 = [10, 10];
+		const P11 = [11, 11];
+		const P12 = [12, 12];
 		assert.ok(
 			!Geometry.intersectRect(
 				P01[0],

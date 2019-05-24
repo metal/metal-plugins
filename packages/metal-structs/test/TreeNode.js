@@ -4,35 +4,35 @@ import TreeNode from '../src/TreeNode';
 
 describe('TreeNode', function() {
 	it('should create node with not defined value', function() {
-		let tree = new TreeNode();
+		const tree = new TreeNode();
 		assert.strictEqual(undefined, tree.getValue());
 	});
 
 	it('should create node with null value', function() {
-		let tree = new TreeNode(null);
+		const tree = new TreeNode(null);
 		assert.strictEqual(null, tree.getValue());
 	});
 
 	it('should create node with value', function() {
-		let tree = new TreeNode(1);
+		const tree = new TreeNode(1);
 		assert.strictEqual(1, tree.getValue());
 	});
 
 	it('should create node with empty children array', function() {
-		let tree = new TreeNode();
+		const tree = new TreeNode();
 		assert.ok(Array.isArray(tree.getChildren()));
 	});
 
 	it('should add child to node', function() {
-		let tree = new TreeNode();
-		let child = new TreeNode();
+		const tree = new TreeNode();
+		const child = new TreeNode();
 		tree.addChild(child);
 		assert.strictEqual(1, tree.getChildCount());
 	});
 
 	it('should remove child from node', function() {
-		let tree = new TreeNode();
-		let child = new TreeNode();
+		const tree = new TreeNode();
+		const child = new TreeNode();
 		tree.addChild(child);
 		assert.strictEqual(1, tree.getChildCount());
 		assert.strictEqual(child, tree.removeChild(child));
@@ -41,9 +41,9 @@ describe('TreeNode', function() {
 	});
 
 	it('should not add child to node if child already has a parent', function() {
-		let tree0 = new TreeNode();
-		let tree1 = new TreeNode();
-		let child = new TreeNode();
+		const tree0 = new TreeNode();
+		const tree1 = new TreeNode();
+		const child = new TreeNode();
 		tree0.addChild(child);
 		assert.throws(function() {
 			tree1.addChild(child);
@@ -51,9 +51,9 @@ describe('TreeNode', function() {
 	});
 
 	it('should get child at certain position on node', function() {
-		let tree = new TreeNode();
-		let child0 = new TreeNode();
-		let child1 = new TreeNode();
+		const tree = new TreeNode();
+		const child0 = new TreeNode();
+		const child1 = new TreeNode();
 		tree.addChild(child0);
 		tree.addChild(child1);
 		assert.strictEqual(2, tree.getChildCount());
@@ -62,8 +62,8 @@ describe('TreeNode', function() {
 	});
 
 	it('should get child at inexistent position as null', function() {
-		let tree = new TreeNode();
-		let child = new TreeNode();
+		const tree = new TreeNode();
+		const child = new TreeNode();
 		tree.addChild(child);
 		assert.strictEqual(1, tree.getChildCount());
 		assert.strictEqual(child, tree.getChildAt(0));
@@ -71,9 +71,9 @@ describe('TreeNode', function() {
 	});
 
 	it('should get node depth', function() {
-		let tree = new TreeNode();
-		let child00 = new TreeNode();
-		let child01 = new TreeNode();
+		const tree = new TreeNode();
+		const child00 = new TreeNode();
+		const child01 = new TreeNode();
 		tree.addChild(child00);
 		child00.addChild(child01);
 		assert.strictEqual(0, tree.getDepth());
@@ -82,9 +82,9 @@ describe('TreeNode', function() {
 	});
 
 	it('should get node ancestors', function() {
-		let tree = new TreeNode();
-		let child00 = new TreeNode();
-		let child01 = new TreeNode();
+		const tree = new TreeNode();
+		const child00 = new TreeNode();
+		const child01 = new TreeNode();
 		tree.addChild(child00);
 		child00.addChild(child01);
 		assert.deepEqual([], tree.getAncestors());
@@ -93,9 +93,9 @@ describe('TreeNode', function() {
 	});
 
 	it('should test hether this node is the ancestor of the given node', function() {
-		let tree = new TreeNode();
-		let child00 = new TreeNode();
-		let child01 = new TreeNode();
+		const tree = new TreeNode();
+		const child00 = new TreeNode();
+		const child01 = new TreeNode();
 		tree.addChild(child00);
 		child00.addChild(child01);
 		assert.ok(!tree.contains(tree));
@@ -107,14 +107,14 @@ describe('TreeNode', function() {
 	});
 
 	it('should get the root node as the node itself if there is no parent', function() {
-		let tree = new TreeNode();
+		const tree = new TreeNode();
 		assert.strictEqual(tree, tree.getRoot());
 	});
 
 	it('should get the root node', function() {
-		let tree = new TreeNode();
-		let child00 = new TreeNode();
-		let child01 = new TreeNode();
+		const tree = new TreeNode();
+		const child00 = new TreeNode();
+		const child01 = new TreeNode();
 		tree.addChild(child00);
 		child00.addChild(child01);
 		assert.strictEqual(tree, tree.getRoot());
@@ -123,9 +123,9 @@ describe('TreeNode', function() {
 	});
 
 	it('should test if the node is leaf', function() {
-		let tree = new TreeNode();
-		let child00 = new TreeNode();
-		let child01 = new TreeNode();
+		const tree = new TreeNode();
+		const child00 = new TreeNode();
+		const child01 = new TreeNode();
 		tree.addChild(child00);
 		child00.addChild(child01);
 		assert.ok(!tree.isLeaf());
@@ -134,35 +134,35 @@ describe('TreeNode', function() {
 	});
 
 	it('should traverse depth-first in pre-order', function() {
-		let A = new TreeNode('A');
-		let B = new TreeNode('B');
-		let C = new TreeNode('C');
-		let D = new TreeNode('D');
-		let E = new TreeNode('E');
-		let F = new TreeNode('F');
+		const A = new TreeNode('A');
+		const B = new TreeNode('B');
+		const C = new TreeNode('C');
+		const D = new TreeNode('D');
+		const E = new TreeNode('E');
+		const F = new TreeNode('F');
 		A.addChild(B);
 		A.addChild(C);
 		B.addChild(D);
 		C.addChild(E);
 		C.addChild(F);
-		let path = [];
+		const path = [];
 		A.traverse(node => path.push(node.getValue()));
 		assert.deepEqual(['A', 'B', 'D', 'C', 'E', 'F'], path);
 	});
 
 	it('should traverse depth-first in post-order', function() {
-		let A = new TreeNode('A');
-		let B = new TreeNode('B');
-		let C = new TreeNode('C');
-		let D = new TreeNode('D');
-		let E = new TreeNode('E');
-		let F = new TreeNode('F');
+		const A = new TreeNode('A');
+		const B = new TreeNode('B');
+		const C = new TreeNode('C');
+		const D = new TreeNode('D');
+		const E = new TreeNode('E');
+		const F = new TreeNode('F');
 		A.addChild(B);
 		A.addChild(C);
 		B.addChild(D);
 		C.addChild(E);
 		C.addChild(F);
-		let path = [];
+		const path = [];
 		A.traverse(null, node => path.push(node.getValue()));
 		assert.deepEqual(['D', 'B', 'E', 'F', 'C', 'A'], path);
 	});

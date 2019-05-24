@@ -1,4 +1,4 @@
-let testAgents = {
+const testAgents = {
 	/**
 	 * Internet Explorer
 	 */

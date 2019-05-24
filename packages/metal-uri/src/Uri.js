@@ -96,12 +96,13 @@ class Uri {
 			return;
 		}
 		this.query = new MultiMap();
-		let search = this.url.query;
+		const search = this.url.query;
 		if (search) {
 			search
 				.substring(1)
 				.split('&')
 				.forEach(param => {
+					// eslint-disable-next-line
 					let [key, value] = param.split('=');
 					if (isDef(value)) {
 						value = Uri.urlDecode(value);
@@ -126,7 +127,7 @@ class Uri {
 	getHost() {
 		let host = this.getHostname();
 		if (host) {
-			let port = this.getPort();
+			const port = this.getPort();
 			if (port && port !== '80') {
 				host += ':' + port;
 			}
@@ -139,7 +140,7 @@ class Uri {
 	 * @return {string}
 	 */
 	getHostname() {
-		let hostname = this.url.hostname;
+		const hostname = this.url.hostname;
 		if (hostname === Uri.HOSTNAME_PLACEHOLDER) {
 			return '';
 		}
@@ -151,7 +152,7 @@ class Uri {
 	 * @return {string}
 	 */
 	getOrigin() {
-		let host = this.getHost();
+		const host = this.getHost();
 		if (host) {
 			return this.getProtocol() + '//' + host;
 		}
@@ -295,22 +296,22 @@ class Uri {
 			}
 
 			switch (uri.charAt(0)) {
-			case '.':
-			case '?':
-			case '#':
-				url += Uri.HOSTNAME_PLACEHOLDER;
-				url += '/';
-				url += uri;
-				break;
-			case '':
-			case '/':
-				if (uri[1] !== '/') {
+				case '.':
+				case '?':
+				case '#':
 					url += Uri.HOSTNAME_PLACEHOLDER;
-				}
-				url += uri;
-				break;
-			default:
-				url += uri;
+					url += '/';
+					url += uri;
+					break;
+				case '':
+				case '/':
+					if (uri[1] !== '/') {
+						url += Uri.HOSTNAME_PLACEHOLDER;
+					}
+					url += uri;
+					break;
+				default:
+					url += uri;
 			}
 		} else {
 			this.usingDefaultProtocol_ = false;
@@ -427,7 +428,7 @@ class Uri {
 		}
 
 		let href = '';
-		let host = this.getHost();
+		const host = this.getHost();
 		if (host) {
 			href += this.getProtocol() + '//';
 		}

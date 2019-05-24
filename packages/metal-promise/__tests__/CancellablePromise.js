@@ -2,7 +2,7 @@ import CancellablePromise from '../src/CancellablePromise';
 import sinon from 'sinon';
 import {async, nullFunction} from 'metal';
 
-let unhandledRejectionHandler = sinon.stub();
+const unhandledRejectionHandler = sinon.stub();
 
 describe('CancellablePromise', function() {
 	beforeAll(function() {
@@ -536,7 +536,7 @@ describe('CancellablePromise', function() {
  */
 function fail(message) {
 	throw new Error(
-		message || 'Test failed. This assertion shouldn\'t have been reached.'
+		message || "Test failed. This assertion shouldn't have been reached."
 	);
 }
 

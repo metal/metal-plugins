@@ -11,7 +11,7 @@ describe('Storage', function() {
 	});
 
 	it('should throws error for wrong type mechanism', function() {
-		let unnkownType = {};
+		const unnkownType = {};
 		assert.throws(() => new Storage(unnkownType), Error);
 	});
 
@@ -26,14 +26,14 @@ describe('Storage', function() {
 		});
 
 		it('should set string value', function() {
-			let storage = new Storage(this.mechanism);
+			const storage = new Storage(this.mechanism);
 			storage.set('key', 'value');
 			assert.strictEqual('value', storage.get('key'));
 		});
 
 		it('should set stores values as json objects', function() {
-			let storage = new Storage(this.mechanism);
-			let obj = {
+			const storage = new Storage(this.mechanism);
+			const obj = {
 				key: 1,
 			};
 			storage.set('key', obj);
@@ -41,19 +41,19 @@ describe('Storage', function() {
 		});
 
 		it('should set stores null value as null', function() {
-			let storage = new Storage(this.mechanism);
+			const storage = new Storage(this.mechanism);
 			storage.set('key', null);
 			assert.strictEqual(null, storage.get('key'));
 		});
 
 		it('should set stores undefined value as undefined', function() {
-			let storage = new Storage(this.mechanism);
+			const storage = new Storage(this.mechanism);
 			storage.set('key', undefined);
 			assert.strictEqual(undefined, storage.get('key'));
 		});
 
 		it('should clear all values from storage', function() {
-			let storage = new Storage(this.mechanism);
+			const storage = new Storage(this.mechanism);
 			storage.set('key', 'value');
 			assert.strictEqual(1, storage.size());
 			storage.clear();
@@ -61,21 +61,21 @@ describe('Storage', function() {
 		});
 
 		it('should get keys from storage', function() {
-			let storage = new Storage(this.mechanism);
+			const storage = new Storage(this.mechanism);
 			storage.set('key1', 'value1');
 			storage.set('key2', 'value2');
 			assert.sameMembers(['key1', 'key2'], storage.keys());
 		});
 
 		it('should get values from storage', function() {
-			let storage = new Storage(this.mechanism);
+			const storage = new Storage(this.mechanism);
 			storage.set('key1', 'value1');
 			storage.set('key2', 'value2');
 			assert.sameMembers(['value1', 'value2'], storage.values());
 		});
 
 		it('should remove a value from a key', function() {
-			let storage = new Storage(this.mechanism);
+			const storage = new Storage(this.mechanism);
 			storage.set('key1', 'value');
 			storage.set('key2', 'value');
 			assert.strictEqual(2, storage.size());
@@ -91,7 +91,7 @@ describe('Storage', function() {
 				}
 			}
 			/* eslint-enable */
-			let storage = new Storage(new MockMechanism());
+			const storage = new Storage(new MockMechanism());
 			assert.strictEqual(undefined, storage.get());
 		});
 
@@ -103,7 +103,7 @@ describe('Storage', function() {
 				}
 			}
 			/* eslint-enable */
-			let storage = new Storage(new MockMechanism());
+			const storage = new Storage(new MockMechanism());
 			assert.throws(() => storage.get(), Storage.ErrorCode.INVALID_VALUE);
 		});
 	});

@@ -90,8 +90,8 @@ class Affix extends State {
 		if (!core.isDef(this.offsetBottom)) {
 			return false;
 		}
-		let clientHeight = Position.getHeight(this.scrollElement);
-		let scrollElementClientHeight = Position.getClientHeight(
+		const clientHeight = Position.getHeight(this.scrollElement);
+		const scrollElementClientHeight = Position.getClientHeight(
 			this.scrollElement
 		);
 		return (

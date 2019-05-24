@@ -28,7 +28,7 @@ class Align {
 		let bestRegion;
 
 		if (autoBestAlign) {
-			let suggestion = this.suggestAlignBestRegion(
+			const suggestion = this.suggestAlignBestRegion(
 				element,
 				alignElement,
 				position
@@ -39,7 +39,7 @@ class Align {
 			bestRegion = this.getAlignRegion(element, alignElement, position);
 		}
 
-		let computedStyle = window.getComputedStyle(element, null);
+		const computedStyle = window.getComputedStyle(element, null);
 		if (computedStyle.getPropertyValue('position') !== 'fixed') {
 			bestRegion.top += window.pageYOffset;
 			bestRegion.left += window.pageXOffset;
@@ -85,52 +85,54 @@ class Align {
 	 * @static
 	 */
 	static getAlignRegion(element, alignElement, position) {
-		let r1 = Position.getRegion(alignElement);
-		let r2 = Position.getRegion(element);
+		const r1 = Position.getRegion(alignElement);
+		const r2 = Position.getRegion(element);
 		let top = 0;
 		let left = 0;
 
 		switch (position) {
-		case Align.TopCenter:
-			top = r1.top - r2.height;
-			left = r1.left + r1.width / 2 - r2.width / 2;
-			break;
-		case Align.RightCenter:
-			top = r1.top + r1.height / 2 - r2.height / 2;
-			left = r1.left + r1.width;
-			break;
-		case Align.BottomCenter:
-			top = r1.bottom;
-			left = r1.left + r1.width / 2 - r2.width / 2;
-			break;
-		case Align.LeftCenter:
-			top = r1.top + r1.height / 2 - r2.height / 2;
-			left = r1.left - r2.width;
-			break;
-		case Align.TopRight:
-			top = r1.top - r2.height;
-			left = r1.right - r2.width;
-			break;
-		case Align.BottomRight:
-			top = r1.bottom;
-			left = r1.right - r2.width;
-			break;
-		case Align.BottomLeft:
-			top = r1.bottom;
-			left = r1.left;
-			break;
-		case Align.TopLeft:
-			top = r1.top - r2.height;
-			left = r1.left;
-			break;
+			case Align.TopCenter:
+				top = r1.top - r2.height;
+				left = r1.left + r1.width / 2 - r2.width / 2;
+				break;
+			case Align.RightCenter:
+				top = r1.top + r1.height / 2 - r2.height / 2;
+				left = r1.left + r1.width;
+				break;
+			case Align.BottomCenter:
+				top = r1.bottom;
+				left = r1.left + r1.width / 2 - r2.width / 2;
+				break;
+			case Align.LeftCenter:
+				top = r1.top + r1.height / 2 - r2.height / 2;
+				left = r1.left - r2.width;
+				break;
+			case Align.TopRight:
+				top = r1.top - r2.height;
+				left = r1.right - r2.width;
+				break;
+			case Align.BottomRight:
+				top = r1.bottom;
+				left = r1.right - r2.width;
+				break;
+			case Align.BottomLeft:
+				top = r1.bottom;
+				left = r1.left;
+				break;
+			case Align.TopLeft:
+				top = r1.top - r2.height;
+				left = r1.left;
+				break;
+			default:
+				break;
 		}
 
 		return {
 			bottom: top + r2.height,
 			height: r2.height,
-			left: left,
+			left,
 			right: left + r2.width,
-			top: top,
+			top,
 			width: r2.width,
 		};
 	}
@@ -169,15 +171,15 @@ class Align {
 		);
 		let tryPosition = bestPosition;
 		let tryRegion = bestRegion;
-		let viewportRegion = Position.getRegion(window);
+		const viewportRegion = Position.getRegion(window);
 
 		for (let i = 0; i < 8; ) {
 			if (Position.intersectRegion(viewportRegion, tryRegion)) {
-				let visibleRegion = Position.intersection(
+				const visibleRegion = Position.intersection(
 					viewportRegion,
 					tryRegion
 				);
-				let area = visibleRegion.width * visibleRegion.height;
+				const area = visibleRegion.width * visibleRegion.height;
 				if (area > bestArea) {
 					bestArea = area;
 					bestRegion = tryRegion;

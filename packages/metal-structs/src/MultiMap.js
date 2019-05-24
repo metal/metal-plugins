@@ -5,7 +5,7 @@ import {Disposable} from 'metal';
 /**
  * A cached reference to the create function.
  */
-let create = Object.create;
+const create = Object.create;
 
 /**
  * Case insensitive string Multimap implementation. Allows multiple values for
@@ -70,8 +70,8 @@ class MultiMap extends Disposable {
 	 * @return {!MultiMap}
 	 */
 	static fromObject(obj) {
-		let map = new MultiMap();
-		let keys = Object.keys(obj);
+		const map = new MultiMap();
+		const keys = Object.keys(obj);
 		for (let i = 0; i < keys.length; i++) {
 			map.set(keys[i], obj[keys[i]]);
 		}
@@ -85,7 +85,7 @@ class MultiMap extends Disposable {
 	 * @chainable
 	 */
 	get(name) {
-		let values = this.values[name.toLowerCase()];
+		const values = this.values[name.toLowerCase()];
 		if (values) {
 			return values[0];
 		}

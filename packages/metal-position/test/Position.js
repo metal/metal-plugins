@@ -5,7 +5,7 @@ import Position from '../src/Position';
 import PositionTestHelper from './fixture/PositionTestHelper';
 
 describe('Position', function() {
-	let paddingElement = dom.buildFragment(
+	const paddingElement = dom.buildFragment(
 		'<div id="paddingElement" style="height:10000px;width:10000px;position:relative;overflow:auto;"><div style="position:absolute;top:20000px;left:20000px;height:10px;width:10px;"></div></div>'
 	).firstChild;
 
@@ -45,9 +45,9 @@ describe('Position', function() {
 		});
 
 		it('should check viewport region', function() {
-			let height = Position.getClientHeight(window);
-			let width = Position.getClientWidth(window);
-			let region = Position.getRegion(window);
+			const height = Position.getClientHeight(window);
+			const width = Position.getClientWidth(window);
+			const region = Position.getRegion(window);
 			assert.strictEqual(height, region.height);
 			assert.strictEqual(height, region.bottom);
 			assert.strictEqual(width, region.width);
@@ -80,7 +80,7 @@ describe('Position', function() {
 		});
 
 		it('should check element client size', function() {
-			let scrollbarWidth =
+			const scrollbarWidth =
 				Position.getRegion(paddingElement).width -
 				Position.getClientWidth(paddingElement);
 			assert.strictEqual(
@@ -126,9 +126,9 @@ describe('Position', function() {
 
 	describe('Region', function() {
 		it('should check document region', function() {
-			let height = Position.getHeight(document);
-			let width = Position.getWidth(document);
-			let region = Position.getRegion(document);
+			const height = Position.getHeight(document);
+			const width = Position.getWidth(document);
+			const region = Position.getRegion(document);
 			assert.strictEqual(height, region.height);
 			assert.strictEqual(height, region.bottom);
 			assert.strictEqual(width, region.width);
@@ -138,7 +138,7 @@ describe('Position', function() {
 		});
 
 		it('should get node region', function() {
-			let region = Position.getRegion(paddingElement);
+			const region = Position.getRegion(paddingElement);
 			assert.strictEqual(10000, region.height);
 			assert.strictEqual(10000, region.width);
 			assert.strictEqual(10000, region.right);
@@ -155,7 +155,7 @@ describe('Position', function() {
 				window.scrollTo(30, 20);
 
 				dom.once(document, 'scroll', function() {
-					let region = Position.getRegion(paddingElement);
+					const region = Position.getRegion(paddingElement);
 					assert.strictEqual(10000, region.height);
 					assert.strictEqual(10000, region.width);
 					assert.strictEqual(9970, region.right);
@@ -182,7 +182,7 @@ describe('Position', function() {
 				window.scrollTo(30, 20);
 
 				dom.once(document, 'scroll', function() {
-					let region = Position.getRegion(paddingElement, true);
+					const region = Position.getRegion(paddingElement, true);
 					assert.strictEqual(10000, region.height);
 					assert.strictEqual(10000, region.width);
 					assert.strictEqual(10000, region.right);
@@ -201,13 +201,13 @@ describe('Position', function() {
 		);
 
 		it('should check if same region intersects', function() {
-			let r1 = {
+			const r1 = {
 				top: 0,
 				left: 0,
 				bottom: 100,
 				right: 100,
 			};
-			let r2 = {
+			const r2 = {
 				top: 0,
 				left: 0,
 				bottom: 100,
@@ -217,13 +217,13 @@ describe('Position', function() {
 		});
 
 		it('should check if inner region intersects', function() {
-			let r1 = {
+			const r1 = {
 				top: 0,
 				left: 0,
 				bottom: 100,
 				right: 100,
 			};
-			let r2 = {
+			const r2 = {
 				top: 50,
 				left: 50,
 				bottom: 75,
@@ -234,13 +234,13 @@ describe('Position', function() {
 		});
 
 		it('should check if negative region intersects', function() {
-			let r1 = {
+			const r1 = {
 				top: 0,
 				left: 0,
 				bottom: 100,
 				right: 100,
 			};
-			let r2 = {
+			const r2 = {
 				top: -1,
 				left: -1,
 				bottom: 101,
@@ -251,13 +251,13 @@ describe('Position', function() {
 		});
 
 		it('should check if external region do not intersect', function() {
-			let r1 = {
+			const r1 = {
 				top: 0,
 				left: 0,
 				bottom: 100,
 				right: 100,
 			};
-			let r2 = {
+			const r2 = {
 				top: 101,
 				left: 101,
 				bottom: 200,
@@ -268,13 +268,13 @@ describe('Position', function() {
 		});
 
 		it('should check if same region is considered inside region', function() {
-			let r1 = {
+			const r1 = {
 				top: 0,
 				left: 0,
 				bottom: 100,
 				right: 100,
 			};
-			let r2 = {
+			const r2 = {
 				top: 0,
 				left: 0,
 				bottom: 100,
@@ -284,13 +284,13 @@ describe('Position', function() {
 		});
 
 		it('should check if inner region is considered inside region', function() {
-			let r1 = {
+			const r1 = {
 				top: 0,
 				left: 0,
 				bottom: 100,
 				right: 100,
 			};
-			let r2 = {
+			const r2 = {
 				top: 50,
 				left: 50,
 				bottom: 75,
@@ -301,13 +301,13 @@ describe('Position', function() {
 		});
 
 		it('should check if partially intersected region is not considered inside region', function() {
-			let r1 = {
+			const r1 = {
 				top: 0,
 				left: 0,
 				bottom: 100,
 				right: 100,
 			};
-			let r2 = {
+			const r2 = {
 				top: 100,
 				left: 100,
 				bottom: 101,
@@ -318,13 +318,13 @@ describe('Position', function() {
 		});
 
 		it('should check if external region is not considered inside region', function() {
-			let r1 = {
+			const r1 = {
 				top: 0,
 				left: 0,
 				bottom: 100,
 				right: 100,
 			};
-			let r2 = {
+			const r2 = {
 				top: 101,
 				left: 101,
 				bottom: 200,
@@ -335,7 +335,7 @@ describe('Position', function() {
 		});
 
 		it('should check if region inside viewport is not considered inside viewport region', function() {
-			let region = {
+			const region = {
 				top: 0,
 				left: 0,
 				bottom: 100,
@@ -345,7 +345,7 @@ describe('Position', function() {
 		});
 
 		it('should check if region outside viewport is not considered inside viewport region', function() {
-			let region = {
+			const region = {
 				top: -1,
 				left: -1,
 				bottom: 100,
@@ -355,7 +355,7 @@ describe('Position', function() {
 		});
 
 		it('should intersection between two equivalent regions be the same region', function() {
-			let r1 = {
+			const r1 = {
 				bottom: 100,
 				height: 100,
 				left: 0,
@@ -363,7 +363,7 @@ describe('Position', function() {
 				top: 0,
 				width: 100,
 			};
-			let r2 = {
+			const r2 = {
 				bottom: 100,
 				height: 100,
 				left: 0,
@@ -375,7 +375,7 @@ describe('Position', function() {
 		});
 
 		it('should computes the intersection between two regions', function() {
-			let r1 = {
+			const r1 = {
 				bottom: 100,
 				height: 100,
 				left: 0,
@@ -383,7 +383,7 @@ describe('Position', function() {
 				top: 0,
 				width: 100,
 			};
-			let r2 = {
+			const r2 = {
 				bottom: 50,
 				height: 50,
 				left: 0,
@@ -395,13 +395,13 @@ describe('Position', function() {
 		});
 
 		it('should the intersection between two external regions empty', function() {
-			let r1 = {
+			const r1 = {
 				top: 0,
 				left: 0,
 				bottom: 100,
 				right: 100,
 			};
-			let r2 = {
+			const r2 = {
 				top: 101,
 				left: 101,
 				bottom: 200,
@@ -411,7 +411,7 @@ describe('Position', function() {
 		});
 
 		it('should check if a point is inside a region', function() {
-			let r = {
+			const r = {
 				top: 0,
 				left: 0,
 				bottom: 100,
@@ -448,7 +448,8 @@ describe('Position', function() {
 		});
 
 		it('should return offset position of given element with translate css', function() {
-			offsetElement.style['-webkit-transform'] = 'translate(-30px, -50px)';
+			offsetElement.style['-webkit-transform'] =
+				'translate(-30px, -50px)';
 			offsetElement.style['-ms-transform'] = 'translate(-30px, -50px)';
 			offsetElement.style.transform = 'translate(-30px, -50px)';
 			assert.strictEqual(50, Position.getOffsetTop(offsetElement));
@@ -458,7 +459,8 @@ describe('Position', function() {
 		it('should return offset position of given element with 3d translate css', function() {
 			offsetElement.style['-webkit-transform'] =
 				'translate3d(-30px, -50px, -10px)';
-			offsetElement.style['-ms-transform'] = 'translate3d(-30px, -50px, -10px)';
+			offsetElement.style['-ms-transform'] =
+				'translate3d(-30px, -50px, -10px)';
 			offsetElement.style.transform = 'translate3d(-30px, -50px, -10px)';
 			if (Position.getTransformMatrixValues(offsetElement)) {
 				// This test only makes sense on browsers that support 3d transforms.
@@ -468,11 +470,15 @@ describe('Position', function() {
 		});
 
 		it('should return offset position of given element ignoring translate css', function() {
-			offsetElement.style['-webkit-transform'] = 'translate(-30px, -50px)';
+			offsetElement.style['-webkit-transform'] =
+				'translate(-30px, -50px)';
 			offsetElement.style['-ms-transform'] = 'translate(-30px, -50px)';
 			offsetElement.style.transform = 'translate(-30px, -50px)';
 			assert.strictEqual(100, Position.getOffsetTop(offsetElement, true));
-			assert.strictEqual(200, Position.getOffsetLeft(offsetElement, true));
+			assert.strictEqual(
+				200,
+				Position.getOffsetLeft(offsetElement, true)
+			);
 		});
 	});
 });

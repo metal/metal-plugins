@@ -4,7 +4,7 @@ import parse from '../src/parse';
 
 describe('parse', function() {
 	it('should parse url into an object', function() {
-		let uri = parse('http://hostname:8080/ignore?a=1#hash');
+		const uri = parse('http://hostname:8080/ignore?a=1#hash');
 		assert.strictEqual('#hash', uri.hash);
 		assert.strictEqual('hostname', uri.hostname);
 		assert.strictEqual('/ignore', uri.pathname);

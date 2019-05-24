@@ -15,7 +15,7 @@ describe('TransitionChild', () => {
 	it('renders', () => {
 		const component = new TransitionChild();
 
-		expect(component).toMatchSnapshot;
+		expect(component).toMatchSnapshot();
 	});
 
 	it('should delay before adding a class', () => {

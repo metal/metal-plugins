@@ -135,8 +135,7 @@ class TransitionWrapper extends Component {
 						// eslint-disable-next-line
 						<TransitionChild
 							name={this.props.name}
-							ref={child.props.key}
-						>
+							ref={child.props.key}>
 							{child}
 						</TransitionChild>
 					))}

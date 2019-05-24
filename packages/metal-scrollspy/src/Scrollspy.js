@@ -70,15 +70,15 @@ class Scrollspy extends State {
 	 * Checks position of elements and activate the one in region.
 	 */
 	checkPosition() {
-		let scrollHeight = this.getScrollHeight_();
-		let scrollTop = Position.getScrollTop(this.scrollElement);
+		const scrollHeight = this.getScrollHeight_();
+		const scrollTop = Position.getScrollTop(this.scrollElement);
 
 		if (scrollHeight < scrollTop + this.offset) {
 			this.activate(this.regions.length - 1);
 			return;
 		}
 
-		let index = this.findBestRegionAt_();
+		const index = this.findBestRegionAt_();
 		if (index !== this.activeIndex) {
 			if (index === -1) {
 				this.deactivateAll();
@@ -112,11 +112,11 @@ class Scrollspy extends State {
 	 */
 	findBestRegionAt_() {
 		let index = -1;
-		let origin = this.getCurrentPosition();
+		const origin = this.getCurrentPosition();
 		if (this.regions.length > 0 && origin >= this.regions[0].top) {
 			for (let i = 0; i < this.regions.length; i++) {
-				let region = this.regions[i];
-				let lastRegion = i === this.regions.length - 1;
+				const region = this.regions[i];
+				const lastRegion = i === this.regions.length - 1;
 				if (
 					origin >= region.top &&
 					(lastRegion || origin < this.regions[i + 1].top)
@@ -134,7 +134,7 @@ class Scrollspy extends State {
 	 * @return {number}
 	 */
 	getCurrentPosition() {
-		let scrollTop = Position.getScrollTop(this.scrollElement);
+		const scrollTop = Position.getScrollTop(this.scrollElement);
 		return scrollTop + this.offset + this.scrollElementRegion_.top;
 	}
 
@@ -201,16 +201,16 @@ class Scrollspy extends State {
 		this.scrollHeight_ = this.getScrollHeight_();
 
 		this.regions = [];
-		let links = this.element.querySelectorAll(this.selector);
-		let scrollTop = Position.getScrollTop(this.scrollElement);
+		const links = this.element.querySelectorAll(this.selector);
+		const scrollTop = Position.getScrollTop(this.scrollElement);
 		for (let i = 0; i < links.length; ++i) {
-			let link = links[i];
+			const link = links[i];
 			if (link.hash && link.hash.length > 1) {
-				let element = document.getElementById(link.hash.substring(1));
+				const element = document.getElementById(link.hash.substring(1));
 				if (element) {
-					let region = Position.getRegion(element);
+					const region = Position.getRegion(element);
 					this.regions.push({
-						link: link,
+						link,
 						top: region.top + scrollTop,
 						bottom: region.bottom + scrollTop,
 					});
@@ -274,7 +274,7 @@ Scrollspy.STATE = {
 	 */
 	scrollElement: {
 		setter: dom.toElement,
-		valueFn: function() {
+		valueFn() {
 			if (!isServerSide()) {
 				return document;
 			}

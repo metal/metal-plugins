@@ -23,9 +23,9 @@ class DragShim {
 			element = DragShim.getDocShim();
 			element.style.display = 'block';
 		}
-		let eventTypes = Object.keys(listeners);
+		const eventTypes = Object.keys(listeners);
 		return eventTypes.map(function(type) {
-			let isTouch = type.substr(0, 5) === 'touch';
+			const isTouch = type.substr(0, 5) === 'touch';
 			return dom.on(isTouch ? document : element, type, listeners[type]);
 		});
 	}

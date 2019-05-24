@@ -50,7 +50,7 @@ describe('Clipboard', function() {
 			);
 
 			clipboard = new Clipboard({
-				text: function() {
+				text() {
 					return 'From text state fn';
 				},
 			});
@@ -143,7 +143,7 @@ describe('Clipboard', function() {
 			);
 
 			clipboard = new Clipboard({
-				action: function() {
+				action() {
 					return 'copy';
 				},
 			});
@@ -277,7 +277,7 @@ describe('Clipboard', function() {
 			dom.append(container, '<div id="target">From div</div>');
 			dom.append(container, '<span id="target2">From span</span>');
 			clipboard = new Clipboard({
-				target: function() {
+				target() {
 					return dom.toElement('#target2');
 				},
 			});
@@ -303,14 +303,14 @@ describe('Clipboard', function() {
 			);
 			clipboard = new Clipboard();
 
-			let listener = sinon.stub();
+			const listener = sinon.stub();
 			clipboard.on('success', listener);
 
-			let element = dom.toElement('[data-clipboard]');
+			const element = dom.toElement('[data-clipboard]');
 			dom.triggerEvent(element, 'click');
 			assert.strictEqual(1, listener.callCount);
 
-			let event = listener.args[0][0];
+			const event = listener.args[0][0];
 			assert.strictEqual('copy', event.action);
 			assert.strictEqual('From data-text', event.text);
 			assert.strictEqual(element, event.trigger);
@@ -324,7 +324,7 @@ describe('Clipboard', function() {
 			);
 			clipboard = new Clipboard();
 
-			let listener = sinon.stub();
+			const listener = sinon.stub();
 			clipboard.on('success', listener);
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
 			// eslint-disable-next-line
@@ -335,7 +335,7 @@ describe('Clipboard', function() {
 				);
 			});
 
-			let event = listener.args[0][0];
+			const event = listener.args[0][0];
 			event.clearSelection();
 			assert.strictEqual('', window.getSelection().toString());
 		});
@@ -351,15 +351,15 @@ describe('Clipboard', function() {
 			);
 			clipboard = new Clipboard();
 
-			let listener = sinon.stub();
+			const listener = sinon.stub();
 			clipboard.on('success', listener);
 
-			let target = dom.toElement('#target');
+			const target = dom.toElement('#target');
 			sinon.spy(target, 'blur');
 			dom.triggerEvent(dom.toElement('[data-clipboard]'), 'click');
 			assert.strictEqual(0, target.blur.callCount);
 
-			let event = listener.args[0][0];
+			const event = listener.args[0][0];
 			event.clearSelection();
 			assert.strictEqual(1, target.blur.callCount);
 		});
@@ -372,14 +372,14 @@ describe('Clipboard', function() {
 			);
 			clipboard = new Clipboard();
 
-			let listener = sinon.stub();
+			const listener = sinon.stub();
 			clipboard.on('error', listener);
 
-			let element = dom.toElement('[data-clipboard]');
+			const element = dom.toElement('[data-clipboard]');
 			dom.triggerEvent(element, 'click');
 			assert.strictEqual(1, listener.callCount);
 
-			let event = listener.args[0][0];
+			const event = listener.args[0][0];
 			assert.strictEqual('copy', event.action);
 			assert.strictEqual(element, event.trigger);
 			assert.ok(core.isFunction(event.clearSelection));
@@ -393,14 +393,14 @@ describe('Clipboard', function() {
 			);
 			clipboard = new Clipboard();
 
-			let listener = sinon.stub();
+			const listener = sinon.stub();
 			clipboard.on('error', listener);
 
-			let element = dom.toElement('[data-clipboard]');
+			const element = dom.toElement('[data-clipboard]');
 			dom.triggerEvent(element, 'click');
 			assert.strictEqual(1, listener.callCount);
 
-			let event = listener.args[0][0];
+			const event = listener.args[0][0];
 			assert.strictEqual('copy', event.action);
 			assert.strictEqual(element, event.trigger);
 			assert.ok(core.isFunction(event.clearSelection));

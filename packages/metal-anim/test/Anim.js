@@ -14,8 +14,8 @@ describe('Anim', function() {
 
 	before(function() {
 		// Disables mobile devices tests for these tests due sauce tunnel inconsistency
-		let devices = ['iPhone', 'iPad', 'Android'];
-		let filtered = devices.filter(device => {
+		const devices = ['iPhone', 'iPad', 'Android'];
+		const filtered = devices.filter(device => {
 			return window.navigator.userAgent.indexOf(device) !== -1;
 		});
 		if (filtered.length) {
@@ -35,7 +35,7 @@ describe('Anim', function() {
 	});
 
 	it('should emulate transitionend after transition-duration', function(done) {
-		let start = Date.now();
+		const start = Date.now();
 		Anim.emulateTransitionEnd(this.element);
 		dom.once(this.element, 'transitionend', function() {
 			assert.ok(Date.now() - start >= 300);
@@ -44,7 +44,7 @@ describe('Anim', function() {
 	});
 
 	it('should emulate animationend after animation-duration interval', function(done) {
-		let start = Date.now();
+		const start = Date.now();
 		Anim.emulateAnimationEnd(this.element);
 		dom.once(this.element, 'animationend', function() {
 			assert.ok(Date.now() - start >= 200);
@@ -53,7 +53,7 @@ describe('Anim', function() {
 	});
 
 	it('should emulate the longest duration when `emulateEnd` is used (transitionend)', function(done) {
-		let listener = sinon.stub();
+		const listener = sinon.stub();
 		dom.once(this.element, 'transitionend', listener);
 		dom.once(this.element, 'animationend', listener);
 		Anim.emulateEnd(this.element);
@@ -67,7 +67,7 @@ describe('Anim', function() {
 	it('should emulate the longest duration when `emulateEnd` is used (animationend)', function(done) {
 		this.element.style.transitionDuration = '0.2s';
 		this.element.style.animationDuration = '0.3s';
-		let listener = sinon.stub();
+		const listener = sinon.stub();
 		dom.once(this.element, 'transitionend', listener);
 		dom.once(this.element, 'animationend', listener);
 		Anim.emulateEnd(this.element);

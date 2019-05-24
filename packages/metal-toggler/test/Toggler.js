@@ -40,7 +40,9 @@ describe('Toggler', function() {
 			assert.ok(dom.hasClass(toggler.content, toggler.collapsedClasses));
 			assert.ok(!dom.hasClass(toggler.content, toggler.expandedClasses));
 			assert.ok(toggler.header.getAttribute('aria-expanded') === 'false');
-			assert.ok(toggler.content.getAttribute('aria-expanded') === 'false');
+			assert.ok(
+				toggler.content.getAttribute('aria-expanded') === 'false'
+			);
 		});
 
 		it('should expand/collapse content when ENTER key is pressed on header', function() {
@@ -89,12 +91,20 @@ describe('Toggler', function() {
 			createToggler();
 
 			dom.triggerEvent(toggler.header, 'click');
-			assert.ok(!dom.hasClass(toggler.header, toggler.headerCollapsedClasses));
-			assert.ok(dom.hasClass(toggler.header, toggler.headerExpandedClasses));
+			assert.ok(
+				!dom.hasClass(toggler.header, toggler.headerCollapsedClasses)
+			);
+			assert.ok(
+				dom.hasClass(toggler.header, toggler.headerExpandedClasses)
+			);
 
 			dom.triggerEvent(toggler.header, 'click');
-			assert.ok(dom.hasClass(toggler.header, toggler.headerCollapsedClasses));
-			assert.ok(!dom.hasClass(toggler.header, toggler.headerExpandedClasses));
+			assert.ok(
+				dom.hasClass(toggler.header, toggler.headerCollapsedClasses)
+			);
+			assert.ok(
+				!dom.hasClass(toggler.header, toggler.headerExpandedClasses)
+			);
 		});
 
 		it('should not throw error if no header is given', function() {
@@ -111,14 +121,22 @@ describe('Toggler', function() {
 			toggler.expand();
 			assert.ok(!dom.hasClass(toggler.content, toggler.collapsedClasses));
 			assert.ok(dom.hasClass(toggler.content, toggler.expandedClasses));
-			assert.ok(!dom.hasClass(toggler.header, toggler.headerCollapsedClasses));
-			assert.ok(dom.hasClass(toggler.header, toggler.headerExpandedClasses));
+			assert.ok(
+				!dom.hasClass(toggler.header, toggler.headerCollapsedClasses)
+			);
+			assert.ok(
+				dom.hasClass(toggler.header, toggler.headerExpandedClasses)
+			);
 
 			toggler.collapse();
 			assert.ok(dom.hasClass(toggler.content, toggler.collapsedClasses));
 			assert.ok(!dom.hasClass(toggler.content, toggler.expandedClasses));
-			assert.ok(dom.hasClass(toggler.header, toggler.headerCollapsedClasses));
-			assert.ok(!dom.hasClass(toggler.header, toggler.headerExpandedClasses));
+			assert.ok(
+				dom.hasClass(toggler.header, toggler.headerCollapsedClasses)
+			);
+			assert.ok(
+				!dom.hasClass(toggler.header, toggler.headerExpandedClasses)
+			);
 		});
 
 		it('should fire events when the header is toggled', function() {
@@ -167,11 +185,15 @@ describe('Toggler', function() {
 
 	describe('Delegate Toggler', function() {
 		it('should expand/collapse the appropriate content when an element matching header selector is clicked', function() {
-			dom.enterDocument('<button id="toggler1" class="toggler-btn"></button>');
+			dom.enterDocument(
+				'<button id="toggler1" class="toggler-btn"></button>'
+			);
 			dom.enterDocument(
 				'<div id="togglerContent1" class="toggler-content toggler-collapsed"></div>'
 			);
-			dom.enterDocument('<button id="toggler2" class="toggler-btn"></button>');
+			dom.enterDocument(
+				'<button id="toggler2" class="toggler-btn"></button>'
+			);
 			dom.enterDocument(
 				'<div id="togglerContent2" class="toggler-content toggler-collapsed"></div>'
 			);
@@ -181,10 +203,10 @@ describe('Toggler', function() {
 				header: '.toggler-btn',
 			});
 
-			let toggler1 = dom.toElement('#toggler1');
-			let toggler2 = dom.toElement('#toggler2');
-			let content1 = dom.toElement('#togglerContent1');
-			let content2 = dom.toElement('#togglerContent2');
+			const toggler1 = dom.toElement('#toggler1');
+			const toggler2 = dom.toElement('#toggler2');
+			const content1 = dom.toElement('#togglerContent1');
+			const content2 = dom.toElement('#togglerContent2');
 
 			dom.triggerEvent(toggler1, 'click');
 			assert.ok(!dom.hasClass(content1, toggler.collapsedClasses));
@@ -200,11 +222,15 @@ describe('Toggler', function() {
 		});
 
 		it('should expand the appropriate content when an element matching header by calling the publich method', function() {
-			dom.enterDocument('<button id="toggler1" class="toggler-btn"></button>');
+			dom.enterDocument(
+				'<button id="toggler1" class="toggler-btn"></button>'
+			);
 			dom.enterDocument(
 				'<div id="togglerContent1" class="toggler-content toggler-collapsed"></div>'
 			);
-			dom.enterDocument('<button id="toggler2" class="toggler-btn"></button>');
+			dom.enterDocument(
+				'<button id="toggler2" class="toggler-btn"></button>'
+			);
 			dom.enterDocument(
 				'<div id="togglerContent2" class="toggler-content toggler-collapsed"></div>'
 			);
@@ -214,10 +240,10 @@ describe('Toggler', function() {
 				header: '.toggler-btn',
 			});
 
-			let toggler1 = dom.toElement('#toggler1');
-			let toggler2 = dom.toElement('#toggler2');
-			let content1 = dom.toElement('#togglerContent1');
-			let content2 = dom.toElement('#togglerContent2');
+			const toggler1 = dom.toElement('#toggler1');
+			const toggler2 = dom.toElement('#toggler2');
+			const content1 = dom.toElement('#togglerContent1');
+			const content2 = dom.toElement('#togglerContent2');
 
 			toggler.expand(toggler1);
 			assert.ok(!dom.hasClass(content1, toggler.collapsedClasses));
@@ -229,21 +255,25 @@ describe('Toggler', function() {
 		});
 
 		it('should collapse the appropriate content when an element matching header by calling the publich method', function() {
-			dom.enterDocument('<button id="toggler1" class="toggler-btn"></button>');
+			dom.enterDocument(
+				'<button id="toggler1" class="toggler-btn"></button>'
+			);
 			dom.enterDocument(
 				'<div id="togglerContent1" class="toggler-content toggler-collapsed"></div>'
 			);
-			dom.enterDocument('<button id="toggler2" class="toggler-btn"></button>');
+			dom.enterDocument(
+				'<button id="toggler2" class="toggler-btn"></button>'
+			);
 			dom.enterDocument(
 				'<div id="togglerContent2" class="toggler-content toggler-collapsed"></div>'
 			);
 
 			createToggler();
 
-			let toggler1 = dom.toElement('#toggler1');
-			let toggler2 = dom.toElement('#toggler2');
-			let content1 = dom.toElement('#togglerContent1');
-			let content2 = dom.toElement('#togglerContent2');
+			const toggler1 = dom.toElement('#toggler1');
+			const toggler2 = dom.toElement('#toggler2');
+			const content1 = dom.toElement('#togglerContent1');
+			const content2 = dom.toElement('#togglerContent2');
 
 			toggler.collapse(toggler1);
 			assert.ok(dom.hasClass(content1, toggler.collapsedClasses));
@@ -255,11 +285,15 @@ describe('Toggler', function() {
 		});
 
 		it('should toggle all elements by calling the public methods without arguments', function() {
-			dom.enterDocument('<button id="toggler1" class="toggler-btn"></button>');
+			dom.enterDocument(
+				'<button id="toggler1" class="toggler-btn"></button>'
+			);
 			dom.enterDocument(
 				'<div id="togglerContent1" class="toggler-content toggler-collapsed"></div>'
 			);
-			dom.enterDocument('<button id="toggler2" class="toggler-btn"></button>');
+			dom.enterDocument(
+				'<button id="toggler2" class="toggler-btn"></button>'
+			);
 			dom.enterDocument(
 				'<div id="togglerContent2" class="toggler-content toggler-collapsed"></div>'
 			);
@@ -269,10 +303,10 @@ describe('Toggler', function() {
 				header: '.toggler-btn',
 			});
 
-			let toggler1 = dom.toElement('#toggler1');
-			let toggler2 = dom.toElement('#toggler2');
-			let content1 = dom.toElement('#togglerContent1');
-			let content2 = dom.toElement('#togglerContent2');
+			const toggler1 = dom.toElement('#toggler1');
+			const toggler2 = dom.toElement('#toggler2');
+			const content1 = dom.toElement('#togglerContent1');
+			const content2 = dom.toElement('#togglerContent2');
 
 			toggler.toggle();
 			assert.ok(dom.hasClass(content1, toggler.expandedClasses));
@@ -287,7 +321,7 @@ describe('Toggler', function() {
 			assert.ok(dom.hasClass(toggler2, toggler.headerCollapsedClasses));
 		});
 
-		it('should use the header\'s next matched sibling as its content', function() {
+		it("should use the header's next matched sibling as its content", function() {
 			dom.enterDocument('<button class="toggler-btn"></button>');
 			dom.enterDocument('<div>Some other content</div>');
 			dom.enterDocument(
@@ -307,11 +341,14 @@ describe('Toggler', function() {
 				)
 			);
 			assert.ok(
-				dom.hasClass(dom.toElement('#togglerContent1'), toggler.expandedClasses)
+				dom.hasClass(
+					dom.toElement('#togglerContent1'),
+					toggler.expandedClasses
+				)
 			);
 		});
 
-		it('should use the header\'s first matched child if no sibling matches content selector', function() {
+		it("should use the header's first matched child if no sibling matches content selector", function() {
 			dom.enterDocument(
 				'<div class="toggler-btn"><div class="toggler-content toggler-collapsed"></div></div>'
 			);
@@ -326,7 +363,10 @@ describe('Toggler', function() {
 				)
 			);
 			assert.ok(
-				dom.hasClass(dom.toElement('.toggler-content'), toggler.expandedClasses)
+				dom.hasClass(
+					dom.toElement('.toggler-content'),
+					toggler.expandedClasses
+				)
 			);
 		});
 
@@ -346,7 +386,10 @@ describe('Toggler', function() {
 				)
 			);
 			assert.ok(
-				dom.hasClass(dom.toElement('.toggler-content'), toggler.expandedClasses)
+				dom.hasClass(
+					dom.toElement('.toggler-content'),
+					toggler.expandedClasses
+				)
 			);
 		});
 
@@ -385,7 +428,10 @@ describe('Toggler', function() {
 					)
 				);
 
-				dom.triggerEvent(dom.toElement('.container .toggler-btn'), 'click');
+				dom.triggerEvent(
+					dom.toElement('.container .toggler-btn'),
+					'click'
+				);
 				assert.ok(
 					!dom.hasClass(
 						dom.toElement('.container .toggler-content'),
@@ -421,7 +467,10 @@ describe('Toggler', function() {
 					)
 				);
 
-				dom.triggerEvent(dom.toElement('.container .toggler-btn'), 'click');
+				dom.triggerEvent(
+					dom.toElement('.container .toggler-btn'),
+					'click'
+				);
 				assert.ok(
 					!dom.hasClass(
 						dom.toElement('.container .toggler-content'),

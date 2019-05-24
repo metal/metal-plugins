@@ -4,7 +4,7 @@ import MultiMap from '../src/MultiMap';
 
 describe('MultiMap', function() {
 	it('should add and get single value', function() {
-		let map = new MultiMap();
+		const map = new MultiMap();
 		map.add('key1', 1);
 		map.add('key2', 2);
 		assert.strictEqual(1, map.get('key1'));
@@ -12,7 +12,7 @@ describe('MultiMap', function() {
 	});
 
 	it('should set map value', function() {
-		let map = new MultiMap();
+		const map = new MultiMap();
 		map.add('key1', 1);
 		map.add('key1', 1);
 		map.set('key1', 2);
@@ -20,7 +20,7 @@ describe('MultiMap', function() {
 	});
 
 	it('should remove map value', function() {
-		let map = new MultiMap();
+		const map = new MultiMap();
 		map.add('key1', 1);
 		map.add('key1', 1);
 		map.remove('key1');
@@ -28,7 +28,7 @@ describe('MultiMap', function() {
 	});
 
 	it('should get all values for key', function() {
-		let map = new MultiMap();
+		const map = new MultiMap();
 		map.add('key1', 1);
 		map.add('key1', 1);
 		map.add('key2', 2);
@@ -38,7 +38,7 @@ describe('MultiMap', function() {
 	});
 
 	it('should get first added value for key', function() {
-		let map = new MultiMap();
+		const map = new MultiMap();
 		map.add('key1', 1);
 		map.add('key1', 10);
 		map.add('key2', 2);
@@ -48,21 +48,21 @@ describe('MultiMap', function() {
 	});
 
 	it('should check if map contains key', function() {
-		let map = new MultiMap();
+		const map = new MultiMap();
 		map.add('key1', 1);
 		assert.ok(map.contains('key1'));
 		assert.ok(!map.contains('key2'));
 	});
 
 	it('should get map size', function() {
-		let map = new MultiMap();
+		const map = new MultiMap();
 		map.add('key1', 1);
 		map.add('key2', 2);
 		assert.strictEqual(2, map.size());
 	});
 
 	it('should clear map', function() {
-		let map = new MultiMap();
+		const map = new MultiMap();
 		map.add('key1', 1);
 		assert.ok(!map.isEmpty());
 		map.clear();
@@ -70,28 +70,28 @@ describe('MultiMap', function() {
 	});
 
 	it('should get map key names', function() {
-		let map = new MultiMap();
+		const map = new MultiMap();
 		map.add('key1', 1);
 		map.add('key2', 2);
 		assert.deepEqual(['key1', 'key2'], map.names());
 	});
 
 	it('should toString to JSON', function() {
-		let map = new MultiMap();
+		const map = new MultiMap();
 		map.add('key1', 1);
 		map.add('key1', 1);
 		assert.strictEqual('{"key1":[1,1]}', map.toString());
 	});
 
 	it('should dispose map', function() {
-		let map = new MultiMap();
+		const map = new MultiMap();
 		map.add('key1', 1);
 		map.dispose();
 		assert.ok(!map.values);
 	});
 
 	it('should key name be case insensitive', function() {
-		let map = new MultiMap();
+		const map = new MultiMap();
 		map.add('KEY1', 1);
 		map.add('key2', 2);
 		assert.strictEqual(1, map.get('key1'));
@@ -99,13 +99,13 @@ describe('MultiMap', function() {
 	});
 
 	it('should preserve key case', function() {
-		let map = new MultiMap();
+		const map = new MultiMap();
 		map.add('KEY1', 1);
 		assert.deepEqual(['KEY1'], map.names());
 	});
 
 	it('should create map from object contents', function() {
-		let map = MultiMap.fromObject({
+		const map = MultiMap.fromObject({
 			key1: 1,
 			key2: 2,
 		});

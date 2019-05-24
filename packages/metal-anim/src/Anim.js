@@ -62,18 +62,18 @@ class Anim {
 			duration = this.getComputedDurationMs(element, type);
 		}
 
-		let delayed = setTimeout(function() {
+		const delayed = setTimeout(function() {
 			dom.triggerEvent(element, features.checkAnimationEventName()[type]);
 		}, duration);
 
-		let abort = function() {
+		const abort = function() {
 			clearTimeout(delayed);
 			hoistedEvtHandler.removeListener();
 		};
-		let hoistedEvtHandler = dom.once(element, type + 'end', abort);
+		const hoistedEvtHandler = dom.once(element, type + 'end', abort);
 
 		return {
-			abort: abort,
+			abort,
 		};
 	}
 

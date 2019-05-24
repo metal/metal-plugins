@@ -13,9 +13,9 @@ describe('DragDrop', function() {
 	let target2;
 
 	beforeEach(function() {
-		let parent = document.createElement('div');
+		const parent = document.createElement('div');
 		dom.addClasses(parent, 'parent');
-		let html =
+		const html =
 			'<div class="item" style="height:50px;width:50px;"></div><div class="target"></div>';
 		dom.append(parent, html);
 
@@ -103,7 +103,7 @@ describe('DragDrop', function() {
 	});
 
 	it('should ignore targets that match selector but are outside the given "container"', function() {
-		let parent = document.createElement('div');
+		const parent = document.createElement('div');
 		dom.replace(target, parent);
 		dom.append(parent, target);
 
@@ -124,11 +124,11 @@ describe('DragDrop', function() {
 	});
 
 	it('should update elements that match "targets" selector when "container" is changed', function() {
-		let parent = document.createElement('div');
+		const parent = document.createElement('div');
 		dom.replace(target, parent);
 		dom.append(parent, target);
 
-		let parent2 = document.createElement('div');
+		const parent2 = document.createElement('div');
 		dom.replace(target2, parent2);
 		dom.append(parent2, target2);
 
@@ -161,7 +161,7 @@ describe('DragDrop', function() {
 			targets: '.target',
 		});
 
-		let listener = sinon.stub();
+		const listener = sinon.stub();
 		dragDrop.on(DragDrop.Events.TARGET_ENTER, listener);
 
 		DragTestHelper.triggerMouseEvent(item, 'mousedown', 0, 0);
@@ -185,7 +185,7 @@ describe('DragDrop', function() {
 			targets: '.target',
 		});
 
-		let listener = sinon.stub();
+		const listener = sinon.stub();
 		dragDrop.on(DragDrop.Events.TARGET_LEAVE, listener);
 
 		DragTestHelper.triggerMouseEvent(item, 'mousedown', 0, 0);
@@ -210,7 +210,7 @@ describe('DragDrop', function() {
 			targets: '.target',
 		});
 
-		let listener = sinon.stub();
+		const listener = sinon.stub();
 		dragDrop.on(DragDrop.Events.TARGET_ENTER, listener);
 
 		DragTestHelper.triggerKeyEvent(item, 13);
@@ -234,7 +234,7 @@ describe('DragDrop', function() {
 			targets: '.target',
 		});
 
-		let listener = sinon.stub();
+		const listener = sinon.stub();
 		dragDrop.on(DragDrop.Events.TARGET_LEAVE, listener);
 
 		DragTestHelper.triggerKeyEvent(item, 13);
@@ -256,7 +256,7 @@ describe('DragDrop', function() {
 		});
 		assert.strictEqual(2, dragDrop.targets.length);
 
-		let newTarget = target.cloneNode(true);
+		const newTarget = target.cloneNode(true);
 		newTarget.style.top = '250px';
 		dom.enterDocument(newTarget);
 		assert.strictEqual(2, dragDrop.targets.length);
@@ -308,7 +308,7 @@ describe('DragDrop', function() {
 				targets: '.target',
 			});
 
-			let listener = sinon.stub();
+			const listener = sinon.stub();
 			dragDrop.on(DragDrop.Events.TARGET_ENTER, listener);
 
 			DragTestHelper.triggerMouseEvent(item, 'mousedown', 0, 0);
@@ -327,7 +327,7 @@ describe('DragDrop', function() {
 				targets: '.target',
 			});
 
-			let listener = sinon.stub();
+			const listener = sinon.stub();
 			dragDrop.on(DragDrop.Events.TARGET_ENTER, listener);
 
 			DragTestHelper.triggerMouseEvent(item, 'mousedown', 0, 0);

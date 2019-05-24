@@ -8,7 +8,7 @@
  */
 function debounce(fn, delay) {
 	return function debounced() {
-		let args = Array.prototype.slice.call(arguments, 0);
+		const args = Array.prototype.slice.call(arguments, 0);
 		cancelDebounce(debounced);
 		debounced.id = setTimeout(function() {
 			fn.apply(null, args);

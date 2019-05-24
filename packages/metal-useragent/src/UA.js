@@ -19,9 +19,9 @@ class UA {
 	 * @static
 	 */
 	static getNativeUserAgent() {
-		let navigator = UA.globals.window && UA.globals.window.navigator;
+		const navigator = UA.globals.window && UA.globals.window.navigator;
 		if (navigator) {
-			let userAgent = navigator.userAgent;
+			const userAgent = navigator.userAgent;
 			if (userAgent) {
 				return userAgent;
 			}
@@ -38,9 +38,9 @@ class UA {
 	 * @static
 	 */
 	static getNativePlatform() {
-		let navigator = UA.globals.window && UA.globals.window.navigator;
+		const navigator = UA.globals.window && UA.globals.window.navigator;
 		if (navigator) {
-			let platform = navigator.platform;
+			const platform = navigator.platform;
 			if (platform) {
 				return platform;
 			}

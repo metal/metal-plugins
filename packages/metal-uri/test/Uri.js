@@ -5,23 +5,23 @@ import {MultiMap} from 'metal-structs';
 
 describe('Uri', function() {
 	it('should support empty uri', function() {
-		let uri = new Uri();
+		const uri = new Uri();
 		assert.strictEqual('/', uri.getPathname());
 		assert.strictEqual('/', uri.toString());
 	});
 
 	it('should get uri hostname', function() {
-		let uri = new Uri('http://hostname:8080');
+		const uri = new Uri('http://hostname:8080');
 		assert.strictEqual('hostname', uri.getHostname());
 	});
 
 	it('should get uri host', function() {
-		let uri = new Uri('http://hostname:8080');
+		const uri = new Uri('http://hostname:8080');
 		assert.strictEqual('hostname:8080', uri.getHost());
 	});
 
 	it('should get uri origin', function() {
-		let uri = new Uri('http://hostname:8080/ignore');
+		const uri = new Uri('http://hostname:8080/ignore');
 		assert.strictEqual('http://hostname:8080', uri.getOrigin());
 	});
 
@@ -34,29 +34,29 @@ describe('Uri', function() {
 	});
 
 	it('should hostname be empty for empty uri', function() {
-		let uri = new Uri();
+		const uri = new Uri();
 		assert.strictEqual('', uri.getHostname());
 	});
 
 	it('should host be empty for empty uri', function() {
-		let uri = new Uri();
+		const uri = new Uri();
 		assert.strictEqual('', uri.getHost());
 	});
 
 	it('should origin be empty for empty uri', function() {
-		let uri = new Uri();
+		const uri = new Uri();
 		assert.strictEqual('', uri.getOrigin());
 	});
 
 	it('should support set port on uri', function() {
-		let uri = new Uri('hostname:8080');
+		const uri = new Uri('hostname:8080');
 		assert.strictEqual('8080', uri.getPort());
 		uri.setPort('81');
 		assert.strictEqual('81', uri.getPort());
 	});
 
 	it('should support set protocol on uri', function() {
-		let uri = new Uri('http://hostname');
+		const uri = new Uri('http://hostname');
 		assert.strictEqual('http:', uri.getProtocol());
 		uri.setProtocol('https');
 		assert.strictEqual('https:', uri.getProtocol());
@@ -65,39 +65,39 @@ describe('Uri', function() {
 	});
 
 	it('should support only hostname', function() {
-		let uri = new Uri('hostname');
+		const uri = new Uri('hostname');
 		assert.strictEqual('hostname', uri.getHostname());
 		assert.strictEqual('http://hostname/', uri.toString());
 	});
 
 	it('should support only hostname from setter', function() {
-		let uri = new Uri();
+		const uri = new Uri();
 		uri.setHostname('hostname');
 		assert.strictEqual('hostname', uri.getHostname());
 		assert.strictEqual('http://hostname/', uri.toString());
 	});
 
 	it('should support only pathname', function() {
-		let uri = new Uri('/pathname');
+		const uri = new Uri('/pathname');
 		assert.strictEqual('/pathname', uri.getPathname());
 		assert.strictEqual('/pathname', uri.toString());
 	});
 
 	it('should support only pathname from setter', function() {
-		let uri = new Uri();
+		const uri = new Uri();
 		uri.setPathname('/pathname');
 		assert.strictEqual('/pathname', uri.getPathname());
 		assert.strictEqual('/pathname', uri.toString());
 	});
 
 	it('should support only hash', function() {
-		let uri = new Uri('#hash');
+		const uri = new Uri('#hash');
 		assert.strictEqual('#hash', uri.getHash());
 		assert.strictEqual('/#hash', uri.toString());
 	});
 
 	it('should support only hash from setter', function() {
-		let uri = new Uri();
+		const uri = new Uri();
 		uri.setHash('#hash');
 		assert.strictEqual('#hash', uri.getHash());
 		assert.strictEqual('/#hash', uri.toString());
@@ -119,14 +119,14 @@ describe('Uri', function() {
 	});
 
 	it('should support pathname with search', function() {
-		let uri = new Uri('/pathname?a=1');
+		const uri = new Uri('/pathname?a=1');
 		assert.strictEqual('?a=1', uri.getSearch());
 		assert.strictEqual('/pathname', uri.getPathname());
 		assert.strictEqual('/pathname?a=1', uri.toString());
 	});
 
 	it('should support pathname with search and hash', function() {
-		let uri = new Uri('/pathname?a=1#hash');
+		const uri = new Uri('/pathname?a=1#hash');
 		assert.strictEqual('#hash', uri.getHash());
 		assert.strictEqual('?a=1', uri.getSearch());
 		assert.strictEqual('/pathname', uri.getPathname());
@@ -134,13 +134,13 @@ describe('Uri', function() {
 	});
 
 	it('should initialize parameters from search part of uri', function() {
-		let uri = new Uri('http://hostname?a=1&b=2');
+		const uri = new Uri('http://hostname?a=1&b=2');
 		assert.strictEqual('1', uri.getParameterValue('a'));
 		assert.strictEqual('2', uri.getParameterValue('b'));
 	});
 
 	it('should set parameter value in uri', function() {
-		let uri = new Uri();
+		const uri = new Uri();
 		uri.setParameterValue('a', '1');
 		uri.setParameterValue('a', '2');
 		assert.strictEqual('2', uri.getParameterValue('a'));
@@ -148,14 +148,14 @@ describe('Uri', function() {
 	});
 
 	it('should set parameter values in uri', function() {
-		let uri = new Uri();
+		const uri = new Uri();
 		uri.setParameterValues('a', ['1', '2']);
 		assert.strictEqual('1', uri.getParameterValue('a'));
 		assert.deepEqual(['1', '2'], uri.getParameterValues('a'));
 	});
 
 	it('should add parameter value in uri', function() {
-		let uri = new Uri();
+		const uri = new Uri();
 		uri.addParameterValue('a', '1');
 		uri.addParameterValue('a', '2');
 		assert.strictEqual('1', uri.getParameterValue('a'));
@@ -163,21 +163,21 @@ describe('Uri', function() {
 	});
 
 	it('should add parameter values in uri', function() {
-		let uri = new Uri();
+		const uri = new Uri();
 		uri.addParameterValues('a', ['1', '2']);
 		assert.strictEqual('1', uri.getParameterValue('a'));
 		assert.deepEqual(['1', '2'], uri.getParameterValues('a'));
 	});
 
 	it('should remove parameter in uri', function() {
-		let uri = new Uri();
+		const uri = new Uri();
 		uri.setParameterValue('a', '1');
 		uri.removeParameter('a');
 		assert.strictEqual(undefined, uri.getParameterValue('a'));
 	});
 
 	it('should add parameter value in uri be case insensitive', function() {
-		let uri = new Uri();
+		const uri = new Uri();
 		uri.addParameterValue('a', '1');
 		uri.addParameterValue('A', '2');
 		uri.addParameterValue('a', '3');
@@ -189,21 +189,21 @@ describe('Uri', function() {
 	});
 
 	it('should encode parameter value in uri', function() {
-		let uri = new Uri();
+		const uri = new Uri();
 		uri.setParameterValue('a', 'one space');
 		assert.strictEqual('one space', uri.getParameterValue('a'));
 		assert.strictEqual('/?a=one%20space', uri.toString());
 	});
 
 	it('should parameter value preserve encoding', function() {
-		let uri = new Uri();
+		const uri = new Uri();
 		uri.setParameterValue('a', 'one%20space');
 		assert.strictEqual('one%20space', uri.getParameterValue('a'));
 		assert.strictEqual('/?a=one%2520space', uri.toString());
 	});
 
 	it('should parameter value in url preserve encoding', function() {
-		let uri = new Uri('?a=one%20space');
+		const uri = new Uri('?a=one%20space');
 		assert.strictEqual('one space', uri.getParameterValue('a'));
 		assert.strictEqual('/?a=one%20space', uri.toString());
 	});
@@ -223,7 +223,7 @@ describe('Uri', function() {
 	});
 
 	it('should support protocol relative uri', function() {
-		let uri = new Uri('//hostname:123/path/data?key=value#hash');
+		const uri = new Uri('//hostname:123/path/data?key=value#hash');
 		assert.strictEqual(
 			'http://hostname:123/path/data?key=value#hash',
 			uri.toString()
@@ -231,8 +231,8 @@ describe('Uri', function() {
 	});
 
 	it('should add parameters from MultiMap', function() {
-		let uri = new Uri('?a=1');
-		let map = new MultiMap();
+		const uri = new Uri('?a=1');
+		const map = new MultiMap();
 		map.add('a', '2');
 		map.add('a', '3');
 		uri.addParametersFromMultiMap(map);
@@ -248,7 +248,10 @@ describe('Uri', function() {
 		assert.strictEqual('foo/bar', Uri.joinPaths('foo', 'bar'));
 		assert.strictEqual('foo/bar', Uri.joinPaths('foo/', '/bar'));
 		assert.strictEqual('foo/bar', Uri.joinPaths('foo/', 'bar'));
-		assert.strictEqual('foo/bar/bazz', Uri.joinPaths('foo', '/bar', 'bazz'));
+		assert.strictEqual(
+			'foo/bar/bazz',
+			Uri.joinPaths('foo', '/bar', 'bazz')
+		);
 		assert.strictEqual(
 			'http://localhost:123',
 			Uri.joinPaths('http://localhost:123', '')
@@ -262,8 +265,8 @@ describe('Uri', function() {
 	});
 
 	it('should make urls unique by adding a random param', function() {
-		let uri = new Uri('foo.bar/path');
-		let uri2 = new Uri('foo.bar/path');
+		const uri = new Uri('foo.bar/path');
+		const uri2 = new Uri('foo.bar/path');
 
 		assert.strictEqual(uri.toString(), uri2.toString());
 
@@ -273,8 +276,8 @@ describe('Uri', function() {
 	});
 
 	it('should remove uniqueness by removing the random param', function() {
-		let uri = new Uri('foo.bar/path');
-		let uri2 = new Uri('foo.bar/path');
+		const uri = new Uri('foo.bar/path');
+		const uri2 = new Uri('foo.bar/path');
 		uri.makeUnique().removeUnique();
 		uri2.makeUnique().removeUnique();
 		assert.strictEqual(uri.toString(), uri2.toString());
@@ -286,7 +289,7 @@ describe('Uri', function() {
 	});
 
 	it('should preserve trailing slash on paths', function() {
-		let uri = new Uri('http://hostname:8080/foo/');
+		const uri = new Uri('http://hostname:8080/foo/');
 		assert.strictEqual('http://hostname:8080/foo/', uri.toString());
 	});
 
@@ -301,41 +304,41 @@ describe('Uri', function() {
 	});
 
 	it('should set protocol http: on localhost uri', function() {
-		let uri = new Uri('localhost:8080');
+		const uri = new Uri('localhost:8080');
 		assert.strictEqual('http:', uri.getProtocol());
 		assert.strictEqual('8080', uri.getPort());
 	});
 
 	it('should support useful types of uri schemes like "tel"', function() {
-		let uri = new Uri('tel:pathname', false);
+		const uri = new Uri('tel:pathname', false);
 		assert.strictEqual('tel:', uri.getProtocol());
 		assert.strictEqual('pathname', uri.getPathname());
 		assert.strictEqual('tel:pathname', uri.toString());
 	});
 
 	it('should support uri schemes that include hyphens', function() {
-		let uri = new Uri('ms-excel:pathname', false);
+		const uri = new Uri('ms-excel:pathname', false);
 		assert.strictEqual('ms-excel:', uri.getProtocol());
 		assert.strictEqual('pathname', uri.getPathname());
 		assert.strictEqual('ms-excel:pathname', uri.toString());
 	});
 
 	it('should support uri schemes that include numerical values', function() {
-		let uri = new Uri('pkcs11:pathname', false);
+		const uri = new Uri('pkcs11:pathname', false);
 		assert.strictEqual('pkcs11:', uri.getProtocol());
 		assert.strictEqual('pathname', uri.getPathname());
 		assert.strictEqual('pkcs11:pathname', uri.toString());
 	});
 
 	it('should support uri schemes that include periods', function() {
-		let uri = new Uri('iris.beep:pathname', false);
+		const uri = new Uri('iris.beep:pathname', false);
 		assert.strictEqual('iris.beep:', uri.getProtocol());
 		assert.strictEqual('pathname', uri.getPathname());
 		assert.strictEqual('iris.beep:pathname', uri.toString());
 	});
 
 	it('should support uri schemes that include pluses', function() {
-		let uri = new Uri('some+scheme:pathname', false);
+		const uri = new Uri('some+scheme:pathname', false);
 		assert.strictEqual('some+scheme:', uri.getProtocol());
 		assert.strictEqual('pathname', uri.getPathname());
 		assert.strictEqual('some+scheme:pathname', uri.toString());

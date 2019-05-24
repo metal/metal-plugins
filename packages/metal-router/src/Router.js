@@ -207,8 +207,8 @@ class Router extends Component {
 	 * @protected
 	 */
 	toArray_(config) {
-		let arr = [];
-		let keys = Object.keys(config || {});
+		const arr = [];
+		const keys = Object.keys(config || {});
 		for (let i = 0; i < keys.length; i++) {
 			arr.push(keys[i], config[keys[i]]);
 		}
@@ -517,7 +517,7 @@ class ComponentScreen extends RequestScreen {
 	 * @return {?String} Redirect path.
 	 */
 	maybeFindRedirectPath() {
-		let redirectPath = this.beforeUpdateHistoryPath(this.router.lastPath);
+		const redirectPath = this.beforeUpdateHistoryPath(this.router.lastPath);
 		if (redirectPath !== this.router.lastPath) {
 			return redirectPath;
 		}
@@ -532,9 +532,9 @@ class ComponentScreen extends RequestScreen {
 	 * @return {Router}
 	 */
 	maybeFindRedirectRouter() {
-		let redirectPath = this.maybeFindRedirectPath();
+		const redirectPath = this.maybeFindRedirectPath();
 		if (redirectPath) {
-			let redirectRoute = Router.router().findRoute(redirectPath);
+			const redirectRoute = Router.router().findRoute(redirectPath);
 			if (redirectRoute) {
 				// The initiator component will load the render state and follow any
 				// "302" redirect that may happen. Therefore, the data returned of the
@@ -554,7 +554,7 @@ class ComponentScreen extends RequestScreen {
 	 * @return {object}
 	 */
 	maybeParseLastLoadedStateAsJson() {
-		let state = this.router.lastLoadedState;
+		const state = this.router.lastLoadedState;
 		try {
 			return JSON.parse(state);
 		} catch (err) {
@@ -566,7 +566,7 @@ class ComponentScreen extends RequestScreen {
 	 * @protected
 	 */
 	maybeRedirectRouter() {
-		let redirectRouter = this.maybeFindRedirectRouter();
+		const redirectRouter = this.maybeFindRedirectRouter();
 		if (redirectRouter) {
 			// If performing a redirect use "redirectRouter" as "this.router". The
 			// initiator "this.router" is completely ignored from now on.

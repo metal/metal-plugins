@@ -14,7 +14,7 @@ class DragTestHelper {
 	 */
 	static triggerKeyEvent(target, keyCode) {
 		dom.triggerEvent(target, 'keydown', {
-			keyCode: keyCode,
+			keyCode,
 		});
 	}
 
@@ -37,7 +37,7 @@ class DragTestHelper {
 			clientY: y,
 		};
 		if ('ontouchstart' in window) {
-			let eventTypesMap = {
+			const eventTypesMap = {
 				mousedown: 'touchstart',
 				mousemove: 'touchmove',
 				mouseup: 'touchend',

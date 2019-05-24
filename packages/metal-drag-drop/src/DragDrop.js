@@ -42,7 +42,7 @@ class DragDrop extends Drag {
 	 * @override
 	 */
 	buildEventObject_() {
-		let obj = super.buildEventObject_();
+		const obj = super.buildEventObject_();
 		obj.target = this.activeTargets_[0];
 		obj.allActiveTargets = this.activeTargets_;
 		return obj;
@@ -70,11 +70,11 @@ class DragDrop extends Drag {
 	findAllActiveTargets_() {
 		let activeTargets = [];
 		let mainRegion;
-		let sourceRegion = this.getSourceRegion_();
-		let targets = this.targets;
+		const sourceRegion = this.getSourceRegion_();
+		const targets = this.targets;
 		targets.forEach(
 			function(target, index) {
-				let region = Position.getRegion(target);
+				const region = Position.getRegion(target);
 				if (
 					targets[index] !== this.activeDragPlaceholder_ &&
 					Position.intersectRegion(region, sourceRegion)
@@ -102,13 +102,13 @@ class DragDrop extends Drag {
 	 */
 	getSourceRegion_() {
 		if (core.isDefAndNotNull(this.mousePos_)) {
-			let x = this.mousePos_.x;
-			let y = this.mousePos_.y;
+			const x = this.mousePos_.x;
+			const y = this.mousePos_.y;
 			return Position.makeRegion(y, 0, x, x, y, 0);
 		} else {
 			// We need to remove the scroll data from the region, since the other regions we'll
 			// be comparing to won't take that information into account.
-			let region = object.mixin({}, this.sourceRegion_);
+			const region = object.mixin({}, this.sourceRegion_);
 			region.left -= document.body.scrollLeft;
 			region.right -= document.body.scrollLeft;
 			region.top -= document.body.scrollTop;
@@ -174,7 +174,7 @@ class DragDrop extends Drag {
 	updatePosition(deltaX, deltaY) {
 		super.updatePosition(deltaX, deltaY);
 
-		let newTargets = this.findAllActiveTargets_();
+		const newTargets = this.findAllActiveTargets_();
 		if (newTargets[0] !== this.activeTargets_[0]) {
 			if (this.activeTargets_[0]) {
 				dom.removeClasses(this.activeTargets_[0], this.targetOverClass);

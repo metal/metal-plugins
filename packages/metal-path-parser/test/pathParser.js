@@ -154,7 +154,7 @@ describe('pathParser', function() {
 	});
 
 	describe('extractData', function() {
-		it('should return null if path doesn\'t match given format', function() {
+		it("should return null if path doesn't match given format", function() {
 			assert.strictEqual(null, extractData('/my/path', '/other/path'));
 		});
 
@@ -186,8 +186,8 @@ describe('pathParser', function() {
 			assert.deepEqual(expectedData, data);
 		});
 
-		it('should return object without optional param if it\'s not given', function() {
-			let data = extractData('/my/path/:foo?', '/my/path');
+		it("should return object without optional param if it's not given", function() {
+			const data = extractData('/my/path/:foo?', '/my/path');
 			assert.deepEqual({}, data);
 		});
 
