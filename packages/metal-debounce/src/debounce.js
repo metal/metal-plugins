@@ -1,9 +1,5 @@
 'use strict';
 
-// This dependency is used to polyfill Array.from method that is used in
-// _toConsumableArray() function in babel glue to this rest-spread utilization
-import from from 'core-js/es6/array'; //eslint-disable-line
-
 /**
  * Debounces function execution.
  * @param {!function()} fn
@@ -12,10 +8,10 @@ import from from 'core-js/es6/array'; //eslint-disable-line
  */
 function debounce(fn, delay) {
 	return function debounced() {
-		let args = arguments;
+		let args = Array.prototype.slice.call(arguments, 0);
 		cancelDebounce(debounced);
 		debounced.id = setTimeout(function() {
-			fn(...(null, args));
+			fn.apply(null, args);
 		}, delay);
 	};
 }
