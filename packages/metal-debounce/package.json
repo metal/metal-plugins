@@ -1,9 +1,8 @@
 {
   "name": "metal-debounce",
   "description": "Metal's debounce utility",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "dependencies": {
-    "core-js": "^2.5.5"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
