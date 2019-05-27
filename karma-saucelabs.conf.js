@@ -69,12 +69,6 @@ module.exports = function(config) {
 				browserName: 'chrome',
 				platform: 'Windows 7',
 			},
-			sl_android: {
-				base: 'SauceLabs',
-				browserName: 'android',
-				platform: 'Linux',
-				version: '4.4',
-			},
 		},
 	];
 
