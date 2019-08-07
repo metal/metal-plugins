@@ -126,4 +126,8 @@ module.exports = function(config) {
 			username: process.env.SAUCE_USERNAME,
 		},
 	});
+
+	config.files.unshift(
+		'node_modules/promise-polyfill/dist/polyfill.min.js'
+	);
 };
