@@ -103,10 +103,6 @@ module.exports = function(config) {
 
 		customLaunchers: batch,
 
-		files: [
-			'node_modules/promise-polyfill/dist/polyfill.min.js'
-		],
-
 		plugins: [
 			'karma-chai-sinon',
 			'karma-mocha',

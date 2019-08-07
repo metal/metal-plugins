@@ -111,6 +111,12 @@ module.exports = function (config) {
             // Since all files will be added, we need to ensure manually that these
             // will be added first.
             {
+              patten: 'node_modules/promise-polyfill/dist/polyfill.min.js',
+              watched: false,
+              included: true,
+              served: true,
+            },
+            {
                 pattern: 'packages/*/test/**/*.js',
                 watched: false,
                 included: true,
