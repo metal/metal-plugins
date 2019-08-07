@@ -883,7 +883,7 @@ describe('Router', function() {
 
 		Router.router()
 			.navigate('/path')
-			.catch(err => {
+			.catch(() => {
 				assert.equal(Router.getActiveComponent(), null);
 				assert.equal(pathname, window.location.pathname);
 
@@ -927,7 +927,7 @@ describe('Router', function() {
 
 		Router.router()
 			.navigate('/path')
-			.catch(err => {
+			.catch(() => {
 				assert.equal(Router.getActiveComponent(), null);
 				assert.equal(pathname, window.location.pathname);
 
@@ -971,7 +971,7 @@ describe('Router', function() {
 
 		Router.router()
 			.navigate('/path/1')
-			.catch(err => {
+			.catch(() => {
 				assert.equal(Router.getActiveComponent(), null);
 				assert.equal(pathname, window.location.pathname);
 
@@ -1119,7 +1119,7 @@ describe('Router', function() {
 			.then(() => {
 				Router.router()
 					.navigate('/path')
-					.catch(err => {
+					.catch(() => {
 						assert.equal('/path/2', window.location.pathname);
 						assert.ok(Router.getActiveComponent() instanceof CustomComponent2);
 
