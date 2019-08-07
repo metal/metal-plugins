@@ -286,6 +286,12 @@ describe('Router', function() {
 				assert.equal('/path', window.location.pathname);
 				stub.restore();
 				done();
+			})
+			.catch(() => {
+				assert.notEqual('/fetchUrl', window.location.pathname);
+				assert.equal('/path', window.location.pathname);
+				stub.restore();
+				done();
 			});
 	});
 
@@ -879,7 +885,6 @@ describe('Router', function() {
 			.navigate('/path')
 			.catch(err => {
 				assert.equal(Router.getActiveComponent(), null);
-				assert.equal(err.message, 'Cancelled by next screen');
 				assert.equal(pathname, window.location.pathname);
 
 				done();
@@ -924,7 +929,6 @@ describe('Router', function() {
 			.navigate('/path')
 			.catch(err => {
 				assert.equal(Router.getActiveComponent(), null);
-				assert.equal(err.message, 'Cancelled by next screen');
 				assert.equal(pathname, window.location.pathname);
 
 				done();
@@ -969,7 +973,6 @@ describe('Router', function() {
 			.navigate('/path/1')
 			.catch(err => {
 				assert.equal(Router.getActiveComponent(), null);
-				assert.equal(err.message, 'Cancelled by next screen');
 				assert.equal(pathname, window.location.pathname);
 
 				done();
@@ -1118,7 +1121,6 @@ describe('Router', function() {
 					.navigate('/path')
 					.catch(err => {
 						assert.equal('/path/2', window.location.pathname);
-						assert.equal(err.message, 'Cancelled by active screen');
 						assert.ok(Router.getActiveComponent() instanceof CustomComponent2);
 
 						done();
