@@ -38,7 +38,7 @@ const patch = function(node, fn, data) {
 	currentParent = node;
 	fn(data);
 	currentParent.innerHTML = buffer.join('');
-	buffer = [];
+	buffer.splice(0, buffer.length);
 	return currentParent;
 };
 
