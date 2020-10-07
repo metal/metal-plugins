@@ -48,7 +48,7 @@
     "ngrok": "^3.0.1",
     "prettier-eslint-cli": "^4.7.0",
     "puppeteer": "^1.6.2",
-    "serve": "^6.5.6",
+    "serve": "^10.1.2",
     "sinon": "^4.5.0",
     "sinon-chai": "^3.1.0",
     "webpack": "^4.8.0"
