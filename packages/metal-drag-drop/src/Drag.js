@@ -264,7 +264,9 @@ class Drag extends State {
 		this.mousePos_ = null;
 		this.mouseSourceDelta_ = null;
 		this.dragging_ = false;
-		this.dragHandler_.removeAllListeners();
+		if (this.dragHandler_) {
+			this.dragHandler_.removeAllListeners();
+		}
 	}
 
 	/**
